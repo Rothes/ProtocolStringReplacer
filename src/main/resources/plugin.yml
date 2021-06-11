@@ -1,0 +1,17 @@
+name: ProtocolStringReplacer
+version: ${project.version}
+main: me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer
+authors: [Rothes]
+api-version: 1.13
+depend:
+  - ProtocolLib
+commands:
+  protocolstringreplacer:
+    description: nothing here
+permissions:
+  protocolstringreplacer.feature.usermetacache:
+    description: save the itemmeta when editing, and restore the original one when the player in creative interacts it.
+    default: true
+  protocolstringreplacer.feature.usermetacache.noncreative:
+    description: with protocolstringreplacer.feature.usermetacache, allow to restore the original one when the player in other gamemodes interacts it.
+    default: false
