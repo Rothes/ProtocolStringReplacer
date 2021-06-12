@@ -30,7 +30,7 @@ public class ReplacerManager {
     private final HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
 
     public void initialize() {
-        File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replaces");
+        File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.currentTimeMillis();
         HashMap<File, DotYamlConfiguration> loadedFiles = loadReplacesFiles(path);
         Bukkit.getConsoleSender().sendMessage("§7[§6ProtocolStringReplacer§7] §a预加载 " + loadedFiles.size() + " 个替换配置文件. §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");

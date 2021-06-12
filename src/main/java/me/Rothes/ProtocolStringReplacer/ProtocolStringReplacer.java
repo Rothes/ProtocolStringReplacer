@@ -70,6 +70,9 @@ public class ProtocolStringReplacer extends JavaPlugin {
         replacerManager = new ReplacerManager();
         userManager = new UserManager();
         packetListenerManager = new PacketListenerManager();
+        if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
+            instance.saveResource("Replacers/Example.yml", true);
+        }
         File configFile = new File(instance.getDataFolder() + "/Config.yml");
         if (!configFile.exists()) {
             instance.saveResource("Config.yml", true);
