@@ -8,7 +8,8 @@ public enum ReplacerType {
     OPEN_WINDOW("OPEN_WINDOW", PacketType.Play.Server.OPEN_WINDOW),
     SET_SLOT("SET_SLOT", PacketType.Play.Server.SET_SLOT),
     WINDOW_ITEMS("WINDOW_ITEMS", PacketType.Play.Server.WINDOW_ITEMS),
-    ENTITY_METADATA("ENTITY_METADATA", PacketType.Play.Server.ENTITY_METADATA);
+    ENTITY_METADATA("ENTITY_METADATA", PacketType.Play.Server.ENTITY_METADATA),
+    TILE_ENTITY_DATA("TILE_ENTITY_DATA", PacketType.Play.Server.TILE_ENTITY_DATA);
 
     ReplacerType(String name, PacketType packetType) {
         this.name = name;

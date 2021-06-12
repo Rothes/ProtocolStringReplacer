@@ -19,6 +19,7 @@ Filter:
   # OPEN_WINDOW 监听窗口的标题文本
   # CHAT 监听聊天文本
   # ENTITY_METADATA 监听实体名称
+  # TILE_ENTITY_DATA 监听tile的nbt数据. 目前仅支持修改告示牌信息
   Packet-Types:
     - WINDOW_ITEMS
     - SET_SLOT

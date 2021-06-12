@@ -1,6 +1,6 @@
 package me.Rothes.ProtocolStringReplacer.User;
 
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerFile;
+import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,7 +17,7 @@ public class User {
     private String currentlyWindowTitle;
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private Short uniqueCacheKey = 0;
-    private ReplacerFile editorFile;
+    private ReplacerConfig editorFile;
     private int editorIndex;
     private String editorPattern;
     private String editorReplacement;

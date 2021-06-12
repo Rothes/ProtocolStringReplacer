@@ -26,11 +26,11 @@ import java.util.regex.Pattern;
 
 public class ReplacerManager {
 
-    private final char PAPIHead = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Feature.Placeholder.Placeholder-Head", "｛").charAt(0);
-    private final char PAPITail = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Feature.Placeholder.Placeholder-Tail", "｝").charAt(0);
+    private final char PAPIHead = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Head", "｛").charAt(0);
+    private final char PAPITail = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Tail", "｝").charAt(0);
 
     private final Replacer replacer = new me.Rothes.ProtocolStringReplacer.Replacer.PAPIReplacer();
-    private final LinkedList<ReplacerFile> replacerFileList = new LinkedList<>();
+    private final LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
     private final HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
 
     public void initialize() {
@@ -44,13 +44,13 @@ public class ReplacerManager {
         for (Map.Entry<File, DotYamlConfiguration> entry : loadedFiles.entrySet()) {
             File file = entry.getKey();
             DotYamlConfiguration config = entry.getValue();
-            ReplacerFile replacerFile = new ReplacerFile(file, config);
-            int size = replacerFileList.size();
+            ReplacerConfig replacerConfig = new ReplacerConfig(file, config);
+            int size = replacerConfigList.size();
             for (int i = 0; i <= size; i++) {
-                if (i == replacerFileList.size()) {
-                    replacerFileList.add(replacerFile);
-                } else if (replacerFile.getPriority() > replacerFileList.get(i).getPriority()) {
-                    replacerFileList.add(i, replacerFile);
+                if (i == replacerConfigList.size()) {
+                    replacerConfigList.add(replacerConfig);
+                } else if (replacerConfig.getPriority() > replacerConfigList.get(i).getPriority()) {
+                    replacerConfigList.add(i, replacerConfig);
                     break;
                 }
             }
@@ -61,11 +61,13 @@ public class ReplacerManager {
 
         ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
         CommentYamlConfiguration config = instrance.getConfig();
+        long cleanAccessInterval = config.getInt("Options.Features.ItemMetaCache.Clean-Access-Interval", 300) * 1000L;
+        long cleanTaskInterval = config.getInt("Options.Features.ItemMetaCache.Clean-Task-Interval", 600) * 20L;
         Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
             List<ItemMeta> needToRemove = new ArrayList<>();
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
-                if ((currentTime - entry.getValue().getLastAccessTime()) > config.getInt("Options.Feature.ItemMetaCache.Clean-Access-Interval", 300) * 1000L) {
+                if ((currentTime - entry.getValue().getLastAccessTime()) > cleanAccessInterval) {
                     needToRemove.add(entry.getKey());
                 }
             }
@@ -76,17 +78,17 @@ public class ReplacerManager {
                     }
                 });
             }
-        }, 0L, config.getInt("Options.Feature.ItemMetaCache.Clean-Task-Interval", 600) * 20L);
+        }, 0L, cleanTaskInterval);
     }
 
     @Nonnull
-    public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerFile, User> filter) {
+    public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(user, "User cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
-        for (ReplacerFile replacerFile : replacerFileList) {
-            if (replacerFile.isEnable() && filter.test(replacerFile, user)) {
-                string = getFileReplacedString(user, string, replacerFile, true);
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
+                string = getFileReplacedString(user, string, replacerConfig, true);
             }
         }
         return string;
@@ -94,7 +96,7 @@ public class ReplacerManager {
 
     @SuppressWarnings("UnusedReturnValue")
     @Nonnull
-    public ItemStack getReplacedItemStack(@Nonnull ItemStack itemStack, @Nonnull User user, @Nonnull BiPredicate<ReplacerFile, User> filter) {
+    public ItemStack getReplacedItemStack(@Nonnull ItemStack itemStack, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(itemStack, "ItemStack cannot be null");
         if (itemStack.hasItemMeta()) {
             itemStack.setItemMeta(getReplacedItemMeta(itemStack.getItemMeta(), user, filter));
@@ -104,7 +106,7 @@ public class ReplacerManager {
 
     @SuppressWarnings("UnusedReturnValue")
     @Nonnull
-    public ItemMeta getReplacedItemMeta(@Nonnull ItemMeta itemMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerFile, User> filter) {
+    public ItemMeta getReplacedItemMeta(@Nonnull ItemMeta itemMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
         Validate.notNull(user, "User cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
@@ -114,14 +116,14 @@ public class ReplacerManager {
                 itemMeta = metaCache.getReplacedItemMeta();
             } else {
                 ItemMeta original = itemMeta.clone();
-                for (ReplacerFile replacerFile : replacerFileList) {
-                    if (replacerFile.isEnable() && filter.test(replacerFile, user)) {
-                        itemMeta.setDisplayName(getFileReplacedString(user, itemMeta.getDisplayName(), replacerFile, false));
+                for (ReplacerConfig replacerConfig : replacerConfigList) {
+                    if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
+                        itemMeta.setDisplayName(getFileReplacedString(user, itemMeta.getDisplayName(), replacerConfig, false));
 
                         if (itemMeta.hasLore()) {
                             List<String> lore = itemMeta.getLore();
                             for (int i = 0; i < lore.size(); i++) {
-                                lore.set(i, getFileReplacedString(user, lore.get(i), replacerFile, false));
+                                lore.set(i, getFileReplacedString(user, lore.get(i), replacerConfig, false));
                             }
                             itemMeta.setLore(lore);
                         }
@@ -153,13 +155,13 @@ public class ReplacerManager {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    private String getFileReplacedString(@Nonnull User user, @Nonnull String string, @Nonnull ReplacerFile replacerFile, boolean setPlaceholders) {
+    private String getFileReplacedString(@Nonnull User user, @Nonnull String string, @Nonnull ReplacerConfig replacerConfig, boolean setPlaceholders) {
         Validate.notNull(user, "User cannot be null");
         Validate.notNull(string, "String cannot be null");
-        Validate.notNull(replacerFile, "Replacer File cannot be null");
+        Validate.notNull(replacerConfig, "Replacer File cannot be null");
 
-        Object object = replacerFile.getReplaces().entrySet();
-        switch (replacerFile.getMatchType()) {
+        Object object = replacerConfig.getReplaces().entrySet();
+        switch (replacerConfig.getMatchType()) {
             case CONTAIN:
                 Set<Map.Entry<String, String>> containSet = (Set<Map.Entry<String, String>>) object;
                 for (Map.Entry<String, String> entry : containSet) {

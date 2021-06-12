@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ReplacerFile {
+public class ReplacerConfig {
 
     public enum MatchType {
         CONTAIN("contain"),
@@ -41,7 +41,7 @@ public class ReplacerFile {
     private String author;
     private String version;
 
-    public ReplacerFile(@Nonnull File file, @Nonnull DotYamlConfiguration configuration) {
+    public ReplacerConfig(@Nonnull File file, @Nonnull DotYamlConfiguration configuration) {
         long startTime = System.currentTimeMillis();
         this.file = file;
         this.configuration = configuration;
@@ -98,7 +98,9 @@ public class ReplacerFile {
                 }
             }
         }
-//        Bukkit.getConsoleSender().sendMessage("§7[§6ProtocolStringReplacer§7] §a载入替换配置: " + getPath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
+        if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false)) {
+            Bukkit.getConsoleSender().sendMessage("§7[§6ProtocolStringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
+        }
     }
 
     public File getFile() {
@@ -143,7 +145,7 @@ public class ReplacerFile {
 
     @Override
     public String toString() {
-        return "ReplacerFile{" +
+        return "ReplacerConfig{" +
                 "file=" + file +
                 ", configuration=" + configuration +
                 ", enable=" + enable +

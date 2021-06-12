@@ -24,18 +24,9 @@ public class OpenWindow extends AbstractServerPacketListener {
             User user = getEventUser(packetEvent);
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-            BaseComponent[] baseComponents = ComponentSerializer.parse(wrappedChatComponent.getJson());
-
-            StringBuilder stringBuilder = new StringBuilder(baseComponents.length);
-            for (BaseComponent baseComponent : baseComponents) {
-
-                stringBuilder.append(baseComponent.toLegacyText().substring(2));
-            }
-            String currentTitle = stringBuilder.toString();
+            String currentTitle = jsonToLegacyText(wrappedChatComponent.getJson());
             user.setCurrentlyWindowTitle(currentTitle);
-            stringBuilder = new StringBuilder(3);
-            stringBuilder.append("{\"text\":\"").append(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(currentTitle, user, filter).replace("\"", "\"\"")).append("\"}");
-            wrappedChatComponent.setJson(stringBuilder.toString());
+            wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(currentTitle, user, filter)));
             wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }
     };

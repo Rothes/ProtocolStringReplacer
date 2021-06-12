@@ -4,8 +4,8 @@ import com.comphenix.protocol.PacketType;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.AbstractServerPacketListener;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
 import me.Rothes.ProtocolStringReplacer.User.User;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerFile;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,7 +17,7 @@ import java.util.function.BiPredicate;
 
 public class AbstractServerItemPacketListener extends AbstractServerPacketListener {
 
-    protected final BiPredicate<ReplacerFile, User> itemFilter;
+    protected final BiPredicate<ReplacerConfig, User> itemFilter;
     protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
 
     protected AbstractServerItemPacketListener(PacketType packetType) {

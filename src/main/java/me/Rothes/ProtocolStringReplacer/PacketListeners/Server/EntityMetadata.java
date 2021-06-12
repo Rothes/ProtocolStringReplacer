@@ -26,7 +26,6 @@ public class EntityMetadata extends AbstractServerPacketListener {
                 String name = entity.getCustomName();
                 if (name != null) {
                     entity.setCustomName(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(name, user, filter));
-                    structureModifier.write(0, entity);
                 }
             }
         }
