@@ -17,8 +17,8 @@ public class SetCreativeSlot extends AbstractClientItemPacketListener {
     public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketReceiving(PacketEvent packetEvent) {
             User user = getEventUser(packetEvent);
-            ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
             if (user.hasPermission("protocolstringreplacer.feature.usermetacache")) {
+                ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
                 resotreItem(user, itemStack);
             }
         }
