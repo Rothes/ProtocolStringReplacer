@@ -1,8 +1,9 @@
 package me.Rothes.ProtocolStringReplacer.Replacer;
 
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.Rothes.ProtocolStringReplacer.User.User;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -11,12 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
@@ -71,22 +67,13 @@ public class ReplacerManager {
     }
 
     @Nonnull
-    public String getReplacedString(@Nonnull String string) {
-        Validate.notNull(string, "String cannot be null");
-        for (ReplacerFile replacerFile : replacerFileList) {
-            string = getFileReplacedString(string, replacerFile);
-        }
-        return string;
-    }
-
-    @Nonnull
     public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerFile, User> filter) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(user, "User cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
         for (ReplacerFile replacerFile : replacerFileList) {
             if (replacerFile.isEnable() && filter.test(replacerFile, user)) {
-                string = getFileReplacedString(string, replacerFile);
+                string = getFileReplacedString(user, string, replacerFile, true);
             }
         }
         return string;
@@ -116,12 +103,12 @@ public class ReplacerManager {
                 ItemMeta original = itemMeta.clone();
                 for (ReplacerFile replacerFile : replacerFileList) {
                     if (replacerFile.isEnable() && filter.test(replacerFile, user)) {
-                        itemMeta.setDisplayName(getFileReplacedString(itemMeta.getDisplayName(), replacerFile));
+                        itemMeta.setDisplayName(getFileReplacedString(user, itemMeta.getDisplayName(), replacerFile, false));
 
                         if (itemMeta.hasLore()) {
                             List<String> lore = itemMeta.getLore();
                             for (int i = 0; i < lore.size(); i++) {
-                                lore.set(i, getFileReplacedString(lore.get(i), replacerFile));
+                                lore.set(i, getFileReplacedString(user, lore.get(i), replacerFile, false));
                             }
                             itemMeta.setLore(lore);
                         }
@@ -129,7 +116,8 @@ public class ReplacerManager {
                 }
                 replacedItemCache.put(original, new ItemMetaCache(itemMeta, System.currentTimeMillis()));
             }
-        return itemMeta;
+
+        return updatePlaceholders(user, itemMeta);
     }
 
     @Nonnull
@@ -152,7 +140,8 @@ public class ReplacerManager {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    private String getFileReplacedString(@Nonnull String string, @Nonnull ReplacerFile replacerFile) {
+    private String getFileReplacedString(@Nonnull User user, @Nonnull String string, @Nonnull ReplacerFile replacerFile, boolean setPlaceholders) {
+        Validate.notNull(user, "User cannot be null");
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerFile, "Replacer File cannot be null");
 
@@ -178,7 +167,7 @@ public class ReplacerManager {
                     string = entry.getKey().matcher(string).replaceAll(entry.getValue());
                 }
         }
-        return string;
+        return setPlaceholders? PlaceholderAPI.setBracketPlaceholders(user.getPlayer(), string) : string;
     }
 
     private boolean isYmlFile(@Nonnull File file) {
@@ -190,6 +179,22 @@ public class ReplacerManager {
             return subfix.equalsIgnoreCase(".yml");
         }
         return false;
+    }
+
+    private ItemMeta updatePlaceholders(@Nonnull User user, @Nonnull ItemMeta itemMeta) {
+        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(itemMeta, "ItemMeta cannot be null");
+
+        itemMeta = itemMeta.clone();
+        itemMeta.setDisplayName(PlaceholderAPI.setBracketPlaceholders(user.getPlayer(), itemMeta.getDisplayName()));
+        if (itemMeta.hasLore()) {
+            List<String> lore = itemMeta.getLore();
+            for (int i = 0; i < lore.size(); i++) {
+                lore.set(i, PlaceholderAPI.setBracketPlaceholders(user.getPlayer(), lore.get(i)));
+            }
+            itemMeta.setLore(lore);
+        }
+        return itemMeta;
     }
 
 }
