@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -24,6 +25,9 @@ import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
 public class ReplacerManager {
+
+    private final char PAPIHead = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Feature.Placeholder.Placeholder-Head", "｛").charAt(0);
+    private final char PAPITail = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Feature.Placeholder.Placeholder-Tail", "｝").charAt(0);
 
     private final Replacer replacer = new me.Rothes.ProtocolStringReplacer.Replacer.PAPIReplacer();
     private final LinkedList<ReplacerFile> replacerFileList = new LinkedList<>();
@@ -206,8 +210,23 @@ public class ReplacerManager {
         return itemMeta;
     }
 
-    private String setPlaceholder(User user, String string) {
-        return replacer.apply(string, user.getPlayer(),
-                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
+    private String setPlaceholder(@NotNull User user, @NotNull String string) {
+        boolean headFound = false;
+        boolean tailFound = false;
+        for (char Char : string.toCharArray()) {
+            if (!headFound) {
+                if (Char == PAPIHead) {
+                    headFound = true;
+                }
+            } else {
+                if (Char == PAPITail) {
+                    tailFound = true;
+                    break;
+                }
+            }
+        }
+        return tailFound? replacer.apply(string, user.getPlayer(),
+                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion) : string;
     }
+
 }

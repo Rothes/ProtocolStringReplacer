@@ -18,6 +18,7 @@ public final class PAPIReplacer implements Replacer {
     private final char head = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Feature.Placeholder.Placeholder-Head", "｛").charAt(0);
     private final char tail = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Feature.Placeholder.Placeholder-Tail", "｝").charAt(0);
 
+
     @NotNull
     @Override
     public String apply(@NotNull final String text, @Nullable final OfflinePlayer player,
