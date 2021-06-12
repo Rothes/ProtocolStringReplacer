@@ -1,0 +1,31 @@
+# 是否开启本替换配置. 若为false则不会为这个文件处理. 若未定义, 默认为false.
+Enable: true
+# 本文件的优先级. 若有多个替换配置, 优先级高的最早替换. 默认为5.
+Priority: 30
+# 可选参数
+Version: '1.210605'
+# 可选参数
+Author: 'Rothes'
+# 匹配字符串的方式. 可选值:
+# 'contain' : 只要包含就替换 (默认)
+# 'equal' : 要求设置与原字符串完全匹配
+# 'regex' : 使用正则表达式
+Match-Type: 'contain'
+# 筛选功能. 用于指定此文件替换字符串的条件.
+Filter:
+  # 指定替换的数据包类型. 默认为全部. 可选值:
+  # WINDOW_ITEMS 监听打开窗口中的物品
+  # SET_SLOT 监听窗口中槽位的物品
+  # OPEN_WINDOW 监听窗口的标题文本
+  # CHAT 监听聊天文本
+  # ENTITY_METADATA 监听实体名称
+  Packet-Types:
+    - WINDOW_ITEMS
+    - SET_SLOT
+    - OPEN_WINDOW
+    - CHAT
+
+Replaces:
+  # 左侧的key为原字符串 右侧的value为替换后的字符串.
+  '我的名字': '｛player_name｝'
+  '一个命名牌': '我的命名牌'
