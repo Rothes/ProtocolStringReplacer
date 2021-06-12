@@ -18,7 +18,7 @@ public class OpenWindow extends AbstractServerPacketListener {
         super(PacketType.Play.Server.OPEN_WINDOW);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.LOW, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);
@@ -31,7 +31,7 @@ public class OpenWindow extends AbstractServerPacketListener {
 
                 stringBuilder.append(baseComponent.toLegacyText().substring(2));
             }
-            String currentTitle = stringBuilder.toString();;
+            String currentTitle = stringBuilder.toString();
             user.setCurrentlyWindowTitle(currentTitle);
             stringBuilder = new StringBuilder(3);
             stringBuilder.append("{\"text\":\"").append(ProtocolStringReplacer.getReplacerManager().getReplacedString(currentTitle, user, filter).replace("\"", "\"\"")).append("\"}");

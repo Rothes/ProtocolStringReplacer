@@ -14,7 +14,7 @@ public class WindowClick extends AbstractClientItemPacketListener {
         super(PacketType.Play.Client.WINDOW_CLICK);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.LOW, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketReceiving(PacketEvent packetEvent) {
             User user = getEventUser(packetEvent);
             ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);

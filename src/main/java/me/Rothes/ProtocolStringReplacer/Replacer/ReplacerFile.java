@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class ReplacerFile {
 
-    enum MatchType {
+    public enum MatchType {
         CONTAIN("contain"),
         EQUAL("equal"),
         REGEX("regex");

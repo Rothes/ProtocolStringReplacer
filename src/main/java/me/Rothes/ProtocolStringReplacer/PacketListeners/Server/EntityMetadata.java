@@ -16,7 +16,7 @@ public class EntityMetadata extends AbstractServerPacketListener {
         super(PacketType.Play.Server.ENTITY_METADATA);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.LOW, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);

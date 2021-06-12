@@ -14,7 +14,7 @@ public class WindowItems extends AbstractServerItemPacketListener {
         super(PacketType.Play.Server.WINDOW_ITEMS);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.LOW, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
             User user = getEventUser(packetEvent);
             for (ItemStack itemStack : packetEvent.getPacket().getItemListModifier().read(0)) {

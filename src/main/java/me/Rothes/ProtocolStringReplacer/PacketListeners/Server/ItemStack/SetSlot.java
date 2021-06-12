@@ -14,7 +14,7 @@ public class SetSlot extends AbstractServerItemPacketListener {
         super(PacketType.Play.Server.SET_SLOT);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.LOW, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
             User user = getEventUser(packetEvent);
             ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);

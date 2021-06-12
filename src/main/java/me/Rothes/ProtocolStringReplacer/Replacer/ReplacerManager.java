@@ -1,9 +1,11 @@
 package me.Rothes.ProtocolStringReplacer.Replacer;
 
+import me.Rothes.ProtocolStringReplacer.API.Configuration.CommentYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
-import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import me.clip.placeholderapi.replacer.Replacer;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -23,8 +25,9 @@ import java.util.regex.Pattern;
 
 public class ReplacerManager {
 
-    private LinkedList<ReplacerFile> replacerFileList = new LinkedList<>();
-    private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
+    private final Replacer replacer = new me.Rothes.ProtocolStringReplacer.Replacer.PAPIReplacer();
+    private final LinkedList<ReplacerFile> replacerFileList = new LinkedList<>();
+    private final HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
 
     public void initialize() {
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replaces");
@@ -53,11 +56,12 @@ public class ReplacerManager {
         replacedItemCache.put(null, new ItemMetaCache(null, 1L));
 
         ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
+        CommentYamlConfiguration config = instrance.getConfig();
         Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
             List<ItemMeta> needToRemove = new ArrayList<>();
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
-                if ((currentTime - entry.getValue().getLastAccessTime()) > 1800000) {
+                if ((currentTime - entry.getValue().getLastAccessTime()) > config.getInt("Options.Feature.ItemMetaCache.Clean-Access-Interval", 300) * 1000L) {
                     needToRemove.add(entry.getKey());
                 }
             }
@@ -68,7 +72,7 @@ public class ReplacerManager {
                     }
                 });
             }
-        }, 0L, 36000L);
+        }, 0L, config.getInt("Options.Feature.ItemMetaCache.Clean-Task-Interval", 600) * 20L);
     }
 
     @Nonnull
@@ -172,7 +176,7 @@ public class ReplacerManager {
                     string = entry.getKey().matcher(string).replaceAll(entry.getValue());
                 }
         }
-        return setPlaceholders? PlaceholderAPI.setBracketPlaceholders(user.getPlayer(), string) : string;
+        return setPlaceholders? setPlaceholder(user, string) : string;
     }
 
     private boolean isYmlFile(@Nonnull File file) {
@@ -191,15 +195,19 @@ public class ReplacerManager {
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
 
         itemMeta = itemMeta.clone();
-        itemMeta.setDisplayName(PlaceholderAPI.setBracketPlaceholders(user.getPlayer(), itemMeta.getDisplayName()));
+        itemMeta.setDisplayName(setPlaceholder(user, itemMeta.getDisplayName()));
         if (itemMeta.hasLore()) {
             List<String> lore = itemMeta.getLore();
             for (int i = 0; i < lore.size(); i++) {
-                lore.set(i, PlaceholderAPI.setBracketPlaceholders(user.getPlayer(), lore.get(i)));
+                lore.set(i, setPlaceholder(user, lore.get(i)));
             }
             itemMeta.setLore(lore);
         }
         return itemMeta;
     }
 
+    private String setPlaceholder(User user, String string) {
+        return replacer.apply(string, user.getPlayer(),
+                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
+    }
 }
