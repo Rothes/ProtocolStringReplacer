@@ -18,7 +18,7 @@ public abstract class AbstractPacketListener {
 
     protected final User getEventUser(@Nonnull PacketEvent event) {
         Validate.notNull(event, "Packet Event cannot be null");
-        return ProtocolStringReplacer.getUserManager().getUser(event.getPlayer());
+        return ProtocolStringReplacer.getInstance().getUserManager().getUser(event.getPlayer());
     }
 
 }

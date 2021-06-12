@@ -11,7 +11,7 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        ProtocolStringReplacer.getUserManager().unloadUser(player);
+        ProtocolStringReplacer.getInstance().getUserManager().unloadUser(player);
     }
 
 }

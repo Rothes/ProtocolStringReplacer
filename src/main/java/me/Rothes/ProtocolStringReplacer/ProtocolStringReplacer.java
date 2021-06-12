@@ -7,7 +7,6 @@ import me.Rothes.ProtocolStringReplacer.PacketListeners.PacketListenerManager;
 import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerManager;
 import me.Rothes.ProtocolStringReplacer.User.UserManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -16,16 +15,15 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.IOException;
 
 public class ProtocolStringReplacer extends JavaPlugin {
 
-    private static CommentYamlConfiguration config = new CommentYamlConfiguration();
-    private static File configFile;
     private static ProtocolStringReplacer instance;
-    private static ReplacerManager replacerManager;
-    private static PacketListenerManager packetListenerManager;
-    private static UserManager userManager;
+    private CommentYamlConfiguration config;
+    private File configFile;
+    private ReplacerManager replacerManager;
+    private PacketListenerManager packetListenerManager;
+    private UserManager userManager;
 
     public static ProtocolStringReplacer getInstance() {
         return instance;
@@ -52,24 +50,21 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     @Nonnull
-    public static ReplacerManager getReplacerManager() {
+    public ReplacerManager getReplacerManager() {
         return replacerManager;
     }
 
     @Nonnull
-    public static UserManager getUserManager() {
+    public UserManager getUserManager() {
         return userManager;
     }
 
     @Nonnull
-    public static PacketListenerManager getPacketListenerManager() {
+    public PacketListenerManager getPacketListenerManager() {
         return packetListenerManager;
     }
 
-    private static void initialize() {
-        replacerManager = new ReplacerManager();
-        userManager = new UserManager();
-        packetListenerManager = new PacketListenerManager();
+    private void initialize() {
         if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
             instance.saveResource("Replacers/Example.yml", true);
         }
@@ -78,11 +73,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
             instance.saveResource("Config.yml", true);
             configFile = new File(instance.getDataFolder() + "/Config.yml");
         }
-        try {
-            config.load(configFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        config = CommentYamlConfiguration.loadConfiguration(configFile);
+        replacerManager = new ReplacerManager();
+        userManager = new UserManager();
+        packetListenerManager = new PacketListenerManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();

@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class AbstractClientItemPacketListener extends AbstractServerPacketListener {
 
-    protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getPacketListenerManager().getUserCacheKey();
+    protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
 
     protected AbstractClientItemPacketListener(PacketType packetType) {
         super(packetType);

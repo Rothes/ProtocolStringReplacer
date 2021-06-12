@@ -18,7 +18,7 @@ import java.util.function.BiPredicate;
 public class AbstractServerItemPacketListener extends AbstractServerPacketListener {
 
     protected final BiPredicate<ReplacerFile, User> itemFilter;
-    protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getPacketListenerManager().getUserCacheKey();
+    protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
 
     protected AbstractServerItemPacketListener(PacketType packetType) {
         super(packetType);
@@ -26,9 +26,7 @@ public class AbstractServerItemPacketListener extends AbstractServerPacketListen
             DotYamlConfiguration configuration = replacerFile.getConfiguration();
             List<String> windowTitles = configuration.getStringList("Filter鰠" + packetType.name() + "鰠Window-Title");
             if (containPacket(replacerFile)) {
-                if (windowTitles.isEmpty() || windowTitles.contains(user.getCurrentlyWindowTitle())) {
-                    return true;
-                }
+                return windowTitles.isEmpty() || windowTitles.contains(user.getCurrentlyWindowTitle());
             }
             return false;
         };

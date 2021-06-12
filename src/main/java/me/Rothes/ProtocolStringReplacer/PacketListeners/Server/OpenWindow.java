@@ -34,7 +34,7 @@ public class OpenWindow extends AbstractServerPacketListener {
             String currentTitle = stringBuilder.toString();
             user.setCurrentlyWindowTitle(currentTitle);
             stringBuilder = new StringBuilder(3);
-            stringBuilder.append("{\"text\":\"").append(ProtocolStringReplacer.getReplacerManager().getReplacedString(currentTitle, user, filter).replace("\"", "\"\"")).append("\"}");
+            stringBuilder.append("{\"text\":\"").append(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(currentTitle, user, filter).replace("\"", "\"\"")).append("\"}");
             wrappedChatComponent.setJson(stringBuilder.toString());
             wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }

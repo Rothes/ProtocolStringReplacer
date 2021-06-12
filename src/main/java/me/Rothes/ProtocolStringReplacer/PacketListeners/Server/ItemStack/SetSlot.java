@@ -19,7 +19,7 @@ public class SetSlot extends AbstractServerItemPacketListener {
             User user = getEventUser(packetEvent);
             ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
             ItemStack original = itemStack.clone();
-            ProtocolStringReplacer.getReplacerManager().getReplacedItemStack(itemStack, user, itemFilter);
+            ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, itemFilter);
             if (!original.isSimilar(itemStack)) {
                 saveUserMetaCacche(user, original, itemStack);
             }

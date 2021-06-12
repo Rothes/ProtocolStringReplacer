@@ -11,7 +11,7 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        ProtocolStringReplacer.getUserManager().loadUser(player);
+        ProtocolStringReplacer.getInstance().getUserManager().loadUser(player);
     }
 
 }

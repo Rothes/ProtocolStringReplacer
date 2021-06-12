@@ -32,7 +32,7 @@ public class Chat extends AbstractServerPacketListener {
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             if (wrappedChatComponent != null) {
                 // TODO
-                wrappedChatComponent.setJson(ProtocolStringReplacer.getReplacerManager().getReplacedString(wrappedChatComponent.getJson(), user, filter));
+                wrappedChatComponent.setJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(wrappedChatComponent.getJson(), user, filter));
                 wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
             } else {
                 StructureModifier<Object> structureModifier = packet.getModifier();
@@ -72,7 +72,7 @@ public class Chat extends AbstractServerPacketListener {
     @Nonnull
     private BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, User user) {
         Validate.notNull(baseComponent, "BaseComponent cannot be null");
-        BaseComponent replaced = new TextComponent(ProtocolStringReplacer.getReplacerManager().getReplacedString(baseComponent.toPlainText(), user, filter));
+        BaseComponent replaced = new TextComponent(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(baseComponent.toPlainText(), user, filter));
         replaced.copyFormatting(baseComponent);
         return replaced;
     }

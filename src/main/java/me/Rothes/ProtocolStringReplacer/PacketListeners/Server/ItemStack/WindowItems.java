@@ -20,7 +20,7 @@ public class WindowItems extends AbstractServerItemPacketListener {
             for (ItemStack itemStack : packetEvent.getPacket().getItemListModifier().read(0)) {
                 if (itemStack.hasItemMeta()) {
                     ItemStack original = itemStack.clone();
-                    ProtocolStringReplacer.getReplacerManager().getReplacedItemStack(itemStack, user, itemFilter);
+                    ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, itemFilter);
                     if (!original.isSimilar(itemStack)) {
                         saveUserMetaCacche(user, original, itemStack);
                     }
