@@ -28,9 +28,9 @@ import java.util.regex.Pattern;
 
 public class ReplacerManager {
 
-    private Replacer papiReplacer = new PAPIReplacer();
-    private char PAPIHead;
-    private char PAPITail;
+    private Replacer papiReplacer;
+    private char papihead;
+    private char papitail;
     private LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
     private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
     private BukkitTask cleanTask;
@@ -42,8 +42,8 @@ public class ReplacerManager {
     public void initialize() {
         PAPIReplacer papiReplacer = new PAPIReplacer();
         this.papiReplacer = papiReplacer;
-        PAPIHead = papiReplacer.getHead();
-        PAPITail = papiReplacer.getTail();
+        papihead = papiReplacer.getHead();
+        papitail = papiReplacer.getTail();
 
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.currentTimeMillis();
@@ -281,11 +281,11 @@ public class ReplacerManager {
         for(int i = 0; i < string.length(); i++) {
             char Char = string.charAt(i);
             if (!headFound) {
-                if (Char == PAPIHead) {
+                if (Char == papihead) {
                     headFound = true;
                 }
             } else {
-                if (Char == PAPITail) {
+                if (Char == papitail) {
                     tailFound = true;
                     break;
                 }
