@@ -9,10 +9,8 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 
-public class OpenWindow extends AbstractServerPacketListener {
+public final class OpenWindow extends AbstractServerPacketListener {
 
     public OpenWindow() {
         super(PacketType.Play.Server.OPEN_WINDOW);
@@ -25,7 +23,7 @@ public class OpenWindow extends AbstractServerPacketListener {
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             String currentTitle = jsonToLegacyText(wrappedChatComponent.getJson());
-            user.setCurrentlyWindowTitle(currentTitle);
+            user.setCurrentWindowTitle(currentTitle);
             wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(currentTitle, user, filter)));
             wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }

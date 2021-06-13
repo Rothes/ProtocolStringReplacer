@@ -9,7 +9,7 @@ import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 
-public class TileEntityData extends AbstractServerPacketListener{
+public final class TileEntityData extends AbstractServerPacketListener{
 
     public TileEntityData() {
         super(PacketType.Play.Server.TILE_ENTITY_DATA);

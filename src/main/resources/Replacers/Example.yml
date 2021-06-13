@@ -26,6 +26,7 @@ Filter:
     - OPEN_WINDOW
     - CHAT
 
+# 替换的字符串列表.
 Replaces:
   # 左侧的key为原字符串 右侧的value为替换后的字符串.
   '我的名字': '｛player_name｝'

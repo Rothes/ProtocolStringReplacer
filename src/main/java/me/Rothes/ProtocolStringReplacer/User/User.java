@@ -14,7 +14,7 @@ public class User {
     private UUID uuid;
     private Player player;
 
-    private String currentlyWindowTitle;
+    private String currentWindowTitle;
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private Short uniqueCacheKey = 0;
     private ReplacerConfig editorFile;
@@ -56,12 +56,12 @@ public class User {
         return ++uniqueCacheKey;
     }
 
-    public String getCurrentlyWindowTitle() {
-        return currentlyWindowTitle;
+    public String getCurrentWindowTitle() {
+        return currentWindowTitle;
     }
 
-    public void setCurrentlyWindowTitle(String title) {
-        currentlyWindowTitle = title;
+    public void setCurrentWindowTitle(String title) {
+        currentWindowTitle = title;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class User {
         return "User{" +
                 "uuid=" + uuid +
                 ", player=" + player +
-                ", currentlyWindowTitle='" + currentlyWindowTitle + '\'' +
+                ", currentWindowTitle='" + currentWindowTitle + '\'' +
                 ", metaCache=" + metaCache +
                 ", uniqueCacheKey=" + uniqueCacheKey +
                 ", editorFile=" + editorFile +

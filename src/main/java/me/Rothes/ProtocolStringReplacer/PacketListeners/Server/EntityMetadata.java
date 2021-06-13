@@ -10,7 +10,7 @@ import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import org.bukkit.entity.Entity;
 
-public class EntityMetadata extends AbstractServerPacketListener {
+public final class EntityMetadata extends AbstractServerPacketListener {
 
     public EntityMetadata() {
         super(PacketType.Play.Server.ENTITY_METADATA);

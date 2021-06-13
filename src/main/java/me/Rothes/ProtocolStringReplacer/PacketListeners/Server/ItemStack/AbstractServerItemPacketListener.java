@@ -26,7 +26,7 @@ public class AbstractServerItemPacketListener extends AbstractServerPacketListen
             DotYamlConfiguration configuration = replacerFile.getConfiguration();
             List<String> windowTitles = configuration.getStringList("Filter鰠" + packetType.name() + "鰠Window-Title");
             if (containPacket(replacerFile)) {
-                return windowTitles.isEmpty() || windowTitles.contains(user.getCurrentlyWindowTitle());
+                return windowTitles.isEmpty() || windowTitles.contains(user.getCurrentWindowTitle());
             }
             return false;
         };

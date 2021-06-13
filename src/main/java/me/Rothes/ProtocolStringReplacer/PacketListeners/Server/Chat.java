@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chat extends AbstractServerPacketListener {
+public final class Chat extends AbstractServerPacketListener {
 
     public Chat() {
         super(PacketType.Play.Server.CHAT);

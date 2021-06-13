@@ -8,7 +8,7 @@ import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import org.bukkit.inventory.ItemStack;
 
-public class WindowClick extends AbstractClientItemPacketListener {
+public final class WindowClick extends AbstractClientItemPacketListener {
 
     public WindowClick() {
         super(PacketType.Play.Client.WINDOW_CLICK);

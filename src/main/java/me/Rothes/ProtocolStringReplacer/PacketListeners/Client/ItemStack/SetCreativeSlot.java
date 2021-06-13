@@ -8,7 +8,7 @@ import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import org.bukkit.inventory.ItemStack;
 
-public class SetCreativeSlot extends AbstractClientItemPacketListener {
+public final class SetCreativeSlot extends AbstractClientItemPacketListener {
 
     public SetCreativeSlot() {
         super(PacketType.Play.Client.SET_CREATIVE_SLOT);
