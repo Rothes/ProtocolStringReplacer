@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.tags.ItemTagType;
 
 import java.util.HashMap;
 
-public class AbstractClientItemPacketListener extends AbstractServerPacketListener {
+public abstract class AbstractClientItemPacketListener extends AbstractServerPacketListener {
 
     protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
 

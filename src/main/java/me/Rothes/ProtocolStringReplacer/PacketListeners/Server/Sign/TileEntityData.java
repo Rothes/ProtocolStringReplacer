@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
+package me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -9,7 +9,7 @@ import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 
-public final class TileEntityData extends AbstractServerPacketListener{
+public final class TileEntityData extends AbstractServerSignPacketListener {
 
     public TileEntityData() {
         super(PacketType.Play.Server.TILE_ENTITY_DATA);

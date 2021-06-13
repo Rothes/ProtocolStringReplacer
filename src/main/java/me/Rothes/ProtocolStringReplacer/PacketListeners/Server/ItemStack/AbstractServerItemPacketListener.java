@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.tags.ItemTagType;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class AbstractServerItemPacketListener extends AbstractServerPacketListener {
+public abstract class AbstractServerItemPacketListener extends AbstractServerPacketListener {
 
     protected final BiPredicate<ReplacerConfig, User> itemFilter;
     protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();

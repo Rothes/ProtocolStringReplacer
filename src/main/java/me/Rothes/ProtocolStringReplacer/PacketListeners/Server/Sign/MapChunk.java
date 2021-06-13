@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
+package me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -12,7 +12,7 @@ import me.Rothes.ProtocolStringReplacer.User.User;
 
 import java.util.List;
 
-public final class MapChunk extends AbstractServerPacketListener {
+public final class MapChunk extends AbstractServerSignPacketListener {
 
     public MapChunk() {
         super(PacketType.Play.Server.MAP_CHUNK);
