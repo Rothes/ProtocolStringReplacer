@@ -9,11 +9,14 @@ public class ItemMetaCache {
 
     private ItemMeta replacedItemMeta;
     private Long lastAccessTime;
+    private Boolean hasPlaceholder;
 
-    public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime) {
+    public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime, @Nonnull Boolean hasPlaceholder) {
         Validate.notNull(lastAccessTime, "Last Access Time cannot be null");
+        Validate.notNull(hasPlaceholder, "Boolean cannot be null");
         this.replacedItemMeta = replacedItemMeta;
         this.lastAccessTime = lastAccessTime;
+        this.hasPlaceholder = hasPlaceholder;
     }
 
     public ItemMeta getReplacedItemMeta() {
@@ -22,6 +25,10 @@ public class ItemMetaCache {
 
     public Long getLastAccessTime() {
         return lastAccessTime;
+    }
+
+    public Boolean hasPlaceholder() {
+        return hasPlaceholder;
     }
 
     public void setReplacedItemMeta(ItemMeta replacedItemMeta) {

@@ -57,7 +57,7 @@ public class ReplacerManager {
         }
 
         // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L));
+        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false));
 
         ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
         CommentYamlConfiguration config = instrance.getConfig();
@@ -110,29 +110,37 @@ public class ReplacerManager {
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
         Validate.notNull(user, "User cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
-            ItemMetaCache metaCache = replacedItemCache.get(itemMeta);
-            if (metaCache != null) {
-                metaCache.setLastAccessTime(System.currentTimeMillis());
-                itemMeta = metaCache.getReplacedItemMeta();
-            } else {
-                ItemMeta original = itemMeta.clone();
-                for (ReplacerConfig replacerConfig : replacerConfigList) {
-                    if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                        itemMeta.setDisplayName(getFileReplacedString(user, itemMeta.getDisplayName(), replacerConfig, false));
 
-                        if (itemMeta.hasLore()) {
-                            List<String> lore = itemMeta.getLore();
-                            for (int i = 0; i < lore.size(); i++) {
-                                lore.set(i, getFileReplacedString(user, lore.get(i), replacerConfig, false));
-                            }
-                            itemMeta.setLore(lore);
+        boolean hasPlaceholder = false;
+        ItemMetaCache metaCache = replacedItemCache.get(itemMeta);
+        if (metaCache != null) {
+            metaCache.setLastAccessTime(System.currentTimeMillis());
+            itemMeta = metaCache.getReplacedItemMeta();
+            hasPlaceholder = metaCache.hasPlaceholder();
+        } else {
+            ItemMeta original = itemMeta.clone();
+            String replaced;
+            for (ReplacerConfig replacerConfig : replacerConfigList) {
+                if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
+                    replaced = getFileReplacedString(user, itemMeta.getDisplayName(), replacerConfig, false);
+                    itemMeta.setDisplayName(replaced);
+                    hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+
+                    if (itemMeta.hasLore()) {
+                        List<String> lore = itemMeta.getLore();
+                        for (int i = 0; i < lore.size(); i++) {
+                            replaced = getFileReplacedString(user, lore.get(i), replacerConfig, false);
+                            lore.set(i, replaced);
+                            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                         }
+                        itemMeta.setLore(lore);
                     }
                 }
-                replacedItemCache.put(original, new ItemMetaCache(itemMeta, System.currentTimeMillis()));
             }
+            replacedItemCache.put(original, new ItemMetaCache(itemMeta, System.currentTimeMillis(), hasPlaceholder));
+        }
 
-        return updatePlaceholders(user, itemMeta);
+        return hasPlaceholder? updatePlaceholders(user, itemMeta) : itemMeta;
     }
 
     @Nonnull
@@ -182,7 +190,7 @@ public class ReplacerManager {
                     string = entry.getKey().matcher(string).replaceAll(entry.getValue());
                 }
         }
-        return setPlaceholders? setPlaceholder(user, string) : string;
+        return setPlaceholders && hasPlaceholder(string)? setPlaceholder(user, string) : string;
     }
 
     private boolean isYmlFile(@Nonnull File file) {
@@ -201,21 +209,22 @@ public class ReplacerManager {
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
 
         itemMeta = itemMeta.clone();
-        itemMeta.setDisplayName(setPlaceholder(user, itemMeta.getDisplayName()));
+        itemMeta.setDisplayName(hasPlaceholder(itemMeta.getDisplayName())? setPlaceholder(user, itemMeta.getDisplayName()) : itemMeta.getDisplayName());
         if (itemMeta.hasLore()) {
             List<String> lore = itemMeta.getLore();
             for (int i = 0; i < lore.size(); i++) {
-                lore.set(i, setPlaceholder(user, lore.get(i)));
+                lore.set(i, hasPlaceholder(lore.get(i))? setPlaceholder(user, lore.get(i)) : lore.get(i));
             }
             itemMeta.setLore(lore);
         }
         return itemMeta;
     }
 
-    private String setPlaceholder(@NotNull User user, @NotNull String string) {
+    private boolean hasPlaceholder(@NotNull String string) {
         boolean headFound = false;
         boolean tailFound = false;
-        for (char Char : string.toCharArray()) {
+        for(int i = 0; i < string.length(); i++) {
+            char Char = string.charAt(i);
             if (!headFound) {
                 if (Char == PAPIHead) {
                     headFound = true;
@@ -227,8 +236,12 @@ public class ReplacerManager {
                 }
             }
         }
-        return tailFound? replacer.apply(string, user.getPlayer(),
-                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion) : string;
+        return tailFound;
+    }
+
+    private String setPlaceholder(@NotNull User user, @NotNull String string) {
+        return replacer.apply(string, user.getPlayer(),
+                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
     }
 
 }
