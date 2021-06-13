@@ -15,10 +15,11 @@ import java.util.regex.Pattern;
 
 public class CommentYamlConfiguration extends YamlConfiguration {
 
-    protected String commentPrefix = "'䳗䣞䑪这是注释': '";
+    // TODO
+    protected String commentPrefix = "'这是注释': '";
     protected String commentSubfix = "'";
 
-    protected String originalRegex = "^( *)'䳗䣞䑪这是注释': '";
+    protected String originalRegex = "^( *)'(/d+)这是注释(/d+)': '";
     protected Pattern originalPattern = Pattern.compile(originalRegex);
 
     protected Pattern startedSpacePattern = Pattern.compile("^( *)");
@@ -130,6 +131,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     protected String getStartedSpace(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
 
@@ -138,6 +140,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         return matcher.group(1);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     protected String getEndedSpace(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
 

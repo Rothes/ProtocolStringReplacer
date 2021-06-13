@@ -67,7 +67,7 @@ public class ReplacerConfig {
                     }
                 }
                 if (!typeFound) {
-                    Bukkit.getConsoleSender().sendMessage("§7[§6ProtocolStringReplacer§7] §c未知或不支持的数据包类型: " + type);
+                    Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知或不支持的数据包类型: " + type);
                 }
             }
         }
@@ -82,7 +82,7 @@ public class ReplacerConfig {
         }
         if (!typeFound) {
             this.matchType = MatchType.EQUAL;
-            Bukkit.getConsoleSender().sendMessage("§7[§6ProtocolStringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"contain\"");
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"contain\"");
         }
         ConfigurationSection section = configuration.getConfigurationSection("Replaces");
         if (section != null) {
@@ -99,7 +99,7 @@ public class ReplacerConfig {
             }
         }
         if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false)) {
-            Bukkit.getConsoleSender().sendMessage("§7[§6ProtocolStringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
         }
     }
 

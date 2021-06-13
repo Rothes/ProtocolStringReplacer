@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 public class CaptureSubCommand extends SubCommand {
 
     public CaptureSubCommand() {
-        super("capture", "protocolstringreplacer.command.capture");
+        super("capture", "protocolstringreplacer.command.capture", "todo");
     }
 
     @Override

@@ -18,6 +18,13 @@ public final class PAPIReplacer implements Replacer {
     private final char head = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Head", "｛").charAt(0);
     private final char tail = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Tail", "｝").charAt(0);
 
+    public char getHead() {
+        return head;
+    }
+
+    public char getTail() {
+        return tail;
+    }
 
     @NotNull
     @Override

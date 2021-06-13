@@ -4,18 +4,18 @@ Options:
     Console:
       # 在控制台内显示加载的替换配置文件.
       Print-Replacer-Config-When-Loaded: true
+
     # 自定义插件占位符的使用格式. 建议使用玩家想不到的格式
     # 以防止玩家通过占位符获取到不该获取的信息.
     # 同时，使用不常用的字符也能优化性能.
     # 在默认值下, 使用如｛player_name｝的格式来获取占位符的变量.
-
     Placeholder:
       # 使用占位符的前缀. 仅允许一个字符.
       Placeholder-Head: '｛'
       # 使用占位符的后缀. 仅允许一个字符.
       Placeholder-Tail: '｝'
-    # 关于已替换物品缓存表的相关设定.
 
+    # 关于已替换物品缓存表的相关设定.
     ItemMetaCache:
       # 每多少秒执行一次清理缓存的任务.
       Clean-Task-Interval: 600

@@ -7,13 +7,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public abstract class SubCommand {
 
-    private final String name;
-    private final String permission;
+    private String name;
+    private String permission;
+    private String description;
 
     @ParametersAreNonnullByDefault
-    public SubCommand(String name, String permission) {
+    public SubCommand(String name, String permission, String description) {
         this.name = name;
         this.permission = permission;
+        this.description = description;
     }
 
     public abstract void onExecute(@Nonnull CommandSender sender, @Nonnull String[] args);
@@ -26,6 +28,11 @@ public abstract class SubCommand {
     @Nonnull
     public String getPermission() {
         return permission;
+    }
+
+    @Nonnull
+    public String getDescription() {
+        return description;
     }
 
 }

@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -27,18 +28,27 @@ import java.util.regex.Pattern;
 
 public class ReplacerManager {
 
-    private final char PAPIHead = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Head", "｛").charAt(0);
-    private final char PAPITail = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Tail", "｝").charAt(0);
+    private Replacer papiReplacer = new PAPIReplacer();
+    private char PAPIHead;
+    private char PAPITail;
+    private LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
+    private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
+    private BukkitTask cleanTask;
 
-    private final Replacer replacer = new me.Rothes.ProtocolStringReplacer.Replacer.PAPIReplacer();
-    private final LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
-    private final HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
+    public BukkitTask getCleanTask() {
+        return cleanTask;
+    }
 
     public void initialize() {
+        PAPIReplacer papiReplacer = new PAPIReplacer();
+        this.papiReplacer = papiReplacer;
+        PAPIHead = papiReplacer.getHead();
+        PAPITail = papiReplacer.getTail();
+
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.currentTimeMillis();
         HashMap<File, DotYamlConfiguration> loadedFiles = loadReplacesFiles(path);
-        Bukkit.getConsoleSender().sendMessage("§7[§6ProtocolStringReplacer§7] §a预加载 " + loadedFiles.size() + " 个替换配置文件. §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
+        Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a预加载 " + loadedFiles.size() + " 个替换配置文件. §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
         if (loadedFiles.size() == 0) {
             return;
         }
@@ -64,7 +74,7 @@ public class ReplacerManager {
         CommentYamlConfiguration config = instrance.getConfig();
         long cleanAccessInterval = config.getInt("Options.Features.ItemMetaCache.Clean-Access-Interval", 300) * 1000L;
         long cleanTaskInterval = config.getInt("Options.Features.ItemMetaCache.Clean-Task-Interval", 600) * 20L;
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
+        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
             List<ItemMeta> needToRemove = new ArrayList<>();
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
@@ -285,7 +295,7 @@ public class ReplacerManager {
     }
 
     private String setPlaceholder(@NotNull User user, @NotNull String string) {
-        return replacer.apply(string, user.getPlayer(),
+        return papiReplacer.apply(string, user.getPlayer(),
                 PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
     }
 

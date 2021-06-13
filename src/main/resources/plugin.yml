@@ -8,8 +8,12 @@ softdepend:
   - PlaceholderAPI
 commands:
   protocolstringreplacer:
-    description: nothing here
+    aliases: [psr]
+    description: ProtocolStringReplacer commands.
 permissions:
+  protocolstringreplacer.command.reload:
+    description: allow you to reload the configs.
+    default: op
   protocolstringreplacer.feature.usermetacache:
     description: save the itemmeta when editing, and restore the original one when the player in creative interacts it.
     default: op
