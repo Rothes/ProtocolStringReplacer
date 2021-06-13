@@ -9,7 +9,8 @@ public enum ReplacerType {
     SET_SLOT("SET_SLOT", PacketType.Play.Server.SET_SLOT),
     WINDOW_ITEMS("WINDOW_ITEMS", PacketType.Play.Server.WINDOW_ITEMS),
     ENTITY_METADATA("ENTITY_METADATA", PacketType.Play.Server.ENTITY_METADATA),
-    TILE_ENTITY_DATA("TILE_ENTITY_DATA", PacketType.Play.Server.TILE_ENTITY_DATA);
+    TILE_ENTITY_DATA("TILE_ENTITY_DATA", PacketType.Play.Server.TILE_ENTITY_DATA),
+    MAP_CHUNK("MAP_CHUNK", PacketType.Play.Server.MAP_CHUNK);
 
     ReplacerType(String name, PacketType packetType) {
         this.name = name;

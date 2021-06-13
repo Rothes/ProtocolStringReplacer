@@ -8,6 +8,7 @@ import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Chat;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.EntityMetadata;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.SetSlot;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.WindowItems;
+import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.MapChunk;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.OpenWindow;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.TileEntityData;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
@@ -35,6 +36,7 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new WindowItems().packetAdapter);
         protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
         protocolManager.addPacketListener(new TileEntityData().packetAdapter);
+        protocolManager.addPacketListener(new MapChunk().packetAdapter);
 
         protocolManager.addPacketListener(new WindowClick().packetAdapter);
         protocolManager.addPacketListener(new SetCreativeSlot().packetAdapter);
