@@ -10,6 +10,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
@@ -135,6 +136,28 @@ public class ReplacerManager {
                         }
                         itemMeta.setLore(lore);
                     }
+                    if (itemMeta instanceof BookMeta) {
+                        BookMeta bookMeta = (BookMeta) itemMeta;
+                        if (bookMeta.hasAuthor()) {
+                            replaced = getFileReplacedString(user, bookMeta.getAuthor(), replacerConfig, false);
+                            bookMeta.setAuthor(replaced);
+                            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+                        }
+                        if (bookMeta.hasTitle()) {
+                            replaced = getFileReplacedString(user, bookMeta.getTitle(), replacerConfig, false);
+                            bookMeta.setTitle(replaced);
+                            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+                        }
+                        if (bookMeta.hasPages()) {
+                            List<String> pages = new ArrayList<>(bookMeta.getPages());
+                            for (int i = 0; i < pages.size(); i++) {
+                                replaced = getFileReplacedString(user, pages.get(i), replacerConfig, false);
+                                pages.set(i, replaced);
+                                hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+                            }
+                            bookMeta.setPages(pages);
+                        }
+                    }
                 }
             }
             replacedItemCache.put(original, new ItemMetaCache(itemMeta, System.currentTimeMillis(), hasPlaceholder));
@@ -209,13 +232,35 @@ public class ReplacerManager {
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
 
         itemMeta = itemMeta.clone();
-        itemMeta.setDisplayName(hasPlaceholder(itemMeta.getDisplayName())? setPlaceholder(user, itemMeta.getDisplayName()) : itemMeta.getDisplayName());
+        if (hasPlaceholder(itemMeta.getDisplayName())) {
+            itemMeta.setDisplayName(setPlaceholder(user, itemMeta.getDisplayName()));
+        }
         if (itemMeta.hasLore()) {
             List<String> lore = itemMeta.getLore();
             for (int i = 0; i < lore.size(); i++) {
-                lore.set(i, hasPlaceholder(lore.get(i))? setPlaceholder(user, lore.get(i)) : lore.get(i));
+                if (hasPlaceholder(lore.get(i))) {
+                    lore.set(i, setPlaceholder(user, lore.get(i)));
+                }
             }
             itemMeta.setLore(lore);
+        }
+        if (itemMeta instanceof BookMeta) {
+            BookMeta bookMeta = (BookMeta) itemMeta;
+            if (bookMeta.hasAuthor() && hasPlaceholder(bookMeta.getAuthor())) {
+                bookMeta.setAuthor(setPlaceholder(user, bookMeta.getAuthor()));
+            }
+            if (bookMeta.hasTitle() && hasPlaceholder(bookMeta.getTitle())) {
+                bookMeta.setTitle(setPlaceholder(user, bookMeta.getTitle()));
+            }
+            if (bookMeta.hasPages()) {
+                List<String> pages = new ArrayList<>(bookMeta.getPages());
+                for (int i = 0; i < pages.size(); i++) {
+                    if (hasPlaceholder(pages.get(i))) {
+                        pages.set(i, setPlaceholder(user, pages.get(i)));
+                    }
+                }
+                bookMeta.setPages(pages);
+            }
         }
         return itemMeta;
     }
