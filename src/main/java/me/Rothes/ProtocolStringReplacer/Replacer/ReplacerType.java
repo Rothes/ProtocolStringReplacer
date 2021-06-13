@@ -5,6 +5,7 @@ import com.comphenix.protocol.PacketType;
 public enum ReplacerType {
 
     CHAT("CHAT", PacketType.Play.Server.CHAT),
+    TITLE("TITLE", PacketType.Play.Server.TITLE),
     OPEN_WINDOW("OPEN_WINDOW", PacketType.Play.Server.OPEN_WINDOW),
     SET_SLOT("SET_SLOT", PacketType.Play.Server.SET_SLOT),
     WINDOW_ITEMS("WINDOW_ITEMS", PacketType.Play.Server.WINDOW_ITEMS),

@@ -11,6 +11,7 @@ import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.WindowI
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.MapChunk;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.OpenWindow;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.TileEntityData;
+import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Title;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import org.bukkit.NamespacedKey;
 
@@ -37,6 +38,7 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
         protocolManager.addPacketListener(new TileEntityData().packetAdapter);
         protocolManager.addPacketListener(new MapChunk().packetAdapter);
+        protocolManager.addPacketListener(new Title().packetAdapter);
 
         protocolManager.addPacketListener(new WindowClick().packetAdapter);
         protocolManager.addPacketListener(new SetCreativeSlot().packetAdapter);
