@@ -123,7 +123,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             sender = Bukkit.getConsoleSender();
         }
         loadConfig();
-        Bukkit.getScheduler().cancelTask(replacerManager.getCleanTask().getTaskId());
+        replacerManager.getCleanTask().cancel();
         replacerManager = new ReplacerManager();
         userManager = new UserManager();
         replacerManager.initialize();
