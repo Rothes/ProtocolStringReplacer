@@ -14,18 +14,19 @@ Match-Type: 'contain'
 # 筛选功能. 用于指定此文件替换字符串的条件.
 Filter:
   # 指定替换的数据包类型. 默认为全部. 可选值:
-  # WINDOW_ITEMS 监听打开窗口中的物品
-  # SET_SLOT 监听窗口中槽位的物品
-  # OPEN_WINDOW 监听窗口的标题文本
   # CHAT 监听聊天文本
+  # TITLE 监听标题消息
+  # OPEN_WINDOW 监听窗口的标题文本
+  # SET_SLOT 监听窗口中槽位的物品
+  # WINDOW_ITEMS 监听打开窗口中的物品
   # ENTITY_METADATA 监听实体名称
   # TILE_ENTITY_DATA 监听tile的nbt数据. 目前仅支持修改告示牌信息
   # MAP_CHUNK 监听刷新区块的数据. 目前仅支持修改告示牌信息
   Packet-Types:
-    - WINDOW_ITEMS
-    - SET_SLOT
-    - OPEN_WINDOW
     - CHAT
+    - OPEN_WINDOW
+    - SET_SLOT
+    - WINDOW_ITEMS
 
 # 替换的字符串列表.
 Replaces:
