@@ -6,7 +6,7 @@
 
     <groupId>me.Rothes</groupId>
     <artifactId>ProtocolStringReplacer</artifactId>
-    <version>1.1.8-beta</version>
+    <version>1.1.9-beta</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -61,15 +61,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.10.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.6.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.9</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
