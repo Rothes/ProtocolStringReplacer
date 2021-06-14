@@ -19,8 +19,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
     protected String commentPrefix = "'这是注释': '";
     protected String commentSubfix = "'";
 
-    protected String originalRegex = "^( *)'(/d+)这是注释(/d+)': '";
-    protected Pattern originalPattern = Pattern.compile(originalRegex);
+    protected Pattern commentPattern = Pattern.compile("^( *)'(/d+)这是注释(/d+)': '");
 
     protected Pattern startedSpacePattern = Pattern.compile("^( *)");
     protected Pattern endedSpacePattern = Pattern.compile("( *)$");
@@ -31,6 +30,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
 
         String[] lines = contents.split("\n");
         StringBuilder stringBuilder = new StringBuilder();
+        short commentIndex = 1;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
             stringBuilder.append(line).append("\n");
@@ -87,7 +87,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         String[] lines = contents.split("\n");
         StringBuilder stringBuilder = new StringBuilder();
         for (String line : lines) {
-            Matcher matcher = originalPattern.matcher(line);
+            Matcher matcher = commentPattern.matcher(line);
             if (matcher.find()) {
                 stringBuilder.append(line.replaceFirst(matcher.group(0), matcher.group(1) + "#").replace("''", "'"))
                         .deleteCharAt(stringBuilder.length() - 1).append("\n");

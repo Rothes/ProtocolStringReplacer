@@ -16,6 +16,7 @@ Filter:
   # 指定替换的数据包类型. 默认为全部. 可选值:
   # CHAT 监听聊天文本
   # TITLE 监听标题消息
+  # BOSS_BAR 监听BOSS血量条文本
   # OPEN_WINDOW 监听窗口的标题文本
   # SET_SLOT 监听窗口中槽位的物品
   # WINDOW_ITEMS 监听打开窗口中的物品

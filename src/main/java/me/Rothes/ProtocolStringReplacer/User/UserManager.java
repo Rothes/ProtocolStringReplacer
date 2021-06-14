@@ -3,6 +3,7 @@ package me.Rothes.ProtocolStringReplacer.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ public class UserManager {
         return users.get(uuid);
     }
 
+    @Nonnull
     public User getUser(@NotNull Player player) {
         return getUser(player.getUniqueId());
     }

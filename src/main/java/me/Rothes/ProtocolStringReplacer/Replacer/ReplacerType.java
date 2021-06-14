@@ -6,6 +6,7 @@ public enum ReplacerType {
 
     CHAT("CHAT", PacketType.Play.Server.CHAT),
     TITLE("TITLE", PacketType.Play.Server.TITLE),
+    BOSS("BOSS_BAR", PacketType.Play.Server.BOSS),
     OPEN_WINDOW("OPEN_WINDOW", PacketType.Play.Server.OPEN_WINDOW),
     SET_SLOT("SET_SLOT", PacketType.Play.Server.SET_SLOT),
     WINDOW_ITEMS("WINDOW_ITEMS", PacketType.Play.Server.WINDOW_ITEMS),

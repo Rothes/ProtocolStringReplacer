@@ -14,10 +14,10 @@ public class User {
     private UUID uuid;
     private Player player;
 
-    private String currentWindowTitle;
+    private String currentWindowTitle ;
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private Short uniqueCacheKey = 0;
-    private ReplacerConfig editorFile;
+    private ReplacerConfig editorReplacerConfig;
     private int editorIndex;
     private String editorPattern;
     private String editorReplacement;
@@ -72,7 +72,7 @@ public class User {
                 ", currentWindowTitle='" + currentWindowTitle + '\'' +
                 ", metaCache=" + metaCache +
                 ", uniqueCacheKey=" + uniqueCacheKey +
-                ", editorFile=" + editorFile +
+                ", editorReplacerConfig=" + editorReplacerConfig +
                 ", editorIndex=" + editorIndex +
                 ", editorPattern='" + editorPattern + '\'' +
                 ", editorReplacement='" + editorReplacement + '\'' +
