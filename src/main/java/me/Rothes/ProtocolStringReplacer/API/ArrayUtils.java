@@ -1,7 +1,6 @@
 package me.Rothes.ProtocolStringReplacer.API;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
@@ -54,7 +53,6 @@ public class ArrayUtils {
                 merged.add(strings[startIndex++]);
             }
         }
-        Bukkit.getConsoleSender().sendMessage(merged.toString());
         return merged.toArray(new String[0]);
     }
 
