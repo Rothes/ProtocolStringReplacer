@@ -6,6 +6,7 @@ import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiPredicate;
@@ -28,6 +29,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         StringBuilder stringBuilder = new StringBuilder(baseComponents.length);
         for (BaseComponent baseComponent : baseComponents) {
             stringBuilder.append(baseComponent.toLegacyText().substring(2));
+            Bukkit.getConsoleSender().sendMessage(baseComponent.toLegacyText().replace("§", "&"));
         }
         return stringBuilder.toString();
     }
