@@ -131,20 +131,20 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     protected String getStartedSpace(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
 
         Matcher matcher = startedSpacePattern.matcher(string);
+        //noinspection ResultOfMethodCallIgnored
         matcher.find();
         return matcher.group(1);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     protected String getEndedSpace(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
 
         Matcher matcher = endedSpacePattern.matcher(string);
+        //noinspection ResultOfMethodCallIgnored
         matcher.find();
         return matcher.group(1);
     }
