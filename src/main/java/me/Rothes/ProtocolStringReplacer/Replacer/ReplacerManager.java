@@ -5,7 +5,6 @@ import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.replacer.Replacer;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -28,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class ReplacerManager {
 
-    private Replacer papiReplacer;
+    private PAPIReplacer papiReplacer;
     private char papihead;
     private char papitail;
     private LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
@@ -40,8 +39,7 @@ public class ReplacerManager {
     }
 
     public void initialize() {
-        PAPIReplacer papiReplacer = new PAPIReplacer();
-        this.papiReplacer = papiReplacer;
+        this.papiReplacer = new PAPIReplacer();
         papihead = papiReplacer.getHead();
         papitail = papiReplacer.getTail();
 

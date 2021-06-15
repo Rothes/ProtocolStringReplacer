@@ -12,20 +12,20 @@ public class UserManager {
     private HashMap<UUID, User> users = new HashMap<>();
 
     public User getUser(@NotNull UUID uuid) {
-        return users.get(uuid);
+        return users.getOrDefault(uuid, loadUser(uuid));
     }
 
     @Nonnull
     public User getUser(@NotNull Player player) {
-        return getUser(player.getUniqueId());
+        return users.getOrDefault(player.getUniqueId(), loadUser(player));
     }
 
-    public void loadUser(@NotNull UUID uuid) {
-        users.put(uuid, new User(uuid));
+    public User loadUser(@NotNull UUID uuid) {
+        return users.putIfAbsent(uuid, new User(uuid));
     }
 
-    public void loadUser(@NotNull Player player) {
-        users.put(player.getUniqueId(), new User(player));
+    public User loadUser(@NotNull Player player) {
+        return users.putIfAbsent(player.getUniqueId(), new User(player));
     }
 
     public void unloadUser(@NotNull UUID uuid) {
