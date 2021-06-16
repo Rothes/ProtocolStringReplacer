@@ -53,8 +53,8 @@ public class ReplacerConfig {
         boolean typeFound;
         if (types.isEmpty()) {
             ReplacerType[] replacerTypes = ReplacerType.values();
-            for (ReplacerType packetType : replacerTypes) {
-                packetTypeList.add(packetType.getPacketType());
+            for (ReplacerType replacerType : replacerTypes) {
+                packetTypeList.add(replacerType.getPacketType());
             }
         } else {
             for (String type : types) {
@@ -71,6 +71,13 @@ public class ReplacerConfig {
                 }
             }
         }
+        if (Integer.parseInt(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]) >= 17) {
+            if (packetTypeList.contains(PacketType.Play.Server.TITLE)) {
+                packetTypeList.add(PacketType.Play.Server.SET_TITLE_TEXT);
+                packetTypeList.add(PacketType.Play.Server.SET_SUBTITLE_TEXT);
+            }
+        }
+
         String matchType = configuration.getString("Match-Type", "contain");
         typeFound = false;
         for (MatchType availableMatchType : MatchType.values()) {

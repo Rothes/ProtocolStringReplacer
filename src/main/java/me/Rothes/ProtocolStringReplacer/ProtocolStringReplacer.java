@@ -74,10 +74,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     private void initialize() {
         loadConfig();
-        replacerManager = new ReplacerManager();
-        userManager = new UserManager();
         packetListenerManager = new PacketListenerManager();
+        replacerManager = new ReplacerManager();
         commandHandler = new CommandHandler();
+        userManager = new UserManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();
