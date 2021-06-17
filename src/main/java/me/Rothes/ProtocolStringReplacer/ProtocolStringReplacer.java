@@ -10,7 +10,6 @@ import me.Rothes.ProtocolStringReplacer.User.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -92,11 +91,9 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private boolean checkDepends(String... depends) {
         boolean missingDepend = false;
         PluginManager pluginManager = Bukkit.getPluginManager();
-        Plugin dependPlugin;
         for (String depend : depends) {
-            dependPlugin = pluginManager.getPlugin(depend);
-            if (dependPlugin == null || !dependPlugin.isEnabled()) {
-                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未检测到" + depend + "，禁用插件.");
+            if (!pluginManager.isPluginEnabled(depend)) {
+                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未检测到前置插件 " + depend + "，禁用插件.");
                 missingDepend = true;
             }
         }

@@ -26,6 +26,7 @@ public final class PAPIReplacer implements Replacer {
         return tail;
     }
 
+    // Forked from PlaceholderAPI for it hasn't provided the API yet.
     @NotNull
     @Override
     public String apply(@NotNull final String text, @Nullable final OfflinePlayer player,

@@ -48,7 +48,7 @@ public class ChatColors {
                 stringBuilder.insert(--i, '§');
             }
             stringBuilder.insert(0, "§x");
-            string = string.replaceFirst(matcher.group(0), stringBuilder.toString());
+            string = string.replace(matcher.group(0), stringBuilder.toString());
         }
         return string;
     }

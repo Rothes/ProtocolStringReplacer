@@ -21,9 +21,7 @@ public final class Title extends AbstractServerPacketListener {
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             if (wrappedChatComponent != null) {
-                String currentTitle = jsonToLegacyText(wrappedChatComponent.getJson());
-                user.setCurrentWindowTitle(currentTitle);
-                wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(currentTitle, user, filter)));
+                wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(jsonToLegacyText(wrappedChatComponent.getJson()), user, filter)));
                 wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
             }
         }

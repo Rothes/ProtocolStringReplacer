@@ -1,6 +1,7 @@
 package me.Rothes.ProtocolStringReplacer.Replacer;
 
 import com.comphenix.protocol.PacketType;
+import me.Rothes.ProtocolStringReplacer.API.Configuration.CommentYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -72,7 +73,7 @@ public class ReplacerConfig {
             }
         }
         if (Integer.parseInt(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]) >= 17) {
-            if (packetTypeList.contains(PacketType.Play.Server.TITLE)) {
+            if (packetTypeList.remove(PacketType.Play.Server.TITLE)) {
                 packetTypeList.add(PacketType.Play.Server.SET_TITLE_TEXT);
                 packetTypeList.add(PacketType.Play.Server.SET_SUBTITLE_TEXT);
             }
@@ -93,14 +94,19 @@ public class ReplacerConfig {
         }
         ConfigurationSection section = configuration.getConfigurationSection("Replaces");
         if (section != null) {
+            Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
             if (this.matchType == MatchType.REGEX) {
                 for (String replace : section.getKeys(true)) {
-                    if ("䳗䣞䑪这是注释".equals(replace)) continue;
+                    if (commentKeyPattern.matcher(replace).find()) {
+                        return;
+                    }
                     replaces.put(Pattern.compile(replace, Pattern.DOTALL), configuration.getString("Replaces鰠" + replace));
                 }
             } else {
                 for (String replace : section.getKeys(true)) {
-                    if ("䳗䣞䑪这是注释".equals(replace)) continue;
+                    if (commentKeyPattern.matcher(replace).find()) {
+                        return;
+                    }
                     replaces.put(replace, configuration.getString("Replaces鰠" + replace));
                 }
             }

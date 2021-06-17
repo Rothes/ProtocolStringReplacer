@@ -20,9 +20,7 @@ public class SetTitleText extends AbstractServerPacketListener {
             User user = getEventUser(packetEvent);
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-            String currentTitle = jsonToLegacyText(wrappedChatComponent.getJson());
-            user.setCurrentWindowTitle(currentTitle);
-            wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(currentTitle, user, filter)));
+            wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(jsonToLegacyText(wrappedChatComponent.getJson()), user, filter)));
             wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }
     };

@@ -28,6 +28,10 @@ public class PacketListenerManager {
         return userCacheKey;
     }
 
+    public ProtocolManager getProtocolManager() {
+        return protocolManager;
+    }
+
     public void initialize() {
         protocolManager = ProtocolLibrary.getProtocolManager();
         userCacheKey = new NamespacedKey(ProtocolStringReplacer.getInstance(), "psr_user_cache_key");

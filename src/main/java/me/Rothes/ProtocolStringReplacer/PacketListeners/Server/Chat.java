@@ -1,5 +1,6 @@
 package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
 
+import me.Rothes.ProtocolStringReplacer.PacketListeners.PacketListenerManager;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import com.comphenix.protocol.PacketType;
@@ -14,6 +15,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,6 @@ public final class Chat extends AbstractServerPacketListener {
         public void onPacketSending(PacketEvent packetEvent) {
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);
-
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             if (wrappedChatComponent != null) {

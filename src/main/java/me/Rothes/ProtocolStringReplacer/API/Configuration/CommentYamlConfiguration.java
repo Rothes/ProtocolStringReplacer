@@ -15,14 +15,15 @@ import java.util.regex.Pattern;
 
 public class CommentYamlConfiguration extends YamlConfiguration {
 
-    // TODO
-    protected String commentPrefix = "'这是注释': '";
-    protected String commentSubfix = "'";
-
-    protected Pattern commentPattern = Pattern.compile("^( *)'(/d+)这是注释(/d+)': '");
+    protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)这是注释([0-9]+)");
+    protected static Pattern commentPattern = Pattern.compile("^( *)'([0-9]+)这是注释([0-9]+)': '");
 
     protected Pattern startedSpacePattern = Pattern.compile("^( *)");
     protected Pattern endedSpacePattern = Pattern.compile("( *)$");
+
+    public static Pattern getCommentKeyPattern() {
+        return commentKeyPattern;
+    }
 
     @Override
     public void loadFromString(@Nonnull String contents) throws InvalidConfigurationException {
@@ -30,7 +31,8 @@ public class CommentYamlConfiguration extends YamlConfiguration {
 
         String[] lines = contents.split("\n");
         StringBuilder stringBuilder = new StringBuilder();
-        short commentIndex = 1;
+        short commentIndex = 0;
+        short passedLines = 1;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
             stringBuilder.append(line).append("\n");
@@ -73,7 +75,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                         startedSpace = getStartedSpace(lines[i + 1]);
                     }
                     // The comment behind the settings will be removed when saved, so we only need to do this.
-                    stringBuilder.append(startedSpace).append(commentPrefix).append(getEndedSpace(line.substring(0, cursor))).append(line.substring(cursor).replace("'", "''")).append(commentSubfix).append("\n");
+                    stringBuilder.append(startedSpace).append("'").append(commentIndex).append("这是注释").append(passedLines).append("': '").append(getEndedSpace(line.substring(0, cursor))).append(line.substring(cursor).replace("'", "''")).append("'").append("\n");
                 }
             }
         }
