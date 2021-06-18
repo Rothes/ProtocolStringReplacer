@@ -14,8 +14,8 @@ public class User {
     private UUID uuid;
     private Player player;
 
-    private String currentWindowTitle ;
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
+    private String currentWindowTitle;
     private Short uniqueCacheKey = 0;
     private ReplacerConfig editorReplacerConfig;
     private int editorIndex;

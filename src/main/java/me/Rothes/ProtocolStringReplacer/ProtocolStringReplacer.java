@@ -38,6 +38,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         return config;
     }
 
+    @Override
     public void onEnable() {
         instance = this;
         serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
@@ -47,9 +48,13 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
     }
 
+    @Override
     public void onDisable() {
         if (packetListenerManager != null) {
             packetListenerManager.removeListeners();
+        }
+        if (replacerManager != null) {
+            replacerManager.saveReplacerConfigs();
         }
     }
 

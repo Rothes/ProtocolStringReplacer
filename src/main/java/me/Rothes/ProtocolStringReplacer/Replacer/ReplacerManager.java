@@ -174,6 +174,14 @@ public class ReplacerManager {
         return hasPlaceholder? updatePlaceholders(user, itemMeta) : itemMeta;
     }
 
+    public void saveReplacerConfigs() {
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            if (replacerConfig.isEdited()) {
+                replacerConfig.saveConfig();
+            }
+        }
+    }
+
     @Nonnull
     private HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
         Validate.notNull(path, "Path cannot be null");

@@ -55,9 +55,11 @@ public class ReplacerConfig {
     private HashMap<Short, CommentLine> commentLines = new HashMap<>();
     private String author;
     private String version;
+    private boolean edited;
 
     public ReplacerConfig(@Nonnull File file, @Nonnull DotYamlConfiguration configuration) {
         long startTime = System.currentTimeMillis();
+        edited = false;
         this.file = file;
         this.configuration = configuration;
         enable = configuration.getBoolean("Enable", false);
@@ -128,6 +130,10 @@ public class ReplacerConfig {
         if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false)) {
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
         }
+    }
+
+    public boolean isEdited() {
+        return edited;
     }
 
     public File getFile() {

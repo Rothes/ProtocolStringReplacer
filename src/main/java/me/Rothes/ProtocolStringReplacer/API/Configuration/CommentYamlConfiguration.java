@@ -1,6 +1,7 @@
 package me.Rothes.ProtocolStringReplacer.API.Configuration;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -91,7 +92,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         for (String line : lines) {
             Matcher matcher = commentPattern.matcher(line);
             if (matcher.find()) {
-                stringBuilder.append(line.replace(matcher.group(0), "").replace("''", "'"));
+                stringBuilder.append(StringUtils.replace(line.substring(matcher.group(0).length()), "''", "'"));
                 if (("'").equals(matcher.group(4))) {
                     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
                 }
