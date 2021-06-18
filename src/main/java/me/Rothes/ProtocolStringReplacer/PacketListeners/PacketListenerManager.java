@@ -47,7 +47,7 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new TileEntityData().packetAdapter);
         protocolManager.addPacketListener(new MapChunk().packetAdapter);
         protocolManager.addPacketListener(new BossBar().packetAdapter);
-        if (Integer.parseInt(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]) >= 17) {
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §3启用 Spigot 1.17+ 兼容.");
             protocolManager.addPacketListener(new SetTitleText().packetAdapter);
             protocolManager.addPacketListener(new SetSubtitleText().packetAdapter);

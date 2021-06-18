@@ -10,11 +10,24 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplacerConfig {
+
+    private static class CommentLine {
+        private String key;
+        private String value;
+
+        private CommentLine(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
 
     public enum MatchType {
         CONTAIN("contain"),
@@ -39,6 +52,7 @@ public class ReplacerConfig {
     private List<PacketType> packetTypeList = new ArrayList<>();
     private MatchType matchType;
     private ListOrderedMap replaces = new ListOrderedMap();
+    private HashMap<Short, CommentLine> commentLines = new HashMap<>();
     private String author;
     private String version;
 
@@ -72,7 +86,7 @@ public class ReplacerConfig {
                 }
             }
         }
-        if (Integer.parseInt(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]) >= 17) {
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
             if (packetTypeList.remove(PacketType.Play.Server.TITLE)) {
                 packetTypeList.add(PacketType.Play.Server.SET_TITLE_TEXT);
                 packetTypeList.add(PacketType.Play.Server.SET_SUBTITLE_TEXT);
@@ -96,18 +110,18 @@ public class ReplacerConfig {
         if (section != null) {
             Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
             if (this.matchType == MatchType.REGEX) {
-                for (String replace : section.getKeys(true)) {
-                    if (commentKeyPattern.matcher(replace).find()) {
-                        return;
+                for (String key : section.getKeys(true)) {
+                    String value = configuration.getString("Replaces鰠" + key);
+                    if (!checkComment(key, value, commentKeyPattern)) {
+                        replaces.put(Pattern.compile(key, Pattern.DOTALL), value);
                     }
-                    replaces.put(Pattern.compile(replace, Pattern.DOTALL), configuration.getString("Replaces鰠" + replace));
                 }
             } else {
-                for (String replace : section.getKeys(true)) {
-                    if (commentKeyPattern.matcher(replace).find()) {
-                        return;
+                for (String key : section.getKeys(true)) {
+                    String value = configuration.getString("Replaces鰠" + key);
+                    if (!checkComment(key, value, commentKeyPattern)) {
+                        replaces.put(key, value);
                     }
-                    replaces.put(replace, configuration.getString("Replaces鰠" + replace));
                 }
             }
         }
@@ -156,6 +170,53 @@ public class ReplacerConfig {
         return file.getAbsolutePath().replace(ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\", "");
     }
 
+    public void saveConfig() {
+        configuration.set("Enable", enable);
+        configuration.set("Priority", priority);
+        configuration.set("Author", author);
+        configuration.set("Version", version);
+        List<String> types = new ArrayList<>();
+        boolean isUp17 = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17;
+        for (PacketType packetType : packetTypeList) {
+            for (ReplacerType replacerType : ReplacerType.values()) {
+                if (replacerType.getPacketType() == packetType) {
+                    types.add(replacerType.getName());
+                    break;
+                }
+            }
+            if (isUp17 && (packetType == PacketType.Play.Server.SET_TITLE_TEXT || packetType == PacketType.Play.Server.SET_SUBTITLE_TEXT)) {
+                types.add(ReplacerType.TITLE.getName());
+            }
+        }
+        configuration.set("Filter鰠Packet-Types", types);
+        configuration.set("Match-Type", matchType.getName());
+        configuration.set("Replaces", null);
+        if (matchType == MatchType.REGEX) {
+            for (short i = 0; i < replaces.size(); i++) {
+                if (commentLines.containsKey(i)) {
+                    CommentLine commentLine = commentLines.get(i);
+                    configuration.set("Replaces鰠" + commentLine.key, commentLine.value);
+                }
+                Pattern pattern = (Pattern) replaces.get(i);
+                configuration.set("Replaces鰠" + pattern.toString(), replaces.get(pattern));
+            }
+        } else {
+            for (short i = 0; i < replaces.size(); i++) {
+                if (commentLines.containsKey(i)) {
+                    CommentLine commentLine = commentLines.get(i);
+                    configuration.set("Replaces鰠" + commentLine.key, commentLine.value);
+                }
+                String string = (String) replaces.get(i);
+                configuration.set("Replaces鰠" + string, replaces.get(string));
+            }
+        }
+        try {
+            configuration.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public String toString() {
         return "ReplacerConfig{" +
@@ -169,6 +230,15 @@ public class ReplacerConfig {
                 ", author='" + author + '\'' +
                 ", version='" + version + '\'' +
                 '}';
+    }
+
+    private boolean checkComment(String key, String value, Pattern pattern) {
+        Matcher matcher = pattern.matcher(key);
+        if (matcher.find()) {
+            commentLines.put((short) replaces.size(), new CommentLine(key, value));
+            return true;
+        }
+        return false;
     }
 
 }

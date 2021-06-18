@@ -26,6 +26,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private PacketListenerManager packetListenerManager;
     private UserManager userManager;
     private CommandHandler commandHandler;
+    private byte serverMajorVersion;
 
     public static ProtocolStringReplacer getInstance() {
         return instance;
@@ -39,6 +40,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
+        serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
         if (!checkDepends("PlaceholderAPI", "ProtocolLib")) {
             initialize();
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a插件已成功加载");
@@ -49,6 +51,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
         if (packetListenerManager != null) {
             packetListenerManager.removeListeners();
         }
+    }
+
+    public byte getServerMajorVersion() {
+        return serverMajorVersion;
     }
 
     @Nonnull

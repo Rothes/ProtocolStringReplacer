@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class CommentYamlConfiguration extends YamlConfiguration {
 
     protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)这是注释([0-9]+)");
-    protected static Pattern commentPattern = Pattern.compile("^( *)'([0-9]+)这是注释([0-9]+)': '");
+    protected static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)这是注释([0-9]+): (')");
 
     protected Pattern startedSpacePattern = Pattern.compile("^( *)");
     protected Pattern endedSpacePattern = Pattern.compile("( *)$");
@@ -75,7 +75,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                         startedSpace = getStartedSpace(lines[i + 1]);
                     }
                     // The comment behind the settings will be removed when saved, so we only need to do this.
-                    stringBuilder.append(startedSpace).append("'").append(commentIndex).append("这是注释").append(passedLines).append("': '").append(getEndedSpace(line.substring(0, cursor))).append(line.substring(cursor).replace("'", "''")).append("'").append("\n");
+                    stringBuilder.append(startedSpace).append(commentIndex++).append("这是注释").append(passedLines).append(": '").append(getEndedSpace(line.substring(0, cursor))).append(line.substring(cursor).replace("'", "''")).append("'").append("\n");
                 }
             }
         }
@@ -91,8 +91,11 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         for (String line : lines) {
             Matcher matcher = commentPattern.matcher(line);
             if (matcher.find()) {
-                stringBuilder.append(line.replaceFirst(matcher.group(0), matcher.group(1) + "#").replace("''", "'"))
-                        .deleteCharAt(stringBuilder.length() - 1).append("\n");
+                stringBuilder.append(line.replace(matcher.group(0), "").replace("''", "'"));
+                if (("'").equals(matcher.group(4))) {
+                    stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+                }
+                stringBuilder.append("\n");
             } else {
                 stringBuilder.append(line).append("\n");
             }
@@ -113,24 +116,6 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         }
 
         return config;
-    }
-
-    protected boolean isCorrectlyQuoted(@Nonnull String string) {
-        Validate.notNull(string, "String cannot be null");
-
-        string = string.trim();
-        char quoteChar = string.charAt(0);
-        if (quoteChar == '\'' || quoteChar == '\"') {
-            int count = 0;
-            for (char Char : string.toCharArray()) {
-                if (Char == quoteChar) {
-                    count++;
-                }
-            }
-            return ((count % 2) == 0);
-        } else {
-            return true;
-        }
     }
 
     protected String getStartedSpace(@Nonnull String string) {
