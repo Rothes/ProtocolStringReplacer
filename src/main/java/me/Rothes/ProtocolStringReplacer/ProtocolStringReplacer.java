@@ -7,6 +7,8 @@ import me.Rothes.ProtocolStringReplacer.Listeners.PlayerQuitListener;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.PacketListenerManager;
 import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerManager;
 import me.Rothes.ProtocolStringReplacer.User.UserManager;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -77,11 +79,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
         return packetListenerManager;
     }
 
-    @Nonnull
-    public CommandHandler getCommandHandler() {
-        return commandHandler;
-    }
-
     private void initialize() {
         loadConfig();
         packetListenerManager = new PacketListenerManager();
@@ -97,6 +94,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
             userManager.loadUser(player);
             player.updateInventory();
         }
+        Metrics metrics = new Metrics(this, 11740);
+        metrics.addCustomChart(new SimplePie("replaces_count", () -> String.valueOf(replacerManager.getReplacesCount())));
     }
 
     private boolean checkDepends(String... depends) {

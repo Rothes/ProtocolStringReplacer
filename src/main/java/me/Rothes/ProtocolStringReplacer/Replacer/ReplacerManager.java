@@ -90,6 +90,16 @@ public class ReplacerManager {
         }, 0L, cleanTaskInterval);
     }
 
+    public int getReplacesCount() {
+        int count = 0;
+        for (var replacerConfig : replacerConfigList) {
+            if (replacerConfig.isEnable()) {
+                count = count + replacerConfig.getReplaces().size();
+            }
+        }
+        return count;
+    }
+
     @Nonnull
     public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(string, "String cannot be null");
@@ -129,7 +139,7 @@ public class ReplacerManager {
         } else {
             ItemMeta original = itemMeta.clone();
             String replaced;
-            for (ReplacerConfig replacerConfig : replacerConfigList) {
+            for (var replacerConfig : replacerConfigList) {
                 if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
                     replaced = getFileReplacedString(user, itemMeta.getDisplayName(), replacerConfig, false);
                     itemMeta.setDisplayName(replaced);
@@ -188,7 +198,7 @@ public class ReplacerManager {
         HashMap<File, DotYamlConfiguration> loaded = new HashMap<>();
         if (path.exists()) {
             File[] files = path.listFiles();
-            for (File file : files) {
+            for (var file : files) {
                 if (file.isFile() && isYmlFile(file)) {
                     DotYamlConfiguration dotYamlConfiguration = DotYamlConfiguration.loadConfiguration(file);
                     loaded.put(file, dotYamlConfiguration);
@@ -210,22 +220,22 @@ public class ReplacerManager {
         Object object = replacerConfig.getReplaces().entrySet();
         switch (replacerConfig.getMatchType()) {
             case CONTAIN:
-                Set<Map.Entry<String, String>> containSet = (Set<Map.Entry<String, String>>) object;
-                for (Map.Entry<String, String> entry : containSet) {
+                var containSet = (Set<Map.Entry<String, String>>) object;
+                for (var entry : containSet) {
                     string = StringUtils.replace(string, entry.getKey(), entry.getValue());
                 }
                 break;
             case EQUAL:
-                Set<Map.Entry<String, String>> equalSet = (Set<Map.Entry<String, String>>) object;
-                for (Map.Entry<String, String> entry : equalSet) {
+                var equalSet = (Set<Map.Entry<String, String>>) object;
+                for (var entry : equalSet) {
                     if (string.equals(entry.getKey())) {
                         string = entry.getValue();
                     }
                 }
                 break;
             case REGEX:
-                Set<Map.Entry<Pattern, String>> regexSet = (Set<Map.Entry<Pattern, String>>) object;
-                for (Map.Entry<Pattern, String> entry : regexSet) {
+                var regexSet = (Set<Map.Entry<Pattern, String>>) object;
+                for (var entry : regexSet) {
                     string = entry.getKey().matcher(string).replaceAll(entry.getValue());
                 }
         }
