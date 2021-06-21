@@ -65,6 +65,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             char quoteChar = '\n';
             boolean isPlainComment = true;
             boolean isInQuote = false;
+            boolean isKeyValue = false;
             boolean commentFound = false;
             if (cursor == line.length()) {
                 line = line + "#";
@@ -86,6 +87,8 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                     if (charAtCursor == '\'' || charAtCursor == '\"') {
                         quoteChar = charAtCursor;
                         isInQuote = true;
+                    } else if (line.length() > cursor + 2 && charAtCursor == ':' && line.charAt(cursor + 1) == ' ' && " #".indexOf(line.charAt(cursor + 2)) == -1) {
+                        isKeyValue = true;
                     } else if (charAtCursor == '#') {
                         commentFound = true;
                         break;
@@ -96,6 +99,20 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             if (commentFound) {
                 commentsToAdd.add(0, new Comment(getEndedSpace(line.substring(0, cursor)) + line.substring(cursor).replace("'", "''"),
                         isPlainComment));
+            }
+            // Need this to keep the comments in ReplacerConfig ordering.
+            if (isKeyValue) {
+                startedSpace = getStartedSpace(line);
+                for (var comment : commentsToAdd) {
+                    stringBuilder.append(startedSpace).append(commentIndex++).append("㩵遌㚳这是注释").append(comment.passedLines);
+                    if (comment.plainComment) {
+                        stringBuilder.append("是");
+                    } else {
+                        stringBuilder.append("否");
+                    }
+                    stringBuilder.append(": '").append(comment.commentString).append("'\n");
+                }
+                commentsToAdd.clear();
             }
 
         }

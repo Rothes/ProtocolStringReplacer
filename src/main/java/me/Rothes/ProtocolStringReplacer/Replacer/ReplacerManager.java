@@ -90,6 +90,10 @@ public class ReplacerManager {
         }, 0L, cleanTaskInterval);
     }
 
+    public LinkedList<ReplacerConfig> getReplacerConfigList() {
+        return replacerConfigList;
+    }
+
     public int getReplacesCount() {
         int count = 0;
         for (var replacerConfig : replacerConfigList) {
