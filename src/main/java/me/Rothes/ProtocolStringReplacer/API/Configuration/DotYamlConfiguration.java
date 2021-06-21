@@ -12,6 +12,11 @@ import java.util.logging.Level;
 
 public class DotYamlConfiguration extends CommentYamlConfiguration {
 
+    public DotYamlConfiguration() {
+        super();
+        options().pathSeparator('鰠');
+    }
+
     @Nonnull
     public static DotYamlConfiguration loadConfiguration(@Nonnull File file) {
         Validate.notNull(file, "File cannot be null");
@@ -25,15 +30,6 @@ public class DotYamlConfiguration extends CommentYamlConfiguration {
         }
 
         return config;
-    }
-
-    @Nonnull
-    public DotYamlConfigurationOptions options() {
-        if (this.options == null) {
-            this.options = new DotYamlConfigurationOptions(this);
-        }
-
-        return (DotYamlConfigurationOptions)this.options;
     }
 
 }

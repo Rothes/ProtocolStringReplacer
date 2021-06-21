@@ -12,7 +12,9 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,7 +54,7 @@ public class ReplacerConfig {
     private List<PacketType> packetTypeList = new ArrayList<>();
     private MatchType matchType;
     private ListOrderedMap replaces = new ListOrderedMap();
-    private HashMap<Short, CommentLine> commentLines = new HashMap<>();
+    private HashMap<Short, LinkedList<CommentLine>> commentLines = new HashMap<>();
     private String author;
     private String version;
     private boolean edited;
@@ -130,6 +132,7 @@ public class ReplacerConfig {
         if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false)) {
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
         }
+        saveConfig();
     }
 
     public boolean isEdited() {
@@ -196,12 +199,22 @@ public class ReplacerConfig {
         }
         configuration.set("Filter鰠Packet-Types", types);
         configuration.set("Match-Type", matchType.getName());
-        configuration.set("Replaces", null);
+        configuration.set("Replaces鰠䳗temp临时", "not null");
+        ConfigurationSection section = configuration.getConfigurationSection("Replaces");
+        if (section != null) {
+            for (String key : section.getKeys(true)) {
+                if (!key.equals("䳗temp临时")) {
+                    configuration.set("Replaces鰠" + key, null);
+                }
+            }
+        }
         if (matchType == MatchType.REGEX) {
             for (short i = 0; i < replaces.size(); i++) {
                 if (commentLines.containsKey(i)) {
-                    CommentLine commentLine = commentLines.get(i);
-                    configuration.set("Replaces鰠" + commentLine.key, commentLine.value);
+                    LinkedList<CommentLine> commentLineList = commentLines.get(i);
+                    for (var commentLine: commentLineList) {
+                        configuration.set("Replaces鰠" + commentLine.key, commentLine.value);
+                    }
                 }
                 Pattern pattern = (Pattern) replaces.get(i);
                 configuration.set("Replaces鰠" + pattern.toString(), replaces.get(pattern));
@@ -209,13 +222,16 @@ public class ReplacerConfig {
         } else {
             for (short i = 0; i < replaces.size(); i++) {
                 if (commentLines.containsKey(i)) {
-                    CommentLine commentLine = commentLines.get(i);
-                    configuration.set("Replaces鰠" + commentLine.key, commentLine.value);
+                    LinkedList<CommentLine> commentLineList = commentLines.get(i);
+                    for (var commentLine: commentLineList) {
+                        configuration.set("Replaces鰠" + commentLine.key, commentLine.value);
+                    }
                 }
                 String string = (String) replaces.get(i);
                 configuration.set("Replaces鰠" + string, replaces.get(string));
             }
         }
+        configuration.set("Replaces鰠䳗temp临时", null);
         try {
             configuration.save(file);
         } catch (IOException e) {
@@ -241,7 +257,12 @@ public class ReplacerConfig {
     private boolean checkComment(String key, String value, Pattern pattern) {
         Matcher matcher = pattern.matcher(key);
         if (matcher.find()) {
-            commentLines.put((short) replaces.size(), new CommentLine(key, value));
+            LinkedList<CommentLine> commentLines = this.commentLines.get((short) replaces.size());
+            if (commentLines == null) {
+                this.commentLines.put((short) replaces.size(), new LinkedList<>(Collections.singletonList(new CommentLine(key, value))));
+            } else {
+                commentLines.add(new CommentLine(key, value));
+            }
             return true;
         }
         return false;
