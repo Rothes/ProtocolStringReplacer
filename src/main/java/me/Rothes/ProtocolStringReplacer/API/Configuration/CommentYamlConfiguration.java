@@ -24,14 +24,14 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         private boolean plainComment;
 
         private Comment(String commentString, boolean isplainComment) {
-            passedLines = 0;
+            passedLines = -1;
             this.commentString = commentString;
             this.plainComment = isplainComment;
         }
     }
 
-    protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([0-9]+)([是否])");
-    protected static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([0-9]+)([是否]): '");
+    protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([是否])");
+    protected static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
 
     protected static Pattern startedSpacePattern = Pattern.compile("^( *)");
     protected static Pattern endedSpacePattern = Pattern.compile("( *)$");
@@ -54,18 +54,13 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         short commentIndex = 0;
         LinkedList<Comment> commentsToAdd = new LinkedList<>();
         for (String line : lines) {
-            stringBuilder.append(line).append("\n");
-            for (var comment : commentsToAdd) {
-                comment.passedLines++;
-            }
-
             String startedSpace = getStartedSpace(line);
             int cursor = startedSpace.length();
             // Initialize with an impossible value.
             char quoteChar = '\n';
             boolean isPlainComment = true;
             boolean isInQuote = false;
-            boolean isKeyValue = false;
+            boolean isKey = false;
             boolean commentFound = false;
             if (cursor == line.length()) {
                 line = line + "#";
@@ -87,8 +82,8 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                     if (charAtCursor == '\'' || charAtCursor == '\"') {
                         quoteChar = charAtCursor;
                         isInQuote = true;
-                    } else if (line.length() > cursor + 2 && charAtCursor == ':' && line.charAt(cursor + 1) == ' ' && " #".indexOf(line.charAt(cursor + 2)) == -1) {
-                        isKeyValue = true;
+                    } else if (charAtCursor == ':') {
+                        isKey = true;
                     } else if (charAtCursor == '#') {
                         commentFound = true;
                         break;
@@ -101,30 +96,35 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                         isPlainComment));
             }
             // Need this to keep the comments in ReplacerConfig ordering.
-            if (isKeyValue) {
+            if (isKey) {
                 startedSpace = getStartedSpace(line);
                 for (var comment : commentsToAdd) {
-                    stringBuilder.append(startedSpace).append(commentIndex++).append("㩵遌㚳这是注释").append(comment.passedLines);
+                    stringBuilder.append(startedSpace).append(commentIndex++).append("㩵遌㚳这是注释");
                     if (comment.plainComment) {
                         stringBuilder.append("是");
                     } else {
                         stringBuilder.append("否");
                     }
-                    stringBuilder.append(": '").append(comment.commentString).append("'\n");
+                    stringBuilder.append(": '").append(comment.passedLines).append("| ").append(comment.commentString).append("'\n");
                 }
                 commentsToAdd.clear();
+            }
+
+            stringBuilder.append(line).append("\n");
+            for (var comment : commentsToAdd) {
+                comment.passedLines++;
             }
 
         }
         if (!commentsToAdd.isEmpty()) {
             for (var comment : commentsToAdd) {
-                stringBuilder.append(commentIndex++).append("㩵遌㚳这是注释").append(comment.passedLines);
+                stringBuilder.append(commentIndex++).append("㩵遌㚳这是注释");
                 if (comment.plainComment) {
                     stringBuilder.append("是");
                 } else {
                     stringBuilder.append("否");
                 }
-                stringBuilder.append(": '").append(comment.commentString).append("'\n");
+                stringBuilder.append(": '").append(comment.passedLines).append("| ").append(comment.commentString).append("'\n");
             }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
@@ -140,17 +140,17 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         for (String line : lines) {
             Matcher matcher = commentPattern.matcher(line);
             if (matcher.find()) {
-                short passedLines = Short.parseShort(matcher.group(3));
+                short passedLines = Short.parseShort(matcher.group(4));
                 int index = stringBuilder.length() - 1;
                 for (int i = 0; i < passedLines; i++) {
                     index = stringBuilder.lastIndexOf("\n", index - 1);
                 }
-                if (index < 0) {
+                if (index == -1) {
                     index = 0;
                     stringBuilder.insert(index, '\n');
                 }
                 stringBuilder.insert(index, StringUtils.replace(line.substring(matcher.group(0).length(), line.length() - 1), "''", "'"));
-                if (index != 0 && matcher.group(4).equals("是")) {
+                if (index != 0 && matcher.group(3).equals("是")) {
                     stringBuilder.insert(index, '\n');
                 }
             } else {
