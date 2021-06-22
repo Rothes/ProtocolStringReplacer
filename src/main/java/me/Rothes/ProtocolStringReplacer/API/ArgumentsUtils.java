@@ -7,8 +7,33 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ArrayUtils {
+public class ArgumentsUtils {
     private static Pattern lastQuotes = Pattern.compile("\"+$");
+
+    @Nonnull
+    public static String formatWithQuotes(@Nonnull String string) {
+        Validate.notNull(string, "String cannot be null");
+        if (string.equals("")) {
+            return string;
+        } else {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append('\"');
+            String[] args = string.split(" ");
+            for (String arg : args) {
+                stringBuilder.append(" ").append(arg);
+                char[] chars = arg.toCharArray();
+                for (int i1 = chars.length - 1; i1 > 9; i1--) {
+                    if (chars[i1] == '\"') {
+                        stringBuilder.append('\"');
+                    } else {
+                        break;
+                    }
+                }
+            }
+            stringBuilder.deleteCharAt(1).append('\"');
+            return stringBuilder.toString();
+        }
+    }
 
     @Nonnull
     public static String[] mergeQuotes(@Nonnull String[] strings) {
@@ -20,7 +45,7 @@ public class ArrayUtils {
         for (int i = 0; i < strings.length; i++) {
             String arg = strings[i];
             if (startIndex == -1) {
-                if (arg.charAt(0) == '\"') {
+                if (arg.length() > 0 && arg.charAt(0) == '\"') {
                     startIndex = i;
                 } else {
                     merged.add(arg);
@@ -28,8 +53,7 @@ public class ArrayUtils {
             }
             if (startIndex != -1
                     && ((startIndex != i && arg.length() == 1 && arg.charAt(0) == '\"')
-                          || (arg.length() > 2 /* To avoid empty String */ && arg.charAt(arg.length() - 1) == '\"'))) {
-                long start = System.currentTimeMillis();
+                          || (arg.length() > 1 /* To avoid empty String */ && arg.charAt(arg.length() - 1) == '\"'))) {
                 Matcher matcher = lastQuotes.matcher(strings[i]);
                 //noinspection ResultOfMethodCallIgnored
                 matcher.find();

@@ -61,7 +61,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             boolean isPlainComment = true;
             boolean isInQuote = false;
             boolean isKey = false;
-            boolean commentFound = false;
+            boolean foundComment = false;
             if (cursor == line.length()) {
                 line = line + "#";
             }
@@ -85,7 +85,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                     } else if (charAtCursor == ':') {
                         isKey = true;
                     } else if (charAtCursor == '#') {
-                        commentFound = true;
+                        foundComment = true;
                         break;
                     }
                 }
@@ -105,7 +105,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                 }
                 commentsToAdd.clear();
             }
-            if (commentFound) {
+            if (foundComment) {
                 commentsToAdd.add(0, new Comment(getEndedSpace(line.substring(0, cursor)) + line.substring(cursor).replace("'", "''"),
                         isPlainComment));
             }
