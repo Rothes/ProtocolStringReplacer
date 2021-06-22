@@ -30,8 +30,8 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         }
     }
 
-    protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([是否])");
-    protected static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
+    protected static Pattern commentKeyPattern = Pattern.compile("([|0-9]+)㩵遌㚳这是注释([是否])");
+    protected static Pattern commentPattern = Pattern.compile("^( *)([|0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
 
     protected static Pattern startedSpacePattern = Pattern.compile("^( *)");
     protected static Pattern endedSpacePattern = Pattern.compile("( *)$");
@@ -91,10 +91,6 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                 }
                 cursor++;
             }
-            if (commentFound) {
-                commentsToAdd.add(0, new Comment(getEndedSpace(line.substring(0, cursor)) + line.substring(cursor).replace("'", "''"),
-                        isPlainComment));
-            }
             // Need this to keep the comments in ReplacerConfig ordering.
             if (isKey) {
                 startedSpace = getStartedSpace(line);
@@ -108,6 +104,10 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                     stringBuilder.append(": '").append(comment.passedLines).append("| ").append(comment.commentString).append("'\n");
                 }
                 commentsToAdd.clear();
+            }
+            if (commentFound) {
+                commentsToAdd.add(0, new Comment(getEndedSpace(line.substring(0, cursor)) + line.substring(cursor).replace("'", "''"),
+                        isPlainComment));
             }
 
             stringBuilder.append(line).append("\n");
@@ -143,7 +143,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                 short passedLines = Short.parseShort(matcher.group(4));
                 int index = stringBuilder.length() - 1;
                 for (int i = 0; i < passedLines; i++) {
-                    index = stringBuilder.lastIndexOf("\n", index - 1);
+                    index = stringBuilder.lastIndexOf("\n", --index);
                 }
                 if (index == -1) {
                     index = 0;
