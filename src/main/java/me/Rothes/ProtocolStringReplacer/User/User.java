@@ -11,6 +11,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -18,7 +19,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -31,8 +34,12 @@ public class User {
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private String currentWindowTitle;
     private Short uniqueCacheKey = 0;
+
+    private String[] commandToConfirm;
+    private Long confirmTime;
+
     private ReplacerConfig editorReplacerConfig;
-    private int editorIndex;
+    private Integer editorIndex;
     private String editorPattern;
     private String editorReplacement;
 
@@ -94,6 +101,33 @@ public class User {
 
     public void setEditorReplacerConfig(ReplacerConfig editorReplacerConfig) {
         this.editorReplacerConfig = editorReplacerConfig;
+    }
+
+    public void setCommandToConfirm(String[] args) {
+        commandToConfirm = args;
+        confirmTime = System.currentTimeMillis();
+    }
+
+    public boolean isConfirmed(@Nonnull String[] args) {
+        Validate.notNull(args, "Arguments cannot be null");
+        return Arrays.equals(args, commandToConfirm);
+    }
+
+    public String[] getCommandToConfirm() {
+        return commandToConfirm;
+    }
+
+    public boolean hasCommandToConfirm() {
+        return commandToConfirm != null;
+    }
+
+    public void clearCommandToConfirm() {
+        commandToConfirm = null;
+        confirmTime = null;
+    }
+
+    public boolean isConfirmExpired() {
+        return confirmTime != null && System.currentTimeMillis() - confirmTime > 15000;
     }
 
     public void sendFilteredMessage(BaseComponent... baseComponents) {
