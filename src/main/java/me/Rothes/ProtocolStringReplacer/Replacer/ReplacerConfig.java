@@ -49,6 +49,7 @@ public class ReplacerConfig {
 
     private File file;
     private DotYamlConfiguration configuration;
+    private short configVersion;
     private boolean enable;
     private int priority;
     private List<PacketType> packetTypeList = new ArrayList<>();
@@ -61,74 +62,7 @@ public class ReplacerConfig {
 
     public ReplacerConfig(@Nonnull File file, @Nonnull DotYamlConfiguration configuration) {
         long startTime = System.currentTimeMillis();
-        edited = false;
-        this.file = file;
-        this.configuration = configuration;
-        enable = configuration.getBoolean("Enable", false);
-        priority = configuration.getInt("Priority", 5);
-        author = configuration.getString("Author");
-        version = configuration.getString("Version");
-        List<String> types = configuration.getStringList("Filter鰠Packet-Types");
-        boolean typeFound;
-        if (types.isEmpty()) {
-            ReplacerType[] replacerTypes = ReplacerType.values();
-            for (ReplacerType replacerType : replacerTypes) {
-                packetTypeList.add(replacerType.getPacketType());
-            }
-        } else {
-            for (String type : types) {
-                typeFound = false;
-                for (ReplacerType replacerType : ReplacerType.values()) {
-                    if (replacerType.getName().equals(type)) {
-                        typeFound = true;
-                        packetTypeList.add(replacerType.getPacketType());
-                        break;
-                    }
-                }
-                if (!typeFound) {
-                    Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知或不支持的数据包类型: " + type);
-                }
-            }
-        }
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            if (packetTypeList.remove(PacketType.Play.Server.TITLE)) {
-                packetTypeList.add(PacketType.Play.Server.SET_TITLE_TEXT);
-                packetTypeList.add(PacketType.Play.Server.SET_SUBTITLE_TEXT);
-            }
-        }
-
-        String matchType = configuration.getString("Match-Type", "contain");
-        typeFound = false;
-        for (MatchType availableMatchType : MatchType.values()) {
-            if (availableMatchType.name.equalsIgnoreCase(matchType)) {
-                this.matchType = availableMatchType;
-                typeFound = true;
-                break;
-            }
-        }
-        if (!typeFound) {
-            this.matchType = MatchType.CONTAIN;
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"contain\"");
-        }
-        ConfigurationSection section = configuration.getConfigurationSection("Replaces");
-        if (section != null) {
-            Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
-            if (this.matchType == MatchType.REGEX) {
-                for (String key : section.getKeys(true)) {
-                    String value = configuration.getString("Replaces鰠" + key);
-                    if (!checkComment(key, value, commentKeyPattern)) {
-                        replaces.put(Pattern.compile(key, Pattern.DOTALL), value);
-                    }
-                }
-            } else {
-                for (String key : section.getKeys(true)) {
-                    String value = configuration.getString("Replaces鰠" + key);
-                    if (!checkComment(key, value, commentKeyPattern)) {
-                        replaces.put(key, value);
-                    }
-                }
-            }
-        }
+        loadData(file, configuration);
         if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false)) {
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
         }
@@ -179,10 +113,11 @@ public class ReplacerConfig {
     }
 
     public void saveConfig() {
-        configuration.set("Enable", enable);
-        configuration.set("Priority", priority);
-        configuration.set("Author", author);
-        configuration.set("Version", version);
+        configuration.set("Config-Version", configVersion);
+        configuration.set("Options鰠Enable", enable);
+        configuration.set("Options鰠Priority", priority);
+        configuration.set("Options鰠Author", author);
+        configuration.set("Options鰠Version", version);
         List<String> types = new ArrayList<>();
         boolean isUp17 = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17;
         for (PacketType packetType : packetTypeList) {
@@ -196,17 +131,9 @@ public class ReplacerConfig {
                 types.add(ReplacerType.TITLE.getName());
             }
         }
-        configuration.set("Filter鰠Packet-Types", types);
-        configuration.set("Match-Type", matchType.getName());
-        configuration.set("Replaces鰠䳗temp临时", "not null");
-        ConfigurationSection section = configuration.getConfigurationSection("Replaces");
-        if (section != null) {
-            for (String key : section.getKeys(true)) {
-                if (!key.equals("䳗temp临时")) {
-                    configuration.set("Replaces鰠" + key, null);
-                }
-            }
-        }
+        configuration.set("Options鰠Filter鰠Packet-Types", types);
+        configuration.set("Options鰠Match-Type", matchType.getName());
+        configuration.set("Replaces", new ArrayList<String>());
         if (matchType == MatchType.REGEX) {
             for (short i = 0; i < replaces.size(); i++) {
                 if (commentLines.containsKey(i)) {
@@ -230,7 +157,6 @@ public class ReplacerConfig {
                 configuration.set("Replaces鰠" + string, replaces.get(string));
             }
         }
-        configuration.set("Replaces鰠䳗temp临时", null);
         try {
             configuration.save(file);
         } catch (IOException e) {
@@ -267,4 +193,88 @@ public class ReplacerConfig {
         return false;
     }
 
+    private void loadData(File file, DotYamlConfiguration configuration) {
+        this.configuration = configuration;
+        this.file = file;
+        configVersion = (short) configuration.getInt("Config-Version", 1);
+        if (configVersion == 1) {
+            ConfigurationSection configurationSection = configuration.getConfigurationSection("");
+            for (String key: configurationSection.getKeys(false)) {
+                if (key.equals("Replaces")) {
+                    break;
+                }
+                configuration.set("Options鰠" + key, configuration.get(key));
+                configuration.set(key, null);
+            }
+            edited = true;
+            configVersion = 2;
+            configuration.set("23333㩵遌㚳这是注释是", "0| # 请勿手动修改Config-Version值! ");
+            configuration.set("Config-Version", configVersion);
+        }
+        enable = configuration.getBoolean("Options鰠Enable", false);
+        priority = configuration.getInt("Options鰠Priority", 5);
+        author = configuration.getString("Options鰠Author");
+        version = configuration.getString("Options鰠Version");
+        List<String> types = configuration.getStringList("Filter鰠Packet-Types");
+        boolean typeFound;
+        if (types.isEmpty()) {
+            ReplacerType[] replacerTypes = ReplacerType.values();
+            for (ReplacerType replacerType : replacerTypes) {
+                packetTypeList.add(replacerType.getPacketType());
+            }
+        } else {
+            for (String type : types) {
+                typeFound = false;
+                for (ReplacerType replacerType : ReplacerType.values()) {
+                    if (replacerType.getName().equals(type)) {
+                        typeFound = true;
+                        packetTypeList.add(replacerType.getPacketType());
+                        break;
+                    }
+                }
+                if (!typeFound) {
+                    Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知或不支持的数据包类型: " + type);
+                }
+            }
+        }
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
+            if (packetTypeList.remove(PacketType.Play.Server.TITLE)) {
+                packetTypeList.add(PacketType.Play.Server.SET_TITLE_TEXT);
+                packetTypeList.add(PacketType.Play.Server.SET_SUBTITLE_TEXT);
+            }
+        }
+
+        String matchType = configuration.getString("Options鰠Match-Type", "contain");
+        typeFound = false;
+        for (MatchType availableMatchType : MatchType.values()) {
+            if (availableMatchType.name.equalsIgnoreCase(matchType)) {
+                this.matchType = availableMatchType;
+                typeFound = true;
+                break;
+            }
+        }
+        if (!typeFound) {
+            this.matchType = MatchType.CONTAIN;
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"contain\"");
+        }
+        ConfigurationSection section = configuration.getConfigurationSection("Replaces");
+        if (section != null) {
+            Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
+            if (this.matchType == MatchType.REGEX) {
+                for (String key : section.getKeys(true)) {
+                    String value = configuration.getString("Replaces鰠" + key);
+                    if (!checkComment(key, value, commentKeyPattern)) {
+                        replaces.put(Pattern.compile(key, Pattern.DOTALL), value);
+                    }
+                }
+            } else {
+                for (String key : section.getKeys(true)) {
+                    String value = configuration.getString("Replaces鰠" + key);
+                    if (!checkComment(key, value, commentKeyPattern)) {
+                        replaces.put(key, value);
+                    }
+                }
+            }
+        }
+    }
 }
