@@ -215,7 +215,7 @@ public class ReplacerConfig {
         priority = configuration.getInt("Options鰠Priority", 5);
         author = configuration.getString("Options鰠Author");
         version = configuration.getString("Options鰠Version");
-        List<String> types = configuration.getStringList("Filter鰠Packet-Types");
+        List<String> types = configuration.getStringList("Options鰠Filter鰠Packet-Types");
         boolean typeFound;
         if (types.isEmpty()) {
             ReplacerType[] replacerTypes = ReplacerType.values();
