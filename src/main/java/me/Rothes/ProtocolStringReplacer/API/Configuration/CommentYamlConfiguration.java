@@ -84,7 +84,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                         isInQuote = true;
                     } else if (charAtCursor == ':') {
                         isKey = true;
-                    } else if (charAtCursor == '#') {
+                    } else if (charAtCursor == '#' && (cursor == 0 || " '\":".indexOf(line.charAt(cursor - 1)) != -1)) {
                         foundComment = true;
                         break;
                     }
