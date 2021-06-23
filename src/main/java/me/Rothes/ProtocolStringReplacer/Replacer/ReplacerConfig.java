@@ -107,7 +107,7 @@ public class ReplacerConfig {
             }
         }
         if (!typeFound) {
-            this.matchType = MatchType.EQUAL;
+            this.matchType = MatchType.CONTAIN;
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"contain\"");
         }
         ConfigurationSection section = configuration.getConfigurationSection("Replaces");
@@ -132,7 +132,6 @@ public class ReplacerConfig {
         if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false)) {
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
         }
-        saveConfig();
     }
 
     public boolean isEdited() {
@@ -176,7 +175,7 @@ public class ReplacerConfig {
     }
 
     public String getRelativePath() {
-        return file.getAbsolutePath().replace(ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\", "");
+        return file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/');
     }
 
     public void saveConfig() {
