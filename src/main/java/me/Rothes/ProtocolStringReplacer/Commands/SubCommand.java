@@ -1,9 +1,12 @@
 package me.Rothes.ProtocolStringReplacer.Commands;
 
+import me.Rothes.ProtocolStringReplacer.User.User;
 import org.bukkit.command.CommandSender;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class SubCommand {
 
@@ -18,7 +21,9 @@ public abstract class SubCommand {
         this.description = description;
     }
 
-    public abstract void onExecute(@Nonnull CommandSender sender, @Nonnull String[] args);
+    public abstract void onExecute(@Nonnull User user, @Nonnull String[] args);
+
+    public abstract List<String> onTab(@Nonnull User user, @Nonnull String[] args);
 
     @Nonnull
     public final String getName() {
@@ -35,4 +40,5 @@ public abstract class SubCommand {
         return description;
     }
 
+    public abstract void sendHelp(@Nonnull User user);
 }

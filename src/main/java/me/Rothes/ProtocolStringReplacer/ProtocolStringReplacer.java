@@ -6,11 +6,12 @@ import me.Rothes.ProtocolStringReplacer.Listeners.PlayerJoinListener;
 import me.Rothes.ProtocolStringReplacer.Listeners.PlayerQuitListener;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.PacketListenerManager;
 import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerManager;
+import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.User.UserManager;
+import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,7 +28,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private ReplacerManager replacerManager;
     private PacketListenerManager packetListenerManager;
     private UserManager userManager;
-    private CommandHandler commandHandler;
     private byte serverMajorVersion;
 
     public static ProtocolStringReplacer getInstance() {
@@ -83,7 +83,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         loadConfig();
         packetListenerManager = new PacketListenerManager();
         replacerManager = new ReplacerManager();
-        commandHandler = new CommandHandler();
+        CommandHandler commandHandler = new CommandHandler();
         userManager = new UserManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
@@ -96,6 +96,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
         Metrics metrics = new Metrics(this, 11740);
         metrics.addCustomChart(new SimplePie("replaces_count", () -> String.valueOf(replacerManager.getReplacesCount())));
+        metrics.addCustomChart(new SimplePie("replace_configs_count", () -> String.valueOf(replacerManager.getReplacerConfigList().size())));
     }
 
     private boolean checkDepends(String... depends) {
@@ -125,10 +126,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
         config = CommentYamlConfiguration.loadConfiguration(configFile);
     }
 
-    public void reload(CommandSender sender) {
-        if (sender == null) {
-            sender = Bukkit.getConsoleSender();
-        }
+    public void reload(@Nonnull User user) {
+        Validate.notNull(user, "User cannot be null");
         loadConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager = new ReplacerManager();
@@ -138,7 +137,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             userManager.loadUser(player);
             player.updateInventory();
         }
-        sender.sendMessage("§c§lP§6§lS§3§lR §e> §a插件已重载完毕.");
+        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a插件已重载完毕.");
     }
 
 }

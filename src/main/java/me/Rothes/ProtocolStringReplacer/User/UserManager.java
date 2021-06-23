@@ -1,5 +1,7 @@
 package me.Rothes.ProtocolStringReplacer.User;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +12,7 @@ import java.util.UUID;
 public class UserManager {
 
     private HashMap<UUID, User> users = new HashMap<>();
+    private User console = new User(Bukkit.getConsoleSender());
 
     public User getUser(@NotNull UUID uuid) {
         return users.getOrDefault(uuid, loadUser(uuid));
@@ -18,6 +21,11 @@ public class UserManager {
     @Nonnull
     public User getUser(@NotNull Player player) {
         return users.getOrDefault(player.getUniqueId(), loadUser(player));
+    }
+
+    @Nonnull
+    public User getUser(@NotNull CommandSender sender) {
+        return sender instanceof Player? getUser((Player) sender) : console;
     }
 
     public User loadUser(@NotNull UUID uuid) {

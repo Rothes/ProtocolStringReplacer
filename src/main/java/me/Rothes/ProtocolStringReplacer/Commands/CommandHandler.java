@@ -1,13 +1,18 @@
 package me.Rothes.ProtocolStringReplacer.Commands;
 
-import me.Rothes.ProtocolStringReplacer.API.ArrayUtils;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.ReloadSubCommand;
+import me.Rothes.ProtocolStringReplacer.API.ArgumentsUtils;
+import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Edit;
+import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Reload;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.Rothes.ProtocolStringReplacer.User.User;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.block.CommandBlock;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -16,60 +21,70 @@ import java.util.List;
 
 public class CommandHandler implements TabCompleter, CommandExecutor {
 
-    private List<SubCommand> subCommands = new LinkedList<>();
+    private LinkedList<SubCommand> subCommands = new LinkedList<>();
 
     public void initialize() {
         ProtocolStringReplacer.getInstance().getCommand("ProtocolStringReplacer").setExecutor(this);
         Bukkit.getServer().getPluginCommand("ProtocolStringReplacer").setTabCompleter(this);
 
-        registerSubCommand(new ReloadSubCommand());
+        subCommands.add(new Edit());
+        subCommands.add(new Reload());
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length > 0) {
-            args = ArrayUtils.mergeQuotes(args);
-            for (SubCommand subCommand : subCommands) {
-                if (args[0].equalsIgnoreCase(subCommand.getName())) {
-                    if (sender.isOp() || sender.hasPermission(subCommand.getPermission())) {
-                        subCommand.onExecute(sender, args);
-                        return true;
-                    } else {
-                        sender.sendMessage("§c§lP§6§lS§3§lR §e> §c您没有权限这么做.");
+        if (sender instanceof CommandBlock) {
+            sender.sendMessage("§7[§cProtocol§6String§3Replacer§7] §c仅控制台和玩家可使用PSR的指令.");
+        } else {
+            User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
+            if (args.length > 0) {
+                args = ArgumentsUtils.mergeQuotes(args);
+                for (var subCommand : subCommands) {
+                    if (args[0].equalsIgnoreCase(subCommand.getName())) {
+                        if (user.hasPermission(subCommand.getPermission())) {
+                            subCommand.onExecute(user, args);
+                        } else {
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您没有权限这么做.");
+                        }
                         return true;
                     }
                 }
             }
-        }
+            sendHelp(user);
 
-        sendHelp(sender);
+        }
         return true;
     }
 
-    public void sendHelp(@Nonnull CommandSender sender) {
-        sender.sendMessage("§7§m------§b§l §b[ §c§lProtocol§6§lString§3§lReplacer§b ]§l §7§m------");
-        sender.sendMessage("§7 * §e/psr help §7- §b插件指令列表");
-        for (SubCommand subCommand : subCommands) {
-            sender.sendMessage("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
+    public void sendHelp(@Nonnull User user) {
+        user.sendFilteredText("§7§m------§b§l §b[ §c§lProtocol§6§lString§3§lReplacer§b ]§l §7§m------");
+        user.sendFilteredText("§7 * §e/psr help §7- §b插件指令列表");
+        for (var subCommand : subCommands) {
+            user.sendFilteredText("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
         }
-        sender.sendMessage("§7§m-----------------------------------------");
-    }
-
-    public void registerSubCommand(@Nonnull SubCommand subCommand) {
-        subCommands.add(subCommand);
-    }
-
-    public void unregisterSubCommand(@Nonnull SubCommand subCommand) {
-        subCommands.remove(subCommand);
+        user.sendFilteredText("§7§m-----------------------------------------");
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 80.0F, 1.0F);
+        }
+
         List<String> list = new ArrayList<>();
         if (args.length == 1) {
             list.add("help");
-            for (SubCommand subCommand : subCommands) {
-                list.add(subCommand.getName());
+            for (var subCommand : subCommands) {
+                if (sender.hasPermission(subCommand.getPermission())) {
+                    list.add(subCommand.getName());
+                }
+            }
+        } else {
+            for (var subCommand : subCommands) {
+                if (subCommand.getName().equalsIgnoreCase(args[0])) {
+                    list = subCommand.onTab(ProtocolStringReplacer.getInstance().getUserManager().getUser(sender), args);
+                }
             }
         }
         return list;
