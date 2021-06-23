@@ -1,5 +1,6 @@
 package me.Rothes.ProtocolStringReplacer.Commands.SubCommands.EditChildren;
 
+import com.comphenix.protocol.PacketType;
 import me.Rothes.ProtocolStringReplacer.API.ArgumentsUtils;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
@@ -10,6 +11,7 @@ import me.Rothes.ProtocolStringReplacer.User.User;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,8 +63,27 @@ public class File extends SubCommand {
                     user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换文件列表§7 ]§l §7§m-----------");
 
                     for (int i = (page - 1) * 10; i < replacerConfigList.size() && i < page * 10; i++) {
+                        ReplacerConfig replacerConfig = replacerConfigList.get(i);
+                        ComponentBuilder hoverBuilder = new ComponentBuilder("").append(replacerConfig.getRelativePath()).color(ChatColor.GOLD).bold(true).append("\n§3§l状态: ").bold(false).append(replacerConfig.isEnable()? "§a启用" : "§c禁用").
+                                append("\n§3§l优先级: ").append(String.valueOf(replacerConfig.getPriority())).color(ChatColor.AQUA).append("\n§3§l版本: ").append(replacerConfig.getVersion() == null? "§7未定义" : replacerConfig.getVersion()).
+                                append("\n§3§l作者: ").append(replacerConfig.getAuthor() == null? "§7未定义" : replacerConfig.getAuthor()).append("\n§3§l匹配方式: §b");
+                        switch (replacerConfig.getMatchType()) {
+                            case CONTAIN:
+                                hoverBuilder.append("包含匹配");
+                                break;
+                            case EQUAL:
+                                hoverBuilder.append("完全匹配");
+                                break;
+                            case REGEX:
+                                hoverBuilder.append("正则表达式");
+                        }
+                        hoverBuilder.append("\n§3§l监听网络数据包: ");
+                        for (var packetType : replacerConfig.getPacketTypeList()) {
+                            hoverBuilder.append("\n§7- ").append(packetType.name()).color(ChatColor.AQUA);
+                        }
+
                         user.sendFilteredMessage(new ComponentBuilder("[选定]").color(ChatColor.GOLD).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit file select " + i)).append(" " + i + ". ").reset().color(ChatColor.WHITE).
-                                append(replacerConfigList.get(i).getRelativePath()).color(ChatColor.AQUA).create());
+                                append(replacerConfig.getRelativePath()).color(ChatColor.AQUA).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).create());
                     }
 
                     ComponentBuilder pageComponent = new ComponentBuilder("");
