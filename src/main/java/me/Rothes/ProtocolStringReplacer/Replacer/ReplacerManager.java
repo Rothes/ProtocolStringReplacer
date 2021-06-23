@@ -54,15 +54,7 @@ public class ReplacerManager {
             File file = entry.getKey();
             DotYamlConfiguration config = entry.getValue();
             ReplacerConfig replacerConfig = new ReplacerConfig(file, config);
-            int size = replacerConfigList.size();
-            for (int i = 0; i <= size; i++) {
-                if (i == replacerConfigList.size()) {
-                    replacerConfigList.add(replacerConfig);
-                } else if (replacerConfig.getPriority() > replacerConfigList.get(i).getPriority()) {
-                    replacerConfigList.add(i, replacerConfig);
-                    break;
-                }
-            }
+            addReplacerConfig(replacerConfig);
         }
 
         // To warm up the lambda below.
@@ -88,6 +80,18 @@ public class ReplacerManager {
                 });
             }
         }, 0L, cleanTaskInterval);
+    }
+
+    public void addReplacerConfig(ReplacerConfig replacerConfig) {
+        int size = replacerConfigList.size();
+        for (int i = 0; i <= size; i++) {
+            if (i == replacerConfigList.size()) {
+                replacerConfigList.add(replacerConfig);
+            } else if (replacerConfig.getPriority() > replacerConfigList.get(i).getPriority()) {
+                replacerConfigList.add(i, replacerConfig);
+                break;
+            }
+        }
     }
 
     public LinkedList<ReplacerConfig> getReplacerConfigList() {
@@ -196,6 +200,21 @@ public class ReplacerManager {
         }
     }
 
+    public static boolean isYmlFile(@Nonnull File file) {
+        Validate.notNull(file, "File cannot be null");
+        return isYmlFile(file.getName());
+    }
+
+    public static boolean isYmlFile(@Nonnull String name) {
+        Validate.notNull(name, "FileName cannot be null");
+        int length = name.length();
+        if (length > 4) {
+            String subfix = name.substring(length - 4, length);
+            return subfix.equalsIgnoreCase(".yml");
+        }
+        return false;
+    }
+
     @Nonnull
     private HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
         Validate.notNull(path, "Path cannot be null");
@@ -244,17 +263,6 @@ public class ReplacerManager {
                 }
         }
         return setPlaceholders && hasPlaceholder(string)? setPlaceholder(user, string) : string;
-    }
-
-    private boolean isYmlFile(@Nonnull File file) {
-        Validate.notNull(file, "File cannot be null");
-        String name = file.getName();
-        int length = name.length();
-        if (length > 4) {
-            String subfix = name.substring(length - 4, length);
-            return subfix.equalsIgnoreCase(".yml");
-        }
-        return false;
     }
 
     private ItemMeta updatePlaceholders(@Nonnull User user, @Nonnull ItemMeta itemMeta) {
