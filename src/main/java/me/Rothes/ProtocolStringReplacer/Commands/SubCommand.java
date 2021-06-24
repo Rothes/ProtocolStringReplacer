@@ -14,8 +14,7 @@ public abstract class SubCommand {
     private String permission;
     private String description;
 
-    @ParametersAreNonnullByDefault
-    public SubCommand(String name, String permission, String description) {
+    public SubCommand(@Nonnull String name, @Nonnull String permission, @Nonnull String description) {
         this.name = name;
         this.permission = permission;
         this.description = description;

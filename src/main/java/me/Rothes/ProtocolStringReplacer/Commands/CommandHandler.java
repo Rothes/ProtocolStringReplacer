@@ -39,6 +39,22 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
             User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
             if (args.length > 0) {
                 args = ArgumentsUtils.mergeQuotes(args);
+
+                if (args[0].equalsIgnoreCase("confirm")) {
+                    if (user.hasCommandToConfirm()) {
+                        if (user.isConfirmExpired()) {
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c确认操作已超时. 请重新执行.");
+                            user.clearCommandToConfirm();
+                            return true;
+                        } else {
+                            args = user.getCommandToConfirm();
+                        }
+                    } else {
+                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您没有待确认的操作.");
+                        return true;
+                    }
+                }
+
                 for (var subCommand : subCommands) {
                     if (args[0].equalsIgnoreCase(subCommand.getName())) {
                         if (user.hasPermission(subCommand.getPermission())) {
@@ -57,7 +73,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
     }
 
     public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText("§7§m------§b§l §b[ §c§lProtocol§6§lString§3§lReplacer§b ]§l §7§m------");
+        user.sendFilteredText("§7§m------§7§l §7[ §c§lProtocol§6§lString§3§lReplacer§7 ]§l §7§m------");
         user.sendFilteredText("§7 * §e/psr help §7- §b插件指令列表");
         for (var subCommand : subCommands) {
             user.sendFilteredText("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
@@ -75,6 +91,10 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         List<String> list = new ArrayList<>();
         if (args.length == 1) {
             list.add("help");
+            User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
+            if (user.hasCommandToConfirm() && !user.isConfirmExpired()) {
+                list.add("confirm");
+            }
             for (var subCommand : subCommands) {
                 if (sender.hasPermission(subCommand.getPermission())) {
                     list.add(subCommand.getName());

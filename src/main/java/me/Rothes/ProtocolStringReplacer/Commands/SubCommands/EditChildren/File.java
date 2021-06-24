@@ -1,6 +1,5 @@
 package me.Rothes.ProtocolStringReplacer.Commands.SubCommands.EditChildren;
 
-import com.comphenix.protocol.PacketType;
 import me.Rothes.ProtocolStringReplacer.API.ArgumentsUtils;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
@@ -52,7 +51,7 @@ public class File extends SubCommand {
                     }
 
                     if (page > totalPage) {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定不大于总页码 §f" + totalPage + " §c的页码.");
+                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于总页码 §f" + totalPage + " §c的页码.");
                         return;
                     }
                     if (page < 1) {
