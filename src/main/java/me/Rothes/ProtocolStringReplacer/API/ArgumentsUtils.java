@@ -1,7 +1,6 @@
 package me.Rothes.ProtocolStringReplacer.API;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
@@ -82,7 +81,6 @@ public class ArgumentsUtils {
                         }
                     }
                     stringBuilder.deleteCharAt(0).deleteCharAt(stringBuilder.length() - 1);
-                    Bukkit.getConsoleSender().sendMessage(stringBuilder.toString());
                     merged.add(stringBuilder.toString());
                     startIndex = -1;
                 }
