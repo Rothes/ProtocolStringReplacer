@@ -276,6 +276,19 @@ public class ReplacerConfig {
         this.configuration = configuration;
         this.file = file;
         configVersion = (short) configuration.getInt("Config-Version", 1);
+        if (configVersion == 1) {
+            ConfigurationSection configurationSection = configuration.getConfigurationSection("");
+            for (String key: configurationSection.getKeys(false)) {
+                if (key.equals("Replaces")) {
+                    break;
+                }
+                configuration.set("Options鰠" + key, configuration.get(key));
+                configuration.set(key, null);
+            }
+            edited = true;
+            configuration.set("23333㩵遌㚳这是注释是", "0| # 请勿手动修改Config-Version值! ");
+            configuration.set("Config-Version", 2);
+        }
         enable = configuration.getBoolean("Options鰠Enable", false);
         priority = configuration.getInt("Options鰠Priority", 5);
         author = configuration.getString("Options鰠Author");
@@ -342,19 +355,8 @@ public class ReplacerConfig {
             }
         }
         if (configVersion == 1) {
-            ConfigurationSection configurationSection = configuration.getConfigurationSection("");
-            for (String key: configurationSection.getKeys(false)) {
-                if (key.equals("Replaces")) {
-                    break;
-                }
-                configuration.set("Options鰠" + key, configuration.get(key));
-                configuration.set(key, null);
-            }
-            edited = true;
-            configVersion = 2;
-            configuration.set("23333㩵遌㚳这是注释是", "0| # 请勿手动修改Config-Version值! ");
-            configuration.set("Config-Version", configVersion);
             saveConfig();
+            configVersion = 2;
         }
     }
 
