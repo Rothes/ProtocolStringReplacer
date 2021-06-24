@@ -65,7 +65,7 @@ public class Replace extends SubCommand {
 
                     for (int i = (page - 1) * 10; i < replaces.size() && i < page * 10; i++) {
                         String original = replaces.get(i).toString();
-                        String replacement = (String) replaces.get(original);
+                        String replacement = (String) replaces.get(replaces.get(i));
                         LinkedList<ReplacerConfig.CommentLine> commentLines = commentLinesMap.get((short) i);
                         ComponentBuilder hoverBuilder = new ComponentBuilder("§6§l注释内容:").color(ChatColor.GREEN);
                         if (commentLines != null && !commentLines.isEmpty()) {
