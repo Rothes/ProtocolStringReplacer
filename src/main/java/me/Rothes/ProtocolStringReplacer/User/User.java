@@ -71,18 +71,6 @@ public class User {
         return player;
     }
 
-    public boolean isOnline() {
-        return player != null && player.isOnline();
-    }
-
-    public boolean hasPermission(String permission) {
-        return sender.isOp() || sender.hasPermission(permission);
-    }
-
-    public boolean hasPermission(Permission permission) {
-        return (isOnline() && player.hasPermission(permission));
-    }
-
     public HashMap<Short, ItemMeta> getMetaCache() {
         return metaCache;
     }
@@ -93,6 +81,26 @@ public class User {
 
     public String getCurrentWindowTitle() {
         return currentWindowTitle;
+    }
+
+    public String[] getCommandToConfirm() {
+        return commandToConfirm;
+    }
+
+    public ReplacerConfig getEditorReplacerConfig() {
+        return editorReplacerConfig;
+    }
+
+    public boolean isOnline() {
+        return player != null && player.isOnline();
+    }
+
+    public boolean hasPermission(String permission) {
+        return sender.isOp() || sender.hasPermission(permission);
+    }
+
+    public boolean hasPermission(Permission permission) {
+        return (isOnline() && player.hasPermission(permission));
     }
 
     public void setCurrentWindowTitle(String title) {
@@ -113,9 +121,6 @@ public class User {
         return Arrays.equals(args, commandToConfirm);
     }
 
-    public String[] getCommandToConfirm() {
-        return commandToConfirm;
-    }
 
     public boolean hasCommandToConfirm() {
         return commandToConfirm != null;
