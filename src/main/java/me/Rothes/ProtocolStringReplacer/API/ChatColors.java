@@ -23,11 +23,11 @@ public class ChatColors {
         Validate.notNull(string, "String cannot be null");
 
         StringBuilder stringBuilder = new StringBuilder(string);
-        for(int i = 0; i < string.length() - 2; i++) {
+        for(int i = string.length() - 2; i >= 0; i--) {
             char Char = string.charAt(i);
             char nextChar = string.charAt(i + 1);
             if (Char == '§' && "0123456789abcdefklmnOoxr".indexOf(nextChar) != -1) {
-                stringBuilder.insert(++i + 1, '&').insert(i + 2, nextChar);
+                stringBuilder.insert(i + 2, nextChar).insert(i + 2, '&');
             }
         }
         return stringBuilder.toString();
