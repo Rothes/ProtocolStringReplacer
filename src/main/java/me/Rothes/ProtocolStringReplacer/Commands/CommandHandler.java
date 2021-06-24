@@ -89,21 +89,21 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         }
 
         List<String> list = new ArrayList<>();
+        User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
         if (args.length == 1) {
             list.add("help");
-            User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
             if (user.hasCommandToConfirm() && !user.isConfirmExpired()) {
                 list.add("confirm");
             }
             for (var subCommand : subCommands) {
-                if (sender.hasPermission(subCommand.getPermission())) {
+                if (user.hasPermission(subCommand.getPermission())) {
                     list.add(subCommand.getName());
                 }
             }
         } else {
             for (var subCommand : subCommands) {
                 if (subCommand.getName().equalsIgnoreCase(args[0])) {
-                    list = subCommand.onTab(ProtocolStringReplacer.getInstance().getUserManager().getUser(sender), args);
+                    list = subCommand.onTab(user, args);
                 }
             }
         }

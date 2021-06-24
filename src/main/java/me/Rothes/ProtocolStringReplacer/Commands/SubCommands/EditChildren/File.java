@@ -165,7 +165,7 @@ public class File extends SubCommand {
                             }
                         } else {
                             user.setCommandToConfirm(args);
-                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请在 15 秒内重新输入一次指令或输入 §e/psr confirm §c以确认删除 §f" + replacerConfig.getRelativePath());
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请在 15 秒内重新执行一次操作或输入 §e/psr confirm §c以确认删除 §f" + replacerConfig.getRelativePath());
                         }
                     } else {
                         user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c找不到此替换配置文件: §f" + args[3]);
