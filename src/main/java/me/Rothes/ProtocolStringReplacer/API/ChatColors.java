@@ -21,6 +21,7 @@ public class ChatColors {
     @Nonnull
     public static String showColorCodes(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
+
         StringBuilder stringBuilder = new StringBuilder(string);
         for(int i = 0; i < string.length() - 2; i++) {
             char Char = string.charAt(i);
