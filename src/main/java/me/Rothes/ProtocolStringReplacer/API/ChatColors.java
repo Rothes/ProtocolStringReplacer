@@ -4,7 +4,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,14 +22,7 @@ public class ChatColors {
     public static String showColorCodes(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
 
-        StringBuilder stringBuilder = new StringBuilder(string);/*
-        for(int i = string.length() - 2; i >= 0; i--) {
-            char Char = string.charAt(i);
-            char nextChar = string.charAt(i + 1);
-            if (Char == '§' && "0123456789abcdefklmnOoxr".indexOf(nextChar) != -1) {
-                stringBuilder.insert(i, nextChar).insert(i, '&');
-            }
-        }*/
+        StringBuilder stringBuilder = new StringBuilder(string);
         for(int i = 0; i < string.length() - 2; i++) {
             char Char = string.charAt(i);
             char nextChar = string.charAt(i + 1);
