@@ -30,8 +30,8 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         }
     }
 
-    protected static Pattern commentKeyPattern = Pattern.compile("([|0-9]+)㩵遌㚳这是注释([是否])");
-    protected static Pattern commentPattern = Pattern.compile("^( *)([|0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
+    protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([是否])");
+    protected static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
 
     protected static Pattern startedSpacePattern = Pattern.compile("^( +)");
     protected static Pattern endedSpacePattern = Pattern.compile("( +)$");
