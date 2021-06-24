@@ -33,8 +33,8 @@ public class CommentYamlConfiguration extends YamlConfiguration {
     protected static Pattern commentKeyPattern = Pattern.compile("([|0-9]+)㩵遌㚳这是注释([是否])");
     protected static Pattern commentPattern = Pattern.compile("^( *)([|0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
 
-    protected static Pattern startedSpacePattern = Pattern.compile("^( *)");
-    protected static Pattern endedSpacePattern = Pattern.compile("( *)$");
+    protected static Pattern startedSpacePattern = Pattern.compile("^( +)");
+    protected static Pattern endedSpacePattern = Pattern.compile("( +)$");
 
     public static Pattern getCommentKeyPattern() {
         return commentKeyPattern;
@@ -91,7 +91,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                 }
                 cursor++;
             }
-            // Need this to keep the comments in ReplacerConfig ordering.
+            // Convenient to edit comments in the configurations.
             if (isKey) {
                 startedSpace = getStartedSpace(line);
                 for (var comment : commentsToAdd) {
@@ -184,18 +184,20 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         Validate.notNull(string, "String cannot be null");
 
         Matcher matcher = startedSpacePattern.matcher(string);
-        //noinspection ResultOfMethodCallIgnored
-        matcher.find();
-        return matcher.group(1);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
     }
 
     protected static String getEndedSpace(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
 
         Matcher matcher = endedSpacePattern.matcher(string);
-        //noinspection ResultOfMethodCallIgnored
-        matcher.find();
-        return matcher.group(1);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
     }
 
 }

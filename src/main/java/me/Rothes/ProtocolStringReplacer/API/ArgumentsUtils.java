@@ -14,7 +14,7 @@ public class ArgumentsUtils {
     @Nonnull
     public static String formatWithQuotes(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
-        if (string.equals("")) {
+        if (string.isEmpty()) {
             return string;
         } else {
             StringBuilder stringBuilder = new StringBuilder();
