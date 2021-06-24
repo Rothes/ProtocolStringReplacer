@@ -1,6 +1,7 @@
 package me.Rothes.ProtocolStringReplacer.API;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
@@ -23,7 +24,7 @@ public class ArgumentsUtils {
             for (String arg : args) {
                 stringBuilder.append(" ").append(arg);
                 char[] chars = arg.toCharArray();
-                for (int i1 = chars.length - 1; i1 > 9; i1--) {
+                for (int i1 = chars.length - 1; i1 >= 0; i1--) {
                     if (chars[i1] == '\"') {
                         stringBuilder.append('\"');
                     } else {
@@ -59,15 +60,29 @@ public class ArgumentsUtils {
                 //noinspection ResultOfMethodCallIgnored
                 matcher.find();
                 String quotes = matcher.group(0);
+                if (startIndex == i && isAllQuote(arg)) {
+                    quotes = quotes.substring(1);
+                }
                 if ((quotes.length() % 2) == 1) {
                     StringBuilder stringBuilder = new StringBuilder(i - startIndex);
-                    stringBuilder.append(strings[startIndex++]);
-                    while (startIndex <= i) {
-                        stringBuilder.append(" ").append(strings[startIndex++]);
+                    stringBuilder.append(strings[startIndex]);
+                    matcher = lastQuotes.matcher(strings[startIndex++]);
+                    if (matcher.find()) {
+                        quotes = matcher.group(0);
+                        int length = stringBuilder.length();
+                        stringBuilder.delete(length - quotes.length() / 2, length);
                     }
-                    int length = stringBuilder.length();
-                    stringBuilder.delete(length - quotes.length() / 2 - 1, length)
-                            .deleteCharAt(0);
+                    while (startIndex <= i) {
+                        stringBuilder.append(" ").append(strings[startIndex]);
+                        matcher = lastQuotes.matcher(strings[startIndex++]);
+                        if (matcher.find()) {
+                            quotes = matcher.group(0);
+                            int length = stringBuilder.length();
+                            stringBuilder.delete(length - quotes.length() / 2, length);
+                        }
+                    }
+                    stringBuilder.deleteCharAt(0).deleteCharAt(stringBuilder.length() - 1);
+                    Bukkit.getConsoleSender().sendMessage(stringBuilder.toString());
                     merged.add(stringBuilder.toString());
                     startIndex = -1;
                 }
@@ -81,4 +96,12 @@ public class ArgumentsUtils {
         return merged.toArray(new String[0]);
     }
 
+    private static boolean isAllQuote(String string) {
+        for (int i = 0 ;i < string.length(); i++) {
+            if (string.charAt(i) != '\"') {
+                return false;
+            }
+        }
+        return true;
+    }
 }
