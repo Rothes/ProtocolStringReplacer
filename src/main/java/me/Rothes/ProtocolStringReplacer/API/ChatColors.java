@@ -4,6 +4,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,21 +20,38 @@ public class ChatColors {
     }
 
     @Nonnull
-    public static String getColored(@Nonnull String textToTranslate, boolean translateColor, boolean translateFormat, boolean translateRGB) {
-        Validate.notNull(textToTranslate, "Text cannot be null");
-        char[] chars = textToTranslate.toCharArray();
+    public static String showColorCodes(@Nonnull String string) {
+        Validate.notNull(string, "String cannot be null");
 
-        for(int i = 0; i < chars.length - 1; ++i) {
-            if (chars[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoXxRr".indexOf(chars[i + 1]) > -1) {
-                chars[i] = '§';
-                chars[i + 1] = Character.toLowerCase(chars[i + 1]);
+        StringBuilder stringBuilder = new StringBuilder(string);/*
+        for(int i = string.length() - 2; i >= 0; i--) {
+            char Char = string.charAt(i);
+            char nextChar = string.charAt(i + 1);
+            if (Char == '§' && "0123456789abcdefklmnOoxr".indexOf(nextChar) != -1) {
+                stringBuilder.insert(i, nextChar).insert(i, '&');
+            }
+        }*/
+        for(int i = 0; i < string.length() - 2; i++) {
+            char Char = string.charAt(i);
+            char nextChar = string.charAt(i + 1);
+            if (Char == '§' && "0123456789abcdefklmnOoxr".indexOf(nextChar) != -1) {
+                stringBuilder.insert(++i + 1, '&').insert(++i + 1, nextChar);
             }
         }
-        String translated = new String(chars);
-        if (translateRGB) {
-            translated = translateRGB(translated);
+        return stringBuilder.toString();
+    }
+
+    @Nonnull
+    public static String restoreColored(@Nonnull String string) {
+        Validate.notNull(string, "String cannot be null");
+
+        char[] chars = string.toCharArray();
+        for(int i = 0; i < chars.length - 1; i++) {
+            if (chars[i] == '§') {
+                chars[i] = '&';
+            }
         }
-        return translated;
+        return new String(chars);
     }
 
     @Nonnull
