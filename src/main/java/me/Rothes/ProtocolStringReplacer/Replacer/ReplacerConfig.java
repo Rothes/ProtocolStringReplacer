@@ -16,18 +16,27 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplacerConfig {
 
-    private static class CommentLine {
+    public static class CommentLine {
         private String key;
         private String value;
 
         private CommentLine(String key, String value) {
             this.key = key;
             this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 
@@ -112,6 +121,10 @@ public class ReplacerConfig {
         return file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/');
     }
 
+    public HashMap<Short, LinkedList<CommentLine>> getCommentLines() {
+        return commentLines;
+    }
+
     public void saveConfig() {
         configuration.set("Config-Version", configVersion);
         configuration.set("Options鰠Enable", enable);
@@ -159,24 +172,90 @@ public class ReplacerConfig {
         }
         try {
             configuration.save(file);
+            edited = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public String toString() {
-        return "ReplacerConfig{" +
-                "file=" + file +
-                ", configuration=" + configuration +
-                ", enable=" + enable +
-                ", priority=" + priority +
-                ", packetTypeList=" + packetTypeList +
-                ", matchType=" + matchType +
-                ", replaces=" + replaces +
-                ", author='" + author + '\'' +
-                ", version='" + version + '\'' +
-                '}';
+    public void setReplace(int index, @Nonnull String value) {
+        if (index < replaces.size()) {
+            replaces.setValue(index, value);
+            edited = true;
+            saveConfig();
+        }
+    }
+
+    public void setReplace(int index, @Nonnull String key, @Nonnull String value) {
+        if (index < replaces.size()) {
+            removeReplace(index, false);
+        }
+        if (index <= replaces.size()) {
+            addReplace(index, key, value);
+            edited = true;
+            saveConfig();
+        }
+    }
+
+    public void addReplace(int index, @Nonnull String key, @Nonnull String value) {
+        if (index <= replaces.size()) {
+            if (this.matchType == MatchType.REGEX) {
+                replaces.put(index, Pattern.compile(key), value);
+            } else {
+            replaces.put(index, key, value);
+            }
+            HashMap<Short, LinkedList<CommentLine>> commentLines = new HashMap<>();
+            for (Map.Entry<Short, LinkedList<CommentLine>> entry : this.commentLines.entrySet()) {
+                short i = entry.getKey();
+                LinkedList<CommentLine> commentLineList = entry.getValue();
+                if (i >= index) {
+                    commentLines.put((short) (i + 1), commentLineList);
+                } else {
+                    commentLines.put(i, commentLineList);
+                }
+                this.commentLines = commentLines;
+            }
+            edited = true;
+            saveConfig();
+        }
+    }
+
+    public void addReplace(@Nonnull String key, @Nonnull String value) {
+        addReplace(replaces.size(), key, value);
+    }
+
+    public void removeReplace(int index) {
+        removeReplace(index, true);
+        edited = true;
+        saveConfig();
+    }
+
+    public void removeReplace(int index, boolean editComment) {
+        HashMap<Short, LinkedList<CommentLine>> commentLines = new HashMap<>();
+        if (editComment) {
+            for (Map.Entry<Short, LinkedList<CommentLine>> entry : this.commentLines.entrySet()) {
+                short i = entry.getKey();
+                LinkedList<CommentLine> commentLineList = entry.getValue();
+                if (i > index) {
+                    commentLines.put((short) (i - 1), commentLineList);
+                } else if (i < index) {
+                    commentLines.put(i, commentLineList);
+                }
+            }
+            this.commentLines = commentLines;
+        }
+        replaces.remove(index);
+        edited = true;
+        saveConfig();
+    }
+
+    public int checkReplaceKey(@Nonnull String key) {
+        for (int i = 0; i < replaces.size(); i++) {
+            if (replaces.get(i).equals(key)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private boolean checkComment(String key, String value, Pattern pattern) {
@@ -210,6 +289,7 @@ public class ReplacerConfig {
             configVersion = 2;
             configuration.set("23333㩵遌㚳这是注释是", "0| # 请勿手动修改Config-Version值! ");
             configuration.set("Config-Version", configVersion);
+            saveConfig();
         }
         enable = configuration.getBoolean("Options鰠Enable", false);
         priority = configuration.getInt("Options鰠Priority", 5);
@@ -264,7 +344,7 @@ public class ReplacerConfig {
                 for (String key : section.getKeys(true)) {
                     String value = configuration.getString("Replaces鰠" + key);
                     if (!checkComment(key, value, commentKeyPattern)) {
-                        replaces.put(Pattern.compile(key, Pattern.DOTALL), value);
+                        replaces.put(Pattern.compile(key), value);
                     }
                 }
             } else {
@@ -277,4 +357,20 @@ public class ReplacerConfig {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "ReplacerConfig{" +
+                "file=" + file +
+                ", configuration=" + configuration +
+                ", enable=" + enable +
+                ", priority=" + priority +
+                ", packetTypeList=" + packetTypeList +
+                ", matchType=" + matchType +
+                ", replaces=" + replaces +
+                ", author='" + author + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
+
 }
