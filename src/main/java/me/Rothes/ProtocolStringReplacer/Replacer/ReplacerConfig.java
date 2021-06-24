@@ -354,9 +354,10 @@ public class ReplacerConfig {
                 }
             }
         }
-        if (configVersion == 1) {
-            saveConfig();
+        if (configVersion < 2) {
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §2已自动升级替换配置 §a" + getRelativePath() + " §2到配置版本 §a2§2.");
             configVersion = 2;
+            saveConfig();
         }
     }
 
