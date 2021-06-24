@@ -21,13 +21,12 @@ public class ChatColors {
     @Nonnull
     public static String showColorCodes(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
-
         StringBuilder stringBuilder = new StringBuilder(string);
         for(int i = 0; i < string.length() - 2; i++) {
             char Char = string.charAt(i);
             char nextChar = string.charAt(i + 1);
             if (Char == '§' && "0123456789abcdefklmnOoxr".indexOf(nextChar) != -1) {
-                stringBuilder.insert(++i + 1, '&').insert(++i + 1, nextChar);
+                stringBuilder.insert(++i + 1, '&').insert(i + 2, nextChar);
             }
         }
         return stringBuilder.toString();
