@@ -3,6 +3,7 @@ package me.Rothes.ProtocolStringReplacer.User;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
@@ -140,7 +141,7 @@ public class User {
             sender.spigot().sendMessage(baseComponents);
         } else {
             PacketContainer packet = new PacketContainer(PacketType.Play.Server.CHAT);
-            packet.getModifier().write(2, baseComponents);
+            packet.getChatComponents().write(0, ComponentConverter.fromBaseComponent(baseComponents));
             packet.getChatTypes().write(0, EnumWrappers.ChatType.SYSTEM);
             try {
                 ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
