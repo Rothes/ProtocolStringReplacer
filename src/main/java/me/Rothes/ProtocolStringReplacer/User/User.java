@@ -143,9 +143,10 @@ public class User {
             PacketContainer packet = new PacketContainer(PacketType.Play.Server.CHAT);
             packet.getChatComponents().write(0, ComponentConverter.fromBaseComponent(baseComponents));
             packet.getChatTypes().write(0, EnumWrappers.ChatType.SYSTEM);
+            packet.setMeta("psr_filtered_packet", true);
             try {
                 ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
-                        sendServerPacket(player, packet, false);
+                        sendServerPacket(player, packet);
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }

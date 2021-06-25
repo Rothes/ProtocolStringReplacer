@@ -6,7 +6,6 @@ import com.comphenix.protocol.injector.server.TemporaryPlayer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;

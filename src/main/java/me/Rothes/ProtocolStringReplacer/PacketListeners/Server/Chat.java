@@ -1,6 +1,5 @@
 package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
 
-import me.Rothes.ProtocolStringReplacer.PacketListeners.PacketListenerManager;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import com.comphenix.protocol.PacketType;
@@ -15,9 +14,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class Chat extends AbstractServerPacketListener {
 
@@ -28,24 +27,27 @@ public final class Chat extends AbstractServerPacketListener {
     public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
             PacketContainer packet = packetEvent.getPacket();
-            User user = getEventUser(packetEvent);
-            StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
-            WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-            if (wrappedChatComponent != null) {
-                // TODO
-                wrappedChatComponent.setJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(wrappedChatComponent.getJson(), user, filter));
-                wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
-            } else {
-                StructureModifier<Object> structureModifier = packet.getModifier();
-                BaseComponent[] baseComponents = ((BaseComponent[]) structureModifier.read(2));
-                if (baseComponents != null) {
-                    for (BaseComponent baseComponent : baseComponents) {
-                        baseComponent = getReplacedComponent(baseComponent, user);
-                        if (hasExtra(baseComponent)) {
-                            baseComponent.setExtra(getReplacedExtra(baseComponent, user));
+            Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
+            if (!(isFiltered.isPresent() && isFiltered.get())) {
+                User user = getEventUser(packetEvent);
+                StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
+                WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
+                if (wrappedChatComponent != null) {
+                    // TODO
+                    wrappedChatComponent.setJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(wrappedChatComponent.getJson(), user, filter));
+                    wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
+                } else {
+                    StructureModifier<Object> structureModifier = packet.getModifier();
+                    BaseComponent[] baseComponents = ((BaseComponent[]) structureModifier.read(2));
+                    if (baseComponents != null) {
+                        for (BaseComponent baseComponent : baseComponents) {
+                            baseComponent = getReplacedComponent(baseComponent, user);
+                            if (hasExtra(baseComponent)) {
+                                baseComponent.setExtra(getReplacedExtra(baseComponent, user));
+                            }
                         }
+                        structureModifier.write(2, baseComponents);
                     }
-                    structureModifier.write(2, baseComponents);
                 }
             }
         }
