@@ -30,11 +30,11 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         }
     }
 
-    protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([是否])");
-    protected static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
+    protected final static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([是否])");
+    protected final static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
 
-    protected static Pattern startedSpacePattern = Pattern.compile("^( +)");
-    protected static Pattern endedSpacePattern = Pattern.compile("( +)$");
+    protected final static Pattern startedSpacePattern = Pattern.compile("^( +)");
+    protected final static Pattern endedSpacePattern = Pattern.compile("( +)$");
 
     public static Pattern getCommentKeyPattern() {
         return commentKeyPattern;
@@ -175,6 +175,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         return config;
     }
 
+    @Override
     @NotNull
     protected String parseHeader(@NotNull String input) {
         return "";
