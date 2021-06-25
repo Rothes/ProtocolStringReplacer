@@ -145,7 +145,7 @@ public class User {
             packet.getChatTypes().write(0, EnumWrappers.ChatType.SYSTEM);
             try {
                 ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
-                        sendServerPacket(player, packet, true);
+                        sendServerPacket(player, packet, false);
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
