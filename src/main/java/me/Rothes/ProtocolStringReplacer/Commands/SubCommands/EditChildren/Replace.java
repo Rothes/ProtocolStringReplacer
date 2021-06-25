@@ -42,7 +42,7 @@ public class Replace extends SubCommand {
                     int page = 1;
                     ListOrderedMap replaces = user.getEditorReplacerConfig().getReplaces();
                     HashMap<Short, LinkedList<ReplacerConfig.CommentLine>> commentLinesMap = user.getEditorReplacerConfig().getCommentLines();
-                    int totalPage = (int) Math.ceil((float) replaces.size() / 10);
+                    int totalPage = (int) Math.ceil((float) replaces.size() / 5);
                     if (args.length == 4) {
                         if (StringUtils.isNumeric(args[3])) {
                             page = Integer.parseInt(args[3]);
@@ -63,7 +63,7 @@ public class Replace extends SubCommand {
 
                     user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换项目列表§7 ]§l §7§m-----------");
 
-                    for (int i = (page - 1) * 10; i < replaces.size() && i < page * 10; i++) {
+                    for (int i = (page - 1) * 5; i < replaces.size() && i < page * 5; i++) {
                         String original = replaces.get(i).toString();
                         String replacement = (String) replaces.get(replaces.get(i));
                         LinkedList<ReplacerConfig.CommentLine> commentLines = commentLinesMap.get((short) i);
