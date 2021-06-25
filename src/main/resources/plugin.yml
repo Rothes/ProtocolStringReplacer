@@ -11,6 +11,9 @@ commands:
     aliases: [psr]
     description: ProtocolStringReplacer commands.
 permissions:
+  protocolstringreplacer.command.edit:
+    description: allow you to edit the replacer configs.
+    default: op
   protocolstringreplacer.command.reload:
     description: allow you to reload the configs.
     default: op
