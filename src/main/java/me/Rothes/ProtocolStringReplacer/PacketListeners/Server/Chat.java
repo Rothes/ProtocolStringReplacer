@@ -1,5 +1,6 @@
 package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
 
+import me.Rothes.ProtocolStringReplacer.API.ComponentConverter;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import com.comphenix.protocol.PacketType;
@@ -10,11 +11,15 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,15 +43,26 @@ public final class Chat extends AbstractServerPacketListener {
                     wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
                 } else {
                     StructureModifier<Object> structureModifier = packet.getModifier();
-                    BaseComponent[] baseComponents = ((BaseComponent[]) structureModifier.read(2));
-                    if (baseComponents != null) {
-                        for (BaseComponent baseComponent : baseComponents) {
-                            baseComponent = getReplacedComponent(baseComponent, user);
-                            if (hasExtra(baseComponent)) {
-                                baseComponent.setExtra(getReplacedExtra(baseComponent, user));
-                            }
+                    int fieldIndex = 0;
+                    boolean foundComponent = false;
+                    Object read = null;
+                    // Paper has an extra field for its component.
+                    while (fieldIndex < 2 && !(read instanceof BaseComponent[] || isPaperComponent(read))) {
+                        read = structureModifier.read(++fieldIndex);
+                        if (read instanceof BaseComponent[] || isPaperComponent(read)) {
+                            foundComponent = true;
+                            break;
                         }
-                        structureModifier.write(2, baseComponents);
+                    }
+
+                    if (foundComponent) {
+                        if (isPaperComponent(read)) {
+                            BaseComponent[] baseComponents = getReplacedComponents(ComponentConverter.paperToSpigot((net.kyori.adventure.text.TextComponent) read), user);
+                            Bukkit.getConsoleSender().sendMessage(Arrays.toString(baseComponents));
+                            structureModifier.write(fieldIndex, ComponentConverter.spigotToPaper(baseComponents));
+                        } else {
+                            structureModifier.write(fieldIndex, getReplacedComponents((BaseComponent[]) read, user));
+                        }
                     }
                 }
             }
@@ -58,11 +74,24 @@ public final class Chat extends AbstractServerPacketListener {
     }
 
     @Nonnull
-    private List<BaseComponent> getReplacedExtra(@Nonnull BaseComponent baseComponent, User user) {
+    private BaseComponent[] getReplacedComponents(@Nonnull BaseComponent[] baseComponents, @Nonnull User user) {
+        for (int i = 0; i < baseComponents.length; i++) {
+            BaseComponent baseComponent = baseComponents[i];
+            baseComponent = getReplacedComponent(baseComponent, user);
+            if (hasExtra(baseComponent)) {
+                baseComponent.setExtra(getReplacedExtra(baseComponent, user));
+            }
+            baseComponents[i] = baseComponent;
+        }
+
+        return baseComponents;
+    }
+
+    @Nonnull
+    private List<BaseComponent> getReplacedExtra(@Nonnull BaseComponent baseComponent, @Nonnull User user) {
         Validate.notNull(baseComponent, "BaseComponent cannot be null");
-        List<BaseComponent> replacedExtra = new ArrayList<>();
+        LinkedList<BaseComponent> replacedExtra = new LinkedList<>();
         for (BaseComponent extra : baseComponent.getExtra()) {
-            // TODO
             extra = getReplacedComponent(extra, user);
             if (hasExtra(extra)) {
                 extra.setExtra(getReplacedExtra(extra, user));
@@ -73,11 +102,17 @@ public final class Chat extends AbstractServerPacketListener {
     }
 
     @Nonnull
-    private BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, User user) {
+    private BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user) {
         Validate.notNull(baseComponent, "BaseComponent cannot be null");
-        BaseComponent replaced = new TextComponent(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(baseComponent.toPlainText(), user, filter));
-        replaced.copyFormatting(baseComponent);
-        return replaced;
+        if (baseComponent instanceof TextComponent) {
+            TextComponent textComponent = ((TextComponent) baseComponent);
+            textComponent.setText(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(((TextComponent) baseComponent).getText(), user, filter));
+        }
+        return baseComponent;
+    }
+
+    private boolean isPaperComponent(Object object) {
+        return ProtocolStringReplacer.getInstance().isPaper() && object instanceof net.kyori.adventure.text.TextComponent;
     }
 
 }
