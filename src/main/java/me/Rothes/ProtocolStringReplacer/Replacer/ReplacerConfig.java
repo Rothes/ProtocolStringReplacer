@@ -140,7 +140,7 @@ public class ReplacerConfig {
                     break;
                 }
             }
-            if (isUp17 && (packetType == PacketType.Play.Server.SET_TITLE_TEXT || packetType == PacketType.Play.Server.SET_SUBTITLE_TEXT)) {
+            if (isUp17 && (packetType == PacketType.Play.Server.SET_TITLE_TEXT || packetType == PacketType.Play.Server.SET_SUBTITLE_TEXT) && !types.contains("TITLE")) {
                 types.add(ReplacerType.TITLE.getName());
             }
         }
