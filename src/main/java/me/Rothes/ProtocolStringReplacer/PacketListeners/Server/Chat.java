@@ -10,7 +10,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -47,7 +46,7 @@ public final class Chat extends AbstractServerPacketListener {
                         } else if (isPaperComponent(read)) {
                             structureModifier.write(fieldIndex, getPaperGsonComponentSerializer().deserialize(
                                     ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(
-                                            StringEscapeUtils.unescapeJson(getPaperGsonComponentSerializer().serialize((TextComponent) read)), user, filter
+                                            StringEscapeUtils.unescapeJson(getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read)), user, filter
                                     )
                             ));
                         }
@@ -58,7 +57,7 @@ public final class Chat extends AbstractServerPacketListener {
     };
 
     private boolean isPaperComponent(Object object) {
-        return ProtocolStringReplacer.getInstance().isPaper() && object instanceof net.kyori.adventure.text.TextComponent;
+        return ProtocolStringReplacer.getInstance().isPaper() && object instanceof net.kyori.adventure.text.Component;
     }
 
     private GsonComponentSerializer getPaperGsonComponentSerializer() {
