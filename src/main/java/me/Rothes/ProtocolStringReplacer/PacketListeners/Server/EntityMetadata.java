@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import org.bukkit.entity.Entity;
@@ -19,8 +20,9 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         public void onPacketSending(PacketEvent packetEvent) {
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);
-            Entity entity = packet.getEntityModifier(packetEvent).read(0);
-            if (entity != null) {
+            StructureModifier<Entity> entityModifier = packet.getEntityModifier(packetEvent);
+            Entity entity = entityModifier.read(0);
+            if (entity != null && entity.getEntityId() >= 0) {
                 String name = entity.getCustomName();
                 if (name != null) {
                     entity.setCustomName(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(name, user, filter));
