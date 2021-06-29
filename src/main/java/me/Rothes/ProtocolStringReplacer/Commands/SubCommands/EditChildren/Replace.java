@@ -135,7 +135,7 @@ public class Replace extends SubCommand {
                         }
                         String original = ChatColors.getColored(args[4]);
                         int i = editorReplacerConfig.checkReplaceKey(original);
-                        if (i == -1) {
+                        if (i == -1 && i != index) {
                             String replacement = ChatColors.getColored(args[5]);
                             editorReplacerConfig.addReplace(original, replacement);
                             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已修改索引 §f" + args[3] + " §a为 §f" + original + " §7§o> §f" + replacement);
