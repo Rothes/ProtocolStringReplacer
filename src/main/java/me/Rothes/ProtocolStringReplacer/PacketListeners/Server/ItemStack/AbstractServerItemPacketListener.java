@@ -12,13 +12,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 import org.bukkit.inventory.meta.tags.ItemTagType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
 public abstract class AbstractServerItemPacketListener extends AbstractServerPacketListener {
 
     protected final BiPredicate<ReplacerConfig, User> itemFilter;
-    protected final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
+    protected NamespacedKey userCacheKey;
 
     protected AbstractServerItemPacketListener(PacketType packetType) {
         super(packetType);
@@ -39,13 +40,34 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
                 ItemMeta replacedMeta = replacedItem.getItemMeta();
                 if (!originalMeta.equals(replacedMeta)) {
                     Short uniqueCacheKey = user.nextUniqueCacheKey();
-                    CustomItemTagContainer tagContainer = replacedMeta.getCustomTagContainer();
-                    tagContainer.setCustomTag(userCacheKey, ItemTagType.SHORT, uniqueCacheKey);
+                    if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13) {
+                        CustomItemTagContainer tagContainer = replacedMeta.getCustomTagContainer();
+                        tagContainer.setCustomTag(getUserCacheKey(), ItemTagType.SHORT, uniqueCacheKey);
+                    } else {
+                        List<String> lore = replacedMeta.getLore();
+                        if (lore == null) {
+                            lore = new ArrayList<>();
+                        }
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append("§p§s§r§-§x");
+                        for (char Char : uniqueCacheKey.toString().toCharArray()) {
+                            stringBuilder.append('§').append(Char);
+                        }
+                        lore.add(stringBuilder.toString());
+                        replacedMeta.setLore(lore);
+                    }
                     replacedItem.setItemMeta(replacedMeta);
                     user.getMetaCache().put(uniqueCacheKey, originalMeta);
                 }
             }
         }
+    }
+
+    protected NamespacedKey getUserCacheKey() {
+        if (userCacheKey == null) {
+            userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
+        }
+        return userCacheKey;
     }
 
 }
