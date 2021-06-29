@@ -134,10 +134,14 @@ public class Replace extends SubCommand {
                             return;
                         }
                         String original = ChatColors.getColored(args[4]);
-                        String replacement = ChatColors.getColored(args[5]);
-                        editorReplacerConfig.setReplace(index, original, replacement);
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已修改索引 §f" + args[3] + " §a为 §f" + original + " §7§o> §f" + replacement);
-
+                        int i = editorReplacerConfig.checkReplaceKey(original);
+                        if (i == -1) {
+                            String replacement = ChatColors.getColored(args[5]);
+                            editorReplacerConfig.addReplace(original, replacement);
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已修改索引 §f" + args[3] + " §a为 §f" + original + " §7§o> §f" + replacement);
+                        } else {
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c在索引 §f" + i + " §c处已有一个相同的原文本了.");
+                        }
                     } else {
                         user.sendFilteredText("§7 * §e/psr edit replace set <索引> [原文本] <新文本>§7- §b编辑指定索引的替换项");
                     }
