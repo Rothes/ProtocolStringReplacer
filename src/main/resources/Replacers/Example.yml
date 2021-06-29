@@ -1,5 +1,7 @@
 # 请勿手动修改Config-Version值!
+# 如果您需要新建一个替换配置，请确保您复制此值.
 Config-Version: 2
+
 # 此替换配置文件的相关设定.
 Options:
   # 是否开启本替换配置. 若为false则不会为这个文件处理. 若未定义, 默认为false.
@@ -13,7 +15,7 @@ Options:
   # 匹配字符串的方式. 可选值:
   # 'contain' : 只要包含就替换 (默认)
   # 'equal' : 要求设置与原字符串完全匹配
-  # 'regex' : 使用正则表达式
+  # 'regex' : 使用Java正则表达式
   Match-Type: 'contain'
   # 筛选功能. 用于指定此文件替换字符串的条件.
   Filter:
