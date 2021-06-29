@@ -131,6 +131,7 @@ public class File extends SubCommand {
                                 file.createNewFile();
                                 DotYamlConfiguration configuration = DotYamlConfiguration.loadConfiguration(file);
                                 ReplacerConfig replacerConfig = new ReplacerConfig(file, configuration);
+                                replacerConfig.setConfigVersion((short) 2);
                                 replacerConfig.saveConfig();
                                 ProtocolStringReplacer.getInstance().getReplacerManager().addReplacerConfig(replacerConfig);
                                 user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已成功创建替换配置文件: §f" + replacerConfig.getRelativePath());
