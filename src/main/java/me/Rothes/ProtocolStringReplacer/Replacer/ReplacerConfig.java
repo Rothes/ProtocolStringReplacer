@@ -125,6 +125,10 @@ public class ReplacerConfig {
         return commentLines;
     }
 
+    public void setConfigVersion(short configVersion) {
+        this.configVersion = configVersion;
+    }
+
     public void saveConfig() {
         configuration.set("Config-Version", configVersion);
         configuration.set("Options鰠Enable", enable);
