@@ -27,6 +27,22 @@ import java.util.regex.Pattern;
 
 public class ReplacerManager {
 
+    private static class ItemMetaCache {
+
+        private ItemMeta replacedItemMeta;
+        private Long lastAccessTime;
+        private Boolean hasPlaceholder;
+
+        public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime, @Nonnull Boolean hasPlaceholder) {
+            Validate.notNull(lastAccessTime, "Last Access Time cannot be null");
+            Validate.notNull(hasPlaceholder, "Boolean cannot be null");
+            this.replacedItemMeta = replacedItemMeta;
+            this.lastAccessTime = lastAccessTime;
+            this.hasPlaceholder = hasPlaceholder;
+        }
+
+    }
+
     private PAPIReplacer papiReplacer;
     private char papihead;
     private char papitail;
@@ -68,7 +84,7 @@ public class ReplacerManager {
             List<ItemMeta> needToRemove = new ArrayList<>();
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
-                if ((currentTime - entry.getValue().getLastAccessTime()) > cleanAccessInterval) {
+                if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
                     needToRemove.add(entry.getKey());
                 }
             }
@@ -141,9 +157,9 @@ public class ReplacerManager {
         boolean hasPlaceholder = false;
         ItemMetaCache metaCache = replacedItemCache.get(itemMeta);
         if (metaCache != null) {
-            metaCache.setLastAccessTime(System.currentTimeMillis());
-            itemMeta = metaCache.getReplacedItemMeta();
-            hasPlaceholder = metaCache.hasPlaceholder();
+            metaCache.lastAccessTime = System.currentTimeMillis();
+            itemMeta = metaCache.replacedItemMeta;
+            hasPlaceholder = metaCache.hasPlaceholder;
         } else {
             ItemMeta original = itemMeta.clone();
             String replaced;
