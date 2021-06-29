@@ -34,7 +34,9 @@ public class PacketListenerManager {
 
     public void initialize() {
         protocolManager = ProtocolLibrary.getProtocolManager();
-        userCacheKey = new NamespacedKey(ProtocolStringReplacer.getInstance(), "psr_user_cache_key");
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13) {
+            userCacheKey = new NamespacedKey(ProtocolStringReplacer.getInstance(), "psr_user_cache_key");
+        }
         addListeners();
     }
 
