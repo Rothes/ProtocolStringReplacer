@@ -2,6 +2,7 @@ package me.Rothes.ProtocolStringReplacer.Commands;
 
 import me.Rothes.ProtocolStringReplacer.API.ArgumentsUtils;
 import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Edit;
+import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Parse;
 import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Reload;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
@@ -28,6 +29,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         Bukkit.getServer().getPluginCommand("ProtocolStringReplacer").setTabCompleter(this);
 
         subCommands.add(new Edit());
+        subCommands.add(new Parse());
         subCommands.add(new Reload());
     }
 
@@ -72,15 +74,6 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         return true;
     }
 
-    public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText("§7§m------§7§l §7[ §c§lProtocol§6§lString§3§lReplacer§7 ]§l §7§m------");
-        user.sendFilteredText("§7 * §e/psr help §7- §b插件指令列表");
-        for (var subCommand : subCommands) {
-            user.sendFilteredText("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
-        }
-        user.sendFilteredText("§7§m-----------------------------------------");
-    }
-
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -108,6 +101,15 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
             }
         }
         return list;
+    }
+
+    public void sendHelp(@Nonnull User user) {
+        user.sendFilteredText("§7§m------§7§l §7[ §c§lProtocol§6§lString§3§lReplacer§7 ]§l §7§m------");
+        user.sendFilteredText("§7 * §e/psr help §7- §b插件指令列表");
+        for (var subCommand : subCommands) {
+            user.sendFilteredText("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
+        }
+        user.sendFilteredText("§7§m-----------------------------------------");
     }
 
 }

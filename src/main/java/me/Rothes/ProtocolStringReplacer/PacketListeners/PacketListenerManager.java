@@ -9,14 +9,15 @@ import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Chat;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.EntityMetadata;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.SetSlot;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.WindowItems;
+import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.WindowItems_11;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.OpenWindow;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.SetSubtitleText;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.SetTitleText;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.MapChunk;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.TileEntityData;
+import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.UpdateSign;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Title;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 
 public class PacketListenerManager {
@@ -41,21 +42,35 @@ public class PacketListenerManager {
     }
 
     public void addListeners() {
-        protocolManager.addPacketListener(new Chat().packetAdapter);
-        protocolManager.addPacketListener(new SetSlot().packetAdapter);
-        protocolManager.addPacketListener(new OpenWindow().packetAdapter);
-        protocolManager.addPacketListener(new WindowItems().packetAdapter);
-        protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
-        protocolManager.addPacketListener(new TileEntityData().packetAdapter);
-        protocolManager.addPacketListener(new MapChunk().packetAdapter);
-        protocolManager.addPacketListener(new BossBar().packetAdapter);
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §3启用 Spigot 1.17+ 兼容.");
             protocolManager.addPacketListener(new SetTitleText().packetAdapter);
             protocolManager.addPacketListener(new SetSubtitleText().packetAdapter);
         } else {
             protocolManager.addPacketListener(new Title().packetAdapter);
         }
+
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 11) {
+            protocolManager.addPacketListener(new WindowItems_11().packetAdapter);
+        } else {
+            protocolManager.addPacketListener(new WindowItems().packetAdapter);
+        }
+
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 10) {
+            protocolManager.addPacketListener(new MapChunk().packetAdapter);
+            protocolManager.addPacketListener(new TileEntityData().packetAdapter);
+        } else {
+            protocolManager.addPacketListener(new UpdateSign().packetAdapter);
+        }
+
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 8) {
+            protocolManager.addPacketListener(new BossBar().packetAdapter);
+        }
+
+        protocolManager.addPacketListener(new Chat().packetAdapter);
+        protocolManager.addPacketListener(new SetSlot().packetAdapter);
+        protocolManager.addPacketListener(new OpenWindow().packetAdapter);
+        protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
+
 
         protocolManager.addPacketListener(new WindowClick().packetAdapter);
         protocolManager.addPacketListener(new SetCreativeSlot().packetAdapter);

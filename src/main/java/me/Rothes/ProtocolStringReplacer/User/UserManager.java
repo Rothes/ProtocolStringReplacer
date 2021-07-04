@@ -28,6 +28,10 @@ public class UserManager {
         return sender instanceof Player? getUser((Player) sender) : console;
     }
 
+    public User getConsoleUser() {
+        return console;
+    }
+
     public User loadUser(@NotNull UUID uuid) {
         return users.putIfAbsent(uuid, new User(uuid));
     }

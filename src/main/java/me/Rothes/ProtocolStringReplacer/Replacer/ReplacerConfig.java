@@ -1,6 +1,5 @@
 package me.Rothes.ProtocolStringReplacer.Replacer;
 
-import com.comphenix.protocol.PacketType;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.CommentYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
@@ -12,6 +11,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -58,10 +58,9 @@ public class ReplacerConfig {
 
     private File file;
     private DotYamlConfiguration configuration;
-    private short configVersion;
     private boolean enable;
     private int priority;
-    private List<PacketType> packetTypeList = new ArrayList<>();
+    private List<ListenType> listenTypeList = new ArrayList<>();
     private MatchType matchType;
     private ListOrderedMap replaces = new ListOrderedMap();
     private HashMap<Short, LinkedList<CommentLine>> commentLines = new HashMap<>();
@@ -97,8 +96,8 @@ public class ReplacerConfig {
         return priority;
     }
 
-    public List<PacketType> getPacketTypeList() {
-        return packetTypeList;
+    public List<ListenType> getListenTypeList() {
+        return listenTypeList;
     }
 
     public ListOrderedMap getReplaces() {
@@ -125,30 +124,16 @@ public class ReplacerConfig {
         return commentLines;
     }
 
-    public void setConfigVersion(short configVersion) {
-        this.configVersion = configVersion;
-    }
-
     public void saveConfig() {
-        configuration.set("Config-Version", configVersion);
         configuration.set("Options鰠Enable", enable);
         configuration.set("Options鰠Priority", priority);
         configuration.set("Options鰠Author", author);
         configuration.set("Options鰠Version", version);
-        List<String> types = new ArrayList<>();
-        boolean isUp17 = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17;
-        for (PacketType packetType : packetTypeList) {
-            for (ReplacerType replacerType : ReplacerType.values()) {
-                if (replacerType.getPacketType() == packetType) {
-                    types.add(replacerType.getName());
-                    break;
-                }
-            }
-            if (isUp17 && (packetType == PacketType.Play.Server.SET_TITLE_TEXT || packetType == PacketType.Play.Server.SET_SUBTITLE_TEXT) && !types.contains("TITLE")) {
-                types.add(ReplacerType.TITLE.getName());
-            }
+        LinkedList<String> types = new LinkedList<>();
+        for (var listenType : listenTypeList) {
+            types.add(listenType.getName());
         }
-        configuration.set("Options鰠Filter鰠Packet-Types", types);
+        configuration.set("Options鰠Filter鰠Listen-Types", types);
         configuration.set("Options鰠Match-Type", matchType.getName());
         configuration.set("Replaces", new ArrayList<String>());
         if (matchType == MatchType.REGEX) {
@@ -279,50 +264,28 @@ public class ReplacerConfig {
     private void loadData(File file, DotYamlConfiguration configuration) {
         this.configuration = configuration;
         this.file = file;
-        configVersion = (short) configuration.getInt("Config-Version", 1);
-        if (configVersion == 1) {
-            ConfigurationSection configurationSection = configuration.getConfigurationSection("");
-            for (String key: configurationSection.getKeys(false)) {
-                if (key.equals("Replaces")) {
-                    break;
-                }
-                configuration.set("Options鰠" + key, configuration.get(key));
-                configuration.set(key, null);
-            }
-            edited = true;
-            configuration.set("23333㩵遌㚳这是注释是", "0| # 请勿手动修改Config-Version值! ");
-            configuration.set("Config-Version", 2);
-        }
         enable = configuration.getBoolean("Options鰠Enable", false);
         priority = configuration.getInt("Options鰠Priority", 5);
         author = configuration.getString("Options鰠Author");
         version = configuration.getString("Options鰠Version");
-        List<String> types = configuration.getStringList("Options鰠Filter鰠Packet-Types");
+        List<String> types = configuration.getStringList("Options鰠Filter鰠Listen-Types");
         boolean typeFound;
         if (types.isEmpty()) {
-            ReplacerType[] replacerTypes = ReplacerType.values();
-            for (ReplacerType replacerType : replacerTypes) {
-                packetTypeList.add(replacerType.getPacketType());
-            }
+            ListenType[] listenTypes = ListenType.values();
+            listenTypeList.addAll(Arrays.asList(listenTypes));
         } else {
             for (String type : types) {
                 typeFound = false;
-                for (ReplacerType replacerType : ReplacerType.values()) {
-                    if (replacerType.getName().equals(type)) {
+                for (var listenType : ListenType.values()) {
+                    if (listenType.getName().equals(type)) {
                         typeFound = true;
-                        packetTypeList.add(replacerType.getPacketType());
+                        listenTypeList.add(listenType);
                         break;
                     }
                 }
                 if (!typeFound) {
-                    Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知或不支持的数据包类型: " + type);
+                    Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知或不支持的监听类型: " + type);
                 }
-            }
-        }
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            if (packetTypeList.remove(PacketType.Play.Server.TITLE)) {
-                packetTypeList.add(PacketType.Play.Server.SET_TITLE_TEXT);
-                packetTypeList.add(PacketType.Play.Server.SET_SUBTITLE_TEXT);
             }
         }
 
@@ -358,11 +321,6 @@ public class ReplacerConfig {
                 }
             }
         }
-        if (configVersion < 2) {
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §2已自动升级替换配置 §a" + getRelativePath() + " §2到配置版本 §a2§2.");
-            configVersion = 2;
-            saveConfig();
-        }
     }
 
     @Override
@@ -370,10 +328,9 @@ public class ReplacerConfig {
         return "ReplacerConfig{" +
                 "file=" + file +
                 ", configuration=" + configuration +
-                ", configVersion=" + configVersion +
                 ", enable=" + enable +
                 ", priority=" + priority +
-                ", packetTypeList=" + packetTypeList +
+                ", listenTypeList=" + listenTypeList +
                 ", matchType=" + matchType +
                 ", replaces=" + replaces +
                 ", commentLines=" + commentLines +

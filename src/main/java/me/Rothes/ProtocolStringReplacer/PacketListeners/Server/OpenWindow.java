@@ -9,6 +9,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import org.bukkit.Bukkit;
@@ -16,7 +17,7 @@ import org.bukkit.Bukkit;
 public final class OpenWindow extends AbstractServerPacketListener {
 
     public OpenWindow() {
-        super(PacketType.Play.Server.OPEN_WINDOW);
+        super(PacketType.Play.Server.OPEN_WINDOW, ListenType.WINDOW_TITLE);
     }
 
     public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {

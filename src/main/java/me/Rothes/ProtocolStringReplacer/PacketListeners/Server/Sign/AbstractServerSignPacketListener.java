@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.AbstractServerPacketListener;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ import java.util.function.BiPredicate;
 public abstract class AbstractServerSignPacketListener extends AbstractServerPacketListener {
 
     protected AbstractServerSignPacketListener(PacketType packetType) {
-        super(packetType);
+        super(packetType, ListenType.SIGN);
     }
 
     protected void setSignText(@NotNull NbtCompound nbtCompound, @NotNull User user, @NotNull BiPredicate<ReplacerConfig, User> filter) {

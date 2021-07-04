@@ -45,7 +45,7 @@ public class File extends SubCommand {
                         if (StringUtils.isNumeric(args[3])) {
                             page = Integer.parseInt(args[3]);
                         } else {
-                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的整数!");
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的正整数!");
                             return;
                         }
                     }
@@ -76,9 +76,9 @@ public class File extends SubCommand {
                             case REGEX:
                                 hoverBuilder.append("正则表达式");
                         }
-                        hoverBuilder.append("\n§3§l监听网络数据包: ");
-                        for (var packetType : replacerConfig.getPacketTypeList()) {
-                            hoverBuilder.append("\n§7- ").append(packetType.name()).color(ChatColor.AQUA);
+                        hoverBuilder.append("\n§3§l监听类型: ");
+                        for (var packetType : replacerConfig.getListenTypeList()) {
+                            hoverBuilder.append("\n§7- ").append(packetType.getName()).color(ChatColor.AQUA);
                         }
 
                         user.sendFilteredMessage(new ComponentBuilder("[选定]").color(ChatColor.GOLD).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit file select " + i)).append(" " + i + ". ").reset().color(ChatColor.WHITE).
@@ -131,7 +131,6 @@ public class File extends SubCommand {
                                 file.createNewFile();
                                 DotYamlConfiguration configuration = DotYamlConfiguration.loadConfiguration(file);
                                 ReplacerConfig replacerConfig = new ReplacerConfig(file, configuration);
-                                replacerConfig.setConfigVersion((short) 2);
                                 replacerConfig.saveConfig();
                                 ProtocolStringReplacer.getInstance().getReplacerManager().addReplacerConfig(replacerConfig);
                                 user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已成功创建替换配置文件: §f" + replacerConfig.getRelativePath());

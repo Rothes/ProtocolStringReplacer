@@ -6,6 +6,8 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
 import net.md_5.bungee.api.ChatMessageType;
@@ -17,6 +19,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 
@@ -24,6 +28,8 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class User {
@@ -39,6 +45,7 @@ public class User {
     private String[] commandToConfirm;
     private Long confirmTime;
 
+    private Set<PacketType> capturePackets = new HashSet<>();
     private ReplacerConfig editorReplacerConfig;
     private Integer editorIndex;
     private String editorPattern;
@@ -135,10 +142,58 @@ public class User {
     public boolean isConfirmExpired() {
         return confirmTime != null && System.currentTimeMillis() - confirmTime > 15000;
     }
+    /*
+    public void setCapturePacket(PacketType packetType, boolean capture) {
+        if (capture) {
+            capturePackets.add(packetType);
+        } else {
+            capturePackets.remove(packetType);
+        }
+    }
+
+    public void openFilteredWindow(int windowId, int windowType, String title) {
+        if (isOnline()) {
+            PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
+            packet.getIntegers().write(0, windowId);
+            packet.getIntegers().write(1, windowType);
+            packet.getChatComponents().write(0, WrappedChatComponent.fromLegacyText(title));
+            packet.setMeta("psr_filtered_packet", true);
+            try {
+                ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
+                        sendServerPacket(player, packet);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setFiliteredWindowItems(int windowId, ItemStack[] itemStacks) {
+        if (isOnline()) {
+            PacketContainer packet = new PacketContainer(PacketType.Play.Server.WINDOW_ITEMS);
+            packet.getIntegers().write(0, windowId);
+            packet.getIntegers().write(1, itemStacks.length);
+            packet.getItemArrayModifier().write(0, itemStacks);
+            packet.setMeta("psr_filtered_packet", true);
+            try {
+                ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
+                        sendServerPacket(player, packet);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
 
     public void sendFilteredMessage(BaseComponent... baseComponents) {
         if (sender instanceof ConsoleCommandSender) {
-            sender.spigot().sendMessage(baseComponents);
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
+                sender.spigot().sendMessage(baseComponents);
+            } else {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (BaseComponent component : baseComponents) {
+                    stringBuilder.append(component.toLegacyText());
+                }
+                sender.sendMessage(stringBuilder.toString());
+            }
         } else {
             PacketContainer packet = new PacketContainer(PacketType.Play.Server.CHAT);
             packet.getChatComponents().write(0, ComponentConverter.fromBaseComponent(baseComponents));

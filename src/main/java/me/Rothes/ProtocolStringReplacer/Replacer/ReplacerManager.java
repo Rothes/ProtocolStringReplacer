@@ -165,9 +165,11 @@ public class ReplacerManager {
             String replaced;
             for (var replacerConfig : replacerConfigList) {
                 if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                    replaced = getFileReplacedString(user, itemMeta.getDisplayName(), replacerConfig, false);
-                    itemMeta.setDisplayName(replaced);
-                    hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+                    if (itemMeta.hasDisplayName()) {
+                        replaced = getFileReplacedString(user, itemMeta.getDisplayName(), replacerConfig, false);
+                        itemMeta.setDisplayName(replaced);
+                        hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+                    }
 
                     if (itemMeta.hasLore()) {
                         List<String> lore = itemMeta.getLore();
@@ -231,8 +233,32 @@ public class ReplacerManager {
         return false;
     }
 
+    public boolean hasPlaceholder(@NotNull String string) {
+        boolean headFound = false;
+        boolean tailFound = false;
+        for(int i = 0; i < string.length(); i++) {
+            char Char = string.charAt(i);
+            if (!headFound) {
+                if (Char == papihead) {
+                    headFound = true;
+                }
+            } else {
+                if (Char == papitail) {
+                    tailFound = true;
+                    break;
+                }
+            }
+        }
+        return tailFound;
+    }
+
+    public String setPlaceholder(@NotNull User user, @NotNull String string) {
+        return papiReplacer.apply(string, user.getPlayer(),
+                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
+    }
+
     @Nonnull
-    private HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
+    public HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
         Validate.notNull(path, "Path cannot be null");
         HashMap<File, DotYamlConfiguration> loaded = new HashMap<>();
         if (path.exists()) {
@@ -317,30 +343,6 @@ public class ReplacerManager {
             }
         }
         return itemMeta;
-    }
-
-    private boolean hasPlaceholder(@NotNull String string) {
-        boolean headFound = false;
-        boolean tailFound = false;
-        for(int i = 0; i < string.length(); i++) {
-            char Char = string.charAt(i);
-            if (!headFound) {
-                if (Char == papihead) {
-                    headFound = true;
-                }
-            } else {
-                if (Char == papitail) {
-                    tailFound = true;
-                    break;
-                }
-            }
-        }
-        return tailFound;
-    }
-
-    private String setPlaceholder(@NotNull User user, @NotNull String string) {
-        return papiReplacer.apply(string, user.getPlayer(),
-                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
     }
 
 }

@@ -1,7 +1,7 @@
 name: ProtocolStringReplacer
 version: ${project.version}
 main: me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer
-authors: [Rothes]
+author: Rothes
 api-version: 1.13
 softdepend:
   - ProtocolLib
@@ -13,6 +13,9 @@ commands:
 permissions:
   protocolstringreplacer.command.edit:
     description: allow you to edit the replacer configs.
+    default: op
+  protocolstringreplacer.command.parse:
+    description: allow you to parse a String.
     default: op
   protocolstringreplacer.command.reload:
     description: allow you to reload the configs.

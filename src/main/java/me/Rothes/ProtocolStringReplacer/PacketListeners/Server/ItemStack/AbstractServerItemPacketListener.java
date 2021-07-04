@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.AbstractServerPacketListener;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import org.bukkit.NamespacedKey;
@@ -22,11 +23,11 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
     protected NamespacedKey userCacheKey;
 
     protected AbstractServerItemPacketListener(PacketType packetType) {
-        super(packetType);
+        super(packetType, ListenType.ITEMSTACK);
         itemFilter = (replacerFile, user) -> {
             DotYamlConfiguration configuration = replacerFile.getConfiguration();
-            List<String> windowTitles = configuration.getStringList("Filter鰠" + packetType.name() + "鰠Window-Title");
-            if (containPacket(replacerFile)) {
+            List<String> windowTitles = configuration.getStringList("Filter鰠itemstack鰠Window-Title");
+            if (containType(replacerFile)) {
                 return windowTitles.isEmpty() || windowTitles.contains(user.getCurrentWindowTitle());
             }
             return false;

@@ -1,6 +1,7 @@
 package me.Rothes.ProtocolStringReplacer.PacketListeners.Client.ItemStack;
 
 import com.comphenix.protocol.PacketType;
+import me.Rothes.ProtocolStringReplacer.PacketListeners.Client.AbstractClientPacketListener;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.AbstractServerPacketListener;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
@@ -13,7 +14,7 @@ import org.bukkit.inventory.meta.tags.ItemTagType;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class AbstractClientItemPacketListener extends AbstractServerPacketListener {
+public abstract class AbstractClientItemPacketListener extends AbstractClientPacketListener {
 
     protected NamespacedKey userCacheKey;
 

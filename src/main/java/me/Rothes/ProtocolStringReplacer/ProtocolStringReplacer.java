@@ -6,6 +6,7 @@ import me.Rothes.ProtocolStringReplacer.Listeners.PlayerJoinListener;
 import me.Rothes.ProtocolStringReplacer.Listeners.PlayerQuitListener;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.PacketListenerManager;
 import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerManager;
+import me.Rothes.ProtocolStringReplacer.Upgrades.UpgradeEnum;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.User.UserManager;
 import org.apache.commons.lang.Validate;
@@ -42,10 +43,17 @@ public class ProtocolStringReplacer extends JavaPlugin {
         return config;
     }
 
+    @NotNull
+    public File getConfigFile() {
+        return configFile;
+    }
+
     @Override
     public void onEnable() {
+        Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a正在加载插件...");
         instance = this;
         serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
+        Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a服务端 Minecraft 版本: 1." + serverMajorVersion + ".");
         try {
             Class.forName("org.bukkit.entity.Player$Spigot");
             isSpigot = true;
@@ -111,6 +119,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         replacerManager = new ReplacerManager();
         CommandHandler commandHandler = new CommandHandler();
         userManager = new UserManager();
+        checkConfigsVersion();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();
@@ -130,7 +139,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         for (String depend : depends) {
             if (!pluginManager.isPluginEnabled(depend)) {
-                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未检测到前置插件 " + depend + "，禁用插件.");
+                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未检测到前置插件 " + depend + "，请安装后再使用本插件.");
                 missingDepend = true;
             }
         }
@@ -144,7 +153,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
             instance.saveResource("Replacers/Example.yml", true);
         }
-        File configFile = new File(instance.getDataFolder() + "/Config.yml");
+        configFile = new File(instance.getDataFolder() + "/Config.yml");
         if (!configFile.exists()) {
             instance.saveResource("Config.yml", true);
             configFile = new File(instance.getDataFolder() + "/Config.yml");
@@ -152,11 +161,23 @@ public class ProtocolStringReplacer extends JavaPlugin {
         config = CommentYamlConfiguration.loadConfiguration(configFile);
     }
 
+    private void checkConfigsVersion() {
+        short configsVersion = (short) config.getInt("Configs-Version", 1);
+        for (var upgrade : UpgradeEnum.values()) {
+            if (upgrade.getCurrentVersion() == configsVersion) {
+                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a正在升级配置文件版本 " + configsVersion + " -> " + (configsVersion + 1));
+                upgrade.getUpgradeHandler().upgrade();
+                configsVersion = (short) config.getInt("Configs-Version");
+            }
+        }
+    }
+
     public void reload(@Nonnull User user) {
         Validate.notNull(user, "User cannot be null");
         loadConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager = new ReplacerManager();
+        checkConfigsVersion();
         replacerManager.initialize();
         userManager = new UserManager();
         for (Player player : Bukkit.getOnlinePlayers()) {

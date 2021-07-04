@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import org.bukkit.entity.Entity;
@@ -13,7 +14,7 @@ import org.bukkit.entity.Entity;
 public final class EntityMetadata extends AbstractServerPacketListener {
 
     public EntityMetadata() {
-        super(PacketType.Play.Server.ENTITY_METADATA);
+        super(PacketType.Play.Server.ENTITY_METADATA, ListenType.ENTITY);
     }
 
     public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {

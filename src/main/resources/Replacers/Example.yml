@@ -1,7 +1,3 @@
-# 请勿手动修改Config-Version值!
-# 如果您需要新建一个替换配置，请确保您复制此值.
-Config-Version: 2
-
 # 此替换配置文件的相关设定.
 Options:
   # 是否开启本替换配置. 若为false则不会为这个文件处理. 若未定义, 默认为false.
@@ -19,21 +15,19 @@ Options:
   Match-Type: 'contain'
   # 筛选功能. 用于指定此文件替换字符串的条件.
   Filter:
-    # 指定替换的数据包类型. 默认为全部. 可选值:
-    # CHAT 监听聊天文本
-    # TITLE 监听标题消息
-    # BOSS_BAR 监听BOSS血量条文本
-    # OPEN_WINDOW 监听窗口的标题文本
-    # SET_SLOT 监听窗口中槽位的物品
-    # WINDOW_ITEMS 监听打开窗口中的物品
-    # ENTITY_METADATA 监听实体名称
-    # TILE_ENTITY_DATA 监听tile的nbt数据. 目前仅支持修改告示牌信息
-    # MAP_CHUNK 监听刷新区块的数据. 目前仅支持修改告示牌信息
-    Packet-Types:
-      - CHAT
-      - OPEN_WINDOW
-      - SET_SLOT
-      - WINDOW_ITEMS
+    # 指定替换何处的字符串. 默认为全部. 可选值:
+    # chat 替换聊天(chat|actionbar)信息文本
+    # sign 替换告示牌文本
+    # title 替换标题(title|subtitle)文本
+    # entity 替换实体名文本
+    # boss-bar 替换Boss血量条文本
+    # itemstack 替换物品(物品名|Lore|书署名|书内容)文本
+    # window-title 替换容器标题文本
+    Listen-Types:
+      - chat
+      - window-title
+      - itemstack
+      - sign
 
 # 替换的字符串列表.
 Replaces:

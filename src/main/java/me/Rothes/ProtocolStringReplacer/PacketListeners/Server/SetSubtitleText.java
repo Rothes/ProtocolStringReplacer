@@ -7,12 +7,13 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.User.User;
 
 public class SetSubtitleText extends AbstractServerPacketListener {
 
     public SetSubtitleText() {
-        super(PacketType.Play.Server.SET_SUBTITLE_TEXT);
+        super(PacketType.Play.Server.SET_SUBTITLE_TEXT, ListenType.TITLE);
     }
 
     public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
@@ -20,8 +21,10 @@ public class SetSubtitleText extends AbstractServerPacketListener {
             User user = getEventUser(packetEvent);
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-            wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(jsonToLegacyText(wrappedChatComponent.getJson()), user, filter)));
-            wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
+            if (wrappedChatComponent != null) {
+                wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(jsonToLegacyText(wrappedChatComponent.getJson()), user, filter)));
+                wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
+            }
         }
     };
 

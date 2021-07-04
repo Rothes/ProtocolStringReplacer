@@ -47,7 +47,7 @@ public class Replace extends SubCommand {
                         if (StringUtils.isNumeric(args[3])) {
                             page = Integer.parseInt(args[3]);
                         } else {
-                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的整数!");
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的正整数!");
                             return;
                         }
                     }
@@ -108,7 +108,7 @@ public class Replace extends SubCommand {
             } else if ("set".equalsIgnoreCase(args[2])) {
                 if (args.length > 3) {
                     if (!StringUtils.isNumeric(args[3])) {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的整数!");
+                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的正整数!");
                         return;
                     }
                     int index = Integer.parseInt(args[3]);
@@ -135,9 +135,9 @@ public class Replace extends SubCommand {
                         }
                         String original = ChatColors.getColored(args[4]);
                         int i = editorReplacerConfig.checkReplaceKey(original);
-                        if (i == -1 && i != index) {
+                        if (i == -1 || i == index) {
                             String replacement = ChatColors.getColored(args[5]);
-                            editorReplacerConfig.addReplace(original, replacement);
+                            editorReplacerConfig.setReplace(index, original, replacement);
                             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已修改索引 §f" + args[3] + " §a为 §f" + original + " §7§o> §f" + replacement);
                         } else {
                             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c在索引 §f" + i + " §c处已有一个相同的原文本了.");
@@ -164,7 +164,7 @@ public class Replace extends SubCommand {
                     }
                 } else if (args.length == 6) {
                     if (!StringUtils.isNumeric(args[3])) {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的整数!");
+                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的正整数!");
                         return;
                     }
                     int index = Integer.parseInt(args[3]);

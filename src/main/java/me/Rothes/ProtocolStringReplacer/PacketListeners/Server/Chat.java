@@ -1,6 +1,7 @@
 package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
 
 import io.papermc.paper.text.PaperComponents;
+import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import com.comphenix.protocol.PacketType;
@@ -22,7 +23,7 @@ public final class Chat extends AbstractServerPacketListener {
     private GsonComponentSerializer paperGsonComponentSerializer;
 
     public Chat() {
-        super(PacketType.Play.Server.CHAT);
+        super(PacketType.Play.Server.CHAT, ListenType.CHAT);
     }
 
     public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {

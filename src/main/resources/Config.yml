@@ -1,3 +1,6 @@
+# 请勿手动修改Configs-Version值!
+Configs-Version: 2
+
 Options:
   Features:
     # 控制台相关设定.
