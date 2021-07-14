@@ -7,6 +7,7 @@ import me.Rothes.ProtocolStringReplacer.User.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -133,6 +134,7 @@ public class ReplacerManager {
         Validate.notNull(filter, "Filter cannot be null");
         for (int i = 0; i < baseComponents.length; i++) {
             BaseComponent baseComponent = baseComponents[i];
+            Bukkit.getConsoleSender().sendMessage(baseComponent.toString());
             baseComponents[i] = getReplacedComponent(baseComponent, user, filter);
         }
         return baseComponents;
@@ -145,19 +147,26 @@ public class ReplacerManager {
         if (baseComponent instanceof TextComponent) {
             TextComponent textComponent = (TextComponent) baseComponent;
             textComponent.setText(getReplacedString(textComponent.getText(), user, filter));
+        } else if (baseComponent instanceof TranslatableComponent) {
+            TranslatableComponent translatableComponent = (TranslatableComponent) baseComponent;
+            if (translatableComponent.getWith() != null) {
+                translatableComponent.setWith(replaceExtra(translatableComponent.getWith(), user, filter));
+            }
         }
-        replaceExtra(baseComponent, user, filter);
+        if (baseComponent.getExtra() != null) {
+            baseComponent.setExtra(replaceExtra(baseComponent.getExtra(), user, filter));
+        }
         return baseComponent;
     }
 
-    public void replaceExtra(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        List<BaseComponent> extra = baseComponent.getExtra();
-        if (extra != null) {
-            for (BaseComponent extraComponent : extra) {
-                getReplacedComponent(extraComponent, user, filter);
-            }
-            baseComponent.setExtra(extra);
+    public List<BaseComponent> replaceExtra(@Nonnull List<BaseComponent> extra, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        Validate.notNull(extra, "BaseComponent List cannot be null");
+        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(filter, "Filter cannot be null");
+        for (BaseComponent extraComponent : extra) {
+            getReplacedComponent(extraComponent, user, filter);
         }
+        return extra;
     }
 
     @Nonnull
