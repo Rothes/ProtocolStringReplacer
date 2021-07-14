@@ -131,18 +131,17 @@ public class ReplacerManager {
         Validate.notNull(baseComponents, "BaseComponent Array cannot be null");
         Validate.notNull(user, "User cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
-        for (ReplacerConfig replacerConfig : replacerConfigList) {
-            if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                for (int i = 0; i < baseComponents.length; i++) {
-                    BaseComponent baseComponent = baseComponents[i];
-                    baseComponents[i] = getReplacedComponent(baseComponent, user, filter);
-                }
-            }
+        for (int i = 0; i < baseComponents.length; i++) {
+            BaseComponent baseComponent = baseComponents[i];
+            baseComponents[i] = getReplacedComponent(baseComponent, user, filter);
         }
         return baseComponents;
     }
 
     public BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        Validate.notNull(baseComponent, "BaseComponent cannot be null");
+        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(filter, "Filter cannot be null");
         if (baseComponent instanceof TextComponent) {
             TextComponent textComponent = (TextComponent) baseComponent;
             textComponent.setText(getReplacedString(textComponent.getText(), user, filter));
