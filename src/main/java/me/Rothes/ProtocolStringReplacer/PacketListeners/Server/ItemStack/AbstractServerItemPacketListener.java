@@ -26,7 +26,7 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
         super(packetType, ListenType.ITEMSTACK);
         itemFilter = (replacerFile, user) -> {
             DotYamlConfiguration configuration = replacerFile.getConfiguration();
-            List<String> windowTitles = configuration.getStringList("Filter鰠itemstack鰠Window-Title");
+            List<String> windowTitles = configuration.getStringList("Filter鰠Itemstack鰠Window-Title");
             if (containType(replacerFile)) {
                 return windowTitles.isEmpty() || windowTitles.contains(user.getCurrentWindowTitle());
             }

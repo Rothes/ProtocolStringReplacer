@@ -5,6 +5,8 @@ import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -122,6 +124,41 @@ public class ReplacerManager {
             }
         }
         return count;
+    }
+
+    @Nonnull
+    public BaseComponent[] getReplacedComponents(@Nonnull BaseComponent[] baseComponents, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        Validate.notNull(baseComponents, "BaseComponent Array cannot be null");
+        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(filter, "Filter cannot be null");
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
+                for (int i = 0; i < baseComponents.length; i++) {
+                    BaseComponent baseComponent = baseComponents[i];
+                    baseComponents[i] = getReplacedComponent(baseComponent, user, filter);
+                }
+            }
+        }
+        return baseComponents;
+    }
+
+    public BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        if (baseComponent instanceof TextComponent) {
+            TextComponent textComponent = (TextComponent) baseComponent;
+            textComponent.setText(getReplacedString(textComponent.getText(), user, filter));
+        }
+        replaceExtra(baseComponent, user, filter);
+        return baseComponent;
+    }
+
+    public void replaceExtra(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        List<BaseComponent> extra = baseComponent.getExtra();
+        if (extra != null) {
+            for (BaseComponent extraComponent : extra) {
+                getReplacedComponent(extraComponent, user, filter);
+            }
+            baseComponent.setExtra(extra);
+        }
     }
 
     @Nonnull
