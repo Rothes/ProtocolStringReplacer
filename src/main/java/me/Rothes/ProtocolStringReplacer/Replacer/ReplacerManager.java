@@ -134,7 +134,6 @@ public class ReplacerManager {
         Validate.notNull(filter, "Filter cannot be null");
         for (int i = 0; i < baseComponents.length; i++) {
             BaseComponent baseComponent = baseComponents[i];
-            Bukkit.getConsoleSender().sendMessage(baseComponent.toString());
             baseComponents[i] = getReplacedComponent(baseComponent, user, filter);
         }
         return baseComponents;
