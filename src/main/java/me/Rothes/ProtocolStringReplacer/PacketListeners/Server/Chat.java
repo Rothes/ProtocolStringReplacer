@@ -1,11 +1,5 @@
 package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
 
-import com.comphenix.protocol.wrappers.BukkitConverters;
-import com.google.gson.JsonSyntaxException;
-import io.papermc.paper.text.PaperComponents;
-import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
-import me.Rothes.ProtocolStringReplacer.User.User;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -13,16 +7,16 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import net.kyori.adventure.text.Component;
+import com.google.gson.JsonSyntaxException;
+import io.papermc.paper.text.PaperComponents;
+import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
+import me.Rothes.ProtocolStringReplacer.User.User;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Bukkit;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public final class Chat extends AbstractServerPacketListener {

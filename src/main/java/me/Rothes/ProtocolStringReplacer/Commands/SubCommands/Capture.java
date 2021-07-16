@@ -2,11 +2,9 @@ package me.Rothes.ProtocolStringReplacer.Commands.SubCommands;
 
 import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
 import me.Rothes.ProtocolStringReplacer.User.User;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Capture extends SubCommand {

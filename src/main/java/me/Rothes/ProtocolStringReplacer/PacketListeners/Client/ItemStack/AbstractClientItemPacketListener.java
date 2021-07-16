@@ -2,7 +2,6 @@ package me.Rothes.ProtocolStringReplacer.PacketListeners.Client.ItemStack;
 
 import com.comphenix.protocol.PacketType;
 import me.Rothes.ProtocolStringReplacer.PacketListeners.Client.AbstractClientPacketListener;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.AbstractServerPacketListener;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import org.bukkit.NamespacedKey;
