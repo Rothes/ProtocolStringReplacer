@@ -18,6 +18,12 @@ import java.util.regex.Pattern;
 
 public class CommentYamlConfiguration extends YamlConfiguration {
 
+    protected static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([是否])");
+    protected static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
+
+    protected final static Pattern startedSpacePattern = Pattern.compile("^( +)");
+    protected final static Pattern endedSpacePattern = Pattern.compile("( +)$");
+
     private static class Comment {
         private int passedLines;
         private String commentString;
@@ -29,12 +35,6 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             this.plainComment = isplainComment;
         }
     }
-
-    protected final static Pattern commentKeyPattern = Pattern.compile("([0-9]+)㩵遌㚳这是注释([是否])");
-    protected final static Pattern commentPattern = Pattern.compile("^( *)([0-9]+)㩵遌㚳这是注释([是否]): '([0-9]+)\\| ");
-
-    protected final static Pattern startedSpacePattern = Pattern.compile("^( +)");
-    protected final static Pattern endedSpacePattern = Pattern.compile("( +)$");
 
     public static Pattern getCommentKeyPattern() {
         return commentKeyPattern;
