@@ -243,10 +243,8 @@ public class Replace extends SubCommand {
         } else if (args.length == 6) {
             if (args[2].equalsIgnoreCase("set")) {
                 list.add("<新文本>");
-            } else if (args[2].equalsIgnoreCase("add")) {
-                if (StringUtils.isNumeric(args[3])) {
-                    list.add("<新文本>");
-                }
+            } else if (args[2].equalsIgnoreCase("add") && StringUtils.isNumeric(args[3])) {
+                list.add("<新文本>");
             }
         }
         return list;
