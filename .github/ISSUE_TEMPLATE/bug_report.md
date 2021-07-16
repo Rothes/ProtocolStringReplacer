@@ -28,7 +28,7 @@ If applicable, add screenshots to help explain your problem.
 **Server Informations**
  - Minecraft Version: [e.g. This server is running CraftBukkit version git-Spigot-1a3504a-84f3da3 (MC: 1.13.2)]
  - ProtocolLib Version: [e.g. ProtocolLib v4.6.1-SNAPSHOT-b505]
- - ProtocolLibStringReplacer Version: [e.g. 1.1.0-beta]
+ - ProtocolStringReplacer Version: [e.g. 1.1.0-beta]
  - Plugins: [e.g. Plugins (4): PlugMan, PlaceholderAPI, ProtocolLib, ProtocolStringReplacer]
 
 **Additional context**
