@@ -6,7 +6,7 @@
 
     <groupId>me.Rothes</groupId>
     <artifactId>ProtocolStringReplacer</artifactId>
-    <version>1.3.3</version>
+    <version>1.3.3.1</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -161,4 +161,5 @@
         </plugins>
 
     </build>
+
 </project>

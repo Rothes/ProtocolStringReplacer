@@ -1,6 +1,7 @@
 package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
 
 import com.comphenix.protocol.wrappers.BukkitConverters;
+import com.google.gson.JsonSyntaxException;
 import io.papermc.paper.text.PaperComponents;
 import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.User.User;
@@ -12,12 +13,15 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.bukkit.Bukkit;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,13 +53,32 @@ public final class Chat extends AbstractServerPacketListener {
                         if (read instanceof BaseComponent[]) {
                             structureModifier.write(fieldIndex, ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents((BaseComponent[]) read, user, filter));
                         } else if (isPaperComponent(read)) {
+                            try {
                             structureModifier.write(fieldIndex, getPaperGsonComponentSerializer().deserialize(
                                     ComponentSerializer.toString(
                                             ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(
-                                                    ComponentSerializer.parse(StringEscapeUtils.unescapeJson(getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read))), user, filter
+                                                    ComponentSerializer.parse(getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read)), user, filter
                                             )
                                     )
                             ));
+                            } catch (JsonSyntaxException exception) {
+                                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c捕获到异常. 请在GitHub反馈, 并粘贴以下错误信息.");
+                                Bukkit.getConsoleSender().sendMessage("§c ================= 异常跟踪 ================= ");
+                                exception.printStackTrace();
+                                Bukkit.getConsoleSender().sendMessage("§c - 修改前: ");
+                                Bukkit.getConsoleSender().sendMessage(getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read));
+                                Bukkit.getConsoleSender().sendMessage("§c - 修改后: ");
+                                try {
+                                    Bukkit.getConsoleSender().sendMessage(ComponentSerializer.toString(
+                                            ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(
+                                                    ComponentSerializer.parse(getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read)), user, filter
+                                            )
+                                    ));
+                                } catch (JsonSyntaxException e) {
+                                    Bukkit.getConsoleSender().sendMessage("§c exception.");
+                                }
+                                Bukkit.getConsoleSender().sendMessage("§c ================= 异常跟踪 ================= ");
+                            }
                         }
                     }
                 }
