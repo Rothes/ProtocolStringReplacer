@@ -1,10 +1,11 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
+package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.AbstractPacketListener;
-import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.user.User;
+
 import java.util.function.BiPredicate;
 
 public abstract class AbstractServerPacketListener extends AbstractPacketListener {

@@ -1,10 +1,10 @@
-package me.Rothes.ProtocolStringReplacer.Commands.SubCommands.EditChildren;
+package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
-import me.Rothes.ProtocolStringReplacer.API.ArgumentsUtils;
-import me.Rothes.ProtocolStringReplacer.API.ChatColors;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.api.ArgUtils;
+import me.rothes.protocolstringreplacer.api.ChatColors;
+import me.rothes.protocolstringreplacer.commands.SubCommand;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -80,7 +80,7 @@ public class Replace extends SubCommand {
 
                         user.sendFilteredMessage(new ComponentBuilder("§6[+] ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace add " + i + " <原文本> <新文本>")).
                                 event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
-                                append("§6[编辑]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace set " + i + " " + ArgumentsUtils.formatWithQuotes(ChatColors.restoreColored(original)) + " " + ArgumentsUtils.formatWithQuotes(ChatColors.restoreColored(replacement)))).append(" " + i + ". ").
+                                append("§6[编辑]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace set " + i + " " + ArgUtils.formatWithQuotes(ChatColors.restoreColored(original)) + " " + ArgUtils.formatWithQuotes(ChatColors.restoreColored(replacement)))).append(" " + i + ". ").
                                 reset().event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
                                 append(ChatColors.showColorCodes(original)).color(ChatColor.AQUA).create());
                         user.sendFilteredMessage(new ComponentBuilder("§c[删除]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace remove " + i)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).

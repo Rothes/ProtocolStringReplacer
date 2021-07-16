@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
+package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -6,9 +6,9 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
-import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
-import me.Rothes.ProtocolStringReplacer.User.User;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.user.User;
 import org.bukkit.entity.Entity;
 
 public final class EntityMetadata extends AbstractServerPacketListener {

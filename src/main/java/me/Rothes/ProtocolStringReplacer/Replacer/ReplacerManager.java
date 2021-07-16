@@ -1,9 +1,9 @@
-package me.Rothes.ProtocolStringReplacer.Replacer;
+package me.rothes.protocolstringreplacer.replacer;
 
-import me.Rothes.ProtocolStringReplacer.API.Configuration.CommentYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
+import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.user.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -30,6 +30,13 @@ import java.util.regex.Pattern;
 
 public class ReplacerManager {
 
+    private PAPIReplacer papiReplacer;
+    private char papihead;
+    private char papitail;
+    private LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
+    private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
+    private BukkitTask cleanTask;
+
     private static class ItemMetaCache {
 
         private ItemMeta replacedItemMeta;
@@ -45,13 +52,6 @@ public class ReplacerManager {
         }
 
     }
-
-    private PAPIReplacer papiReplacer;
-    private char papihead;
-    private char papitail;
-    private LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
-    private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
-    private BukkitTask cleanTask;
 
     public BukkitTask getCleanTask() {
         return cleanTask;
@@ -130,7 +130,7 @@ public class ReplacerManager {
     @Nonnull
     public BaseComponent[] getReplacedComponents(@Nonnull BaseComponent[] baseComponents, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(baseComponents, "BaseComponent Array cannot be null");
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
         for (int i = 0; i < baseComponents.length; i++) {
             BaseComponent baseComponent = baseComponents[i];
@@ -141,7 +141,7 @@ public class ReplacerManager {
 
     public BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(baseComponent, "BaseComponent cannot be null");
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
         if (baseComponent instanceof TextComponent) {
             TextComponent textComponent = (TextComponent) baseComponent;
@@ -160,7 +160,7 @@ public class ReplacerManager {
 
     public List<BaseComponent> replaceExtra(@Nonnull List<BaseComponent> extra, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(extra, "BaseComponent List cannot be null");
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
         for (BaseComponent extraComponent : extra) {
             getReplacedComponent(extraComponent, user, filter);
@@ -171,7 +171,7 @@ public class ReplacerManager {
     @Nonnull
     public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(string, "String cannot be null");
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
@@ -184,7 +184,7 @@ public class ReplacerManager {
     @SuppressWarnings("UnusedReturnValue")
     @Nonnull
     public ItemStack getReplacedItemStack(@Nonnull ItemStack itemStack, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        Validate.notNull(itemStack, "ItemStack cannot be null");
+        Validate.notNull(itemStack, "itemstack cannot be null");
         if (itemStack.hasItemMeta()) {
             itemStack.setItemMeta(getReplacedItemMeta(itemStack.getItemMeta(), user, filter));
         }
@@ -195,7 +195,7 @@ public class ReplacerManager {
     @Nonnull
     public ItemMeta getReplacedItemMeta(@Nonnull ItemMeta itemMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
 
         boolean hasPlaceholder = false;
@@ -322,9 +322,9 @@ public class ReplacerManager {
     @SuppressWarnings("unchecked")
     @Nonnull
     private String getFileReplacedString(@Nonnull User user, @Nonnull String string, @Nonnull ReplacerConfig replacerConfig, boolean setPlaceholders) {
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         Validate.notNull(string, "String cannot be null");
-        Validate.notNull(replacerConfig, "Replacer File cannot be null");
+        Validate.notNull(replacerConfig, "replacer File cannot be null");
 
         Object object = replacerConfig.getReplaces().entrySet();
         switch (replacerConfig.getMatchType()) {
@@ -352,7 +352,7 @@ public class ReplacerManager {
     }
 
     private ItemMeta updatePlaceholders(@Nonnull User user, @Nonnull ItemMeta itemMeta) {
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
 
         itemMeta = itemMeta.clone();

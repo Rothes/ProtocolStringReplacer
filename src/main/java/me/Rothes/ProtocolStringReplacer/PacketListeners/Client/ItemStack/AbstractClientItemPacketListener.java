@@ -1,9 +1,9 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Client.ItemStack;
+package me.rothes.protocolstringreplacer.packetlisteners.client.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Client.AbstractClientPacketListener;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.packetlisteners.client.AbstractClientPacketListener;
+import me.rothes.protocolstringreplacer.user.User;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

@@ -1,9 +1,9 @@
 // wssb
 
-package me.Rothes.ProtocolStringReplacer.Replacer;
+package me.rothes.protocolstringreplacer.replacer;
 
-import me.Rothes.ProtocolStringReplacer.API.ChatColors;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.replacer.Replacer;
 import org.bukkit.ChatColor;
@@ -26,7 +26,7 @@ public final class PAPIReplacer implements Replacer {
         return tail;
     }
 
-    // Forked from PlaceholderAPI for it hasn't provided the API yet.
+    // Forked from PlaceholderAPI for it hasn't provided the api yet.
     @NotNull
     @Override
     public String apply(@NotNull final String text, @Nullable final OfflinePlayer player,

@@ -1,12 +1,12 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign;
+package me.rothes.protocolstringreplacer.packetlisteners.server.sign;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.AbstractServerPacketListener;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
-package me.Rothes.ProtocolStringReplacer.Upgrades;
+package me.rothes.protocolstringreplacer.upgrades;
 
-import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
+import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 
 import javax.annotation.Nonnull;
 import java.io.File;

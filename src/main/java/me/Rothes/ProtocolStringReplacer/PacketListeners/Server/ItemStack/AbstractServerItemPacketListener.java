@@ -1,12 +1,12 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack;
+package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.AbstractServerPacketListener;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

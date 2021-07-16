@@ -1,12 +1,12 @@
-package me.Rothes.ProtocolStringReplacer.Commands.SubCommands.EditChildren;
+package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
-import me.Rothes.ProtocolStringReplacer.API.ArgumentsUtils;
-import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerManager;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.ArgUtils;
+import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
+import me.rothes.protocolstringreplacer.commands.SubCommand;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -190,7 +190,7 @@ public class File extends SubCommand {
             } else if (args[2].equalsIgnoreCase("delete") || args[2].equalsIgnoreCase("select")) {
                 list.add("<替换配置文件|索引>");
                 for (var replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
-                    list.add(ArgumentsUtils.formatWithQuotes(replacerConfig.getRelativePath()));
+                    list.add(ArgUtils.formatWithQuotes(replacerConfig.getRelativePath()));
                 }
             } else if (args[2].equalsIgnoreCase("create")) {
                 String arg = args[3];

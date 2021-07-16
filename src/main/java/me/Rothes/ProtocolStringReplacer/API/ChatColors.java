@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.API;
+package me.rothes.protocolstringreplacer.api;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;

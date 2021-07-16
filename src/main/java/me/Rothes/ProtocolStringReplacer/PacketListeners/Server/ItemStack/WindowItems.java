@@ -1,12 +1,12 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack;
+package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BukkitConverters;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.user.User;
 import org.bukkit.inventory.ItemStack;
 
 public class WindowItems extends AbstractServerItemPacketListener {

@@ -1,11 +1,11 @@
-package me.Rothes.ProtocolStringReplacer.User;
+package me.rothes.protocolstringreplacer.user;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -21,8 +21,6 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class User {
@@ -38,11 +36,11 @@ public class User {
     private String[] commandToConfirm;
     private Long confirmTime;
 
-    private Set<PacketType> capturePackets = new HashSet<>();
+//TODO:    private Set<PacketType> capturePackets = new HashSet<>();
     private ReplacerConfig editorReplacerConfig;
-    private Integer editorIndex;
-    private String editorPattern;
-    private String editorReplacement;
+//TODO:    private Integer editorIndex;
+//TODO:    private String editorPattern;
+//TODO:    private String editorReplacement;
 
     public User(Player player) {
         this.player = player;
@@ -146,7 +144,7 @@ public class User {
 
     public void openFilteredWindow(int windowId, int windowType, String title) {
         if (isOnline()) {
-            PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
+            PacketContainer packet = new PacketContainer(PacketType.Play.server.OPEN_WINDOW);
             packet.getIntegers().write(0, windowId);
             packet.getIntegers().write(1, windowType);
             packet.getChatComponents().write(0, WrappedChatComponent.fromLegacyText(title));
@@ -160,9 +158,9 @@ public class User {
         }
     }
 
-    public void setFiliteredWindowItems(int windowId, ItemStack[] itemStacks) {
+    public void setFiliteredWindowItems(int windowId, itemstack[] itemStacks) {
         if (isOnline()) {
-            PacketContainer packet = new PacketContainer(PacketType.Play.Server.WINDOW_ITEMS);
+            PacketContainer packet = new PacketContainer(PacketType.Play.server.WINDOW_ITEMS);
             packet.getIntegers().write(0, windowId);
             packet.getIntegers().write(1, itemStacks.length);
             packet.getItemArrayModifier().write(0, itemStacks);
@@ -215,16 +213,13 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "user{" +
                 "uuid=" + uuid +
                 ", player=" + player +
                 ", currentWindowTitle='" + currentWindowTitle + '\'' +
                 ", metaCache=" + metaCache +
                 ", uniqueCacheKey=" + uniqueCacheKey +
                 ", editorReplacerConfig=" + editorReplacerConfig +
-                ", editorIndex=" + editorIndex +
-                ", editorPattern='" + editorPattern + '\'' +
-                ", editorReplacement='" + editorReplacement + '\'' +
                 '}';
     }
 

@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server;
+package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -7,9 +7,9 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
@@ -29,7 +29,6 @@ public final class OpenWindow extends AbstractServerPacketListener {
 
             StringBuilder currentTitle = new StringBuilder();
             BaseComponent[] baseComponents = ComponentSerializer.parse(json);
-            StringBuilder stringBuilder = new StringBuilder(baseComponents.length);
             for (BaseComponent baseComponent : baseComponents) {
                 currentTitle.append(baseComponent.toLegacyText().substring(2));
             }

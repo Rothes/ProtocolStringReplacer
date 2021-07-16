@@ -1,14 +1,14 @@
-package me.Rothes.ProtocolStringReplacer;
+package me.rothes.protocolstringreplacer;
 
-import me.Rothes.ProtocolStringReplacer.API.Configuration.CommentYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.Commands.CommandHandler;
-import me.Rothes.ProtocolStringReplacer.Listeners.PlayerJoinListener;
-import me.Rothes.ProtocolStringReplacer.Listeners.PlayerQuitListener;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.PacketListenerManager;
-import me.Rothes.ProtocolStringReplacer.Replacer.ReplacerManager;
-import me.Rothes.ProtocolStringReplacer.Upgrades.UpgradeEnum;
-import me.Rothes.ProtocolStringReplacer.User.User;
-import me.Rothes.ProtocolStringReplacer.User.UserManager;
+import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.user.UserManager;
+import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
+import me.rothes.protocolstringreplacer.commands.CommandHandler;
+import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
+import me.rothes.protocolstringreplacer.listeners.PlayerQuitListener;
+import me.rothes.protocolstringreplacer.packetlisteners.PacketListenerManager;
+import me.rothes.protocolstringreplacer.upgrades.UpgradeEnum;
 import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -173,7 +173,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     public void reload(@Nonnull User user) {
-        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(user, "user cannot be null");
         loadConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager = new ReplacerManager();

@@ -1,11 +1,8 @@
-package me.Rothes.ProtocolStringReplacer.Commands;
+package me.rothes.protocolstringreplacer.commands;
 
-import me.Rothes.ProtocolStringReplacer.User.User;
-import org.bukkit.command.CommandSender;
+import me.rothes.protocolstringreplacer.user.User;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.LinkedList;
 import java.util.List;
 
 public abstract class SubCommand {

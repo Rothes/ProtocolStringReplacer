@@ -1,11 +1,11 @@
-package me.Rothes.ProtocolStringReplacer.Commands;
+package me.rothes.protocolstringreplacer.commands;
 
-import me.Rothes.ProtocolStringReplacer.API.ArgumentsUtils;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Edit;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Parse;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.Reload;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.ArgUtils;
+import me.rothes.protocolstringreplacer.commands.subcommands.Edit;
+import me.rothes.protocolstringreplacer.commands.subcommands.Parse;
+import me.rothes.protocolstringreplacer.commands.subcommands.Reload;
+import me.rothes.protocolstringreplacer.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.CommandBlock;
@@ -40,7 +40,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         } else {
             User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
             if (args.length > 0) {
-                args = ArgumentsUtils.mergeQuotes(args);
+                args = ArgUtils.mergeQuotes(args);
 
                 if (args[0].equalsIgnoreCase("confirm")) {
                     if (user.hasCommandToConfirm()) {

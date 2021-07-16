@@ -1,10 +1,10 @@
-package me.Rothes.ProtocolStringReplacer.Commands.SubCommands;
+package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.Rothes.ProtocolStringReplacer.API.ChatColors;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.ChatColors;
+import me.rothes.protocolstringreplacer.commands.SubCommand;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;

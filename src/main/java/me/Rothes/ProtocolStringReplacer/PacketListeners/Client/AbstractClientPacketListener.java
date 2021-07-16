@@ -1,7 +1,7 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Client;
+package me.rothes.protocolstringreplacer.packetlisteners.client;
 
 import com.comphenix.protocol.PacketType;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.AbstractPacketListener;
+import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
 
 public abstract class AbstractClientPacketListener extends AbstractPacketListener {
 

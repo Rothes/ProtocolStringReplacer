@@ -1,9 +1,9 @@
-package me.Rothes.ProtocolStringReplacer.Commands.SubCommands;
+package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.EditChildren.File;
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommands.EditChildren.Replace;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.File;
+import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Replace;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.commands.SubCommand;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;

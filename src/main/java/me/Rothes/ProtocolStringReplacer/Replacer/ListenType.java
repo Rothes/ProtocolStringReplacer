@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.Replacer;
+package me.rothes.protocolstringreplacer.replacer;
 
 public enum ListenType {
 

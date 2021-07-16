@@ -1,8 +1,8 @@
-package me.Rothes.ProtocolStringReplacer.Upgrades;
+package me.rothes.protocolstringreplacer.upgrades;
 
-import me.Rothes.ProtocolStringReplacer.API.Configuration.CommentYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.API.Configuration.DotYamlConfiguration;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
+import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -32,7 +32,8 @@ public class UpgradeHandler_1 extends AbstractUpgradeHandler{
         TILE_ENTITY_DATA("TILE_ENTITY_DATA", "sign"),
         MAP_CHUNK("MAP_CHUNK", "sign");
 
-        private String packetType, listenType;
+        private String packetType;
+        private String listenType;
         PacketType(String packetType, String listenType) {
             this.packetType = packetType;
             this.listenType = listenType;
@@ -70,8 +71,8 @@ public class UpgradeHandler_1 extends AbstractUpgradeHandler{
 
     @Override
     protected void upgradeReplacerConfig(@Nonnull File file, @Nonnull DotYamlConfiguration config) {
-        Validate.notNull(file, "Configuration File cannot be null");
-        Validate.notNull(config, "Configuration cannot be null");
+        Validate.notNull(file, "configuration File cannot be null");
+        Validate.notNull(config, "configuration cannot be null");
 
         LinkedList<String> listenTypes = new LinkedList<>();
         List<String> packetTypes = config.getStringList("Options鰠Filter鰠Packet-Types");

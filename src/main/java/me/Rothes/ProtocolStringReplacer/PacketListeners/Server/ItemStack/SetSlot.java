@@ -1,11 +1,11 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack;
+package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import me.Rothes.ProtocolStringReplacer.User.User;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.user.User;
 import org.bukkit.inventory.ItemStack;
 
 public final class SetSlot extends AbstractServerItemPacketListener {

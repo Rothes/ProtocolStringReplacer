@@ -1,6 +1,6 @@
-package me.Rothes.ProtocolStringReplacer.Listeners;
+package me.rothes.protocolstringreplacer.listeners;
 
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

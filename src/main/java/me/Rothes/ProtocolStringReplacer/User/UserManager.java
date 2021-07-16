@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.User;
+package me.rothes.protocolstringreplacer.user;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

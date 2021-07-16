@@ -1,23 +1,23 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners;
+package me.rothes.protocolstringreplacer.packetlisteners;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Client.ItemStack.WindowClick;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Client.ItemStack.SetCreativeSlot;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.BossBar;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Chat;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.EntityMetadata;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.SetSlot;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.WindowItems;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.ItemStack.WindowItems_11;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.OpenWindow;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.SetSubtitleText;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.SetTitleText;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.MapChunk;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.TileEntityData;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Sign.UpdateSign;
-import me.Rothes.ProtocolStringReplacer.PacketListeners.Server.Title;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
+import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
+import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
+import me.rothes.protocolstringreplacer.packetlisteners.server.OpenWindow;
+import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunk;
+import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityData;
+import me.rothes.protocolstringreplacer.packetlisteners.server.sign.UpdateSign;
+import me.rothes.protocolstringreplacer.packetlisteners.server.Title;
+import me.rothes.protocolstringreplacer.packetlisteners.server.BossBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
+import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.SetSlot;
+import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItems;
+import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItems_11;
+import me.rothes.protocolstringreplacer.packetlisteners.server.SetSubtitleText;
+import me.rothes.protocolstringreplacer.packetlisteners.server.SetTitleText;
 import org.bukkit.NamespacedKey;
 
 public class PacketListenerManager {

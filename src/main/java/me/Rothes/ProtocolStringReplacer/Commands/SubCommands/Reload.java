@@ -1,8 +1,8 @@
-package me.Rothes.ProtocolStringReplacer.Commands.SubCommands;
+package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.commands.SubCommand;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 

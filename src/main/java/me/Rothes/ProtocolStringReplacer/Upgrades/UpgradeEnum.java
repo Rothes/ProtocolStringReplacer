@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.Upgrades;
+package me.rothes.protocolstringreplacer.upgrades;
 
 public enum UpgradeEnum {
 

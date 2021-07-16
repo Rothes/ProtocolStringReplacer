@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.API;
+package me.rothes.protocolstringreplacer.api;
 
 import org.apache.commons.lang.Validate;
 
@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ArgumentsUtils {
+public class ArgUtils {
 
     private static Pattern lastQuotes = Pattern.compile("\"+$");
 

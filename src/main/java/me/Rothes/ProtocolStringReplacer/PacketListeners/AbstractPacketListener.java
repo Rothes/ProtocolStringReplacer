@@ -1,10 +1,10 @@
-package me.Rothes.ProtocolStringReplacer.PacketListeners;
+package me.rothes.protocolstringreplacer.packetlisteners;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.server.TemporaryPlayer;
-import me.Rothes.ProtocolStringReplacer.User.User;
-import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.user.User;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 

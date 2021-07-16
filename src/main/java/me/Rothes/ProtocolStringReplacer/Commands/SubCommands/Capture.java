@@ -1,7 +1,7 @@
-package me.Rothes.ProtocolStringReplacer.Commands.SubCommands;
+package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.Rothes.ProtocolStringReplacer.Commands.SubCommand;
-import me.Rothes.ProtocolStringReplacer.User.User;
+import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.commands.SubCommand;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ public class Capture extends SubCommand {
 
     @Override
     public void onExecute(@Nonnull User user, @Nonnull String[] args) {
-
+        //TODO
     }
 
     @Override
@@ -25,7 +25,7 @@ public class Capture extends SubCommand {
 
     @Override
     public void sendHelp(@Nonnull User user) {
-
+        //TODO
     }
 
 }
