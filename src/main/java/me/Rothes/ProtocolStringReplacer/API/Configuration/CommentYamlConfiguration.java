@@ -1,4 +1,4 @@
-package me.Rothes.ProtocolStringReplacer.API.Configuration;
+package me.rothes.protocolstringreplacer.api.configuration;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
