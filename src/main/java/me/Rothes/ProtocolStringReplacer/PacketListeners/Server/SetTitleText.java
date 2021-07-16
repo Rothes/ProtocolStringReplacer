@@ -9,6 +9,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
 import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.User.User;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 public class SetTitleText extends AbstractServerPacketListener {
 
@@ -22,7 +23,8 @@ public class SetTitleText extends AbstractServerPacketListener {
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             if (wrappedChatComponent != null) {
-                wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(jsonToLegacyText(wrappedChatComponent.getJson()), user, filter)));
+                wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                        .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
                 wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
             }
         }

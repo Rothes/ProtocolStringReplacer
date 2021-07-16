@@ -26,17 +26,4 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         return replacerConfig.getListenTypeList().contains(listenType);
     }
 
-    protected final String jsonToLegacyText(@NotNull String json) {
-        BaseComponent[] baseComponents = ComponentSerializer.parse(json);
-        StringBuilder stringBuilder = new StringBuilder(baseComponents.length);
-        for (BaseComponent baseComponent : baseComponents) {
-            stringBuilder.append(baseComponent.toLegacyText().substring(2));
-        }
-        return stringBuilder.toString();
-    }
-
-    protected final String legacyTextToJson(@NotNull String text) {
-        return "{\"text\":\"" + text.replace("\"", "\"\"") + "\"}";
-    }
-
 }

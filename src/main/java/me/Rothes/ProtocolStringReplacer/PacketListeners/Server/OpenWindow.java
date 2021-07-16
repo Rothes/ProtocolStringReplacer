@@ -12,6 +12,8 @@ import com.google.gson.JsonParser;
 import me.Rothes.ProtocolStringReplacer.Replacer.ListenType;
 import me.Rothes.ProtocolStringReplacer.User.User;
 import me.Rothes.ProtocolStringReplacer.ProtocolStringReplacer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 
 public final class OpenWindow extends AbstractServerPacketListener {
@@ -27,12 +29,18 @@ public final class OpenWindow extends AbstractServerPacketListener {
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             String json = wrappedChatComponent.getJson();
             User user = getEventUser(packetEvent);
-            String currentTitle = jsonToLegacyText(json);
-            user.setCurrentWindowTitle(currentTitle);
-            if (new JsonParser().parse(json).getAsJsonObject().get("translate") == null) {
-                wrappedChatComponent.setJson(legacyTextToJson(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(currentTitle, user, filter)));
-                wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
+
+            StringBuilder currentTitle = new StringBuilder();
+            BaseComponent[] baseComponents = ComponentSerializer.parse(json);
+            StringBuilder stringBuilder = new StringBuilder(baseComponents.length);
+            for (BaseComponent baseComponent : baseComponents) {
+                currentTitle.append(baseComponent.toLegacyText().substring(2));
             }
+            user.setCurrentWindowTitle(currentTitle.toString());
+
+            wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                    .getReplacedComponents(ComponentSerializer.parse(json), user, filter)));
+            wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }
     };
 
