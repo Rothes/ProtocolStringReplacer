@@ -50,7 +50,8 @@ public class ChatColors {
     private static String translateRGB(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
 
-        Matcher matcher = pattern.matcher(string);
+        String result = string;
+        Matcher matcher = pattern.matcher(result);
         while (matcher.find()) {
             StringBuilder stringBuilder = new StringBuilder(matcher.group(1));
             int i = stringBuilder.length();
@@ -58,9 +59,9 @@ public class ChatColors {
                 stringBuilder.insert(--i, '§');
             }
             stringBuilder.insert(0, "§x");
-            string = string.replace(matcher.group(0), stringBuilder.toString());
+            result = result.replace(matcher.group(0), stringBuilder.toString());
         }
-        return string;
+        return result;
     }
 
 }

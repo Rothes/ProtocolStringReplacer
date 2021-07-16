@@ -75,6 +75,9 @@ public class File extends SubCommand {
                                 break;
                             case REGEX:
                                 hoverBuilder.append("正则表达式");
+                                break;
+                            default:
+                                hoverBuilder.append("未知");
                         }
                         hoverBuilder.append("\n§3§l监听类型: ");
                         for (var packetType : replacerConfig.getListenTypeList()) {

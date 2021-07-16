@@ -116,6 +116,8 @@ public class Parse extends SubCommand {
                                                         "§3§l替换结果: §b" + ChatColors.showColorCodes(text))));
                                     }
                                 }
+                                break;
+                            default:
                         }
                     }
                 }

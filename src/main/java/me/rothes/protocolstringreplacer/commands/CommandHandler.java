@@ -40,16 +40,16 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         } else {
             User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
             if (args.length > 0) {
-                args = ArgUtils.mergeQuotes(args);
+                String[] mergedArgs = ArgUtils.mergeQuotes(args);
 
-                if (args[0].equalsIgnoreCase("confirm")) {
+                if (mergedArgs[0].equalsIgnoreCase("confirm")) {
                     if (user.hasCommandToConfirm()) {
                         if (user.isConfirmExpired()) {
                             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c确认操作已超时. 请重新执行.");
                             user.clearCommandToConfirm();
                             return true;
                         } else {
-                            args = user.getCommandToConfirm();
+                            mergedArgs = user.getCommandToConfirm();
                         }
                     } else {
                         user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您没有待确认的操作.");
@@ -58,9 +58,9 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
                 }
 
                 for (var subCommand : subCommands) {
-                    if (args[0].equalsIgnoreCase(subCommand.getName())) {
+                    if (mergedArgs[0].equalsIgnoreCase(subCommand.getName())) {
                         if (user.hasPermission(subCommand.getPermission())) {
-                            subCommand.onExecute(user, args);
+                            subCommand.onExecute(user, mergedArgs);
                         } else {
                             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您没有权限这么做.");
                         }

@@ -173,12 +173,14 @@ public class ReplacerManager {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
+
+        String result = string;
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                string = getFileReplacedString(user, string, replacerConfig, true);
+                result = getFileReplacedString(user, string, replacerConfig, true);
             }
         }
-        return string;
+        return result;
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -199,33 +201,34 @@ public class ReplacerManager {
         Validate.notNull(filter, "Filter cannot be null");
 
         boolean hasPlaceholder = false;
-        ItemMetaCache metaCache = replacedItemCache.get(itemMeta);
+        ItemMeta result = itemMeta;
+        ItemMetaCache metaCache = replacedItemCache.get(result);
         if (metaCache != null) {
             metaCache.lastAccessTime = System.currentTimeMillis();
-            itemMeta = metaCache.replacedItemMeta;
+            result = metaCache.replacedItemMeta;
             hasPlaceholder = metaCache.hasPlaceholder;
         } else {
-            ItemMeta original = itemMeta.clone();
+            ItemMeta original = result.clone();
             String replaced;
             for (var replacerConfig : replacerConfigList) {
                 if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                    if (itemMeta.hasDisplayName()) {
-                        replaced = getFileReplacedString(user, itemMeta.getDisplayName(), replacerConfig, false);
-                        itemMeta.setDisplayName(replaced);
+                    if (result.hasDisplayName()) {
+                        replaced = getFileReplacedString(user, result.getDisplayName(), replacerConfig, false);
+                        result.setDisplayName(replaced);
                         hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                     }
 
-                    if (itemMeta.hasLore()) {
-                        List<String> lore = itemMeta.getLore();
+                    if (result.hasLore()) {
+                        List<String> lore = result.getLore();
                         for (int i = 0; i < lore.size(); i++) {
                             replaced = getFileReplacedString(user, lore.get(i), replacerConfig, false);
                             lore.set(i, replaced);
                             hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                         }
-                        itemMeta.setLore(lore);
+                        result.setLore(lore);
                     }
-                    if (itemMeta instanceof BookMeta) {
-                        BookMeta bookMeta = (BookMeta) itemMeta;
+                    if (result instanceof BookMeta) {
+                        BookMeta bookMeta = (BookMeta) result;
                         if (bookMeta.hasAuthor()) {
                             replaced = getFileReplacedString(user, bookMeta.getAuthor(), replacerConfig, false);
                             bookMeta.setAuthor(replaced);
@@ -248,10 +251,10 @@ public class ReplacerManager {
                     }
                 }
             }
-            replacedItemCache.put(original, new ItemMetaCache(itemMeta, System.currentTimeMillis(), hasPlaceholder));
+            replacedItemCache.put(original, new ItemMetaCache(result, System.currentTimeMillis(), hasPlaceholder));
         }
 
-        return hasPlaceholder? updatePlaceholders(user, itemMeta) : itemMeta;
+        return hasPlaceholder? updatePlaceholders(user, result) : result;
     }
 
     public void saveReplacerConfigs() {
@@ -326,50 +329,53 @@ public class ReplacerManager {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerConfig, "replacer File cannot be null");
 
+        String result = string;
         Object object = replacerConfig.getReplaces().entrySet();
         switch (replacerConfig.getMatchType()) {
             case CONTAIN:
                 var containSet = (Set<Map.Entry<String, String>>) object;
                 for (var entry : containSet) {
-                    string = StringUtils.replace(string, entry.getKey(), entry.getValue());
+                    result = StringUtils.replace(result, entry.getKey(), entry.getValue());
                 }
                 break;
             case EQUAL:
                 var equalSet = (Set<Map.Entry<String, String>>) object;
                 for (var entry : equalSet) {
-                    if (string.equals(entry.getKey())) {
-                        string = entry.getValue();
+                    if (result.equals(entry.getKey())) {
+                        result = entry.getValue();
                     }
                 }
                 break;
             case REGEX:
                 var regexSet = (Set<Map.Entry<Pattern, String>>) object;
                 for (var entry : regexSet) {
-                    string = entry.getKey().matcher(string).replaceAll(entry.getValue());
+                    result = entry.getKey().matcher(result).replaceAll(entry.getValue());
                 }
+                break;
+            default:
         }
-        return setPlaceholders && hasPlaceholder(string)? setPlaceholder(user, string) : string;
+        return setPlaceholders && hasPlaceholder(result)? setPlaceholder(user, result) : result;
     }
 
     private ItemMeta updatePlaceholders(@Nonnull User user, @Nonnull ItemMeta itemMeta) {
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(itemMeta, "ItemMeta cannot be null");
 
-        itemMeta = itemMeta.clone();
-        if (hasPlaceholder(itemMeta.getDisplayName())) {
-            itemMeta.setDisplayName(setPlaceholder(user, itemMeta.getDisplayName()));
+        ItemMeta result = itemMeta.clone();
+        if (hasPlaceholder(result.getDisplayName())) {
+            result.setDisplayName(setPlaceholder(user, result.getDisplayName()));
         }
-        if (itemMeta.hasLore()) {
-            List<String> lore = itemMeta.getLore();
+        if (result.hasLore()) {
+            List<String> lore = result.getLore();
             for (int i = 0; i < lore.size(); i++) {
                 if (hasPlaceholder(lore.get(i))) {
                     lore.set(i, setPlaceholder(user, lore.get(i)));
                 }
             }
-            itemMeta.setLore(lore);
+            result.setLore(lore);
         }
-        if (itemMeta instanceof BookMeta) {
-            BookMeta bookMeta = (BookMeta) itemMeta;
+        if (result instanceof BookMeta) {
+            BookMeta bookMeta = (BookMeta) result;
             if (bookMeta.hasAuthor() && hasPlaceholder(bookMeta.getAuthor())) {
                 bookMeta.setAuthor(setPlaceholder(user, bookMeta.getAuthor()));
             }
@@ -386,7 +392,7 @@ public class ReplacerManager {
                 bookMeta.setPages(pages);
             }
         }
-        return itemMeta;
+        return result;
     }
 
 }
