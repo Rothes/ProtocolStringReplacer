@@ -71,7 +71,7 @@ public class ReplacerConfig {
     public ReplacerConfig(@Nonnull File file, @Nonnull DotYamlConfiguration configuration) {
         long startTime = System.nanoTime();
         loadData(file, configuration);
-        if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-replacer-Config-When-Loaded", false)) {
+        if (ProtocolStringReplacer.getInstance().getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false)) {
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.nanoTime() - startTime) / 1000000d + "ms");
         }
     }
