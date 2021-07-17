@@ -63,9 +63,9 @@ public class ReplacerManager {
         papitail = papiReplacer.getTail();
 
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         HashMap<File, DotYamlConfiguration> loadedFiles = loadReplacesFiles(path);
-        Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a预加载 " + loadedFiles.size() + " 个替换配置文件. §8耗时 " + (System.currentTimeMillis() - startTime) + "ms");
+        Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a预加载 " + loadedFiles.size() + " 个替换配置文件. §8耗时 " + (System.nanoTime() - startTime) / 1000000d + "ms");
         if (loadedFiles.size() == 0) {
             return;
         }

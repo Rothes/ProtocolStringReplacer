@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class Parse extends SubCommand {
             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a测试正在进行中, 请稍等...");
             ListenType finalListenType = listenType;
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
-                long startTime = System.currentTimeMillis();
+                long startTime = System.nanoTime();
                 String original = ChatColors.getColored(args[1]);
                 String text = original;
                 LinkedList<HoverEvent> results = new LinkedList<>();
@@ -136,7 +137,7 @@ public class Parse extends SubCommand {
                     placeholderMessage.append("§c未发现占位符");
                 }
 
-                long duration = System.currentTimeMillis() - startTime;
+                double duration = (System.nanoTime() - startTime) / 1000000d;
                 user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换测试结果§7 ]§l §7§m-----------");
                 user.sendFilteredText(" §7* §3§l测试耗时: §b" + duration + " ms");
                 user.sendFilteredText(" §7* §3§l监听类型: §b" + finalListenType.getName());
