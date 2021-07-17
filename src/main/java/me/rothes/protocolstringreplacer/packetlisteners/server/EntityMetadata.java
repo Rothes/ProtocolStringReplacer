@@ -5,11 +5,16 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.packetwrapper.WrapperPlayServerEntityMetadata;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
-import org.bukkit.entity.Entity;
+import net.md_5.bungee.chat.ComponentSerializer;
+
+import java.util.List;
+import java.util.Optional;
 
 public final class EntityMetadata extends AbstractServerPacketListener {
 
@@ -21,14 +26,27 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         public void onPacketSending(PacketEvent packetEvent) {
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);
-            StructureModifier<Entity> entityModifier = packet.getEntityModifier(packetEvent);
-            Entity entity = entityModifier.read(0);
-            if (entity != null) {
-                String name = entity.getCustomName();
-                if (name != null) {
-                    entity.setCustomName(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedString(name, user, filter));
+            WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
+            List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
+
+            if (metadataList != null) {
+                for (WrappedWatchableObject watchableObject : metadataList) {
+                    if (watchableObject.getIndex() == 2) {
+                        Optional<?> value = (Optional<?>) watchableObject.getValue();
+                        if (value.isPresent()) {
+                            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
+                            if (wrappedChatComponent != null) {
+                                wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                                        .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
+                                watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
+                                packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
+                            }
+                            packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
+                        }
+                    }
                 }
             }
+
         }
     };
 
