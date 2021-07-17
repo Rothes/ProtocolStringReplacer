@@ -9,25 +9,27 @@ Options:
   # 可选参数
   Author: 'Rothes'
   # 匹配字符串的方式. 可选值:
-  # 'contain' : 只要包含就替换 (默认)
-  # 'equal' : 要求设置与原字符串完全匹配
-  # 'regex' : 使用Java正则表达式
-  Match-Type: 'contain'
+  # 'Contain' : 只要包含就替换 (默认)
+  # 'Equal' : 要求设置与原字符串完全匹配
+  # 'Regex' : 使用Java正则表达式
+  # 不区分大小写.
+  Match-Type: 'Contain'
   # 筛选功能. 用于指定此文件替换字符串的条件.
   Filter:
     # 指定替换何处的字符串. 默认为全部. 可选值:
-    # chat 替换聊天(chat|actionbar)信息文本
-    # sign 替换告示牌文本
-    # title 替换标题(title|subtitle)文本
-    # entity 替换实体名文本
-    # boss-bar 替换Boss血量条文本
-    # itemstack 替换物品(物品名|Lore|书署名|书内容)文本
-    # window-title 替换容器标题文本
+    # Chat 替换聊天(chat|actionbar)信息文本
+    # Sign 替换告示牌文本
+    # Title 替换标题(title|subtitle)文本
+    # Entity 替换实体名文本
+    # Boss-Bar 替换Boss血量条文本
+    # ItemStack 替换物品(物品名|Lore|书署名|书内容)文本
+    # Window-Title 替换容器标题文本
+    # 不区分大小写.
     Listen-Types:
-      - chat
-      - window-title
-      - itemstack
-      - sign
+      - Chat
+      - Window-Title
+      - ItemStack
+      - Sign
 
 # 替换的字符串列表.
 Replaces:

@@ -53,9 +53,9 @@ public class ReplacerConfig {
     }
 
     public enum MatchType {
-        CONTAIN("contain"),
-        EQUAL("equal"),
-        REGEX("regex");
+        CONTAIN("Contain"),
+        EQUAL("Equal"),
+        REGEX("Regex");
 
         private String name;
 
@@ -277,7 +277,7 @@ public class ReplacerConfig {
             for (String type : types) {
                 typeFound = false;
                 for (var listenType : ListenType.values()) {
-                    if (listenType.getName().equals(type)) {
+                    if (listenType.getName().equalsIgnoreCase(type)) {
                         typeFound = true;
                         listenTypeList.add(listenType);
                         break;
@@ -289,7 +289,7 @@ public class ReplacerConfig {
             }
         }
 
-        String matchType = configuration.getString("Options鰠Match-Type", "contain");
+        String matchType = configuration.getString("Options鰠Match-Type", "Contain");
         typeFound = false;
         for (MatchType availableMatchType : MatchType.values()) {
             if (availableMatchType.name.equalsIgnoreCase(matchType)) {
@@ -300,7 +300,7 @@ public class ReplacerConfig {
         }
         if (!typeFound) {
             this.matchType = MatchType.CONTAIN;
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"contain\"");
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"Contain\"");
         }
         ConfigurationSection section = configuration.getConfigurationSection("Replaces");
         if (section != null) {
