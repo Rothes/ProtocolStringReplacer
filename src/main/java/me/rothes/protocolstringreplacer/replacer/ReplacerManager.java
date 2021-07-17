@@ -177,7 +177,7 @@ public class ReplacerManager {
         String result = string;
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                result = getFileReplacedString(user, string, replacerConfig, true);
+                result = getFileReplacedString(user, result, replacerConfig, true);
             }
         }
         return result;
