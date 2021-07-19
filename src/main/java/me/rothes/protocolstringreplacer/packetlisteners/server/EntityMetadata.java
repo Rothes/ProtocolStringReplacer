@@ -24,31 +24,26 @@ public final class EntityMetadata extends AbstractServerPacketListener {
 
     public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
-            try {
-                PacketContainer packet = packetEvent.getPacket();
-                User user = getEventUser(packetEvent);
-                WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
-                List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
+            PacketContainer packet = packetEvent.getPacket();
+            User user = getEventUser(packetEvent);
+            WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
+            List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
 
-                if (metadataList != null) {
-                    for (WrappedWatchableObject watchableObject : metadataList) {
-                        if (watchableObject.getIndex() == 2) {
-                            Optional<?> value = (Optional<?>) watchableObject.getValue();
-                            if (value.isPresent()) {
-                                WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
-                                if (wrappedChatComponent != null) {
-                                    wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                                            .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
-                                    watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
-                                    packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
-                                }
+            if (metadataList != null) {
+                for (WrappedWatchableObject watchableObject : metadataList) {
+                    if (watchableObject.getIndex() == 2) {
+                        Optional<?> value = (Optional<?>) watchableObject.getValue();
+                        if (value.isPresent()) {
+                            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
+                            if (wrappedChatComponent != null) {
+                                wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                                        .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
+                                watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
                                 packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
                             }
                         }
                     }
                 }
-            } catch (RuntimeException ignored) {
-
             }
 
         }
