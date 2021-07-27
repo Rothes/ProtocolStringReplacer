@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -12,6 +13,7 @@ import me.rothes.protocolstringreplacer.packetwrapper.WrapperPlayServerEntityMet
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,10 +41,18 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                                 wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                                         .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
                                 watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
-                                packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
+                            }
+                        }
+                    } else if (watchableObject.getIndex() == 8) {
+                        Object value = watchableObject.getValue();
+                        if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(value)) {
+                            ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(value);
+                            if (itemStack.hasItemMeta()) {
+                                ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, filter);
                             }
                         }
                     }
+                    packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
                 }
             }
 

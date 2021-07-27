@@ -138,7 +138,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         boolean missingDepend = false;
         PluginManager pluginManager = Bukkit.getPluginManager();
         for (String depend : depends) {
-            if (!pluginManager.isPluginEnabled(depend)) {
+            if (pluginManager.getPlugin(depend) == null) {
                 Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未检测到前置插件 " + depend + "，请安装后再使用本插件.");
                 missingDepend = true;
             }
