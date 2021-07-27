@@ -1,13 +1,25 @@
 package me.rothes.protocolstringreplacer.replacer;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.user.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.ItemTag;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
+import net.md_5.bungee.api.chat.hover.content.Content;
+import net.md_5.bungee.api.chat.hover.content.Entity;
+import net.md_5.bungee.api.chat.hover.content.Item;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import net.md_5.bungee.chat.ComponentSerializer;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -145,17 +157,104 @@ public class ReplacerManager {
         Validate.notNull(filter, "Filter cannot be null");
         if (baseComponent instanceof TextComponent) {
             TextComponent textComponent = (TextComponent) baseComponent;
-            textComponent.setText(getReplacedString(textComponent.getText(), user, filter));
+            String color = "";
+            if (textComponent.getColorRaw() != null) {
+                color += textComponent.getColorRaw().toString();
+            }
+            if (textComponent.isBoldRaw() != null && textComponent.isBoldRaw()) {
+                color += "§l";
+            }
+            if (textComponent.isItalicRaw() != null && textComponent.isItalicRaw()) {
+                color += "§o";
+            }
+            if (textComponent.isObfuscatedRaw() != null && textComponent.isObfuscatedRaw()) {
+                color += "§m";
+            }
+            if (textComponent.isUnderlinedRaw() != null && textComponent.isUnderlinedRaw()) {
+                color += "§n";
+            }
+            String replaced = getReplacedString(color + textComponent.getText(), user, filter);
+            int length = color.length();
+            if (replaced.substring(0, length).equals(color)) {
+                replaced = replaced.substring(length);
+            }
+            textComponent.setText(replaced);
         } else if (baseComponent instanceof TranslatableComponent) {
             TranslatableComponent translatableComponent = (TranslatableComponent) baseComponent;
             if (translatableComponent.getWith() != null) {
                 translatableComponent.setWith(replaceExtra(translatableComponent.getWith(), user, filter));
             }
         }
+
+        HoverEvent hoverEvent = baseComponent.getHoverEvent();
+        if (hoverEvent != null) {
+            replaceHoverEvent(hoverEvent, user, filter);
+        }
+
         if (baseComponent.getExtra() != null) {
             baseComponent.setExtra(replaceExtra(baseComponent.getExtra(), user, filter));
         }
         return baseComponent;
+    }
+
+    public void replaceHoverEvent(@Nonnull HoverEvent hoverEvent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        Validate.notNull(hoverEvent, "HoverEvent cannot be null");
+        Validate.notNull(user, "user cannot be null");
+        Validate.notNull(filter, "Filter cannot be null");
+
+        List<Content> contents = hoverEvent.getContents();
+        for (int i = 0; i < contents.size(); i++) {
+            Content content = contents.get(i);
+            if (content instanceof Text) {
+                Object object = ((Text) content).getValue();
+                if (object instanceof BaseComponent[]) {
+                    content = new Text(getReplacedComponents((BaseComponent[]) object, user, filter));
+                } else {
+                    content = new Text(getReplacedString((String) object, user, filter));
+                }
+                contents.set(i, content);
+            } else if (content instanceof Item) {
+                boolean edited = false;
+                Item itemContent = (Item) content;
+                ItemTag tag = itemContent.getTag();
+                if (tag != null) {
+                    String nbt = tag.getNbt();
+                    JsonElement element = new JsonParser().parse(nbt);
+                    JsonObject root = element.getAsJsonObject();
+                    JsonObject display = root.getAsJsonObject("display");
+
+                    String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
+                    diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
+                    if (diaplayNameJson != null) {
+                        BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson)), user, filter);
+                        String result = ComponentSerializer.toString(parse);
+                        display.add("Name", new JsonParser().parse("'" + result + "'"));
+                        edited = true;
+                    }
+
+                    JsonArray lore = display.getAsJsonArray("Lore");
+                    if (lore != null) {
+                        for (int i1 = 0; i1 < lore.size(); i1++) {
+                            String loreJson = lore.get(i1).getAsJsonPrimitive().toString();
+                            loreJson = loreJson.substring(1, loreJson.length() - 1);
+                            BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)), user, filter);
+                            String result = ComponentSerializer.toString(parse);
+                            lore.set(i1, new JsonParser().parse("'" + result + "'"));
+                        }
+                        display.add("Lore", lore);
+                        edited = true;
+                    }
+
+                    if (edited) {
+                        contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
+                    }
+                }
+            } else if (content instanceof Entity) {
+                Entity entityContent = (Entity) content;
+                entityContent.setName(getReplacedComponent(entityContent.getName(), user, filter));
+                contents.set(i, entityContent);
+            }
+        }
     }
 
     public List<BaseComponent> replaceExtra(@Nonnull List<BaseComponent> extra, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
