@@ -33,7 +33,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
 
             if (metadataList != null) {
                 for (WrappedWatchableObject watchableObject : metadataList) {
-                    if (watchableObject.getIndex() == 2) {
+                    if (watchableObject.getValue() instanceof Optional<?>) {
                         Optional<?> value = (Optional<?>) watchableObject.getValue();
                         if (value.isPresent()) {
                             WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
@@ -43,7 +43,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                                 watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
                             }
                         }
-                    } else if (watchableObject.getIndex() == 8) {
+                    } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(watchableObject.getValue())) {
                         Object value = watchableObject.getValue();
                         if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(value)) {
                             ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(value);

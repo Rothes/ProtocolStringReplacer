@@ -2,7 +2,8 @@ package me.rothes.protocolstringreplacer.upgrades;
 
 public enum UpgradeEnum {
 
-    FROM_1_TO_2((short) 1, new UpgradeHandler_1());
+    FROM_1_TO_2((short) 1, new UpgradeHandler1To2()),
+    FROM_2_TO_3((short) 2, new UpgradeHandler2To3());
 
     private short currentVersion;
     private AbstractUpgradeHandler upgradeHandler;

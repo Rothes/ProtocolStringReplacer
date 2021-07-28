@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class UpgradeHandler_1 extends AbstractUpgradeHandler{
+public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
 
     private enum PacketType {
         CHAT("CHAT", "chat"),
@@ -48,6 +48,7 @@ public class UpgradeHandler_1 extends AbstractUpgradeHandler{
         for (var entry : loadReplacesFiles.entrySet()) {
             upgradeReplacerConfig(entry.getKey(), entry.getValue());
         }
+
         CommentYamlConfiguration config = ProtocolStringReplacer.getInstance().getConfig();
         ListOrderedMap keyValues = new ListOrderedMap();
         ConfigurationSection configurationSection = config.getConfigurationSection("");

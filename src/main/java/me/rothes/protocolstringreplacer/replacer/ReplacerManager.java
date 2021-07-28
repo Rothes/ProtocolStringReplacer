@@ -133,7 +133,7 @@ public class ReplacerManager {
         int count = 0;
         for (var replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable()) {
-                count = count + replacerConfig.getReplaces().size();
+                count = count + replacerConfig.getReplaces(ReplacesType.COMMON).size();
             }
         }
         return count;
@@ -202,58 +202,63 @@ public class ReplacerManager {
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
 
-        List<Content> contents = hoverEvent.getContents();
-        for (int i = 0; i < contents.size(); i++) {
-            Content content = contents.get(i);
-            if (content instanceof Text) {
-                Object object = ((Text) content).getValue();
-                if (object instanceof BaseComponent[]) {
-                    content = new Text(getReplacedComponents((BaseComponent[]) object, user, filter));
-                } else {
-                    content = new Text(getReplacedString((String) object, user, filter));
-                }
-                contents.set(i, content);
-            } else if (content instanceof Item) {
-                boolean edited = false;
-                Item itemContent = (Item) content;
-                ItemTag tag = itemContent.getTag();
-                if (tag != null) {
-                    String nbt = tag.getNbt();
-                    JsonElement element = new JsonParser().parse(nbt);
-                    JsonObject root = element.getAsJsonObject();
-                    JsonObject display = root.getAsJsonObject("display");
-
-                    String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
-                    diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
-                    if (diaplayNameJson != null) {
-                        BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson)), user, filter);
-                        String result = ComponentSerializer.toString(parse);
-                        display.add("Name", new JsonParser().parse("'" + result + "'"));
-                        edited = true;
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 12) {
+            List<Content> contents = hoverEvent.getContents();
+            for (int i = 0; i < contents.size(); i++) {
+                Content content = contents.get(i);
+                if (content instanceof Text) {
+                    Object object = ((Text) content).getValue();
+                    Text result;
+                    if (object instanceof BaseComponent[]) {
+                        result = new Text(getReplacedComponents((BaseComponent[]) object, user, filter));
+                    } else {
+                        result = new Text(getReplacedString((String) object, user, filter));
                     }
+                    contents.set(i, result);
+                } else if (content instanceof Item) {
+                    boolean edited = false;
+                    Item itemContent = (Item) content;
+                    ItemTag tag = itemContent.getTag();
+                    if (tag != null) {
+                        String nbt = tag.getNbt();
+                        JsonElement element = new JsonParser().parse(nbt);
+                        JsonObject root = element.getAsJsonObject();
+                        JsonObject display = root.getAsJsonObject("display");
 
-                    JsonArray lore = display.getAsJsonArray("Lore");
-                    if (lore != null) {
-                        for (int i1 = 0; i1 < lore.size(); i1++) {
-                            String loreJson = lore.get(i1).getAsJsonPrimitive().toString();
-                            loreJson = loreJson.substring(1, loreJson.length() - 1);
-                            BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)), user, filter);
+                        String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
+                        diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
+                        if (diaplayNameJson != null) {
+                            BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson)), user, filter);
                             String result = ComponentSerializer.toString(parse);
-                            lore.set(i1, new JsonParser().parse("'" + result + "'"));
+                            display.add("Name", new JsonParser().parse("'" + result + "'"));
+                            edited = true;
                         }
-                        display.add("Lore", lore);
-                        edited = true;
-                    }
 
-                    if (edited) {
-                        contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
+                        JsonArray lore = display.getAsJsonArray("Lore");
+                        if (lore != null) {
+                            for (int i1 = 0; i1 < lore.size(); i1++) {
+                                String loreJson = lore.get(i1).getAsJsonPrimitive().toString();
+                                loreJson = loreJson.substring(1, loreJson.length() - 1);
+                                BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)), user, filter);
+                                String result = ComponentSerializer.toString(parse);
+                                lore.set(i1, new JsonParser().parse("'" + result + "'"));
+                            }
+                            display.add("Lore", lore);
+                            edited = true;
+                        }
+
+                        if (edited) {
+                            contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
+                        }
                     }
+                } else if (content instanceof Entity) {
+                    Entity entityContent = (Entity) content;
+                    entityContent.setName(getReplacedComponent(entityContent.getName(), user, filter));
+                    contents.set(i, entityContent);
                 }
-            } else if (content instanceof Entity) {
-                Entity entityContent = (Entity) content;
-                entityContent.setName(getReplacedComponent(entityContent.getName(), user, filter));
-                contents.set(i, entityContent);
             }
+        } else {
+            getReplacedComponents(hoverEvent.getValue(), user, filter);
         }
     }
 
@@ -429,7 +434,7 @@ public class ReplacerManager {
         Validate.notNull(replacerConfig, "replacer File cannot be null");
 
         String result = string;
-        Object object = replacerConfig.getReplaces().entrySet();
+        Object object = replacerConfig.getReplaces(ReplacesType.COMMON).entrySet();
         switch (replacerConfig.getMatchType()) {
             case CONTAIN:
                 var containSet = (Set<Map.Entry<String, String>>) object;

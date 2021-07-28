@@ -2,6 +2,7 @@ package me.rothes.protocolstringreplacer.commands.subcommands;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.replacer.ReplacesType;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
@@ -63,7 +64,7 @@ public class Parse extends SubCommand {
                 LinkedList<HoverEvent> results = new LinkedList<>();
                 for (var replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
                     if (replacerConfig.getListenTypeList().contains(finalListenType)) {
-                        Object object = replacerConfig.getReplaces().entrySet();
+                        Object object = replacerConfig.getReplaces(ReplacesType.COMMON).entrySet();
                         switch (replacerConfig.getMatchType()) {
                             case CONTAIN:
                                 var containSet = (Set<Map.Entry<String, String>>) object;

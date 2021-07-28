@@ -4,6 +4,7 @@ import me.rothes.protocolstringreplacer.api.ArgUtils;
 import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.replacer.ReplacesType;
 import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -40,8 +41,8 @@ public class Replace extends SubCommand {
             if ("list".equalsIgnoreCase(args[2])) {
                 if (args.length < 5) {
                     int page = 1;
-                    ListOrderedMap replaces = user.getEditorReplacerConfig().getReplaces();
-                    HashMap<Short, LinkedList<ReplacerConfig.CommentLine>> commentLinesMap = user.getEditorReplacerConfig().getCommentLines();
+                    ListOrderedMap replaces = user.getEditorReplacerConfig().getReplaces(ReplacesType.COMMON);
+                    HashMap<Short, LinkedList<ReplacerConfig.CommentLine>> commentLinesMap = user.getEditorReplacerConfig().getCommentLines(ReplacesType.COMMON);
                     int totalPage = (int) Math.ceil((float) replaces.size() / 5);
                     if (args.length == 4) {
                         if (StringUtils.isNumeric(args[3])) {
@@ -119,25 +120,25 @@ public class Replace extends SubCommand {
                     }
 
                     if (args.length == 5) {
-                        if (index >= editorReplacerConfig.getReplaces().size()) {
-                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于总大小 §f" + editorReplacerConfig.getReplaces().size() + " §c的索引.");
+                        if (index >= editorReplacerConfig.getReplaces(ReplacesType.COMMON).size()) {
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于总大小 §f" + editorReplacerConfig.getReplaces(ReplacesType.COMMON).size() + " §c的索引.");
                             return;
                         }
 
                         String replacement = ChatColors.getColored(args[4]);
-                        editorReplacerConfig.setReplace(index, replacement);
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已修改索引 §f" + args[3] + " §a为 §f" + editorReplacerConfig.getReplaces().get(index) + " §7§o> §f" + replacement);
+                        editorReplacerConfig.setReplace(index, replacement, ReplacesType.COMMON);
+                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已修改索引 §f" + args[3] + " §a为 §f" + editorReplacerConfig.getReplaces(ReplacesType.COMMON).get(index) + " §7§o> §f" + replacement);
 
                     } else if (args.length == 6) {
-                        if (index > editorReplacerConfig.getReplaces().size()) {
-                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于或等于总大小 §f" + editorReplacerConfig.getReplaces().size() + " §c的索引.");
+                        if (index > editorReplacerConfig.getReplaces(ReplacesType.COMMON).size()) {
+                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于或等于总大小 §f" + editorReplacerConfig.getReplaces(ReplacesType.COMMON).size() + " §c的索引.");
                             return;
                         }
                         String original = ChatColors.getColored(args[4]);
-                        int i = editorReplacerConfig.checkReplaceKey(original);
+                        int i = editorReplacerConfig.checkReplaceKey(original, ReplacesType.COMMON);
                         if (i == -1 || i == index) {
                             String replacement = ChatColors.getColored(args[5]);
-                            editorReplacerConfig.setReplace(index, original, replacement);
+                            editorReplacerConfig.setReplace(index, original, replacement, ReplacesType.COMMON);
                             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已修改索引 §f" + args[3] + " §a为 §f" + original + " §7§o> §f" + replacement);
                         } else {
                             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c在索引 §f" + i + " §c处已有一个相同的原文本了.");
@@ -154,11 +155,11 @@ public class Replace extends SubCommand {
                 if (args.length == 5) {
                     String original = ChatColors.getColored(args[3]);
                     ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
-                    int i = editorReplacerConfig.checkReplaceKey(original);
+                    int i = editorReplacerConfig.checkReplaceKey(original, ReplacesType.COMMON);
                     if (i == -1) {
                         String replacement = ChatColors.getColored(args[4]);
-                        editorReplacerConfig.addReplace(original, replacement);
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已在索引 §f" + editorReplacerConfig.getReplaces().size() + " §a添加替换项: §f" + original + " §7§o> §f" + replacement);
+                        editorReplacerConfig.addReplace(original, replacement, ReplacesType.COMMON);
+                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已在索引 §f" + editorReplacerConfig.getReplaces(ReplacesType.COMMON).size() + " §a添加替换项: §f" + original + " §7§o> §f" + replacement);
                     } else {
                         user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c在索引 §f" + i + " §c处已有一个相同的原文本了.");
                     }
@@ -174,10 +175,10 @@ public class Replace extends SubCommand {
                     }
                     String original = ChatColors.getColored(args[4]);
                     ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
-                    int i = editorReplacerConfig.checkReplaceKey(original);
+                    int i = editorReplacerConfig.checkReplaceKey(original, ReplacesType.COMMON);
                     if (i == -1) {
                         String replacement = ChatColors.getColored(args[5]);
-                        user.getEditorReplacerConfig().addReplace(index, original, replacement);
+                        user.getEditorReplacerConfig().addReplace(index, original, replacement, ReplacesType.COMMON);
                         user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已在索引 §f" + index + " §a添加替换项: §f" + original + " §7§o> §f" + replacement);
                     } else {
                         user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c在索引 §f" + i + " §c处已有一个相同的原文本了.");
@@ -200,11 +201,11 @@ public class Replace extends SubCommand {
                         return;
                     }
                     ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
-                    if (index > editorReplacerConfig.getReplaces().size()) {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于或等于总大小 §f" + editorReplacerConfig.getReplaces().size() + " §c的索引.");
+                    if (index > editorReplacerConfig.getReplaces(ReplacesType.COMMON).size()) {
+                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于或等于总大小 §f" + editorReplacerConfig.getReplaces(ReplacesType.COMMON).size() + " §c的索引.");
                         return;
                     }
-                    editorReplacerConfig.removeReplace(index);
+                    editorReplacerConfig.removeReplace(index, ReplacesType.COMMON);
                     user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已删除索引 §f" + index + " §a的替换项.");
                 } else {
                     user.sendFilteredText("§7 * §e/psr edit replace remove <索引>§7- §b删除在索引的替换项");
