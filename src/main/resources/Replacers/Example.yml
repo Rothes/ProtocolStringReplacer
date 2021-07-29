@@ -3,9 +3,9 @@ Options:
   # 是否开启本替换配置. 若为false则不会为这个文件处理. 若未定义, 默认为false.
   Enable: true
   # 本文件的优先级. 若有多个替换配置, 优先级高的最早替换. 默认为5.
-  Priority: 30
+  Priority: 5
   # 可选参数
-  Version: '1.210605'
+  Version: '1.210729'
   # 可选参数
   Author: 'Rothes'
   # 匹配字符串的方式. 可选值:
@@ -16,6 +16,7 @@ Options:
   Match-Type: 'Contain'
   # 筛选功能. 用于指定此文件替换字符串的条件.
   Filter:
+    # 监听类型.
     # 指定替换何处的字符串. 默认为全部. 可选值:
     # Chat 替换聊天(chat|actionbar)信息文本
     # Sign 替换告示牌文本
@@ -33,9 +34,17 @@ Options:
 
 # 替换的字符串列表.
 # 左侧的key为原字符串 右侧的value为替换后的字符串.
+# 替换模式优先度: Json > Common, 忽略文件优先度.
 Replaces:
   # 常规文本替换模式.
   Common:
     '我的名字': '｛player_name｝'
     '一个命名牌': '我的命名牌'
     'mx': '是萌新'
+
+  # Json 替换, 适合高级用户.
+  # 不支持使用 Json 替换的监听类型有:
+  # ItemStack 和 1.9.4 版本服务端以下的 Sign.
+  Json:
+    # 修改客户端上熔炉界面标题显示的名称.
+    '{"translate":"container.furnace"}': '{"text":"恭喜您打开了一个熔炉! 666!"}'

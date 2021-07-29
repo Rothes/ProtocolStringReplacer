@@ -23,8 +23,9 @@ public final class BossBar extends AbstractServerPacketListener {
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
             if (wrappedChatComponentStructureModifier.size() != 0) {
                 WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
+                String replacedJson = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(wrappedChatComponent.getJson(), user, filter);
                 wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                        .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
+                        .getReplacedComponents(ComponentSerializer.parse(replacedJson), user, filter)));
                 wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
             }
         }

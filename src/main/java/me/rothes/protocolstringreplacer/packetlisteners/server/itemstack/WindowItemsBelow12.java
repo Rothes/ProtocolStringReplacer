@@ -8,9 +8,9 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.user.User;
 import org.bukkit.inventory.ItemStack;
 
-public final class WindowItems_11 extends AbstractServerItemPacketListener {
+public final class WindowItemsBelow12 extends AbstractServerItemPacketListener {
 
-    public WindowItems_11() {
+    public WindowItemsBelow12() {
         super(PacketType.Play.Server.WINDOW_ITEMS);
     }
 

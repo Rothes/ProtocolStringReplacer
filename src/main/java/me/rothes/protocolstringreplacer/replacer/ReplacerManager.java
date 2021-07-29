@@ -134,7 +134,7 @@ public class ReplacerManager {
         int count = 0;
         for (var replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable()) {
-                count = count + replacerConfig.getReplaces(ReplacesType.COMMON).size();
+                count = count + replacerConfig.getReplaces(ReplacesMode.COMMON).size();
             }
         }
         return count;
@@ -292,7 +292,22 @@ public class ReplacerManager {
         String result = string;
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                result = getFileReplacedString(user, result, replacerConfig, true);
+                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.COMMON, true);
+            }
+        }
+        return result;
+    }
+
+    @Nonnull
+    public String getReplacedJson(@Nonnull String json, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        Validate.notNull(json, "Json String cannot be null");
+        Validate.notNull(user, "user cannot be null");
+        Validate.notNull(filter, "Filter cannot be null");
+
+        String result = json;
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
+                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.JSON, true);
             }
         }
         return result;
@@ -328,7 +343,7 @@ public class ReplacerManager {
             for (var replacerConfig : replacerConfigList) {
                 if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
                     if (result.hasDisplayName()) {
-                        replaced = getFileReplacedString(user, result.getDisplayName(), replacerConfig, false);
+                        replaced = getFileReplacedString(user, result.getDisplayName(), replacerConfig, ReplacesMode.COMMON, false);
                         result.setDisplayName(replaced);
                         hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                     }
@@ -336,7 +351,7 @@ public class ReplacerManager {
                     if (result.hasLore()) {
                         List<String> lore = result.getLore();
                         for (int i = 0; i < lore.size(); i++) {
-                            replaced = getFileReplacedString(user, lore.get(i), replacerConfig, false);
+                            replaced = getFileReplacedString(user, lore.get(i), replacerConfig, ReplacesMode.COMMON, false);
                             lore.set(i, replaced);
                             hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                         }
@@ -345,19 +360,19 @@ public class ReplacerManager {
                     if (result instanceof BookMeta) {
                         BookMeta bookMeta = (BookMeta) result;
                         if (bookMeta.hasAuthor()) {
-                            replaced = getFileReplacedString(user, bookMeta.getAuthor(), replacerConfig, false);
+                            replaced = getFileReplacedString(user, bookMeta.getAuthor(), replacerConfig, ReplacesMode.COMMON, false);
                             bookMeta.setAuthor(replaced);
                             hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                         }
                         if (bookMeta.hasTitle()) {
-                            replaced = getFileReplacedString(user, bookMeta.getTitle(), replacerConfig, false);
+                            replaced = getFileReplacedString(user, bookMeta.getTitle(), replacerConfig, ReplacesMode.COMMON, false);
                             bookMeta.setTitle(replaced);
                             hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                         }
                         if (bookMeta.hasPages()) {
                             List<String> pages = new ArrayList<>(bookMeta.getPages());
                             for (int i = 0; i < pages.size(); i++) {
-                                replaced = getFileReplacedString(user, pages.get(i), replacerConfig, false);
+                                replaced = getFileReplacedString(user, pages.get(i), replacerConfig, ReplacesMode.COMMON, false);
                                 pages.set(i, replaced);
                                 hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
                             }
@@ -439,13 +454,14 @@ public class ReplacerManager {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    private String getFileReplacedString(@Nonnull User user, @Nonnull String string, @Nonnull ReplacerConfig replacerConfig, boolean setPlaceholders) {
+    private String getFileReplacedString(@Nonnull User user, @Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplacesMode replacesMode, boolean setPlaceholders) {
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(string, "String cannot be null");
-        Validate.notNull(replacerConfig, "replacer File cannot be null");
+        Validate.notNull(replacerConfig, "Replacer File cannot be null");
+        Validate.notNull(replacesMode, "Replaces Type cannot be null");
 
         String result = string;
-        Object object = replacerConfig.getReplaces(ReplacesType.COMMON).entrySet();
+        Object object = replacerConfig.getReplaces(replacesMode).entrySet();
         switch (replacerConfig.getMatchType()) {
             case CONTAIN:
                 var containSet = (Set<Map.Entry<String, String>>) object;

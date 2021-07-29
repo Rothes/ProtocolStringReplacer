@@ -2,7 +2,7 @@ package me.rothes.protocolstringreplacer.commands.subcommands;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.replacer.ReplacesType;
+import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
@@ -32,7 +32,7 @@ public class Parse extends SubCommand {
     @SuppressWarnings("unchecked")
     @Override
     public void onExecute(@NotNull User user, @NotNull String[] args) {
-        if (args.length == 4) {
+        if (args.length == 5) {
             Player player;
             if ("null".equals(args[2])) {
                 player = null;
@@ -54,9 +54,21 @@ public class Parse extends SubCommand {
                 user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c监听类型 §f" + args[3] + " §c不存在.");
                 return;
             }
+            ReplacesMode replacesMode = null;
+            for (var type : ReplacesMode.values()) {
+                if (type.getNode().equalsIgnoreCase(args[3])) {
+                    replacesMode = type;
+                    break;
+                }
+            }
+            if (replacesMode == null) {
+                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c替换模式 §f" + args[3] + " §c不存在.");
+                return;
+            }
 
             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a测试正在进行中, 请稍等...");
             ListenType finalListenType = listenType;
+            ReplacesMode finalReplacesMode = replacesMode;
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
                 long startTime = System.nanoTime();
                 String original = ChatColors.getColored(args[1]);
@@ -64,7 +76,7 @@ public class Parse extends SubCommand {
                 LinkedList<HoverEvent> results = new LinkedList<>();
                 for (var replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
                     if (replacerConfig.getListenTypeList().contains(finalListenType)) {
-                        Object object = replacerConfig.getReplaces(ReplacesType.COMMON).entrySet();
+                        Object object = replacerConfig.getReplaces(finalReplacesMode).entrySet();
                         switch (replacerConfig.getMatchType()) {
                             case CONTAIN:
                                 var containSet = (Set<Map.Entry<String, String>>) object;
@@ -141,6 +153,7 @@ public class Parse extends SubCommand {
                 user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换测试结果§7 ]§l §7§m-----------");
                 user.sendFilteredText(" §7* §3§l测试耗时: §b" + duration + " ms");
                 user.sendFilteredText(" §7* §3§l监听类型: §b" + finalListenType.getName());
+                user.sendFilteredText(" §7* §3§l替换模式: §b" + finalReplacesMode.getName());
                 user.sendFilteredText(" §7* §3§l原始文本: §b" + ChatColors.showColorCodes(original));
                 user.sendFilteredText(" §7* §3§l最终文本: §b" + ChatColors.showColorCodes(text));
                 ComponentBuilder componentBuilder = new ComponentBuilder(" §7* §3§l详细步骤:");
@@ -183,6 +196,11 @@ public class Parse extends SubCommand {
             for (var listenType : ListenType.values()) {
                 list.add(listenType.getName());
             }
+        } else if (args.length == 5) {
+            list.add("<替换模式>");
+            for (var replacesMode : ReplacesMode.values()) {
+                list.add(replacesMode.getNode());
+            }
         }
         return list;
     }
@@ -190,7 +208,7 @@ public class Parse extends SubCommand {
     @Override
     public void sendHelp(@NotNull User user) {
         user.sendFilteredText("§7§m---------------------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换测试§7 ]§l §7§m---------------------");
-        user.sendFilteredText("§7 * §e/psr parse <字符串> <玩家|null> <监听类型> §7- §b测试替换字符串");
+        user.sendFilteredText("§7 * §e/psr parse <字符串> <玩家|null> <监听类型> <替换模式> §7- §b测试替换字符串");
         user.sendFilteredText("§7 | §b通过此指令, 您可以测试您设置的替换配置文件是否生效,");
         user.sendFilteredText("§7 | §b并了解字符串替换的流程.");
         user.sendFilteredText("§7 | §b由于进行了额外的操作, 测试耗时会远高于实际替换耗时.");

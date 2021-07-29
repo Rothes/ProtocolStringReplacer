@@ -29,8 +29,8 @@ public class ReplacerConfig {
     private int priority;
     private List<ListenType> listenTypeList = new ArrayList<>();
     private MatchType matchType;
-    private HashMap<ReplacesType, ListOrderedMap> replaces = new HashMap<>();
-    private HashMap<ReplacesType, HashMap<Short, LinkedList<CommentLine>>> commentLines = new HashMap<>();
+    private HashMap<ReplacesMode, ListOrderedMap> replaces = new HashMap<>();
+    private HashMap<ReplacesMode, HashMap<Short, LinkedList<CommentLine>>> commentLines = new HashMap<>();
     private String author;
     private String version;
     private boolean edited;
@@ -102,8 +102,8 @@ public class ReplacerConfig {
     }
 
     @Nullable
-    public ListOrderedMap getReplaces(ReplacesType replacesType) {
-        return replaces.get(replacesType);
+    public ListOrderedMap getReplaces(ReplacesMode replacesMode) {
+        return replaces.get(replacesMode);
     }
 
     public String getAuthor() {
@@ -122,8 +122,8 @@ public class ReplacerConfig {
         return file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/');
     }
 
-    public HashMap<Short, LinkedList<CommentLine>> getCommentLines(ReplacesType replacesType) {
-        return commentLines.get(replacesType);
+    public HashMap<Short, LinkedList<CommentLine>> getCommentLines(ReplacesMode replacesMode) {
+        return commentLines.get(replacesMode);
     }
 
     public void saveConfig() {
@@ -138,29 +138,31 @@ public class ReplacerConfig {
         configuration.set("Options鰠Filter鰠Listen-Types", types);
         configuration.set("Options鰠Match-Type", matchType.getName());
         configuration.set("Replaces鰠Common", new ArrayList<String>());
-        HashMap<Short, LinkedList<CommentLine>> commentLines = this.commentLines.get(ReplacesType.COMMON);
-        ListOrderedMap replaces = this.replaces.get(ReplacesType.COMMON);
-        if (matchType == MatchType.REGEX) {
-            for (short i = 0; i < replaces.size(); i++) {
-                if (commentLines.containsKey(i)) {
-                    LinkedList<CommentLine> commentLineList = commentLines.get(i);
-                    for (var commentLine: commentLineList) {
-                        configuration.set("Replaces鰠Common鰠" + commentLine.key, commentLine.value);
+        for (var replacesMode : ReplacesMode.values()) {
+            HashMap<Short, LinkedList<CommentLine>> commentLines = this.commentLines.get(replacesMode);
+            ListOrderedMap replaces = this.replaces.get(replacesMode);
+            if (matchType == MatchType.REGEX) {
+                for (short i = 0; i < replaces.size(); i++) {
+                    if (commentLines.containsKey(i)) {
+                        LinkedList<CommentLine> commentLineList = commentLines.get(i);
+                        for (var commentLine: commentLineList) {
+                            configuration.set("Replaces鰠" + replacesMode.getNode() + "鰠" + commentLine.key, commentLine.value);
+                        }
                     }
+                    Pattern pattern = (Pattern) replaces.get(i);
+                    configuration.set("Replaces鰠" + replacesMode.getNode() + "鰠" + pattern.toString(), replaces.get(pattern));
                 }
-                Pattern pattern = (Pattern) replaces.get(i);
-                configuration.set("Replaces鰠Common鰠" + pattern.toString(), replaces.get(pattern));
-            }
-        } else {
-            for (short i = 0; i < replaces.size(); i++) {
-                if (commentLines.containsKey(i)) {
-                    LinkedList<CommentLine> commentLineList = commentLines.get(i);
-                    for (var commentLine: commentLineList) {
-                        configuration.set("Replaces鰠Common鰠" + commentLine.key, commentLine.value);
+            } else {
+                for (short i = 0; i < replaces.size(); i++) {
+                    if (commentLines.containsKey(i)) {
+                        LinkedList<CommentLine> commentLineList = commentLines.get(i);
+                        for (var commentLine: commentLineList) {
+                            configuration.set("Replaces鰠" + replacesMode.getNode() + "鰠" + commentLine.key, commentLine.value);
+                        }
                     }
+                    String string = (String) replaces.get(i);
+                    configuration.set("Replaces鰠" + replacesMode.getNode() + "鰠" + string, replaces.get(string));
                 }
-                String string = (String) replaces.get(i);
-                configuration.set("Replaces鰠Common鰠" + string, replaces.get(string));
             }
         }
         try {
@@ -171,34 +173,34 @@ public class ReplacerConfig {
         }
     }
 
-    public void setReplace(int index, @Nonnull String value, @Nonnull ReplacesType replacesType) {
+    public void setReplace(int index, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
         if (index < replaces.size()) {
-            replaces.get(replacesType).setValue(index, value);
+            replaces.get(replacesMode).setValue(index, value);
             edited = true;
             saveConfig();
         }
     }
 
-    public void setReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesType replacesType) {
+    public void setReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
         if (index < replaces.size()) {
-            removeReplace(index, false, replacesType);
+            removeReplace(index, false, replacesMode);
         }
         if (index <= replaces.size()) {
-            addReplace(index, key, value, replacesType);
+            addReplace(index, key, value, replacesMode);
             edited = true;
             saveConfig();
         }
     }
 
-    public void addReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesType replacesType) {
+    public void addReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
         if (index <= replaces.size()) {
             if (this.matchType == MatchType.REGEX) {
-                replaces.get(replacesType).put(index, Pattern.compile(key), value);
+                replaces.get(replacesMode).put(index, Pattern.compile(key), value);
             } else {
-            replaces.get(replacesType).put(index, key, value);
+            replaces.get(replacesMode).put(index, key, value);
             }
             HashMap<Short, LinkedList<CommentLine>> commentLines = new HashMap<>();
-            for (Map.Entry<Short, LinkedList<CommentLine>> entry : this.commentLines.get(replacesType).entrySet()) {
+            for (Map.Entry<Short, LinkedList<CommentLine>> entry : this.commentLines.get(replacesMode).entrySet()) {
                 short i = entry.getKey();
                 LinkedList<CommentLine> commentLineList = entry.getValue();
                 if (i >= index) {
@@ -206,27 +208,27 @@ public class ReplacerConfig {
                 } else {
                     commentLines.put(i, commentLineList);
                 }
-                this.commentLines.put(replacesType, commentLines);
+                this.commentLines.put(replacesMode, commentLines);
             }
             edited = true;
             saveConfig();
         }
     }
 
-    public void addReplace(@Nonnull String key, @Nonnull String value, @Nonnull ReplacesType replacesType) {
-        addReplace(replaces.size(), key, value, replacesType);
+    public void addReplace(@Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
+        addReplace(replaces.get(replacesMode).size(), key, value, replacesMode);
     }
 
-    public void removeReplace(int index, @Nonnull ReplacesType replacesType) {
-        removeReplace(index, true, replacesType);
+    public void removeReplace(int index, @Nonnull ReplacesMode replacesMode) {
+        removeReplace(index, true, replacesMode);
         edited = true;
         saveConfig();
     }
 
-    public void removeReplace(int index, boolean editComment, @Nonnull ReplacesType replacesType) {
+    public void removeReplace(int index, boolean editComment, @Nonnull ReplacesMode replacesMode) {
         HashMap<Short, LinkedList<CommentLine>> commentLines = new HashMap<>();
         if (editComment) {
-            for (Map.Entry<Short, LinkedList<CommentLine>> entry : this.commentLines.get(replacesType).entrySet()) {
+            for (Map.Entry<Short, LinkedList<CommentLine>> entry : this.commentLines.get(replacesMode).entrySet()) {
                 short i = entry.getKey();
                 LinkedList<CommentLine> commentLineList = entry.getValue();
                 if (i > index) {
@@ -235,28 +237,28 @@ public class ReplacerConfig {
                     commentLines.put(i, commentLineList);
                 }
             }
-            this.commentLines.put(replacesType, commentLines);
+            this.commentLines.put(replacesMode, commentLines);
         }
-        replaces.get(replacesType).remove(index);
+        replaces.get(replacesMode).remove(index);
         edited = true;
         saveConfig();
     }
 
-    public int checkReplaceKey(@Nonnull String key, @Nonnull ReplacesType replacesType) {
-        for (int i = 0; i < replaces.size(); i++) {
-            if (replaces.get(replacesType).get(i).equals(key)) {
+    public int checkReplaceKey(@Nonnull String key, @Nonnull ReplacesMode replacesMode) {
+        for (int i = 0; i < replaces.get(replacesMode).size(); i++) {
+            if (replaces.get(replacesMode).get(i).equals(key)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private boolean checkComment(String key, String value, Pattern pattern, @Nonnull ReplacesType replacesType) {
+    private boolean checkComment(String key, String value, Pattern pattern, @Nonnull ReplacesMode replacesMode) {
         Matcher matcher = pattern.matcher(key);
         if (matcher.find()) {
-            LinkedList<CommentLine> commentLines = this.commentLines.get(replacesType).get((short) replaces.size());
+            LinkedList<CommentLine> commentLines = this.commentLines.get(replacesMode).get((short) replaces.size());
             if (commentLines == null) {
-                this.commentLines.get(replacesType).put((short) replaces.size(), new LinkedList<>(Collections.singletonList(new CommentLine(key, value))));
+                this.commentLines.get(replacesMode).put((short) replaces.size(), new LinkedList<>(Collections.singletonList(new CommentLine(key, value))));
             } else {
                 commentLines.add(new CommentLine(key, value));
             }
@@ -306,23 +308,25 @@ public class ReplacerConfig {
             this.matchType = MatchType.CONTAIN;
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"Contain\"");
         }
-        ConfigurationSection section = configuration.getConfigurationSection("Replaces鰠Common");
-        if (section != null) {
-            replaces.put(ReplacesType.COMMON, new ListOrderedMap());
-            commentLines.put(ReplacesType.COMMON, new HashMap<>());
-            Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
-            if (this.matchType == MatchType.REGEX) {
-                for (String key : section.getKeys(true)) {
-                    String value = section.getString(key);
-                    if (!checkComment(key, value, commentKeyPattern, ReplacesType.COMMON)) {
-                        replaces.get(ReplacesType.COMMON).put(Pattern.compile(key), value);
+        for (var replacesMode : ReplacesMode.values()) {
+            ConfigurationSection section = configuration.getConfigurationSection("Replaces鰠" + replacesMode.getNode());
+            replaces.put(replacesMode, new ListOrderedMap());
+            commentLines.put(replacesMode, new HashMap<>());
+            if (section != null) {
+                Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
+                if (this.matchType == MatchType.REGEX) {
+                    for (String key : section.getKeys(true)) {
+                        String value = section.getString(key);
+                        if (!checkComment(key, value, commentKeyPattern, replacesMode)) {
+                            replaces.get(replacesMode).put(Pattern.compile(key), value);
+                        }
                     }
-                }
-            } else {
-                for (String key : section.getKeys(true)) {
-                    String value = section.getString(key);
-                    if (!checkComment(key, value, commentKeyPattern, ReplacesType.COMMON)) {
-                        replaces.get(ReplacesType.COMMON).put(key, value);
+                } else {
+                    for (String key : section.getKeys(true)) {
+                        String value = section.getString(key);
+                        if (!checkComment(key, value, commentKeyPattern, replacesMode)) {
+                            replaces.get(replacesMode).put(key, value);
+                        }
                     }
                 }
             }

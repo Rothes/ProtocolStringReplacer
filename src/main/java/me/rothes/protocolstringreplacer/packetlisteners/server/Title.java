@@ -24,7 +24,9 @@ public final class Title extends AbstractServerPacketListener {
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             if (wrappedChatComponent != null) {
                 wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                        .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
+                        .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
+                                wrappedChatComponent.getJson(), user, filter
+                        )), user, filter)));
                 wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
             }
         }
