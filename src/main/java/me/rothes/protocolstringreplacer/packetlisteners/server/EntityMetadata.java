@@ -36,14 +36,12 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 for (WrappedWatchableObject watchableObject : metadataList) {
                     if (watchableObject.getValue() instanceof Optional<?>) {
                         Optional<?> value = (Optional<?>) watchableObject.getValue();
-                        if (value.isPresent()) {
-                            if (MinecraftReflection.getIChatBaseComponentClass().isInstance(value.get())) {
-                                WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
-                                if (wrappedChatComponent != null) {
-                                    wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                                            .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
-                                    watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
-                                }
+                        if (value.isPresent() && MinecraftReflection.getIChatBaseComponentClass().isInstance(value.get())) {
+                            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
+                            if (wrappedChatComponent != null) {
+                                wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                                        .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
+                                watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
                             }
                         }
                     } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(watchableObject.getValue())) {
