@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
@@ -36,11 +37,13 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     if (watchableObject.getValue() instanceof Optional<?>) {
                         Optional<?> value = (Optional<?>) watchableObject.getValue();
                         if (value.isPresent()) {
-                            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
-                            if (wrappedChatComponent != null) {
-                                wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                                        .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
-                                watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
+                            if (MinecraftReflection.getIChatBaseComponentClass().isInstance(value.get())) {
+                                WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
+                                if (wrappedChatComponent != null) {
+                                    wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                                            .getReplacedComponents(ComponentSerializer.parse(wrappedChatComponent.getJson()), user, filter)));
+                                    watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
+                                }
                             }
                         }
                     } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(watchableObject.getValue())) {

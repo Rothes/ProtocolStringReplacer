@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -248,6 +249,16 @@ public class ReplacerManager {
                         }
 
                         if (edited) {
+                            JsonObject skullOwner = root.getAsJsonObject("SkullOwner");
+                            if (skullOwner != null) {
+                                JsonArray id = skullOwner.getAsJsonArray("Id");
+                                if (id != null && id.size() == 5) {
+                                    id.set(0, new JsonPrimitive(Integer.valueOf(id.get(1).getAsJsonPrimitive().toString())));
+                                    id.set(1, id.get(2));
+                                    id.set(2, id.get(3));
+                                    id.remove(3);
+                                }
+                            }
                             contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
                         }
                     }
