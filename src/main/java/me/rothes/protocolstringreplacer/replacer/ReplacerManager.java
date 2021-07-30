@@ -380,7 +380,7 @@ public class ReplacerManager {
                 }
             }
             if (result instanceof BookMeta) {
-                hasPlaceholder = hasPlaceholder | ReplaceBookMeta((BookMeta) result, user, filter, hasPlaceholder);
+                hasPlaceholder = hasPlaceholder | replaceBookMeta((BookMeta) result, user, filter, hasPlaceholder);
 
             }
             replacedItemCache.put(original, new ItemMetaCache(result, System.currentTimeMillis(), hasPlaceholder));
@@ -389,7 +389,7 @@ public class ReplacerManager {
         return hasPlaceholder? updatePlaceholders(user, result) : result;
     }
 
-    private boolean ReplaceBookMeta(@Nonnull BookMeta bookMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean placeholder) {
+    private boolean replaceBookMeta(@Nonnull BookMeta bookMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean placeholder) {
         boolean hasPlaceholder = placeholder;
         String replaced;
         if (bookMeta.hasAuthor()) {
@@ -487,10 +487,8 @@ public class ReplacerManager {
                         }
                     }
                 }
-            } else if (baseComponent instanceof TranslatableComponent) {
-                if (hasPlaceholder(((TranslatableComponent) baseComponent).getWith().toArray(new BaseComponent[0]))) {
-                    return true;
-                }
+            } else if (baseComponent instanceof TranslatableComponent && hasPlaceholder(((TranslatableComponent) baseComponent).getWith().toArray(new BaseComponent[0]))) {
+                return true;
             }
             if (baseComponent.getExtra() != null && hasPlaceholder(baseComponent.getExtra().toArray(new BaseComponent[0]))) {
                 return true;
