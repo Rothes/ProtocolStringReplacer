@@ -55,7 +55,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
 
             wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                     .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                            json, user, filter
+                            json, user, filter, false
                     )), user, filter)));
             wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }

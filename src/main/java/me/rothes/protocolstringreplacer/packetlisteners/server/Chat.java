@@ -34,8 +34,8 @@ public final class Chat extends AbstractServerPacketListener {
                 StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
                 WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
                 if (wrappedChatComponent != null) {
-                    String replacedJson = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(wrappedChatComponent.getJson(), user, filter);
-                    BaseComponent[] replacedComponents = ComponentSerializer.parse(replacedJson);
+                    String replacedJson = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(wrappedChatComponent.getJson(), user, filter, false);
+                    BaseComponent[] replacedComponents = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(ComponentSerializer.parse(replacedJson), user, filter);
                     wrappedChatComponentStructureModifier.write(0, WrappedChatComponent.fromJson(ComponentSerializer.toString(replacedComponents)));
                 } else {
                     StructureModifier<Object> structureModifier = packet.getModifier();
@@ -44,7 +44,7 @@ public final class Chat extends AbstractServerPacketListener {
                         if (read instanceof BaseComponent[]) {
                             BaseComponent[] readComponents = (BaseComponent[]) read;
                             readComponents = ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                    ComponentSerializer.toString(readComponents), user, filter
+                                    ComponentSerializer.toString(readComponents), user, filter, false
                             ));
                             structureModifier.write(fieldIndex, ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(readComponents, user, filter));
                         } else if (isPaperComponent(read)) {
@@ -54,7 +54,7 @@ public final class Chat extends AbstractServerPacketListener {
                                                     ComponentSerializer.parse(
                                                             ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
                                                                     getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read)
-                                                                    , user, filter))
+                                                                    , user, filter, false))
                                                     , user, filter
                                             )
                                     )

@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -142,17 +143,26 @@ public class ReplacerManager {
 
     @Nonnull
     public BaseComponent[] getReplacedComponents(@Nonnull BaseComponent[] baseComponents, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        return getReplacedComponents(baseComponents, user, filter, true);
+    }
+
+    @Nonnull
+    public BaseComponent[] getReplacedComponents(@Nonnull BaseComponent[] baseComponents, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
         Validate.notNull(baseComponents, "BaseComponent Array cannot be null");
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
         for (int i = 0; i < baseComponents.length; i++) {
             BaseComponent baseComponent = baseComponents[i];
-            baseComponents[i] = getReplacedComponent(baseComponent, user, filter);
+            baseComponents[i] = getReplacedComponent(baseComponent, user, filter, setPlaceholders);
         }
         return baseComponents;
     }
 
     public BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        return getReplacedComponent(baseComponent, user, filter, true);
+    }
+
+    public BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
         Validate.notNull(baseComponent, "BaseComponent cannot be null");
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
@@ -174,7 +184,7 @@ public class ReplacerManager {
             if (textComponent.isUnderlinedRaw() != null && textComponent.isUnderlinedRaw()) {
                 color += "§n";
             }
-            String replaced = getReplacedString(color + textComponent.getText(), user, filter);
+            String replaced = getReplacedString(color + textComponent.getText(), user, filter, setPlaceholders);
             int length = color.length();
             if (replaced.substring(0, length).equals(color)) {
                 replaced = replaced.substring(length);
@@ -285,6 +295,11 @@ public class ReplacerManager {
 
     @Nonnull
     public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        return getReplacedString(string, user, filter, true);
+    }
+
+    @Nonnull
+    public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
@@ -292,7 +307,7 @@ public class ReplacerManager {
         String result = string;
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.COMMON, true);
+                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.COMMON, setPlaceholders);
             }
         }
         return result;
@@ -300,6 +315,11 @@ public class ReplacerManager {
 
     @Nonnull
     public String getReplacedJson(@Nonnull String json, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        return getReplacedJson(json, user, filter, true);
+    }
+
+    @Nonnull
+    public String getReplacedJson(@Nonnull String json, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
         Validate.notNull(json, "Json String cannot be null");
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
@@ -307,7 +327,7 @@ public class ReplacerManager {
         String result = json;
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.JSON, true);
+                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.JSON, setPlaceholders);
             }
         }
         return result;
@@ -357,34 +377,55 @@ public class ReplacerManager {
                         }
                         result.setLore(lore);
                     }
-                    if (result instanceof BookMeta) {
-                        BookMeta bookMeta = (BookMeta) result;
-                        if (bookMeta.hasAuthor()) {
-                            replaced = getFileReplacedString(user, bookMeta.getAuthor(), replacerConfig, ReplacesMode.COMMON, false);
-                            bookMeta.setAuthor(replaced);
-                            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-                        }
-                        if (bookMeta.hasTitle()) {
-                            replaced = getFileReplacedString(user, bookMeta.getTitle(), replacerConfig, ReplacesMode.COMMON, false);
-                            bookMeta.setTitle(replaced);
-                            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-                        }
-                        if (bookMeta.hasPages()) {
-                            List<String> pages = new ArrayList<>(bookMeta.getPages());
-                            for (int i = 0; i < pages.size(); i++) {
-                                replaced = getFileReplacedString(user, pages.get(i), replacerConfig, ReplacesMode.COMMON, false);
-                                pages.set(i, replaced);
-                                hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-                            }
-                            bookMeta.setPages(pages);
-                        }
-                    }
                 }
+            }
+            if (result instanceof BookMeta) {
+                hasPlaceholder = hasPlaceholder | ReplaceBookMeta((BookMeta) result, user, filter, hasPlaceholder);
+
             }
             replacedItemCache.put(original, new ItemMetaCache(result, System.currentTimeMillis(), hasPlaceholder));
         }
 
         return hasPlaceholder? updatePlaceholders(user, result) : result;
+    }
+
+    private boolean ReplaceBookMeta(@Nonnull BookMeta bookMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean placeholder) {
+        boolean hasPlaceholder = placeholder;
+        String replaced;
+        if (bookMeta.hasAuthor()) {
+            replaced = getReplacedString(bookMeta.getAuthor(), user, filter, false);
+            bookMeta.setAuthor(replaced);
+            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+        }
+        if (bookMeta.hasTitle()) {
+            replaced = getReplacedString(bookMeta.getTitle(), user, filter, false);
+            bookMeta.setTitle(replaced);
+            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+        }
+        if (bookMeta.hasPages()) {
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 11) {
+                List<BaseComponent[]> pages = new ArrayList<>(bookMeta.spigot().getPages());
+                for (int i = 0; i < pages.size(); i++) {
+                    BaseComponent[] result = ComponentSerializer.parse(
+                            getReplacedJson(ComponentSerializer.toString(pages.get(i)), user, filter, false)
+                    );
+                    result = getReplacedComponents(result, user, filter, false);
+                    pages.set(i, result);
+                    hasPlaceholder = hasPlaceholder || hasPlaceholder(result);
+                }
+                bookMeta.spigot().setPages(pages);
+
+            } else {
+                List<String> pages = new ArrayList<>(bookMeta.getPages());
+                for (int i = 0; i < pages.size(); i++) {
+                    replaced = getReplacedString(pages.get(i), user, filter, false);
+                    pages.set(i, replaced);
+                    hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
+                }
+                bookMeta.setPages(pages);
+            }
+        }
+        return hasPlaceholder;
     }
 
     public void saveReplacerConfigs() {
@@ -429,6 +470,35 @@ public class ReplacerManager {
         return tailFound;
     }
 
+    public boolean hasPlaceholder(@NotNull BaseComponent[] baseComponents) {
+        for (var baseComponent : baseComponents) {
+            if (baseComponent instanceof TextComponent) {
+                String text = ((TextComponent) baseComponent).getText();
+                boolean headFound = false;
+                for(int i = 0; i < text.length(); i++) {
+                    char Char = text.charAt(i);
+                    if (!headFound) {
+                        if (Char == papihead) {
+                            headFound = true;
+                        }
+                    } else {
+                        if (Char == papitail) {
+                            return true;
+                        }
+                    }
+                }
+            } else if (baseComponent instanceof TranslatableComponent) {
+                if (hasPlaceholder(((TranslatableComponent) baseComponent).getWith().toArray(new BaseComponent[0]))) {
+                    return true;
+                }
+            }
+            if (baseComponent.getExtra() != null && hasPlaceholder(baseComponent.getExtra().toArray(new BaseComponent[0]))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String setPlaceholder(@NotNull User user, @NotNull String string) {
         return papiReplacer.apply(string, user.getPlayer(),
                 PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
@@ -445,7 +515,7 @@ public class ReplacerManager {
                     DotYamlConfiguration dotYamlConfiguration = DotYamlConfiguration.loadConfiguration(file);
                     loaded.put(file, dotYamlConfiguration);
                 } else if (file.isDirectory()) {
-                    loadReplacesFiles(file).forEach(loaded::put);
+                    loaded.putAll(loadReplacesFiles(file));
                 }
             }
         }
@@ -506,14 +576,26 @@ public class ReplacerManager {
             result.setLore(lore);
         }
         if (result instanceof BookMeta) {
-            BookMeta bookMeta = (BookMeta) result;
-            if (bookMeta.hasAuthor() && hasPlaceholder(bookMeta.getAuthor())) {
-                bookMeta.setAuthor(setPlaceholder(user, bookMeta.getAuthor()));
-            }
-            if (bookMeta.hasTitle() && hasPlaceholder(bookMeta.getTitle())) {
-                bookMeta.setTitle(setPlaceholder(user, bookMeta.getTitle()));
-            }
-            if (bookMeta.hasPages()) {
+            updatePlaceholders(user, (BookMeta) result);
+        }
+        return result;
+    }
+
+    private void updatePlaceholders(@Nonnull User user, @Nonnull BookMeta bookMeta) {
+        if (bookMeta.hasAuthor() && hasPlaceholder(bookMeta.getAuthor())) {
+            bookMeta.setAuthor(setPlaceholder(user, bookMeta.getAuthor()));
+        }
+        if (bookMeta.hasTitle() && hasPlaceholder(bookMeta.getTitle())) {
+            bookMeta.setTitle(setPlaceholder(user, bookMeta.getTitle()));
+        }
+        if (bookMeta.hasPages()) {
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 11) {
+                List<BaseComponent[]> pages = new ArrayList<>(bookMeta.spigot().getPages());
+                for (int i = 0; i < pages.size(); i++) {
+                    pages.set(i, updatePlaceholders(user, pages.get(i)));
+                }
+                bookMeta.spigot().setPages(pages);
+            } else {
                 List<String> pages = new ArrayList<>(bookMeta.getPages());
                 for (int i = 0; i < pages.size(); i++) {
                     if (hasPlaceholder(pages.get(i))) {
@@ -523,7 +605,124 @@ public class ReplacerManager {
                 bookMeta.setPages(pages);
             }
         }
-        return result;
+    }
+
+    private BaseComponent[] updatePlaceholders(@Nonnull User user, @Nonnull BaseComponent[] baseComponents) {
+        for (int i = 0; i < baseComponents.length; i++) {
+            BaseComponent baseComponent = baseComponents[i];
+            if (baseComponent instanceof TextComponent) {
+                TextComponent textComponent = (TextComponent) baseComponent;
+                String text = textComponent.getText();
+                if (hasPlaceholder(text)) {
+                    textComponent.setText(setPlaceholder(user, text));
+                }
+            } else if (baseComponent instanceof TranslatableComponent) {
+                TranslatableComponent translatableComponent = (TranslatableComponent) baseComponent;
+                translatableComponent.setWith(Arrays.asList
+                        (updatePlaceholders(user, translatableComponent.getWith().toArray(new BaseComponent[0]))));
+            }
+            if (baseComponent.getExtra() != null) {
+                baseComponent.setExtra(Arrays.asList
+                        (updatePlaceholders(user, baseComponent.getExtra().toArray(new BaseComponent[0]))));
+            }
+            if (baseComponent.getHoverEvent() != null) {
+                updatePlaceholders(user, baseComponent.getHoverEvent());
+            }
+            baseComponents[i] = baseComponent;
+        }
+        return baseComponents;
+    }
+
+    private void updatePlaceholders(@Nonnull User user, @Nonnull HoverEvent hoverEvent) {
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 12) {
+            List<Content> contents = hoverEvent.getContents();
+            for (int i = 0; i < contents.size(); i++) {
+                Content content = contents.get(i);
+                if (content instanceof Text) {
+                    Object object = ((Text) content).getValue();
+                    Text result;
+                    if (object instanceof BaseComponent[]) {
+                        result = new Text(updatePlaceholders(user, (BaseComponent[]) object));
+                    } else {
+                        if (hasPlaceholder((String) object)) {
+                            result = new Text(setPlaceholder(user, (String) object));
+                        } else {
+                            continue;
+                        }
+                    }
+                    contents.set(i, result);
+                } else if (content instanceof Item) {
+                    boolean edited = false;
+                    Item itemContent = (Item) content;
+                    ItemTag tag = itemContent.getTag();
+                    if (tag != null) {
+                        String nbt = tag.getNbt();
+                        JsonElement element = new JsonParser().parse(nbt);
+                        JsonObject root = element.getAsJsonObject();
+                        JsonObject display = root.getAsJsonObject("display");
+
+                        String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
+                        diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
+                        if (diaplayNameJson != null) {
+                            BaseComponent[] parse = updatePlaceholders(user, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson)));
+                            String result = ComponentSerializer.toString(parse);
+                            display.add("Name", new JsonParser().parse("'" + result + "'"));
+                            edited = true;
+                        }
+
+                        JsonArray lore = display.getAsJsonArray("Lore");
+                        if (lore != null) {
+                            for (int i1 = 0; i1 < lore.size(); i1++) {
+                                String loreJson = lore.get(i1).getAsJsonPrimitive().toString();
+                                loreJson = loreJson.substring(1, loreJson.length() - 1);
+                                BaseComponent[] parse = updatePlaceholders(user, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)));
+                                String result = ComponentSerializer.toString(parse);
+                                lore.set(i1, new JsonParser().parse("'" + result + "'"));
+                            }
+                            display.add("Lore", lore);
+                            edited = true;
+                        }
+
+                        if (edited) {
+                            JsonObject skullOwner = root.getAsJsonObject("SkullOwner");
+                            if (skullOwner != null) {
+                                JsonArray id = skullOwner.getAsJsonArray("Id");
+                                if (id != null && id.size() == 5) {
+                                    id.set(0, new JsonPrimitive(Integer.valueOf(id.get(1).getAsJsonPrimitive().toString())));
+                                    id.set(1, id.get(2));
+                                    id.set(2, id.get(3));
+                                    id.remove(3);
+                                }
+                            }
+                            contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
+                        }
+                    }
+                } else if (content instanceof Entity) {
+                    Entity entityContent = (Entity) content;
+                    BaseComponent nameComponent = entityContent.getName();
+                    if (nameComponent instanceof TextComponent) {
+                        TextComponent textComponent = (TextComponent) nameComponent;
+                        if (hasPlaceholder(textComponent.getText())) {
+                            textComponent.setText(setPlaceholder(user, textComponent.getText()));
+                        }
+                    } else if (nameComponent instanceof TranslatableComponent) {
+                        TranslatableComponent translatableComponent = (TranslatableComponent) nameComponent;
+                        translatableComponent.setWith(Arrays.asList(updatePlaceholders(user,
+                                translatableComponent.getWith().toArray(new BaseComponent[0])
+                        )));
+                    }
+                    if (nameComponent.getExtra() != null) {
+                        nameComponent.setExtra(Arrays.asList(updatePlaceholders(user,
+                                nameComponent.getExtra().toArray(new BaseComponent[0])
+                        )));
+                    }
+                    entityContent.setName(nameComponent);
+                    contents.set(i, entityContent);
+                }
+            }
+        } else {
+            updatePlaceholders(user, hoverEvent.getValue());
+        }
     }
 
 }

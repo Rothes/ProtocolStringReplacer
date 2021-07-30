@@ -42,9 +42,9 @@ Replaces:
     '一个命名牌': '我的命名牌'
     'mx': '是萌新'
 
-  # Json 替换, 适合高级用户.
+  # Json 替换模式, 适合高级用户.
   # 不支持使用 Json 替换的监听类型有:
-  # ItemStack 和 1.9.4 版本服务端以下的 Sign.
+  # ItemStack(版本1.12及以上书内容除外) 和 版本 1.9.4 以下的 Sign.
   Json:
     # 修改客户端上熔炉界面标题显示的名称.
     '{"translate":"container.furnace"}': '{"text":"恭喜您打开了一个熔炉! 666!"}'

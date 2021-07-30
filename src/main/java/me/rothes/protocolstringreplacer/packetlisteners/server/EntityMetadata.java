@@ -41,7 +41,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                             if (wrappedChatComponent != null) {
                                 wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                                         .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                                wrappedChatComponent.getJson(), user, filter)), user, filter)));
+                                                wrappedChatComponent.getJson(), user, filter, false)), user, filter)));
                                 watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
                             }
                         }

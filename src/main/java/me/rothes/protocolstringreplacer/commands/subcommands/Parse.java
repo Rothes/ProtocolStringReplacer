@@ -56,13 +56,13 @@ public class Parse extends SubCommand {
             }
             ReplacesMode replacesMode = null;
             for (var type : ReplacesMode.values()) {
-                if (type.getNode().equalsIgnoreCase(args[3])) {
+                if (type.getNode().equalsIgnoreCase(args[4])) {
                     replacesMode = type;
                     break;
                 }
             }
             if (replacesMode == null) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c替换模式 §f" + args[3] + " §c不存在.");
+                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c替换模式 §f" + args[4] + " §c不存在.");
                 return;
             }
 

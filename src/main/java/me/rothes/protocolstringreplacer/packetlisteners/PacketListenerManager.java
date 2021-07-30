@@ -15,7 +15,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.BossBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.SetSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItems;
-import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItemsBelow12;
+import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItemsUpper12;
 import me.rothes.protocolstringreplacer.packetlisteners.server.SetSubtitleText;
 import me.rothes.protocolstringreplacer.packetlisteners.server.SetTitleText;
 import org.bukkit.NamespacedKey;
@@ -50,7 +50,7 @@ public class PacketListenerManager {
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 11) {
-            protocolManager.addPacketListener(new WindowItemsBelow12().packetAdapter);
+            protocolManager.addPacketListener(new WindowItemsUpper12().packetAdapter);
         } else {
             protocolManager.addPacketListener(new WindowItems().packetAdapter);
         }
