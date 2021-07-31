@@ -1,6 +1,7 @@
 package me.rothes.protocolstringreplacer;
 
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.user.UserManager;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -75,7 +77,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
         try {
             Class.forName("io.papermc.paper.text.PaperComponents");
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §3启用 Paper 1.17+ 支持.");
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §3启用 Paper 1.16+ 支持.");
             isPaper = true;
         } catch (Throwable tr) {
             isPaper = false;
@@ -171,6 +173,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             configFile = new File(instance.getDataFolder() + "/Config.yml");
         }
         config = CommentYamlConfiguration.loadConfiguration(configFile);
+        checkConfigsVersion();
         checkConfig();
         configManager = new ConfigManager(instance);
     }
@@ -217,13 +220,13 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     private void checkConfigsVersion() {
-        short configsVersion = (short) config.getInt("Configs-Version", 1);
+        HashMap<Short, AbstractUpgradeHandler> upgrades = new HashMap<>();
         for (var upgrade : UpgradeEnum.values()) {
-            if (upgrade.getCurrentVersion() == configsVersion) {
-                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a正在升级配置文件版本 " + configsVersion + " -> " + (configsVersion + 1));
-                upgrade.getUpgradeHandler().upgrade();
-                configsVersion = (short) config.getInt("Configs-Version");
-            }
+            upgrades.put(upgrade.getCurrentVersion(), upgrade.getUpgradeHandler());
+        }
+        for (short i = (short) config.getInt("Configs-Version", 1); i <= upgrades.size(); i++) {
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a正在升级配置文件版本 " + i + " -> " + (i + 1));
+            upgrades.get(i).upgrade();
         }
     }
 
@@ -232,7 +235,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
         loadConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager = new ReplacerManager();
-        checkConfigsVersion();
         replacerManager.initialize();
         userManager = new UserManager();
         for (Player player : Bukkit.getOnlinePlayers()) {

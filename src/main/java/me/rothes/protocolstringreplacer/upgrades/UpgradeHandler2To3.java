@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.upgrades;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
+import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ public class UpgradeHandler2To3 extends AbstractUpgradeHandler{
 
     @Override
     public void upgrade() {
-        HashMap<File, DotYamlConfiguration> loadReplacesFiles = ProtocolStringReplacer.getInstance().getReplacerManager().loadReplacesFiles(
+        HashMap<File, DotYamlConfiguration> loadReplacesFiles = ReplacerManager.loadReplacesFiles(
                 new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers"));
         for (var entry : loadReplacesFiles.entrySet()) {
             upgradeReplacerConfig(entry.getKey(), entry.getValue());

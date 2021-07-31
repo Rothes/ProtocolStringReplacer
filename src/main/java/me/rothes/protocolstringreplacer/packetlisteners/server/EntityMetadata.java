@@ -13,6 +13,7 @@ import me.rothes.protocolstringreplacer.packetwrapper.WrapperPlayServerEntityMet
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,7 +32,8 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 return;
             }
             PacketContainer packet = packetEvent.getPacket();
-            if (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && packet.getEntityModifier(packetEvent).read(0).getType() == EntityType.DROPPED_ITEM) {
+            Entity entity = packet.getEntityModifier(packetEvent).read(0);
+            if (entity == null || (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && entity.getType() == EntityType.DROPPED_ITEM)) {
                 return;
             }
             User user = getEventUser(packetEvent);

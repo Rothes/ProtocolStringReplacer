@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.upgrades;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
+import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -43,7 +44,7 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
     @SuppressWarnings("unchecked")
     @Override
     public void upgrade() {
-        HashMap<File, DotYamlConfiguration> loadReplacesFiles = ProtocolStringReplacer.getInstance().getReplacerManager().loadReplacesFiles(
+        HashMap<File, DotYamlConfiguration> loadReplacesFiles = ReplacerManager.loadReplacesFiles(
                 new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers"));
         for (var entry : loadReplacesFiles.entrySet()) {
             upgradeReplacerConfig(entry.getKey(), entry.getValue());
@@ -53,6 +54,9 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
         ListOrderedMap keyValues = new ListOrderedMap();
         ConfigurationSection configurationSection = config.getConfigurationSection("");
         for (String key: configurationSection.getKeys(true)) {
+            if (key.equals("Configs-Version")) {
+                continue;
+            }
             keyValues.put(key, config.get(key));
         }
         config = new CommentYamlConfiguration();

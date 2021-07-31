@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.user.User;
@@ -65,6 +64,39 @@ public class ReplacerManager {
             this.hasPlaceholder = hasPlaceholder;
         }
 
+    }
+
+    @Nonnull
+    public static HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
+        Validate.notNull(path, "Path cannot be null");
+        HashMap<File, DotYamlConfiguration> loaded = new HashMap<>();
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            for (var file : files) {
+                if (file.isFile() && isYmlFile(file)) {
+                    DotYamlConfiguration dotYamlConfiguration = DotYamlConfiguration.loadConfiguration(file);
+                    loaded.put(file, dotYamlConfiguration);
+                } else if (file.isDirectory()) {
+                    loaded.putAll(loadReplacesFiles(file));
+                }
+            }
+        }
+        return loaded;
+    }
+
+    public static boolean isYmlFile(@Nonnull File file) {
+        Validate.notNull(file, "File cannot be null");
+        return isYmlFile(file.getName());
+    }
+
+    public static boolean isYmlFile(@Nonnull String name) {
+        Validate.notNull(name, "FileName cannot be null");
+        int length = name.length();
+        if (length > 4) {
+            String subfix = name.substring(length - 4, length);
+            return subfix.equalsIgnoreCase(".yml");
+        }
+        return false;
     }
 
     public BukkitTask getCleanTask() {
@@ -435,21 +467,6 @@ public class ReplacerManager {
         }
     }
 
-    public static boolean isYmlFile(@Nonnull File file) {
-        Validate.notNull(file, "File cannot be null");
-        return isYmlFile(file.getName());
-    }
-
-    public static boolean isYmlFile(@Nonnull String name) {
-        Validate.notNull(name, "FileName cannot be null");
-        int length = name.length();
-        if (length > 4) {
-            String subfix = name.substring(length - 4, length);
-            return subfix.equalsIgnoreCase(".yml");
-        }
-        return false;
-    }
-
     public boolean hasPlaceholder(@NotNull String string) {
         boolean headFound = false;
         boolean tailFound = false;
@@ -499,24 +516,6 @@ public class ReplacerManager {
     public String setPlaceholder(@NotNull User user, @NotNull String string) {
         return papiReplacer.apply(string, user.getPlayer(),
                 PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
-    }
-
-    @Nonnull
-    public HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
-        Validate.notNull(path, "Path cannot be null");
-        HashMap<File, DotYamlConfiguration> loaded = new HashMap<>();
-        if (path.exists()) {
-            File[] files = path.listFiles();
-            for (var file : files) {
-                if (file.isFile() && isYmlFile(file)) {
-                    DotYamlConfiguration dotYamlConfiguration = DotYamlConfiguration.loadConfiguration(file);
-                    loaded.put(file, dotYamlConfiguration);
-                } else if (file.isDirectory()) {
-                    loaded.putAll(loadReplacesFiles(file));
-                }
-            }
-        }
-        return loaded;
     }
 
     @SuppressWarnings("unchecked")
