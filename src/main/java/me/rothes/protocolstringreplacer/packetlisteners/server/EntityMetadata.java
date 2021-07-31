@@ -31,10 +31,10 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 return;
             }
             PacketContainer packet = packetEvent.getPacket();
-            User user = getEventUser(packetEvent);
             if (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && packet.getEntityModifier(packetEvent).read(0).getType() == EntityType.DROPPED_ITEM) {
                 return;
             }
+            User user = getEventUser(packetEvent);
             WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
             List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
 
