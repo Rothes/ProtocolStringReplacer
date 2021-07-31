@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.sign;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -21,8 +20,11 @@ public class UpdateSign extends AbstractServerSignPacketListener {
         super(PacketType.Play.Server.UPDATE_SIGN);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
+            if (packetEvent.isReadOnly()) {
+                return;
+            }
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);
             Object[] read = (Object[]) packet.getModifier().read(2);

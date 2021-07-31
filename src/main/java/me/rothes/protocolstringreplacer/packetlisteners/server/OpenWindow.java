@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -20,8 +19,11 @@ public final class OpenWindow extends AbstractServerPacketListener {
         super(PacketType.Play.Server.OPEN_WINDOW, ListenType.WINDOW_TITLE);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
+            if (packetEvent.isReadOnly()) {
+                return;
+            }
             PacketContainer packet = packetEvent.getPacket();
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);

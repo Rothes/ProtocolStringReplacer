@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -14,6 +13,7 @@ import me.rothes.protocolstringreplacer.packetwrapper.WrapperPlayServerEntityMet
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -25,10 +25,16 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         super(PacketType.Play.Server.ENTITY_METADATA, ListenType.ENTITY);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
+            if (packetEvent.isReadOnly()) {
+                return;
+            }
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);
+            if (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && packet.getEntityModifier(packetEvent).read(0).getType() == EntityType.DROPPED_ITEM) {
+                return;
+            }
             WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
             List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
 

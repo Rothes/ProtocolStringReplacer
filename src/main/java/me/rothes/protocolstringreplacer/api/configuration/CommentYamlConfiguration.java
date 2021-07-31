@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -170,6 +171,21 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         } catch (FileNotFoundException ignored) {
         } catch (IOException | InvalidConfigurationException var4) {
             Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, var4);
+        }
+
+        return config;
+    }
+
+    @Nonnull
+    public static CommentYamlConfiguration loadConfiguration(@Nonnull Reader reader) {
+        Validate.notNull(reader, "Stream cannot be null");
+
+        CommentYamlConfiguration config = new CommentYamlConfiguration();
+
+        try {
+            config.load(reader);
+        } catch (IOException | InvalidConfigurationException ex) {
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         }
 
         return config;

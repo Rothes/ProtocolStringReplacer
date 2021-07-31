@@ -13,6 +13,8 @@ import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +22,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.regex.Pattern;
 
 public class ProtocolStringReplacer extends JavaPlugin {
 
@@ -29,6 +35,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private ReplacerManager replacerManager;
     private PacketListenerManager packetListenerManager;
     private UserManager userManager;
+    private ConfigManager configManager;
     private byte serverMajorVersion;
     private boolean isSpigot;
     private boolean isPaper;
@@ -46,6 +53,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
     @NotNull
     public File getConfigFile() {
         return configFile;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     @Override
@@ -152,13 +163,58 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private void loadConfig() {
         if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
             instance.saveResource("Replacers/Example.yml", true);
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a已生成示例配置于 plugins/ProtocolStringReplacer/Replacers .");
         }
+        Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a正在加载配置文件...");
         configFile = new File(instance.getDataFolder() + "/Config.yml");
         if (!configFile.exists()) {
             instance.saveResource("Config.yml", true);
             configFile = new File(instance.getDataFolder() + "/Config.yml");
         }
         config = CommentYamlConfiguration.loadConfiguration(configFile);
+        checkConfig();
+        configManager = new ConfigManager(instance);
+    }
+
+    private void checkConfig() {
+        CommentYamlConfiguration configDefault = CommentYamlConfiguration.loadConfiguration(new InputStreamReader(instance.getResource("Config.yml")));
+
+        Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
+        boolean edited = false;
+        LinkedList<String> comments = new LinkedList<>();
+        for (String key : configDefault.getKeys(true)) {
+            if (configDefault.get(key) instanceof ConfigurationSection) {
+                continue;
+            }
+            if (commentKeyPattern.matcher(key).find()) {
+                comments.add(key);
+                continue;
+            }
+
+            if (key.equals("Configs-Version")) {
+                comments.clear();
+                continue;
+            }
+
+            if (!config.contains(key)) {
+                for (var commentKey : comments) {
+                    config.set(commentKey, configDefault.getString(commentKey));
+                }
+                config.set(key, configDefault.get(key));
+                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c自动补充了 Config.yml 缺失的配置键 " + key);
+                edited = true;
+                comments.clear();
+            }
+        }
+
+        if (edited) {
+            try {
+                config.save(configFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void checkConfigsVersion() {

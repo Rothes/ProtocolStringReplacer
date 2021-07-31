@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -25,8 +24,11 @@ public final class Chat extends AbstractServerPacketListener {
         super(PacketType.Play.Server.CHAT, ListenType.CHAT);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
+            if (packetEvent.isReadOnly()) {
+                return;
+            }
             PacketContainer packet = packetEvent.getPacket();
             Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
             if (!(isFiltered.isPresent() && isFiltered.get())) {

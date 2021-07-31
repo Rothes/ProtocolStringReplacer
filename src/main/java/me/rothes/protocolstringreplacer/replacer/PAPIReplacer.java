@@ -15,8 +15,8 @@ import java.util.function.Function;
 
 public final class PAPIReplacer implements Replacer {
 
-    private final char head = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Head", "｛").charAt(0);
-    private final char tail = ProtocolStringReplacer.getInstance().getConfig().getString("Options.Features.Placeholder.Placeholder-Tail", "｝").charAt(0);
+    private final char head = ProtocolStringReplacer.getInstance().getConfigManager().placeholderHead;
+    private final char tail = ProtocolStringReplacer.getInstance().getConfigManager().placeholderTail;
 
     public char getHead() {
         return head;

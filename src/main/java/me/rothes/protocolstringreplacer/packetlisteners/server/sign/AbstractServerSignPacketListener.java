@@ -21,19 +21,19 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
     protected void setSignText(@NotNull NbtCompound nbtCompound, @NotNull User user, @NotNull BiPredicate<ReplacerConfig, User> filter) {
         nbtCompound.put("Text1", ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                 .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                        nbtCompound.getString("Text1"), user, filter
+                        nbtCompound.getString("Text1"), user, filter, false
                 )), user, filter)));
         nbtCompound.put("Text2", ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                 .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                        nbtCompound.getString("Text2"), user, filter
+                        nbtCompound.getString("Text2"), user, filter, false
                 )), user, filter)));
         nbtCompound.put("Text3", ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                 .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                        nbtCompound.getString("Text3"), user, filter
+                        nbtCompound.getString("Text3"), user, filter, false
                 )), user, filter)));
         nbtCompound.put("Text4", ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                 .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                        nbtCompound.getString("Text4"), user, filter
+                        nbtCompound.getString("Text4"), user, filter, false
                 )), user, filter)));
     }
 

@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.sign;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -18,8 +17,11 @@ public final class MapChunk extends AbstractServerSignPacketListener {
         super(PacketType.Play.Server.MAP_CHUNK);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
+            if (packetEvent.isReadOnly()) {
+                return;
+            }
             PacketContainer packet = packetEvent.getPacket();
             User user = getEventUser(packetEvent);
             List<NbtBase<?>> nbtBaseList = packet.getListNbtModifier().read(0);

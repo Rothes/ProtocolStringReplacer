@@ -94,9 +94,8 @@ public class ReplacerManager {
         replacedItemCache.put(null, new ItemMetaCache(null, 1L, false));
 
         ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
-        CommentYamlConfiguration config = instrance.getConfig();
-        long cleanAccessInterval = config.getInt("Options.Features.ItemMetaCache.Clean-Access-Interval", 300) * 1000L;
-        long cleanTaskInterval = config.getInt("Options.Features.ItemMetaCache.Clean-Task-Interval", 600) * 20L;
+        long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
+        long cleanTaskInterval = instrance.getConfigManager().cleanTaskInterval;
         cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
             List<ItemMeta> needToRemove = new ArrayList<>();
             long currentTime = System.currentTimeMillis();

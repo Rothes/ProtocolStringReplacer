@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
@@ -17,8 +16,11 @@ public class SetSubtitleText extends AbstractServerPacketListener {
         super(PacketType.Play.Server.SET_SUBTITLE_TEXT, ListenType.TITLE);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
+            if (packetEvent.isReadOnly()) {
+                return;
+            }
             User user = getEventUser(packetEvent);
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);

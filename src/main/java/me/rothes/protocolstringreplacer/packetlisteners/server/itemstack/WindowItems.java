@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BukkitConverters;
@@ -15,8 +14,11 @@ public class WindowItems extends AbstractServerItemPacketListener {
         super(PacketType.Play.Server.WINDOW_ITEMS);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.HIGHEST, packetType) {
+    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
         public void onPacketSending(PacketEvent packetEvent) {
+            if (packetEvent.isReadOnly()) {
+                return;
+            }
             User user = getEventUser(packetEvent);
             Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
             for (var item : read) {
