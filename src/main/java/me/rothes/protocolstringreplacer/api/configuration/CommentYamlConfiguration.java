@@ -95,7 +95,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             // Convenient to edit comments in the configurations.
             if (isKey) {
                 startedSpace = getStartedSpace(line);
-                for (var comment : commentsToAdd) {
+                for (Comment comment : commentsToAdd) {
                     stringBuilder.append(startedSpace).append(commentIndex++).append("㩵遌㚳这是注释");
                     if (comment.plainComment) {
                         stringBuilder.append("是");
@@ -112,13 +112,13 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             }
 
             stringBuilder.append(line).append("\n");
-            for (var comment : commentsToAdd) {
+            for (Comment comment : commentsToAdd) {
                 comment.passedLines++;
             }
 
         }
         if (!commentsToAdd.isEmpty()) {
-            for (var comment : commentsToAdd) {
+            for (Comment comment : commentsToAdd) {
                 stringBuilder.append(commentIndex++).append("㩵遌㚳这是注释");
                 if (comment.plainComment) {
                     stringBuilder.append("是");

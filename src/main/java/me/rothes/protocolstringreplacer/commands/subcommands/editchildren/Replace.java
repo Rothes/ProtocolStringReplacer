@@ -76,7 +76,7 @@ public class Replace extends SubCommand {
                         ComponentBuilder hoverBuilder = new ComponentBuilder("§6§l注释内容:").color(ChatColor.GREEN);
                         if (commentLines != null && !commentLines.isEmpty()) {
                             StringBuilder stringBuilder = new StringBuilder();
-                            for (var commentLine : commentLines) {
+                            for (ReplacerConfig.CommentLine commentLine : commentLines) {
                                 stringBuilder.insert(0, commentValuePrefix.matcher(commentLine.getValue()).replaceFirst("")).insert(0, '\n');
                             }
                             hoverBuilder.append(stringBuilder.toString());
@@ -248,7 +248,7 @@ public class Replace extends SubCommand {
                 && (args[2].equalsIgnoreCase("list") || args[2].equalsIgnoreCase("set")
                 || args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove"))) {
             list.add("<替换模式>");
-            for (var replacesMode : ReplacesMode.values()) {
+            for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }
         } else if (args.length == 5) {
@@ -293,7 +293,7 @@ public class Replace extends SubCommand {
     }
 
     private ReplacesMode getReplacesMode(@NotNull String string) {
-        for (var type : ReplacesMode.values()) {
+        for (ReplacesMode type : ReplacesMode.values()) {
             if (type.getNode().equalsIgnoreCase(string)) {
                 return type;
             }

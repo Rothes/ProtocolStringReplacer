@@ -2,6 +2,7 @@ package me.rothes.protocolstringreplacer.commands.subcommands;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.api.ChatColors;
@@ -44,7 +45,7 @@ public class Parse extends SubCommand {
                 }
             }
             ListenType listenType = null;
-            for (var type : ListenType.values()) {
+            for (ListenType type : ListenType.values()) {
                 if (type.getName().equalsIgnoreCase(args[3])) {
                     listenType = type;
                     break;
@@ -55,7 +56,7 @@ public class Parse extends SubCommand {
                 return;
             }
             ReplacesMode replacesMode = null;
-            for (var type : ReplacesMode.values()) {
+            for (ReplacesMode type : ReplacesMode.values()) {
                 if (type.getNode().equalsIgnoreCase(args[4])) {
                     replacesMode = type;
                     break;
@@ -74,13 +75,13 @@ public class Parse extends SubCommand {
                 String original = ChatColors.getColored(args[1]);
                 String text = original;
                 LinkedList<HoverEvent> results = new LinkedList<>();
-                for (var replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
+                for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
                     if (replacerConfig.getListenTypeList().contains(finalListenType)) {
                         Object object = replacerConfig.getReplaces(finalReplacesMode).entrySet();
                         switch (replacerConfig.getMatchType()) {
                             case CONTAIN:
-                                var containSet = (Set<Map.Entry<String, String>>) object;
-                                for (var entry : containSet) {
+                                Set<Map.Entry<String, String>> containSet = (Set<Map.Entry<String, String>>) object;
+                                for (Map.Entry<String, String> entry : containSet) {
                                     String key = entry.getKey();
                                     String value = entry.getValue();
                                     if (text.contains(key)) {
@@ -96,8 +97,8 @@ public class Parse extends SubCommand {
                                 }
                                 break;
                             case EQUAL:
-                                var equalSet = (Set<Map.Entry<String, String>>) object;
-                                for (var entry : equalSet) {
+                                Set<Map.Entry<String, String>> equalSet = (Set<Map.Entry<String, String>>) object;
+                                for (Map.Entry<String, String> entry : equalSet) {
                                     String key = entry.getKey();
                                     String value = entry.getValue();
                                     if (text.equals(key)) {
@@ -113,8 +114,8 @@ public class Parse extends SubCommand {
                                 }
                                 break;
                             case REGEX:
-                                var regexSet = (Set<Map.Entry<Pattern, String>>) object;
-                                for (var entry : regexSet) {
+                                Set<Map.Entry<Pattern, String>> regexSet = (Set<Map.Entry<Pattern, String>>) object;
+                                for (Map.Entry<Pattern, String> entry : regexSet) {
                                     Pattern key = entry.getKey();
                                     String value = entry.getValue();
                                     Matcher matcher = key.matcher(text);
@@ -187,18 +188,18 @@ public class Parse extends SubCommand {
             list.add("<要测试的字符串>");
         } else if (args.length == 3) {
             list.add("<占位符目标玩家>");
-            for (var player : Bukkit.getOnlinePlayers()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 list.add(player.getName());
             }
             list.add("null");
         } else if (args.length == 4) {
             list.add("<监听类型>");
-            for (var listenType : ListenType.values()) {
+            for (ListenType listenType : ListenType.values()) {
                 list.add(listenType.getName());
             }
         } else if (args.length == 5) {
             list.add("<替换模式>");
-            for (var replacesMode : ReplacesMode.values()) {
+            for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }
         }

@@ -44,11 +44,7 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
     @SuppressWarnings("unchecked")
     @Override
     public void upgrade() {
-        HashMap<File, DotYamlConfiguration> loadReplacesFiles = ReplacerManager.loadReplacesFiles(
-                new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers"));
-        for (var entry : loadReplacesFiles.entrySet()) {
-            upgradeReplacerConfig(entry.getKey(), entry.getValue());
-        }
+        upgradeAllReplacerConfigs(new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers"));
 
         CommentYamlConfiguration config = ProtocolStringReplacer.getInstance().getConfig();
         ListOrderedMap keyValues = new ListOrderedMap();
@@ -63,8 +59,8 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
         config.set("12340㩵遌㚳这是注释是", "0| # 请勿手动修改Configs-Version值!");
         config.set("Configs-Version", 2);
         config.set("12341㩵遌㚳这是注释是", "0| #");
-        var entrySet = (Set<Map.Entry<String, Object>>) keyValues.entrySet();
-        for (var entry : entrySet) {
+        Set<Map.Entry<String, Object>> entrySet = (Set<Map.Entry<String, Object>>) keyValues.entrySet();
+        for (Map.Entry<String, Object> entry : entrySet) {
             config.set(entry.getKey(), entry.getValue());
         }
         try {
@@ -82,15 +78,15 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
         LinkedList<String> listenTypes = new LinkedList<>();
         List<String> packetTypes = config.getStringList("Options鰠Filter鰠Packet-Types");
         if (packetTypes.isEmpty()) {
-            for (var packetType : PacketType.values()) {
+            for (PacketType packetType : PacketType.values()) {
                 if (!listenTypes.contains(packetType.listenType)) {
                     listenTypes.add(packetType.listenType);
                 }
             }
         } else {
-            for (var type : packetTypes) {
+            for (String type : packetTypes) {
                 boolean typeFound = false;
-                for (var packetType : PacketType.values()) {
+                for (PacketType packetType : PacketType.values()) {
                     if (packetType.packetType.equals(type)) {
                         typeFound = true;
                         if (!listenTypes.contains(packetType.listenType)) {
@@ -123,7 +119,7 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
                 commentKeys.add(key);
             } else {
                 if (key.equals("Config-Version") || key.equals("Options鰠Filter鰠Packet-Types")) {
-                    for (var commentKey : commentKeys) {
+                    for (String commentKey : commentKeys) {
                         config.set(commentKey, null);
                     }
                     config.set(key, null);

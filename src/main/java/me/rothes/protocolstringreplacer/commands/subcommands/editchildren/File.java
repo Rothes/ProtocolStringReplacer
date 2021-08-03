@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
+import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.api.ArgUtils;
@@ -80,8 +81,8 @@ public class File extends SubCommand {
                                 hoverBuilder.append("未知");
                         }
                         hoverBuilder.append("\n§3§l监听类型: ");
-                        for (var packetType : replacerConfig.getListenTypeList()) {
-                            hoverBuilder.append("\n§7- ").append(packetType.getName()).color(ChatColor.AQUA);
+                        for (ListenType listenType : replacerConfig.getListenTypeList()) {
+                            hoverBuilder.append("\n§7- ").append(listenType.getName()).color(ChatColor.AQUA);
                         }
 
                         user.sendFilteredMessage(new ComponentBuilder("[选定]").color(ChatColor.GOLD).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit file select " + i)).append(" " + i + ". ").reset().color(ChatColor.WHITE).
@@ -192,7 +193,7 @@ public class File extends SubCommand {
                 list.add("[页码]");
             } else if (args[2].equalsIgnoreCase("delete") || args[2].equalsIgnoreCase("select")) {
                 list.add("<替换配置文件|索引>");
-                for (var replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
+                for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
                     list.add(ArgUtils.formatWithQuotes(replacerConfig.getRelativePath()));
                 }
             } else if (args[2].equalsIgnoreCase("create")) {
@@ -236,7 +237,7 @@ public class File extends SubCommand {
     @Nullable
     private ReplacerConfig getSpecifiedReplacerConfig(@NotNull String string) {
         LinkedList<ReplacerConfig> replacerConfigList = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList();
-        for (var replacerConfig : replacerConfigList) {
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.getRelativePath().equals(string)) {
                 return replacerConfig;
             }

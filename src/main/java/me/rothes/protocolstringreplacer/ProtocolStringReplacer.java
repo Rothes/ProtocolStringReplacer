@@ -199,7 +199,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
 
             if (!config.contains(key)) {
-                for (var commentKey : comments) {
+                for (String commentKey : comments) {
                     config.set(commentKey, configDefault.getString(commentKey));
                 }
                 config.set(key, configDefault.get(key));
@@ -221,7 +221,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     private void checkConfigsVersion() {
         HashMap<Short, AbstractUpgradeHandler> upgrades = new HashMap<>();
-        for (var upgrade : UpgradeEnum.values()) {
+        for (UpgradeEnum upgrade : UpgradeEnum.values()) {
             upgrades.put(upgrade.getCurrentVersion(), upgrade.getUpgradeHandler());
         }
         for (short i = (short) config.getInt("Configs-Version", 1); i <= upgrades.size(); i++) {

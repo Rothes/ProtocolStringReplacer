@@ -20,13 +20,13 @@ public class Edit extends SubCommand {
 
         childCommands.add(new File());
         childCommands.add(new Replace());
-// TODO        childCommands.add(new Option());
+// TODO:        childCommands.add(new Option());
     }
 
     @Override
     public void onExecute(@Nonnull User user, @Nonnull String[] args) {
         if (args.length > 1) {
-            for (var childCommand : childCommands) {
+            for (SubCommand childCommand : childCommands) {
                 if (childCommand.getName().equalsIgnoreCase(args[1])) {
                     if (user.hasPermission(childCommand.getPermission())) {
                         childCommand.onExecute(user, args);
@@ -45,13 +45,13 @@ public class Edit extends SubCommand {
         List<String> list = new ArrayList<>();
         if (args.length == 2) {
             list.add("help");
-            for (var childCommand : childCommands) {
+            for (SubCommand childCommand : childCommands) {
                 if (user.hasPermission(childCommand.getPermission())) {
                     list.add(childCommand.getName());
                 }
             }
         } else {
-            for (var childCommand : childCommands) {
+            for (SubCommand childCommand : childCommands) {
                 if (childCommand.getName().equalsIgnoreCase(args[1])) {
                     list = childCommand.onTab(user, args);
                 }
@@ -64,7 +64,7 @@ public class Edit extends SubCommand {
     public void sendHelp(@Nonnull User user) {
         user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e编辑器§7 ]§l §7§m-----------");
         user.sendFilteredText("§7 * §e/psr edit help §7- §b编辑器指令列表");
-        for (var childCommand : childCommands) {
+        for (SubCommand childCommand : childCommands) {
             user.sendFilteredText("§7 * §e/psr edit " + childCommand.getName() + " §7- §b" + childCommand.getDescription());
         }
         user.sendFilteredText("§7§m-----------------------------------------");

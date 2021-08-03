@@ -21,7 +21,7 @@ public class WindowItems extends AbstractServerItemPacketListener {
             }
             User user = getEventUser(packetEvent);
             Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
-            for (var item : read) {
+            for (Object item : read) {
                 ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
                 if (itemStack.hasItemMeta()) {
                     ItemStack original = itemStack.clone();

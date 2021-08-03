@@ -40,7 +40,7 @@ public class ConfigManager {
 
         String priority = instance.getConfig().getString("Options.Features.Packet-Listener.Listener-Priority", "HIGHEST");
         ListenerPriority listenerPriority = null;
-        for (var value : ListenerPriority.values()) {
+        for (ListenerPriority value : ListenerPriority.values()) {
             if (value.name().equalsIgnoreCase(priority)) {
                 listenerPriority = value;
                 break;

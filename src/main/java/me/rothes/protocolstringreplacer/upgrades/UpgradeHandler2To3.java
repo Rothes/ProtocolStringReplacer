@@ -19,11 +19,7 @@ public class UpgradeHandler2To3 extends AbstractUpgradeHandler{
 
     @Override
     public void upgrade() {
-        HashMap<File, DotYamlConfiguration> loadReplacesFiles = ReplacerManager.loadReplacesFiles(
-                new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers"));
-        for (var entry : loadReplacesFiles.entrySet()) {
-            upgradeReplacerConfig(entry.getKey(), entry.getValue());
-        }
+        upgradeAllReplacerConfigs(new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers"));
 
         CommentYamlConfiguration config = ProtocolStringReplacer.getInstance().getConfig();
         config.set("Configs-Version", 3);
@@ -55,8 +51,8 @@ public class UpgradeHandler2To3 extends AbstractUpgradeHandler{
                 }
             }
             section.set("23307㩵遌㚳这是注释是", "0|   # 常规文本替换模式.");
-            var set = (Set<Map.Entry<String, String>>) keyVauleHashMap.entrySet();
-            for (var entry : set) {
+            Set<Map.Entry<String, String>> set = (Set<Map.Entry<String, String>>) keyVauleHashMap.entrySet();
+            for (Map.Entry<String, String> entry : set) {
                 section.set("Common鰠" + entry.getKey(), entry.getValue());
             }
             try {

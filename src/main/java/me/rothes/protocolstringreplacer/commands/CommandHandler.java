@@ -57,7 +57,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
                     }
                 }
 
-                for (var subCommand : subCommands) {
+                for (SubCommand subCommand : subCommands) {
                     if (mergedArgs[0].equalsIgnoreCase(subCommand.getName())) {
                         if (user.hasPermission(subCommand.getPermission())) {
                             subCommand.onExecute(user, mergedArgs);
@@ -88,13 +88,13 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
             if (user.hasCommandToConfirm() && !user.isConfirmExpired()) {
                 list.add("confirm");
             }
-            for (var subCommand : subCommands) {
+            for (SubCommand subCommand : subCommands) {
                 if (user.hasPermission(subCommand.getPermission())) {
                     list.add(subCommand.getName());
                 }
             }
         } else {
-            for (var subCommand : subCommands) {
+            for (SubCommand subCommand : subCommands) {
                 if (subCommand.getName().equalsIgnoreCase(args[0])) {
                     list = subCommand.onTab(user, args);
                 }
@@ -106,7 +106,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
     public void sendHelp(@Nonnull User user) {
         user.sendFilteredText("§7§m------§7§l §7[ §c§lProtocol§6§lString§3§lReplacer§7 ]§l §7§m------");
         user.sendFilteredText("§7 * §e/psr help §7- §b插件指令列表");
-        for (var subCommand : subCommands) {
+        for (SubCommand subCommand : subCommands) {
             user.sendFilteredText("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
         }
         user.sendFilteredText("§7§m-----------------------------------------");

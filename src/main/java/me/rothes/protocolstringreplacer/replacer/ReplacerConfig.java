@@ -132,20 +132,20 @@ public class ReplacerConfig {
         configuration.set("Options鰠Author", author);
         configuration.set("Options鰠Version", version);
         LinkedList<String> types = new LinkedList<>();
-        for (var listenType : listenTypeList) {
+        for (ListenType listenType : listenTypeList) {
             types.add(listenType.getName());
         }
         configuration.set("Options鰠Filter鰠Listen-Types", types);
         configuration.set("Options鰠Match-Type", matchType.getName());
         configuration.set("Replaces鰠Common", new ArrayList<String>());
-        for (var replacesMode : ReplacesMode.values()) {
+        for (ReplacesMode replacesMode : ReplacesMode.values()) {
             HashMap<Short, LinkedList<CommentLine>> commentLines = this.commentLines.get(replacesMode);
             ListOrderedMap replaces = this.replaces.get(replacesMode);
             if (matchType == MatchType.REGEX) {
                 for (short i = 0; i < replaces.size(); i++) {
                     if (commentLines.containsKey(i)) {
                         LinkedList<CommentLine> commentLineList = commentLines.get(i);
-                        for (var commentLine: commentLineList) {
+                        for (CommentLine commentLine: commentLineList) {
                             configuration.set("Replaces鰠" + replacesMode.getNode() + "鰠" + commentLine.key, commentLine.value);
                         }
                     }
@@ -156,7 +156,7 @@ public class ReplacerConfig {
                 for (short i = 0; i < replaces.size(); i++) {
                     if (commentLines.containsKey(i)) {
                         LinkedList<CommentLine> commentLineList = commentLines.get(i);
-                        for (var commentLine: commentLineList) {
+                        for (CommentLine commentLine: commentLineList) {
                             configuration.set("Replaces鰠" + replacesMode.getNode() + "鰠" + commentLine.key, commentLine.value);
                         }
                     }
@@ -282,7 +282,7 @@ public class ReplacerConfig {
         } else {
             for (String type : types) {
                 typeFound = false;
-                for (var listenType : ListenType.values()) {
+                for (ListenType listenType : ListenType.values()) {
                     if (listenType.getName().equalsIgnoreCase(type)) {
                         typeFound = true;
                         listenTypeList.add(listenType);
@@ -308,7 +308,7 @@ public class ReplacerConfig {
             this.matchType = MatchType.CONTAIN;
             Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"Contain\"");
         }
-        for (var replacesMode : ReplacesMode.values()) {
+        for (ReplacesMode replacesMode : ReplacesMode.values()) {
             ConfigurationSection section = configuration.getConfigurationSection("Replaces鰠" + replacesMode.getNode());
             replaces.put(replacesMode, new ListOrderedMap());
             commentLines.put(replacesMode, new HashMap<>());
