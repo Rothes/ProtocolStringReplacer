@@ -1,6 +1,5 @@
 package me.rothes.protocolstringreplacer.upgrades;
 
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 

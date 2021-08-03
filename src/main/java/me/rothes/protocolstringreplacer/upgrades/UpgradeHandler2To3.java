@@ -3,14 +3,12 @@ package me.rothes.protocolstringreplacer.upgrades;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
-import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
