@@ -1,12 +1,10 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.sign;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.user.User;
 
 import java.util.List;
@@ -17,21 +15,16 @@ public final class MapChunk extends AbstractServerSignPacketListener {
         super(PacketType.Play.Server.MAP_CHUNK);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
-        public void onPacketSending(PacketEvent packetEvent) {
-            if (packetEvent.isReadOnly()) {
-                return;
-            }
-            PacketContainer packet = packetEvent.getPacket();
-            User user = getEventUser(packetEvent);
-            List<NbtBase<?>> nbtBaseList = packet.getListNbtModifier().read(0);
-            for (NbtBase<?> nbtBase : nbtBaseList) {
-                NbtCompound nbtCompound = (NbtCompound) nbtBase;
-                if ("minecraft:sign".equals(nbtCompound.getString("id"))) {
-                    setSignText(nbtCompound, user, filter);
-                }
+    protected void process(PacketEvent packetEvent) {
+        PacketContainer packet = packetEvent.getPacket();
+        User user = getEventUser(packetEvent);
+        List<NbtBase<?>> nbtBaseList = packet.getListNbtModifier().read(0);
+        for (NbtBase<?> nbtBase : nbtBaseList) {
+            NbtCompound nbtCompound = (NbtCompound) nbtBase;
+            if ("minecraft:sign".equals(nbtCompound.getString("id"))) {
+                setSignText(nbtCompound, user, filter);
             }
         }
-    };
+    }
 
 }

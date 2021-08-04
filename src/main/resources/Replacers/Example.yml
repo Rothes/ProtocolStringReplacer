@@ -5,7 +5,7 @@ Options:
   # 本文件的优先级. 若有多个替换配置, 优先级高的最早替换. 默认为5.
   Priority: 5
   # 可选参数
-  Version: '1.210729'
+  Version: '1.210805'
   # 可选参数
   Author: 'Rothes'
   # 匹配字符串的方式. 可选值:
@@ -25,12 +25,20 @@ Options:
     # Boss-Bar 替换Boss血量条文本
     # ItemStack 替换物品(物品名|Lore|书署名|书内容)文本
     # Window-Title 替换容器标题文本
+    # ScoreBoard 替换计分板(标题|实体名称)
     # 不区分大小写.
     Listen-Types:
       - Chat
       - Window-Title
       - ItemStack
       - Sign
+    # 针对计分板监听的特定过滤
+    ScoreBoard:
+      # 是否替换计分板标题. 默认为false.
+      Replace-Title: false
+      # 是否替换计分板中的实体名称. 默认为false.
+      # 注: 对于玩家, 实体名称为玩家名称; 对于非玩家则为UUID.
+      Replace-Entity-Name: false
 
 # 替换的字符串列表.
 # 左侧的key为原字符串 右侧的value为替换后的字符串.
@@ -44,7 +52,8 @@ Replaces:
 
   # Json 替换模式, 适合高级用户.
   # 不支持使用 Json 替换的监听类型有:
-  # ItemStack(版本1.12及以上书内容除外) 和 版本 1.9.4 以下的 Sign.
+  # ItemStack(版本1.12及以上书内容除外)、版本 1.9.4 以下的 Sign,
+  # 以及计分板中的实体名称、版本1.12及以下的计分板标题.
   Json:
     # 修改客户端上熔炉界面标题显示的名称.
     '{"translate":"container.furnace"}': '{"text":"恭喜您打开了一个熔炉! 666!"}'

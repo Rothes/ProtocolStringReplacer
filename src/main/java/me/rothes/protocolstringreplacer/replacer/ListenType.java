@@ -8,7 +8,8 @@ public enum ListenType {
     ENTITY("Entity"),
     BOSS_BAR("Boss-Bar"),
     ITEMSTACK("ItemStack"),
-    WINDOW_TITLE("Window-Title");
+    WINDOW_TITLE("Window-Title"),
+    SCOREBOARD("ScoreBoard");
 
     private String name;
 

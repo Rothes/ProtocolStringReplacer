@@ -28,7 +28,8 @@ Options:
     Packet-Listener:
       # 定义 ProtocolStringReplacer 监听数据包全局优先度. 不要随意修改.
       Listener-Priority: HIGHEST
+      # 是否强行修改不允许修改的数据包.
+      Force-Replace: false
       # 是否处理掉落物 EntityMeta. 若您服务端版本高于1.17,
       # 且后台常出现 ENTITY_META 报错, 请设为 false.
-      # 此功能将在 ProtocolLib 修复该问题后移除.
       Listen-Dropped-Item-Entity: true

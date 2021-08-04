@@ -1,6 +1,7 @@
 package me.rothes.protocolstringreplacer.packetlisteners;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.server.TemporaryPlayer;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -13,15 +14,43 @@ import javax.annotation.Nonnull;
 public abstract class AbstractPacketListener {
 
     protected final PacketType packetType;
+    public final PacketAdapter packetAdapter;
 
-    protected AbstractPacketListener(PacketType packetType) {
+    protected AbstractPacketListener(@Nonnull PacketType packetType) {
         this.packetType = packetType;
+        packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
+            public void onPacketSending(PacketEvent packetEvent) {
+                boolean readOnly = packetEvent.isReadOnly();
+                if (!canWrite(packetEvent)) {
+                    return;
+                }
+                process(packetEvent);
+                if (readOnly) {
+                    packetEvent.setReadOnly(readOnly);
+                }
+            }
+        };
     }
 
-    protected final User getEventUser(@Nonnull PacketEvent event) {
-        Validate.notNull(event, "Packet Event cannot be null");
-        Player player = event.getPlayer();
+    protected final User getEventUser(@Nonnull PacketEvent packetEvent) {
+        Validate.notNull(packetEvent, "Packet Event cannot be null");
+        Player player = packetEvent.getPlayer();
         return player instanceof TemporaryPlayer? ProtocolStringReplacer.getInstance().getUserManager().getUser(player.getPlayer()) : ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
     }
+
+    protected boolean canWrite(@Nonnull PacketEvent packetEvent) {
+        Validate.notNull(packetEvent, "Packet Event cannot be null");
+
+        if (packetEvent.isReadOnly()) {
+            if (ProtocolStringReplacer.getInstance().getConfigManager().forceReplace) {
+                packetEvent.setReadOnly(false);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    abstract protected void process(@Nonnull PacketEvent packetEvent);
 
 }

@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -14,24 +13,19 @@ public class WindowItems extends AbstractServerItemPacketListener {
         super(PacketType.Play.Server.WINDOW_ITEMS);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
-        public void onPacketSending(PacketEvent packetEvent) {
-            if (packetEvent.isReadOnly()) {
-                return;
-            }
-            User user = getEventUser(packetEvent);
-            Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
-            for (Object item : read) {
-                ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
-                if (itemStack.hasItemMeta()) {
-                    ItemStack original = itemStack.clone();
-                    ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, itemFilter);
-                    if (!original.isSimilar(itemStack)) {
-                        saveUserMetaCacche(user, original, itemStack);
-                    }
+    protected void process(PacketEvent packetEvent) {
+        User user = getEventUser(packetEvent);
+        Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
+        for (Object item : read) {
+            ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
+            if (itemStack.hasItemMeta()) {
+                ItemStack original = itemStack.clone();
+                ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, itemFilter);
+                if (!original.isSimilar(itemStack)) {
+                    saveUserMetaCacche(user, original, itemStack);
                 }
             }
         }
-    };
+    }
 
 }

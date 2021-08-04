@@ -1,11 +1,9 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.sign;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.user.User;
 
 public final class TileEntityData extends AbstractServerSignPacketListener {
@@ -14,19 +12,14 @@ public final class TileEntityData extends AbstractServerSignPacketListener {
         super(PacketType.Play.Server.TILE_ENTITY_DATA);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
-        public void onPacketSending(PacketEvent packetEvent) {
-            if (packetEvent.isReadOnly()) {
-                return;
-            }
-            PacketContainer packet = packetEvent.getPacket();
-            User user = getEventUser(packetEvent);
-            // 9: Set the text on a sign
-            if (packet.getIntegers().read(0) == 9) {
-                NbtCompound nbtCompound = (NbtCompound) packet.getNbtModifier().read(0);
-                setSignText(nbtCompound, user, filter);
-            }
+    protected void process(PacketEvent packetEvent) {
+        PacketContainer packet = packetEvent.getPacket();
+        User user = getEventUser(packetEvent);
+        // 9: Set the text on a sign
+        if (packet.getIntegers().read(0) == 9) {
+            NbtCompound nbtCompound = (NbtCompound) packet.getNbtModifier().read(0);
+            setSignText(nbtCompound, user, filter);
         }
-    };
+    }
 
 }

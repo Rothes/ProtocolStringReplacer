@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
@@ -16,21 +15,16 @@ public final class BossBar extends AbstractServerPacketListener {
         super(PacketType.Play.Server.BOSS, ListenType.BOSS_BAR);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
-        public void onPacketSending(PacketEvent packetEvent) {
-            if (packetEvent.isReadOnly()) {
-                return;
-            }
-            User user = getEventUser(packetEvent);
-            StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
-            if (wrappedChatComponentStructureModifier.size() != 0) {
-                WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-                String replacedJson = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(wrappedChatComponent.getJson(), user, filter, false);
-                wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                        .getReplacedComponents(ComponentSerializer.parse(replacedJson), user, filter)));
-                wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
-            }
+    protected void process(PacketEvent packetEvent) {
+        User user = getEventUser(packetEvent);
+        StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
+        if (wrappedChatComponentStructureModifier.size() != 0) {
+            WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
+            String replacedJson = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(wrappedChatComponent.getJson(), user, filter, false);
+            wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                    .getReplacedComponents(ComponentSerializer.parse(replacedJson), user, filter)));
+            wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }
-    };
+    }
 
 }

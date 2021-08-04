@@ -200,13 +200,19 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
             if (!config.contains(key)) {
                 for (String commentKey : comments) {
-                    config.set(commentKey, configDefault.getString(commentKey));
+                    String[] split = commentKey.split("\\.");
+                    StringBuilder stringBuilder = new StringBuilder(commentKey.length() + 4);
+                    for (byte i = 0; i < split.length - 1; i++) {
+                        stringBuilder.append(split[i]).append(".");
+                    }
+                    stringBuilder.append("2333").append(split[split.length - 1]);
+                    config.set(stringBuilder.toString(), configDefault.getString(commentKey));
                 }
                 config.set(key, configDefault.get(key));
                 Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c自动补充了 Config.yml 缺失的配置键 " + key);
                 edited = true;
-                comments.clear();
             }
+            comments.clear();
         }
 
         if (edited) {

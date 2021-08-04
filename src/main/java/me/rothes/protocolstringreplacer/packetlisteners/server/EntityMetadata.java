@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.utility.MinecraftReflection;
@@ -26,47 +25,41 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         super(PacketType.Play.Server.ENTITY_METADATA, ListenType.ENTITY);
     }
 
-    public final PacketAdapter packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
-        public void onPacketSending(PacketEvent packetEvent) {
-            if (packetEvent.isReadOnly()) {
-                return;
-            }
-            PacketContainer packet = packetEvent.getPacket();
-            Entity entity = packet.getEntityModifier(packetEvent).read(0);
-            if (entity == null || (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && entity.getType() == EntityType.DROPPED_ITEM)) {
-                return;
-            }
-            User user = getEventUser(packetEvent);
-            WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
-            List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
+    protected void process(PacketEvent packetEvent) {
+        PacketContainer packet = packetEvent.getPacket();
+        Entity entity = packet.getEntityModifier(packetEvent).read(0);
+        if (entity == null || (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && entity.getType() == EntityType.DROPPED_ITEM)) {
+            return;
+        }
+        User user = getEventUser(packetEvent);
+        WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
+        List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
 
-            if (metadataList != null) {
-                for (WrappedWatchableObject watchableObject : metadataList) {
-                    if (watchableObject.getValue() instanceof Optional<?>) {
-                        Optional<?> value = (Optional<?>) watchableObject.getValue();
-                        if (value.isPresent() && MinecraftReflection.getIChatBaseComponentClass().isInstance(value.get())) {
-                            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
-                            if (wrappedChatComponent != null) {
-                                wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                                        .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                                wrappedChatComponent.getJson(), user, filter, false)), user, filter)));
-                                watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
-                            }
-                        }
-                    } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(watchableObject.getValue())) {
-                        Object value = watchableObject.getValue();
-                        if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(value)) {
-                            ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(value);
-                            if (itemStack.hasItemMeta()) {
-                                ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, filter);
-                            }
+        if (metadataList != null) {
+            for (WrappedWatchableObject watchableObject : metadataList) {
+                if (watchableObject.getValue() instanceof Optional<?>) {
+                    Optional<?> value = (Optional<?>) watchableObject.getValue();
+                    if (value.isPresent() && MinecraftReflection.getIChatBaseComponentClass().isInstance(value.get())) {
+                        WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
+                        if (wrappedChatComponent != null) {
+                            wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
+                                    .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
+                                            wrappedChatComponent.getJson(), user, filter, false)), user, filter)));
+                            watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
                         }
                     }
-                    packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
+                } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(watchableObject.getValue())) {
+                    Object value = watchableObject.getValue();
+                    if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(value)) {
+                        ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(value);
+                        if (itemStack.hasItemMeta()) {
+                            ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, filter);
+                        }
+                    }
                 }
+                packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
             }
-
         }
-    };
+    }
 
 }

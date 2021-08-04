@@ -5,19 +5,21 @@ import com.comphenix.protocol.ProtocolManager;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
+import me.rothes.protocolstringreplacer.packetlisteners.server.BossBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
 import me.rothes.protocolstringreplacer.packetlisteners.server.OpenWindow;
+import me.rothes.protocolstringreplacer.packetlisteners.server.SetSubtitleText;
+import me.rothes.protocolstringreplacer.packetlisteners.server.SetTitleText;
+import me.rothes.protocolstringreplacer.packetlisteners.server.Title;
+import me.rothes.protocolstringreplacer.packetlisteners.server.scoreboard.ScoreBoardObjective;
+import me.rothes.protocolstringreplacer.packetlisteners.server.scoreboard.UpdateScore;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunk;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityData;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.UpdateSign;
-import me.rothes.protocolstringreplacer.packetlisteners.server.Title;
-import me.rothes.protocolstringreplacer.packetlisteners.server.BossBar;
-import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.SetSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItems;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItemsUpper12;
-import me.rothes.protocolstringreplacer.packetlisteners.server.SetSubtitleText;
-import me.rothes.protocolstringreplacer.packetlisteners.server.SetTitleText;
 import org.bukkit.NamespacedKey;
 
 public class PacketListenerManager {
@@ -70,6 +72,8 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new SetSlot().packetAdapter);
         protocolManager.addPacketListener(new OpenWindow().packetAdapter);
         protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
+        protocolManager.addPacketListener(new UpdateScore().packetAdapter);
+        protocolManager.addPacketListener(new ScoreBoardObjective().packetAdapter);
 
 
         protocolManager.addPacketListener(new WindowClick().packetAdapter);
