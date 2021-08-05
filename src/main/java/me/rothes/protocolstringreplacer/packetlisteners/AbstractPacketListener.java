@@ -14,22 +14,10 @@ import javax.annotation.Nonnull;
 public abstract class AbstractPacketListener {
 
     protected final PacketType packetType;
-    public final PacketAdapter packetAdapter;
+    public PacketAdapter packetAdapter;
 
     protected AbstractPacketListener(@Nonnull PacketType packetType) {
         this.packetType = packetType;
-        packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
-            public void onPacketSending(PacketEvent packetEvent) {
-                boolean readOnly = packetEvent.isReadOnly();
-                if (!canWrite(packetEvent)) {
-                    return;
-                }
-                process(packetEvent);
-                if (readOnly) {
-                    packetEvent.setReadOnly(readOnly);
-                }
-            }
-        };
     }
 
     protected final User getEventUser(@Nonnull PacketEvent packetEvent) {
