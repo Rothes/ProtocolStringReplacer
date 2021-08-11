@@ -34,7 +34,7 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
         };
     }
 
-    protected void saveUserMetaCacche(User user, ItemStack originalItem, ItemStack replacedItem) {
+    protected void saveUserMetaCache(User user, ItemStack originalItem, ItemStack replacedItem) {
         if (user.hasPermission("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
             ItemMeta originalMeta = originalItem.getItemMeta();
             ItemMeta replacedMeta = replacedItem.getItemMeta();
@@ -44,22 +44,30 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
                     CustomItemTagContainer tagContainer = replacedMeta.getCustomTagContainer();
                     tagContainer.setCustomTag(getUserCacheKey(), ItemTagType.SHORT, uniqueCacheKey);
                 } else {
-                    List<String> lore = replacedMeta.getLore();
-                    if (lore == null) {
-                        lore = new ArrayList<>();
-                    }
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("§p§s§r§-§x");
-                    for (char Char : uniqueCacheKey.toString().toCharArray()) {
-                        stringBuilder.append('§').append(Char);
-                    }
-                    lore.add(stringBuilder.toString());
-                    replacedMeta.setLore(lore);
+                    addCacheLegacy(replacedMeta, uniqueCacheKey);
                 }
                 replacedItem.setItemMeta(replacedMeta);
                 user.getMetaCache().put(uniqueCacheKey, originalMeta);
             }
         }
+    }
+
+    private void addCacheLegacy(ItemMeta itemMeta, short uniqueCacheKey) {
+        List<String> lore = itemMeta.getLore();
+        if (lore == null) {
+            lore = new ArrayList<>();
+        }
+        lore.add(addColorHidedString(String.valueOf(uniqueCacheKey)));
+        itemMeta.setLore(lore);
+    }
+
+    private String addColorHidedString(String text) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("§p§s§r§-§x");
+        for (char Char : text.toCharArray()) {
+            stringBuilder.append('§').append(Char);
+        }
+        return stringBuilder.toString();
     }
 
     protected NamespacedKey getUserCacheKey() {

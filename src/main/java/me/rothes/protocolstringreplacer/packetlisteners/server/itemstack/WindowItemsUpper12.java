@@ -19,7 +19,7 @@ public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
                 ItemStack original = itemStack.clone();
                 ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, itemFilter);
                 if (!original.isSimilar(itemStack)) {
-                    saveUserMetaCacche(user, original, itemStack);
+                    saveUserMetaCache(user, original, itemStack);
                 }
             }
         }
