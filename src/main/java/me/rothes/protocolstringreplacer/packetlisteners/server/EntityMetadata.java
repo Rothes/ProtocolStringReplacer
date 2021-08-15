@@ -12,6 +12,7 @@ import me.rothes.protocolstringreplacer.packetwrapper.WrapperPlayServerEntityMet
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +33,12 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             return;
         }
         User user = getEventUser(packetEvent);
-        WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
+        WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata;
+        try {
+            wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
+        } catch (RuntimeException e) {
+            return;
+        }
         List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
 
         if (metadataList != null) {
