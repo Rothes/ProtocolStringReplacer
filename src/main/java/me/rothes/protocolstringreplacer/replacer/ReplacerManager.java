@@ -244,7 +244,7 @@ public class ReplacerManager {
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
 
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 12) {
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 15) {
             List<Content> contents = hoverEvent.getContents();
             for (int i = 0; i < contents.size(); i++) {
                 Content content = contents.get(i);
