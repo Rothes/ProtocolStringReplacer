@@ -527,29 +527,20 @@ public class ReplacerManager {
         Validate.notNull(replacesMode, "Replaces Type cannot be null");
 
         String result = string;
-        Object object = replacerConfig.getReplaces(replacesMode).entrySet();
-        switch (replacerConfig.getMatchType()) {
-            case CONTAIN:
-                Set<Map.Entry<String, String>> containSet = (Set<Map.Entry<String, String>>) object;
-                for (Map.Entry<String, String> entry : containSet) {
-                    result = StringUtils.replace(result, entry.getKey(), entry.getValue());
+        if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.CONTAIN) {
+            result = StringUtils.replaceEachRepeatedly(result, replacerConfig.getSearchList(replacesMode), replacerConfig.getReplacementList(replacesMode));
+        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.EQUAL) {
+            Set<Map.Entry<String, String>> set = replacerConfig.getReplaces(replacesMode).entrySet();
+            for (Map.Entry<String, String> entry : set) {
+                if (result.equals(entry.getKey())) {
+                    result = entry.getValue();
                 }
-                break;
-            case EQUAL:
-                Set<Map.Entry<String, String>> equalSet = (Set<Map.Entry<String, String>>) object;
-                for (Map.Entry<String, String> entry : equalSet) {
-                    if (result.equals(entry.getKey())) {
-                        result = entry.getValue();
-                    }
-                }
-                break;
-            case REGEX:
-                Set<Map.Entry<Pattern, String>> regexSet = (Set<Map.Entry<Pattern, String>>) object;
-                for (Map.Entry<Pattern, String> entry : regexSet) {
-                    result = entry.getKey().matcher(result).replaceAll(entry.getValue());
-                }
-                break;
-            default:
+            }
+        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.REGEX) {
+            Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replacesMode).entrySet();
+            for (Map.Entry<Pattern, String> entry : set) {
+                result = entry.getKey().matcher(result).replaceAll(entry.getValue());
+            }
         }
         return setPlaceholders && hasPlaceholder(result)? setPlaceholder(user, result) : result;
     }

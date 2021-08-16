@@ -11,13 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +28,9 @@ public class ReplacerConfig {
     private String author;
     private String version;
     private boolean edited;
+
+    private HashMap<ReplacesMode, String[]> searchList = new HashMap<>();
+    private HashMap<ReplacesMode, String[]> replacementList = new HashMap<>();
 
     public static class CommentLine {
         private String key;
@@ -126,6 +123,14 @@ public class ReplacerConfig {
         return commentLines.get(replacesMode);
     }
 
+    public String[] getSearchList(ReplacesMode replacesMode) {
+        return searchList.get(replacesMode);
+    }
+
+    public String[] getReplacementList(ReplacesMode replacesMode) {
+        return replacementList.get(replacesMode);
+    }
+
     public void saveConfig() {
         configuration.set("Options鰠Enable", enable);
         configuration.set("Options鰠Priority", priority);
@@ -176,6 +181,7 @@ public class ReplacerConfig {
     public void setReplace(int index, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
         if (index < replaces.size()) {
             replaces.get(replacesMode).setValue(index, value);
+            updateList(replacesMode);
             edited = true;
             saveConfig();
         }
@@ -187,8 +193,6 @@ public class ReplacerConfig {
         }
         if (index <= replaces.size()) {
             addReplace(index, key, value, replacesMode);
-            edited = true;
-            saveConfig();
         }
     }
 
@@ -197,7 +201,7 @@ public class ReplacerConfig {
             if (this.matchType == MatchType.REGEX) {
                 replaces.get(replacesMode).put(index, Pattern.compile(key), value);
             } else {
-            replaces.get(replacesMode).put(index, key, value);
+                replaces.get(replacesMode).put(index, key, value);
             }
             HashMap<Short, LinkedList<CommentLine>> commentLines = new HashMap<>();
             for (Map.Entry<Short, LinkedList<CommentLine>> entry : this.commentLines.get(replacesMode).entrySet()) {
@@ -210,6 +214,7 @@ public class ReplacerConfig {
                 }
                 this.commentLines.put(replacesMode, commentLines);
             }
+            updateList(replacesMode);
             edited = true;
             saveConfig();
         }
@@ -221,8 +226,6 @@ public class ReplacerConfig {
 
     public void removeReplace(int index, @Nonnull ReplacesMode replacesMode) {
         removeReplace(index, true, replacesMode);
-        edited = true;
-        saveConfig();
     }
 
     public void removeReplace(int index, boolean editComment, @Nonnull ReplacesMode replacesMode) {
@@ -240,6 +243,7 @@ public class ReplacerConfig {
             this.commentLines.put(replacesMode, commentLines);
         }
         replaces.get(replacesMode).remove(index);
+        updateList(replacesMode);
         edited = true;
         saveConfig();
     }
@@ -329,8 +333,27 @@ public class ReplacerConfig {
                         }
                     }
                 }
+                updateList(replacesMode);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateList(ReplacesMode replacesMode) {
+        if (matchType != MatchType.CONTAIN) {
+            return;
+        }
+        Set<Map.Entry<String, String>> set = this.getReplaces(replacesMode).entrySet();
+        String[] searchList = new String[replaces.get(replacesMode).size()];
+        String[] replacementList = new String[replaces.get(replacesMode).size()];
+        int index = 0;
+        for (Map.Entry<String, String> entry : set) {
+            searchList[index] = entry.getKey();
+            replacementList[index] = entry.getValue();
+            index++;
+        }
+        this.searchList.put(replacesMode, searchList);
+        this.replacementList.put(replacesMode, replacementList);
     }
 
     @Override
