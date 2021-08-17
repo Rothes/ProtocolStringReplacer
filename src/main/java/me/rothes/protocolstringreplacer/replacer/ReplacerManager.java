@@ -21,7 +21,6 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -29,7 +28,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.neosearch.stringsearcher.Emit;
-import org.neosearch.stringsearcher.StringSearcher;
 
 import javax.annotation.Nonnull;
 import java.io.File;
