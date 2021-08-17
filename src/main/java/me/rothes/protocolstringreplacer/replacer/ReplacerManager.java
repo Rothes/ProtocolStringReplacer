@@ -529,6 +529,11 @@ public class ReplacerManager {
         Validate.notNull(replacesMode, "Replaces Mode cannot be null");
 
         String result = string;
+        // Don't process empty String.
+        if (result.isEmpty()) {
+            return result;
+        }
+
         if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.CONTAIN) {
             // Using Aho-Corasick algorithm.
             int i = 0;
