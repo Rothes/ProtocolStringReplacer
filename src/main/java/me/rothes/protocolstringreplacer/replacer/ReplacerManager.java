@@ -28,6 +28,8 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+import org.neosearch.stringsearcher.Emit;
+import org.neosearch.stringsearcher.StringSearcher;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -528,7 +530,23 @@ public class ReplacerManager {
 
         String result = string;
         if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.CONTAIN) {
-            result = StringUtils.replaceEachRepeatedly(result, replacerConfig.getSearchList(replacesMode), replacerConfig.getReplacementList(replacesMode));
+            // Using Aho-Corasick algorithm.
+            int i = 0;
+
+            StringBuilder resultBuilder = new StringBuilder();
+            for (Emit<String> emit : replacerConfig.getStringSearcher(replacesMode).parseText(string)) {
+                if (emit.getStart() > i) {
+                    resultBuilder.append(string.subSequence(i, emit.getStart()));
+                }
+                resultBuilder.append(replacerConfig.getReplaces(replacesMode).get(emit.getSearchString()));
+                i = emit.getEnd() + 1;
+            }
+
+            if (i < string.length()) {
+                resultBuilder.append(string.subSequence(i, string.length()));
+            }
+
+            result = resultBuilder.toString();
         } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.EQUAL) {
             Set<Map.Entry<String, String>> set = replacerConfig.getReplaces(replacesMode).entrySet();
             for (Map.Entry<String, String> entry : set) {

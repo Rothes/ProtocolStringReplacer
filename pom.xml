@@ -43,6 +43,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.neosearch.stringsearcher</groupId>
+            <artifactId>multiple-string-searcher</artifactId>
+            <version>0.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <version>3.0.2</version>
@@ -140,6 +146,10 @@
                             <pattern>org.apache.commons.lang3</pattern>
                             <shadedPattern>me.Rothes.org.apache.commons.lang3</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>org.neosearch.stringsearcher</pattern>
+                            <shadedPattern>me.Rothes.org.neosearch.stringsearcher</shadedPattern>
+                        </relocation>
                     </relocations>
 
                     <minimizeJar>true</minimizeJar>
@@ -148,6 +158,7 @@
                             <include>commons-collections:*</include>
                             <include>org.apache.commons:*</include>
                             <include>org.bstats:*</include>
+                            <include>org.neosearch.stringsearcher:*</include>
                         </includes>
                     </artifactSet>
                     <filters>

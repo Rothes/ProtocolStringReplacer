@@ -6,12 +6,19 @@ import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.neosearch.stringsearcher.StringSearcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,8 +36,7 @@ public class ReplacerConfig {
     private String version;
     private boolean edited;
 
-    private HashMap<ReplacesMode, String[]> searchList = new HashMap<>();
-    private HashMap<ReplacesMode, String[]> replacementList = new HashMap<>();
+    private HashMap<ReplacesMode, StringSearcher<String>> stringSearcher = new HashMap<>();
 
     public static class CommentLine {
         private String key;
@@ -123,12 +129,8 @@ public class ReplacerConfig {
         return commentLines.get(replacesMode);
     }
 
-    public String[] getSearchList(ReplacesMode replacesMode) {
-        return searchList.get(replacesMode);
-    }
-
-    public String[] getReplacementList(ReplacesMode replacesMode) {
-        return replacementList.get(replacesMode);
+    public StringSearcher<String> getStringSearcher(ReplacesMode replacesMode) {
+        return stringSearcher.get(replacesMode);
     }
 
     public void saveConfig() {
@@ -181,7 +183,7 @@ public class ReplacerConfig {
     public void setReplace(int index, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
         if (index < replaces.size()) {
             replaces.get(replacesMode).setValue(index, value);
-            updateList(replacesMode);
+            updateStringSearcher(replacesMode);
             edited = true;
             saveConfig();
         }
@@ -214,7 +216,7 @@ public class ReplacerConfig {
                 }
                 this.commentLines.put(replacesMode, commentLines);
             }
-            updateList(replacesMode);
+            updateStringSearcher(replacesMode);
             edited = true;
             saveConfig();
         }
@@ -243,7 +245,7 @@ public class ReplacerConfig {
             this.commentLines.put(replacesMode, commentLines);
         }
         replaces.get(replacesMode).remove(index);
-        updateList(replacesMode);
+        updateStringSearcher(replacesMode);
         edited = true;
         saveConfig();
     }
@@ -333,27 +335,17 @@ public class ReplacerConfig {
                         }
                     }
                 }
-                updateList(replacesMode);
+                updateStringSearcher(replacesMode);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void updateList(ReplacesMode replacesMode) {
+    private void updateStringSearcher(ReplacesMode replacesMode) {
         if (matchType != MatchType.CONTAIN) {
             return;
         }
-        Set<Map.Entry<String, String>> set = this.getReplaces(replacesMode).entrySet();
-        String[] searchList = new String[replaces.get(replacesMode).size()];
-        String[] replacementList = new String[replaces.get(replacesMode).size()];
-        int index = 0;
-        for (Map.Entry<String, String> entry : set) {
-            searchList[index] = entry.getKey();
-            replacementList[index] = entry.getValue();
-            index++;
-        }
-        this.searchList.put(replacesMode, searchList);
-        this.replacementList.put(replacesMode, replacementList);
+        this.stringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(this.getReplaces(replacesMode).keySet()).build());
     }
 
     @Override
