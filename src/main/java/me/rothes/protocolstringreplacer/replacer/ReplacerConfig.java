@@ -335,8 +335,8 @@ public class ReplacerConfig {
                         }
                     }
                 }
-                updateStringSearcher(replacesMode);
             }
+            updateStringSearcher(replacesMode);
         }
     }
 
