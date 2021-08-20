@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -30,21 +31,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
         for (BaseComponent baseComponent : baseComponents) {
             if (baseComponent instanceof TextComponent) {
                 TextComponent textComponent = (TextComponent) baseComponent;
-                if (textComponent.getColorRaw() != null) {
-                    currentTitle.append(textComponent.getColorRaw());
-                }
-                if (textComponent.isBoldRaw() != null && textComponent.isBoldRaw()) {
-                    currentTitle.append("§l");
-                }
-                if (textComponent.isItalicRaw() != null && textComponent.isItalicRaw()) {
-                    currentTitle.append("§o");
-                }
-                if (textComponent.isObfuscatedRaw() != null && textComponent.isObfuscatedRaw()) {
-                    currentTitle.append("§m");
-                }
-                if (textComponent.isUnderlinedRaw() != null && textComponent.isUnderlinedRaw()) {
-                    currentTitle.append("§n");
-                }
+                currentTitle.append(ChatColors.getTextColor(textComponent));
                 currentTitle.append(textComponent.getText());
             }
         }

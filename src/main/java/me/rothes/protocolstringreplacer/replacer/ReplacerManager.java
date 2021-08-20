@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.user.User;
@@ -199,22 +200,7 @@ public class ReplacerManager {
         Validate.notNull(filter, "Filter cannot be null");
         if (baseComponent instanceof TextComponent) {
             TextComponent textComponent = (TextComponent) baseComponent;
-            String color = "";
-            if (textComponent.getColorRaw() != null) {
-                color += textComponent.getColorRaw().toString();
-            }
-            if (textComponent.isBoldRaw() != null && textComponent.isBoldRaw()) {
-                color += "§l";
-            }
-            if (textComponent.isItalicRaw() != null && textComponent.isItalicRaw()) {
-                color += "§o";
-            }
-            if (textComponent.isObfuscatedRaw() != null && textComponent.isObfuscatedRaw()) {
-                color += "§m";
-            }
-            if (textComponent.isUnderlinedRaw() != null && textComponent.isUnderlinedRaw()) {
-                color += "§n";
-            }
+            String color = ChatColors.getTextColor(textComponent);
             String replaced = getReplacedString(color + textComponent.getText(), user, filter, setPlaceholders);
             int length = color.length();
             if (replaced.substring(0, length).equals(color)) {

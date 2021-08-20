@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.api;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
@@ -44,6 +45,30 @@ public class ChatColors {
             }
         }
         return new String(chars);
+    }
+
+    @Nonnull
+    public static String getTextColor(@Nonnull TextComponent textComponent) {
+        Validate.notNull(textComponent, "TextComponent cannot be null");
+
+        StringBuilder colorBuilder = new StringBuilder();
+        if (textComponent.getColorRaw() != null) {
+            colorBuilder.append(textComponent.getColorRaw());
+        }
+        if (textComponent.isBoldRaw() != null && textComponent.isBoldRaw()) {
+            colorBuilder.append("§l");
+        }
+        if (textComponent.isItalicRaw() != null && textComponent.isItalicRaw()) {
+            colorBuilder.append("§o");
+        }
+        if (textComponent.isObfuscatedRaw() != null && textComponent.isObfuscatedRaw()) {
+            colorBuilder.append("§m");
+        }
+        if (textComponent.isUnderlinedRaw() != null && textComponent.isUnderlinedRaw()) {
+            colorBuilder.append("§n");
+        }
+        return colorBuilder.toString();
+
     }
 
     @Nonnull
