@@ -14,6 +14,7 @@ public class ArgUtils {
     @Nonnull
     public static String formatWithQuotes(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
+
         if (string.isEmpty()) {
             return string;
         } else {
@@ -63,22 +64,12 @@ public class ArgUtils {
                     quotes = quotes.substring(1);
                 }
                 if ((quotes.length() % 2) == 1) {
-                    StringBuilder stringBuilder = new StringBuilder(i - startIndex);
+                    StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append(strings[startIndex]);
-                    matcher = lastQuotes.matcher(strings[startIndex++]);
-                    if (matcher.find()) {
-                        quotes = matcher.group(0);
-                        int length = stringBuilder.length();
-                        stringBuilder.delete(length - quotes.length() / 2, length);
-                    }
+                    addArgument(stringBuilder, strings[startIndex++]);
                     while (startIndex <= i) {
                         stringBuilder.append(" ").append(strings[startIndex]);
-                        matcher = lastQuotes.matcher(strings[startIndex++]);
-                        if (matcher.find()) {
-                            quotes = matcher.group(0);
-                            int length = stringBuilder.length();
-                            stringBuilder.delete(length - quotes.length() / 2, length);
-                        }
+                        addArgument(stringBuilder, strings[startIndex++]);
                     }
                     stringBuilder.deleteCharAt(0).deleteCharAt(stringBuilder.length() - 1);
                     merged.add(stringBuilder.toString());
@@ -94,7 +85,17 @@ public class ArgUtils {
         return merged.toArray(new String[0]);
     }
 
-    private static boolean isAllQuote(String string) {
+    private static void addArgument(StringBuilder stringBuilder, String arg) {
+        Matcher matcher = lastQuotes.matcher(arg);
+
+        if (matcher.find()) {
+            String quotes = matcher.group(0);
+            int length = stringBuilder.length();
+            stringBuilder.delete(length - quotes.length() / 2, length);
+        }
+    }
+
+    private static boolean isAllQuote(@Nonnull String string) {
         for (int i = 0 ;i < string.length(); i++) {
             if (string.charAt(i) != '\"') {
                 return false;
