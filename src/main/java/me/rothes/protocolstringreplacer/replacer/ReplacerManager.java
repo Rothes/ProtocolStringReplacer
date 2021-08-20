@@ -267,6 +267,10 @@ public class ReplacerManager {
                         JsonObject root = element.getAsJsonObject();
                         JsonObject display = root.getAsJsonObject("display");
 
+                        if (display == null) {
+                            return;
+                        }
+
                         String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
                         diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
                         if (diaplayNameJson != null) {
@@ -668,6 +672,10 @@ public class ReplacerManager {
                         JsonElement element = new JsonParser().parse(nbt);
                         JsonObject root = element.getAsJsonObject();
                         JsonObject display = root.getAsJsonObject("display");
+
+                        if (display == null) {
+                            return;
+                        }
 
                         String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
                         diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
