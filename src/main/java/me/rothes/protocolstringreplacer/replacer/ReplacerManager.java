@@ -280,16 +280,7 @@ public class ReplacerManager {
                         }
 
                         if (edited) {
-                            JsonObject skullOwner = root.getAsJsonObject("SkullOwner");
-                            if (skullOwner != null) {
-                                JsonArray id = skullOwner.getAsJsonArray("Id");
-                                if (id != null && id.size() == 5) {
-                                    id.set(0, new JsonPrimitive(Integer.valueOf(id.get(1).getAsJsonPrimitive().toString())));
-                                    id.set(1, id.get(2));
-                                    id.set(2, id.get(3));
-                                    id.remove(3);
-                                }
-                            }
+                            checkJson(root);
                             contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
                         }
                     }
@@ -686,16 +677,7 @@ public class ReplacerManager {
                         }
 
                         if (edited) {
-                            JsonObject skullOwner = root.getAsJsonObject("SkullOwner");
-                            if (skullOwner != null) {
-                                JsonArray id = skullOwner.getAsJsonArray("Id");
-                                if (id != null && id.size() == 5) {
-                                    id.set(0, new JsonPrimitive(Integer.valueOf(id.get(1).getAsJsonPrimitive().toString())));
-                                    id.set(1, id.get(2));
-                                    id.set(2, id.get(3));
-                                    id.remove(3);
-                                }
-                            }
+                            checkJson(root);
                             contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
                         }
                     }
@@ -724,6 +706,19 @@ public class ReplacerManager {
             }
         } else {
             updatePlaceholders(user, hoverEvent.getValue());
+        }
+    }
+
+    private void checkJson(@NotNull JsonObject root) {
+        JsonObject skullOwner = root.getAsJsonObject("SkullOwner");
+        if (skullOwner != null) {
+            JsonArray id = skullOwner.getAsJsonArray("Id");
+            if (id != null && id.size() == 5) {
+                id.set(0, new JsonPrimitive(Integer.valueOf(id.get(1).getAsJsonPrimitive().toString())));
+                id.set(1, id.get(2));
+                id.set(2, id.get(3));
+                id.remove(3);
+            }
         }
     }
 
