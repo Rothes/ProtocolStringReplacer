@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class ReplacerManager {
 
@@ -119,8 +120,15 @@ public class ReplacerManager {
         for (Map.Entry<File, DotYamlConfiguration> entry : loadedFiles.entrySet()) {
             File file = entry.getKey();
             DotYamlConfiguration config = entry.getValue();
-            ReplacerConfig replacerConfig = new ReplacerConfig(file, config);
-            addReplacerConfig(replacerConfig);
+            try {
+                ReplacerConfig replacerConfig = new ReplacerConfig(file, config);
+                addReplacerConfig(replacerConfig);
+            } catch (PatternSyntaxException exception) {
+                exception.printStackTrace();
+                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c无法载入配置文件 "
+                        + file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/')
+                        + " , 因为正则表达式有问题.");
+            }
         }
 
         // To warm up the lambda below.
