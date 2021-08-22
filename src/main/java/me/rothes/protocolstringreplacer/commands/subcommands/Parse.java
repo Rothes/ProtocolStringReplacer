@@ -44,13 +44,7 @@ public class Parse extends SubCommand {
                     return;
                 }
             }
-            ListenType listenType = null;
-            for (ListenType type : ListenType.values()) {
-                if (type.getName().equalsIgnoreCase(args[3])) {
-                    listenType = type;
-                    break;
-                }
-            }
+            ListenType listenType = ListenType.getType(args[3]);
             if (listenType == null) {
                 user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c监听类型 §f" + args[3] + " §c不存在.");
                 return;

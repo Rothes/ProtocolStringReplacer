@@ -19,10 +19,12 @@ public class SetTitleText extends AbstractServerPacketListener {
         User user = getEventUser(packetEvent);
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
+        String json = wrappedChatComponent.getJson();
+        saveCaptureMessage(user, json);
         if (wrappedChatComponent != null) {
             wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                     .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                            wrappedChatComponent.getJson(), user, filter, false
+                            json, user, filter, false
                     )), user, filter)));
             wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
         }

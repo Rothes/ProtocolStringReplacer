@@ -2,6 +2,7 @@ package me.rothes.protocolstringreplacer.commands;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.ArgUtils;
+import me.rothes.protocolstringreplacer.commands.subcommands.Capture;
 import me.rothes.protocolstringreplacer.commands.subcommands.Edit;
 import me.rothes.protocolstringreplacer.commands.subcommands.Parse;
 import me.rothes.protocolstringreplacer.commands.subcommands.Reload;
@@ -30,6 +31,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
 
         subCommands.add(new Edit());
         subCommands.add(new Parse());
+        subCommands.add(new Capture());
         subCommands.add(new Reload());
     }
 

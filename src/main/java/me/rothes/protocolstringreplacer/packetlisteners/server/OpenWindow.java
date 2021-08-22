@@ -25,6 +25,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
         String json = wrappedChatComponent.getJson();
         User user = getEventUser(packetEvent);
+        saveCaptureMessage(user, json);
 
         StringBuilder currentTitle = new StringBuilder();
         BaseComponent[] baseComponents = ComponentSerializer.parse(json);

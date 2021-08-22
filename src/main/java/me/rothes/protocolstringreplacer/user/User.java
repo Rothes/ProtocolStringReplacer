@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -19,9 +20,7 @@ import org.bukkit.permissions.Permission;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class User {
 
@@ -36,7 +35,9 @@ public class User {
     private String[] commandToConfirm;
     private Long confirmTime;
 
-//TODO:    private Set<PacketType> capturePackets = new HashSet<>();
+    private Set<ListenType> captureTypes = new HashSet<>();
+    private HashMap<ListenType, LinkedList<BaseComponent[]>> captureMessages = new HashMap<>();
+
     private ReplacerConfig editorReplacerConfig;
 //TODO:    private Integer editorIndex;
 //TODO:    private String editorPattern;
@@ -106,6 +107,28 @@ public class User {
         currentWindowTitle = title;
     }
 
+    public void addCaptureType(ListenType listenType) {
+        captureTypes.add(listenType);
+        captureMessages.put(listenType, new LinkedList<>());
+    }
+
+    public void removeCaptureType(ListenType listenType) {
+        captureTypes.remove(listenType);
+        captureMessages.remove(listenType);
+    }
+
+    public boolean isCapturing(ListenType listenType) {
+        return captureTypes.contains(listenType);
+    }
+
+    public void addCaptureMessage(ListenType listenType, BaseComponent[] messages) {
+        captureMessages.get(listenType).add(0, messages);
+    }
+
+    public LinkedList<BaseComponent[]> getCaptureMessages(ListenType listenType) {
+        return captureMessages.get(listenType);
+    }
+
     public void setEditorReplacerConfig(ReplacerConfig editorReplacerConfig) {
         this.editorReplacerConfig = editorReplacerConfig;
     }
@@ -119,7 +142,6 @@ public class User {
         Validate.notNull(args, "Arguments cannot be null");
         return Arrays.equals(args, commandToConfirm);
     }
-
 
     public boolean hasCommandToConfirm() {
         return commandToConfirm != null;

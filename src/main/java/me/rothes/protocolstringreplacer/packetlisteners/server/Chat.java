@@ -31,8 +31,10 @@ public final class Chat extends AbstractServerPacketListener {
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             if (wrappedChatComponent != null) {
-                String replacedJson = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(wrappedChatComponent.getJson(), user, filter, false);
-                BaseComponent[] replacedComponents = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(ComponentSerializer.parse(replacedJson), user, filter);
+                String json = wrappedChatComponent.getJson();
+                saveCaptureMessage(user, json);
+                json = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(json, user, filter, false);
+                BaseComponent[] replacedComponents = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(ComponentSerializer.parse(json), user, filter);
                 wrappedChatComponentStructureModifier.write(0, WrappedChatComponent.fromJson(ComponentSerializer.toString(replacedComponents)));
             } else {
                 StructureModifier<Object> structureModifier = packet.getModifier();
