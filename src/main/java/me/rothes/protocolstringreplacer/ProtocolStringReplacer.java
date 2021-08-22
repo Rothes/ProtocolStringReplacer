@@ -40,7 +40,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private ConfigManager configManager;
     private byte serverMajorVersion;
     private boolean isSpigot;
-    private boolean isPaper;
+    private boolean hasPaperComponent;
 
     public static ProtocolStringReplacer getInstance() {
         return instance;
@@ -78,10 +78,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
         try {
             Class.forName("io.papermc.paper.text.PaperComponents");
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §3启用 Paper 1.16+ 支持.");
-            isPaper = true;
+            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §3启用 Paper ChatComponent 支持.");
+            hasPaperComponent = true;
         } catch (Throwable tr) {
-            isPaper = false;
+            hasPaperComponent = false;
         }
         if (!checkDepends("PlaceholderAPI", "ProtocolLib")) {
             initialize();
@@ -107,8 +107,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
         return isSpigot;
     }
 
-    public boolean isPaper() {
-        return isPaper;
+    public boolean hasPaperComponent() {
+        return hasPaperComponent;
     }
 
     @Nonnull

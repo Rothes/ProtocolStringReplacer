@@ -63,7 +63,7 @@ public final class Chat extends AbstractServerPacketListener {
     }
 
     private boolean isPaperComponent(Object object) {
-        return ProtocolStringReplacer.getInstance().isPaper() && object instanceof net.kyori.adventure.text.Component;
+        return ProtocolStringReplacer.getInstance().hasPaperComponent() && object instanceof net.kyori.adventure.text.Component;
     }
 
     private GsonComponentSerializer getPaperGsonComponentSerializer() {
