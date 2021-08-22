@@ -26,6 +26,10 @@ public class Capture extends SubCommand {
 
     @Override
     public void onExecute(@Nonnull User user, @Nonnull String[] args) {
+        if (!user.isOnline()) {
+            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c仅玩家可使用该指令.");
+            return;
+        }
         if (args.length > 1) {
             if ("add".equalsIgnoreCase(args[1])) {
                 addCommand(user, args);
@@ -139,19 +143,17 @@ public class Capture extends SubCommand {
         List<String> list = new ArrayList<>();
         if (args.length == 2) {
             list = Arrays.asList("add", "remove", "list");
-        } else if (args.length == 3) {
-            if (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("list")) {
-                list.add("<监听类型>");
-                for (ListenType listenType : ListenType.values()) {
-                    if (listenType.isCapturable()) {
-                        list.add(listenType.getName());
-                    }
+        } else if (args.length == 3
+                && args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("list")) {
+            list.add("<监听类型>");
+            for (ListenType listenType : ListenType.values()) {
+                if (listenType.isCapturable()) {
+                    list.add(listenType.getName());
                 }
             }
-        } else if (args.length == 4) {
-            if (args[1].equalsIgnoreCase("list")) {
-                list.add("[页码]");
-            }
+        } else if (args.length == 4
+                && args[1].equalsIgnoreCase("list")) {
+            list.add("[页码]");
         }
         return list;
     }

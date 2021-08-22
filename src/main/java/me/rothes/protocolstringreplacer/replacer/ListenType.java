@@ -11,6 +11,14 @@ public enum ListenType {
     WINDOW_TITLE("Window-Title", true),
     SCOREBOARD("ScoreBoard", false);
 
+    private String name;
+    private boolean capturable;
+
+    ListenType(String name, boolean capturable) {
+        this.name = name;
+        this.capturable = capturable;
+    }
+
     public static ListenType getType(String typeName) {
         for (ListenType type : ListenType.values()) {
             if (type.getName().equalsIgnoreCase(typeName)) {
@@ -18,14 +26,6 @@ public enum ListenType {
             }
         }
         return null;
-    }
-
-    private String name;
-    private boolean capturable;
-
-    ListenType(String name, boolean capturable) {
-        this.name = name;
-        this.capturable = capturable;
     }
 
     public String getName() {
