@@ -42,18 +42,21 @@ public final class Chat extends AbstractServerPacketListener {
                     Object read = structureModifier.read(fieldIndex);
                     if (read instanceof BaseComponent[]) {
                         BaseComponent[] readComponents = (BaseComponent[]) read;
+                        String json = ComponentSerializer.toString(readComponents);
+                        saveCaptureMessage(user, json);
                         readComponents = ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                ComponentSerializer.toString(readComponents), user, filter, false
+                                json, user, filter, false
                         ));
                         structureModifier.write(fieldIndex, ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(readComponents, user, filter));
                     } else if (isPaperComponent(read)) {
+                        String json = getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read);
+                        saveCaptureMessage(user, json);
                         structureModifier.write(fieldIndex, getPaperGsonComponentSerializer().deserialize(
                                 ComponentSerializer.toString(
                                         ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(
                                                 ComponentSerializer.parse(
                                                         ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                                                getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read)
-                                                                , user, filter, false))
+                                                                json, user, filter, false))
                                                 , user, filter
                                         )
                                 )
