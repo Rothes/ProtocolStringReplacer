@@ -30,8 +30,8 @@ public final class Chat extends AbstractServerPacketListener {
             User user = getEventUser(packetEvent);
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
+            String json = wrappedChatComponent.getJson();
             if (wrappedChatComponent != null) {
-                String json = wrappedChatComponent.getJson();
                 saveCaptureMessage(user, json);
                 json = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(json, user, filter, false);
                 BaseComponent[] replacedComponents = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(ComponentSerializer.parse(json), user, filter);
@@ -42,14 +42,14 @@ public final class Chat extends AbstractServerPacketListener {
                     Object read = structureModifier.read(fieldIndex);
                     if (read instanceof BaseComponent[]) {
                         BaseComponent[] readComponents = (BaseComponent[]) read;
-                        String json = ComponentSerializer.toString(readComponents);
+                        json = ComponentSerializer.toString(readComponents);
                         saveCaptureMessage(user, json);
                         readComponents = ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
                                 json, user, filter, false
                         ));
                         structureModifier.write(fieldIndex, ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(readComponents, user, filter));
                     } else if (isPaperComponent(read)) {
-                        String json = getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read);
+                        json = getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read);
                         saveCaptureMessage(user, json);
                         structureModifier.write(fieldIndex, getPaperGsonComponentSerializer().deserialize(
                                 ComponentSerializer.toString(

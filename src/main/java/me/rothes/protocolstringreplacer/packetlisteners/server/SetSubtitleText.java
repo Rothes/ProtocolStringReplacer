@@ -19,9 +19,10 @@ public class SetSubtitleText extends AbstractServerPacketListener {
         User user = getEventUser(packetEvent);
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-        String json = wrappedChatComponent.getJson();
-        saveCaptureMessage(user, json);
+        String json;
         if (wrappedChatComponent != null) {
+            json = wrappedChatComponent.getJson();
+            saveCaptureMessage(user, json);
             wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
                     .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
                             json, user, filter, false
