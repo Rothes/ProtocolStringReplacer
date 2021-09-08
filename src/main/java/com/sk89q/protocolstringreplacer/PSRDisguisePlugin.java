@@ -70,7 +70,7 @@ public class PSRDisguisePlugin implements Plugin {
 
     @Override
     public void saveResource(@NotNull String resourcePath, boolean replace) {
-
+        // Empty method.
     }
 
     @Override
