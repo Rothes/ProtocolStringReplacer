@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer;
 import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.exceptions.MissingInitialResourceException;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,17 +30,17 @@ public class PSRLocalization {
         systemLocale += '-';
         systemLocale += System.getProperty("user.country", "US");
 
-        locale = plugin.getConfig().getString("Options.Localization");
-        if (locale == null) {
-            locale = systemLocale;
-        }
+        locale = plugin.getConfig().getString("Options.Localization", systemLocale);
 
         localedMessages = new HashMap<>();
         loadLocale();
     }
 
-    @Nonnull
+    @NotNull
     public static String getLocaledMessage(@Nonnull String key, @Nonnull String... replacements) {
+        Validate.notNull(key, "Key cannot be null");
+        Validate.notNull(replacements, "Replacements Array cannot be null");
+
         String result = localedMessages.getOrDefault(key, "§cMissing localization key: " + key);
         byte length = (byte) replacements.length;
         if (length > 0) {
@@ -50,23 +51,27 @@ public class PSRLocalization {
         return result;
     }
 
-    @Nonnull
+    @NotNull
     public static String getPrefixedLocaledMessage(@Nonnull String key, @Nonnull String... replacements) {
+        Validate.notNull(key, "Key cannot be null");
+        Validate.notNull(replacements, "Replacements Array cannot be null");
+
         return getLocaledMessage("Sender.Prefix") + getLocaledMessage(key, replacements);
     }
 
-    @Nonnull
+    @NotNull
     public static CommentYamlConfiguration getDefaultLocaledConfig() {
         InputStream resource = getLocaledResource("/Configs/Config.yml");
         return CommentYamlConfiguration.loadConfiguration(new InputStreamReader(resource, StandardCharsets.UTF_8));
     }
 
-    @Nonnull
+    @NotNull
     public static CommentYamlConfiguration getDefaultLocale() {
         InputStream resource = getLocaledResource("/Locales/Locale.yml");
         return CommentYamlConfiguration.loadConfiguration(new InputStreamReader(resource, StandardCharsets.UTF_8));
     }
 
+    @NotNull
     public static CommentYamlConfiguration getDefaultLocaledExample() {
         InputStream resource = getLocaledResource("/Replacers/Example.yml");
         return CommentYamlConfiguration.loadConfiguration(new InputStreamReader(resource, StandardCharsets.UTF_8));
@@ -117,7 +122,8 @@ public class PSRLocalization {
         }
     }
 
-    private static InputStream getLocaledResource(String file) {
+    @NotNull
+    private static InputStream getLocaledResource(@NotNull String file) {
         InputStream resource = plugin.getResource("Languages/" + locale + file);
         if (resource == null) {
             resource = plugin.getResource("Languages/" + systemLocale + file);
