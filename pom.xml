@@ -136,19 +136,19 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.Rothes.org.bstats</shadedPattern>
+                            <shadedPattern>me.rothes.protocolstringreplacer.libs.org.bstats</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.collections</pattern>
-                            <shadedPattern>me.Rothes.org.apache.commons.collections</shadedPattern>
+                            <shadedPattern>me.rothes.protocolstringreplacer.libs.org.apache.commons.collections</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.lang3</pattern>
-                            <shadedPattern>me.Rothes.org.apache.commons.lang3</shadedPattern>
+                            <shadedPattern>me.rothes.protocolstringreplacer.libs.org.apache.commons.lang3</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.neosearch.stringsearcher</pattern>
-                            <shadedPattern>me.Rothes.org.neosearch.stringsearcher</shadedPattern>
+                            <shadedPattern>me.rothes.protocolstringreplacer.libs.org.neosearch.stringsearcher</shadedPattern>
                         </relocation>
                     </relocations>
 
