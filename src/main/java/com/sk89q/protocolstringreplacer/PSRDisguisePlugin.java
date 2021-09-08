@@ -48,13 +48,11 @@ public class PSRDisguisePlugin implements Plugin {
         return plugin.getDescription();
     }
 
-    @NotNull
     @Override
     public FileConfiguration getConfig() {
         return null;
     }
 
-    @Nullable
     @Override
     public InputStream getResource(@NotNull String filename) {
         return null;
@@ -62,12 +60,12 @@ public class PSRDisguisePlugin implements Plugin {
 
     @Override
     public void saveConfig() {
-
+        // Empty method.
     }
 
     @Override
     public void saveDefaultConfig() {
-
+        // Empty method.
     }
 
     @Override
@@ -77,7 +75,7 @@ public class PSRDisguisePlugin implements Plugin {
 
     @Override
     public void reloadConfig() {
-
+        // Empty method.
     }
 
     @NotNull
@@ -99,17 +97,17 @@ public class PSRDisguisePlugin implements Plugin {
 
     @Override
     public void onDisable() {
-
+        // Empty method.
     }
 
     @Override
     public void onLoad() {
-
+        // Empty method.
     }
 
     @Override
     public void onEnable() {
-
+        // Empty method.
     }
 
     @Override
@@ -119,7 +117,7 @@ public class PSRDisguisePlugin implements Plugin {
 
     @Override
     public void setNaggable(boolean canNag) {
-
+        // Empty method.
     }
 
     @Nullable
@@ -128,13 +126,11 @@ public class PSRDisguisePlugin implements Plugin {
         return null;
     }
 
-    @NotNull
     @Override
     public Logger getLogger() {
         return null;
     }
 
-    @NotNull
     @Override
     public String getName() {
         return null;
@@ -145,7 +141,6 @@ public class PSRDisguisePlugin implements Plugin {
         return false;
     }
 
-    @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         return null;
