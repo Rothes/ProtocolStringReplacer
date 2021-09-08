@@ -5,7 +5,6 @@ import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfigurati
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nonnull;
