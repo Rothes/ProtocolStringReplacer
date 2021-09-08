@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
@@ -21,13 +22,14 @@ import java.util.List;
 public class Capture extends SubCommand {
 
     public Capture() {
-        super("capture", "protocolstringreplacer.command.capture", "捕获部分数据包的内容");
+        super("capture", "protocolstringreplacer.command.capture",
+                PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Description"));
     }
 
     @Override
     public void onExecute(@Nonnull User user, @Nonnull String[] args) {
         if (!user.isOnline()) {
-            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c仅玩家可使用该指令.");
+            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Console-Sender.Messages.Command-Not-Available"));
             return;
         }
         if (args.length > 1) {
@@ -49,22 +51,27 @@ public class Capture extends SubCommand {
         if (args.length == 3) {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c监听类型 §f" + args[2] + " §c不存在.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Enum.Listen-Type.Messages.Invaild-Type", args[2]));
                 return;
             }
             if (!listenType.isCapturable()) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c此监听类型不可捕获.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Capture.Listen-Type-Cannot-Be-Captured"));
                 return;
             }
             if (user.isCapturing(listenType)) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您已经启用了 §f" + listenType.getName() + " §c的捕获了.");
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c使用指令 §e/psr capture remove " + listenType.getName() + " §c即可取消捕获.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Capture.Already-Capturing-Listen-Type", listenType.getName()));
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Capture.Remove-Capture-Tip", listenType.getName()));
                 return;
             }
             user.addCaptureType(listenType);
-            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已启用 §f" + listenType.getName() + " §a的捕获.");
+            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    "Sender.Commands.Capture.Capture-Added", listenType.getName()));
         } else {
-            user.sendFilteredText("§7 * §e/psr capture add <监听类型> §7- §b启用监听类型的Json捕获");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Help"));
         }
     }
 
@@ -72,18 +79,22 @@ public class Capture extends SubCommand {
         if (args.length == 3) {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c监听类型 §f" + args[2] + " §c不存在.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Enum.Listen-Type.Messages.Invaild-Type", args[2]));
                 return;
             }
             if (!user.isCapturing(listenType)) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您已经关闭了 §f" + listenType.getName() + " §c的捕获了.");
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c使用指令 §e/psr capture add " + listenType.getName() + " §c即可开启捕获.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Capture.Already-Not-Capturing-Listen-Type", listenType.getName()));
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Capture.Add-Capture-Tip", listenType.getName()));
                 return;
             }
             user.removeCaptureType(listenType);
-            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已移除 §f" + listenType.getName() + " §a的捕获.");
+            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    "Sender.Commands.Capture.Capture-Removed", listenType.getName()));
         } else {
-            user.sendFilteredText("§7 * §e/psr capture remove <监听类型> §7- §b移除监听类型的Json捕获");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Remove.Detailed-Help"));
         }
     }
 
@@ -92,12 +103,15 @@ public class Capture extends SubCommand {
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
                 ListenType listenType = ListenType.getType(args[2]);
                 if (listenType == null) {
-                    user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c监听类型 §f" + args[2] + " §c不存在.");
+                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                            "Enum.Listen-Type.Messages.Invaild-Type", args[2]));
                     return;
                 }
                 if (!user.isCapturing(listenType)) {
-                    user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您未在捕获 §f" + listenType.getName() + " §c.");
-                    user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c使用指令 §e/psr capture add " + listenType.getName() + " §c即可开启捕获.");
+                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                            "Sender.Commands.Capture.Not-Capturing-Listen-Type", listenType.getName()));
+                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                            "Sender.Commands.Capture.Add-Capture-Tip", listenType.getName()));
                     return;
                 }
                 int page = 1;
@@ -105,11 +119,12 @@ public class Capture extends SubCommand {
                     if (StringUtils.isNumeric(args[3])) {
                         page = Integer.parseInt(args[3]);
                     } else {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的正整数!");
+                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                                "Sender.Error.Not-A-Positive-Integer", args[3]));
                         return;
                     }
                 }
-                user.sendFilteredText("§7§m---------§7§l §7[ §c§lP§6§lS§3§lR §7- §e捕获列表§7 ]§l §7§m---------");
+                user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Header"));
 
                 LinkedList<BaseComponent[]> captureMessages = user.getCaptureMessages(listenType);
                 int totalPage = (int) Math.ceil((float) captureMessages.size() / 10);
@@ -129,10 +144,10 @@ public class Capture extends SubCommand {
                     pageComponent.append(" ▶ ").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr capture list " + args[2] + " " + (page + 1))).color(ChatColor.YELLOW);
                 }
                 user.sendFilteredMessage(pageComponent.create());
-                user.sendFilteredText("§7§m---------------------------------------");
+                user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Footer"));
             });
         } else {
-            user.sendFilteredText("§7 * §e/psr capture list <监听类型> [页码] §7- §b列出捕获的Json信息");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Detailed-Help"));
         }
     }
 
@@ -145,7 +160,7 @@ public class Capture extends SubCommand {
             list = Arrays.asList("add", "remove", "list");
         } else if (args.length == 3
                 && args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("list")) {
-            list.add("<监听类型>");
+            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Listen-Type.Name") + ">");
             for (ListenType listenType : ListenType.values()) {
                 if (listenType.isCapturable()) {
                     list.add(listenType.getName());
@@ -153,18 +168,18 @@ public class Capture extends SubCommand {
             }
         } else if (args.length == 4
                 && args[1].equalsIgnoreCase("list")) {
-            list.add("[页码]");
+            list.add("[" + PSRLocalization.getLocaledMessage("Enum.Page.Name") + "]");
         }
         return list;
     }
 
     @Override
     public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e捕获工具§7 ]§l §7§m-----------");
-        user.sendFilteredText("§7 * §e/psr capture add §7- §b启用监听类型的Json捕获");
-        user.sendFilteredText("§7 * §e/psr capture remove §7- §b移除监听类型的Json捕获");
-        user.sendFilteredText("§7 * §e/psr capture list §7- §b列出捕获的Json信息");
-        user.sendFilteredText("§7§m-------------------------------------------");
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Help.Header"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Simple-Help"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Remove.Simple-Help"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Simple-Help"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Help.Footer"));
     }
 
 }

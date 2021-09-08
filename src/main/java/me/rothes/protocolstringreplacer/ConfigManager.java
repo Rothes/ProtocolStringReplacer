@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer;
 
 import com.comphenix.protocol.events.ListenerPriority;
-import org.bukkit.Bukkit;
 
 public class ConfigManager {
 
@@ -22,7 +21,7 @@ public class ConfigManager {
 
         String placeholderHead = instance.getConfig().getString("Options.Features.Placeholder.Placeholder-Head");
         if (placeholderHead == null || placeholderHead.isEmpty()) {
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §cPlaceholder-Head 值无效! 请定义一个字符. 使用默认值 '｛'");
+            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invaild-Placeholder-Head"));
             this.placeholderHead = '｛';
         } else {
             this.placeholderHead = placeholderHead.charAt(0);
@@ -30,7 +29,7 @@ public class ConfigManager {
 
         String placeholderTail = instance.getConfig().getString("Options.Features.Placeholder.Placeholder-Tail");
         if (placeholderTail == null || placeholderTail.isEmpty()) {
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §cPlaceholder-Tail 值无效! 请定义一个字符. 使用默认值 '｝'");
+            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invaild-Placeholder-Tail"));
             this.placeholderTail = '｝';
         } else {
             this.placeholderTail = placeholderTail.charAt(0);
@@ -48,7 +47,7 @@ public class ConfigManager {
             }
         }
         if (listenerPriority == null) {
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c数据包监听优先度值无效! 使用默认值 'HIGHEST'");
+            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invaild-Listener-Priority"));
             listenerPriority = ListenerPriority.HIGHEST;
         }
         this.listenerPriority = listenerPriority;

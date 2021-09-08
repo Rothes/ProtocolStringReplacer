@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
@@ -12,13 +13,14 @@ import java.util.List;
 public class Reload extends SubCommand {
 
     public Reload() {
-        super("reload", "protocolstringreplacer.command.reload", "重载插件配置文件");
+        super("reload", "protocolstringreplacer.command.reload", PSRLocalization
+                .getLocaledMessage("Sender.Commands.Reload.Description"));
     }
 
     @Override
     public void onExecute(@Nonnull User user, @Nonnull String[] args) {
         if (args.length == 1) {
-            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §b正在异步重载插件...");
+            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> ProtocolStringReplacer.getInstance().reload(user));
         } else {
             sendHelp(user);
@@ -32,10 +34,11 @@ public class Reload extends SubCommand {
 
     @Override
     public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText("§7§m------§7§l §7[ §c§lP§6§lS§3§lR §7- §e重载§7 ]§l §7§m------");
-        user.sendFilteredText("§7 * §e/psr reload help §7- §b重载指令列表");
-        user.sendFilteredText("§7 * §e/psr reload§7- §b异步重载插件所有配置文件");
-        user.sendFilteredText("§7§m-----------------------------------------");
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Reload.Help.Header"));
+        user.sendFilteredText("§7 * §e/psr reload help §7- §b" + PSRLocalization.getLocaledMessage(
+                "Sender.Commands.Reload.Help.Help-Description"));
+        user.sendFilteredText("§7 * §e/psr reload§7- §b" + this.getDescription());
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Reload.Help.Footer"));
     }
 
 }

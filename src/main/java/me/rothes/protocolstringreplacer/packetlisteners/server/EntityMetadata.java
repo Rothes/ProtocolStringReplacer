@@ -7,6 +7,7 @@ import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetwrapper.WrapperPlayServerEntityMetadata;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
@@ -32,9 +33,12 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         try {
             entity = packet.getEntityModifier(packetEvent).read(0);
         } catch (IllegalArgumentException exception) {
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c解析实体时发生异常. 这是 ProtocolLib 导致的错误, 请不要向 PSR 的作者反馈.");
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c此异常一般不会导致问题. 但您也可以自行构建下方的 ProtocolLib, 来避免此异常.");
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §cGit 链接: https://github.com/Rothes/ProtocolLib.git");
+            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
+                    "Console.Messages.Packet-Listener.Entity-Metadata.Cannot-Read-Entity.Line-1"));
+            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
+                    "Console.Messages.Packet-Listener.Entity-Metadata.Cannot-Read-Entity.Line-2"));
+            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
+                    "Console.Messages.Packet-Listener.Entity-Metadata.Cannot-Read-Entity.Line-3"));
             return;
         }
         if (entity == null || (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && entity.getType() == EntityType.DROPPED_ITEM)) {

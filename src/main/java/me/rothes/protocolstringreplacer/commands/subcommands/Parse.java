@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
@@ -62,7 +63,6 @@ public class Parse extends SubCommand {
             }
 
             user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a测试正在进行中, 请稍等...");
-            ListenType finalListenType = listenType;
             ReplacesMode finalReplacesMode = replacesMode;
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
                 long startTime = System.nanoTime();
@@ -70,7 +70,7 @@ public class Parse extends SubCommand {
                 String text = original;
                 LinkedList<HoverEvent> results = new LinkedList<>();
                 for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
-                    if (replacerConfig.getListenTypeList().contains(finalListenType)) {
+                    if (replacerConfig.getListenTypeList().contains(listenType)) {
                         Object object = replacerConfig.getReplaces(finalReplacesMode).entrySet();
                         switch (replacerConfig.getMatchType()) {
                             case CONTAIN:
@@ -147,8 +147,9 @@ public class Parse extends SubCommand {
                 double duration = (System.nanoTime() - startTime) / 1000000d;
                 user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换测试结果§7 ]§l §7§m-----------");
                 user.sendFilteredText(" §7* §3§l测试耗时: §b" + duration + " ms");
-                user.sendFilteredText(" §7* §3§l监听类型: §b" + finalListenType.getName());
-                user.sendFilteredText(" §7* §3§l替换模式: §b" + finalReplacesMode.getName());
+                user.sendFilteredText(" §7* §3§l监听类型: §b" + listenType.getName());
+                user.sendFilteredText(" §7* §3§l替换模式: §b" + PSRLocalization.getLocaledMessage(
+                        finalReplacesMode.getLocaleKey()));
                 user.sendFilteredText(" §7* §3§l原始文本: §b" + ChatColors.showColorCodes(original));
                 user.sendFilteredText(" §7* §3§l最终文本: §b" + ChatColors.showColorCodes(text));
                 ComponentBuilder componentBuilder = new ComponentBuilder(" §7* §3§l详细步骤:");

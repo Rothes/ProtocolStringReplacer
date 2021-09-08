@@ -1,0 +1,40 @@
+# Don't edit Configs-Version manually!
+Configs-Version: 3
+
+Options:
+  # Locale language. Will search for specified .yml file in ProtocolStringReplacer/Locales.
+  # This setting also involve some internal operations, so it's recommended to
+  # follow the specification: language(Lower case)-location(Upper case)
+  Localization: en-US
+
+  Features:
+    # Console related options.
+    Console:
+      # Show loaded replacer configs in console.
+      Print-Replacer-Config-When-Loaded: true
+
+    # Custom plugin placeholder format. It is recommended to use the format that players can't think of,
+    # so they cannot access some information that they should not be obtained.
+    # By default, you can use the format with ｛player_name｝(Chinese character) to use the placeholder.
+    # You may need to edit them for convenient usage.
+    Placeholder:
+      # The prefix of a placeholder. Only one character allowed.
+      Placeholder-Head: ｛
+      # The suffix of a placeholder. Only one character allowed.
+      Placeholder-Tail: ｝
+
+    # Replaced ItemStack cache related options.
+    ItemMetaCache:
+      # Seconds to execute the task of purging the cache.
+      Clean-Task-Interval: 600
+      # Only Purge the cache entries that have not been accessed in these seconds.
+      Clean-Access-Interval: 300
+
+    # Packet listener related options.
+    Packet-Listener:
+      # Specify the listener priority of ProtocolStringReplacer.
+      # Configure it only when you know what you are doing.
+      Listener-Priority: HIGHEST
+      # Should PSR forcibly edit the data in packets that are not allowed to be written?
+      # It's ok to set it to true.
+      Force-Replace: false

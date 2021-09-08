@@ -1,10 +1,10 @@
 package me.rothes.protocolstringreplacer.replacer;
 
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.neosearch.stringsearcher.StringSearcher;
 
@@ -76,7 +76,8 @@ public class ReplacerConfig {
         long startTime = System.nanoTime();
         loadData(file, configuration);
         if (ProtocolStringReplacer.getInstance().getConfigManager().printReplacer) {
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a载入替换配置: " + getRelativePath() + ". §8耗时 " + (System.nanoTime() - startTime) / 1000000d + "ms");
+            ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Load-Complete",
+                    getRelativePath(), String.valueOf((System.nanoTime() - startTime) / 1000000d)));
         }
     }
 
@@ -296,7 +297,8 @@ public class ReplacerConfig {
                     }
                 }
                 if (!typeFound) {
-                    Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知或不支持的监听类型: " + type);
+                    ProtocolStringReplacer.warn(PSRLocalization.getLocaledMessage(
+                            "Console-Sender.Messages.Replacer-Config.Invaild-Listen-Type", type));
                 }
             }
         }
@@ -312,7 +314,8 @@ public class ReplacerConfig {
         }
         if (!typeFound) {
             this.matchType = MatchType.CONTAIN;
-            Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知的文本匹配方式: " + matchType + ". 使用默认值\"Contain\"");
+            ProtocolStringReplacer.warn(PSRLocalization.getLocaledMessage(
+                    "Console-Sender.Messages.Replacer-Config.Invaild-Match-Mode", matchType));
         }
         for (ReplacesMode replacesMode : ReplacesMode.values()) {
             ConfigurationSection section = configuration.getConfigurationSection("Replaces鰠" + replacesMode.getNode());

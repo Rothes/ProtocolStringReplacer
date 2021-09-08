@@ -1,0 +1,60 @@
+# The settings of this replacer config.
+Options:
+  # Whether this config is enabled or not. Plugin will not process this config
+  # if configured false. By default, it's false if undefined.
+  Enable: true
+  # Priority of this config. If there are multiple replacer configs,
+  # the higher priority, the earlier replaces. Default is 5.
+  Priority: 5
+  # Optional parameter.
+  Version: '1.210805'
+  # Optional parameter.
+  Author: 'Rothes'
+  # The method PSR will use to match the strings. Options:
+  # 'Contain' : Replace all contained (Default)
+  # 'Equal' : The original string must equal you set
+  # 'Regex' : Use Java Regex
+  # This is not case-sensitive.
+  Match-Type: 'Contain'
+  # Filter function. Used to specify the conditions for replacing strings in this config.
+  Filter:
+    # Listen types.
+    # Specify where to replace the string. All by default. Options:
+    # 'Chat': Replace strings in chat|actionbar
+    # 'Sign': Replace strings on signs
+    # 'Title': Replace strings in title|subtitle
+    # 'Entity': Replace strings of entity display name, itemframe name, etc.
+    # 'Boss-Bar': Replace strings of Boss health bar
+    # 'ItemStack': Replace strings in item such as display name|Lore|author of the book|content of the book
+    # 'Window-Title': Replace strings of containers name
+    # 'ScoreBoard': Replace strings in scoreboard title|entity name
+    # This is not case-sensitive.
+    Listen-Types:
+      - Chat
+      - Window-Title
+      - ItemStack
+      - Sign
+    # Specific filtering for scoreboard replacement.
+    ScoreBoard:
+      # Whether replace for scoreboard title. Default is false.
+      Replace-Title: false
+      # Whether replace for entities' name in scoreboard. Default is false.
+      # Note: For players, entity name is player's name, else is entity UUID.
+      Replace-Entity-Name: false
+
+# List of replace strings.
+# Original strings on left (key), and corresponding replacement on right (value).
+# Replace mode priority: Json > Common. This ignores priority in replacer configs.
+Replaces:
+  # Common string replace mode.
+  Common:
+    'My name': '｛player_name｝'
+    'a nametag': 'my nametag!'
+
+  # Json replace mode, for advanced users.
+  # The listen types that doesn't support Json replace:
+  # ItemStack(Except content of the book on 1.12 and upper server)、Sign on server version below 1.9.4,
+  # entity name in ScoreBoard、Scoreboard title in ScoreBoard on server version 1.12 or below 1.12.
+  Json:
+    # This can modify the furnace title on players' client.
+    '{"translate":"container.furnace"}': '{"text":"Congratulations for opening a furnace! Nice job!"}'

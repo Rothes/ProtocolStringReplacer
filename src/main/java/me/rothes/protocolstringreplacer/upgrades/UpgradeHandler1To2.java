@@ -94,7 +94,7 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
                     }
                 }
                 if (!typeFound) {
-                    Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c未知或不支持的数据包类型: " + type + ", 已忽略.");
+                    ProtocolStringReplacer.warn("§c未知或不支持的数据包类型: " + type + ", 已忽略.");
                 }
             }
         }

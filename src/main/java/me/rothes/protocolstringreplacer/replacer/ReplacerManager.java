@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -113,7 +114,8 @@ public class ReplacerManager {
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.nanoTime();
         HashMap<File, DotYamlConfiguration> loadedFiles = loadReplacesFiles(path);
-        Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §a预加载 " + loadedFiles.size() + " 个替换配置文件. §8耗时 " + (System.nanoTime() - startTime) / 1000000L + "ms");
+        ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Pre-Loaded-Replacers",
+                String.valueOf(loadedFiles.size()), String.valueOf((System.nanoTime() - startTime) / 1000000L)));
         if (loadedFiles.size() == 0) {
             return;
         }
@@ -125,9 +127,8 @@ public class ReplacerManager {
                 addReplacerConfig(replacerConfig);
             } catch (PatternSyntaxException exception) {
                 exception.printStackTrace();
-                Bukkit.getConsoleSender().sendMessage("§7[§cProtocol§6StringReplacer§7] §c无法载入配置文件 "
-                        + file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/')
-                        + " , 因为正则表达式有问题.");
+                ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Regex-Exception",
+                        file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/')));
             }
         }
 
@@ -147,6 +148,8 @@ public class ReplacerManager {
             }
             if (!needToRemove.isEmpty()) {
                 Bukkit.getScheduler().runTask(instrance, () -> {
+                    ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
+                            String.valueOf(needToRemove.size())));
                     for (ItemMeta itemMeta : needToRemove) {
                         replacedItemCache.remove(itemMeta);
                     }

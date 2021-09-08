@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands;
 
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.ArgUtils;
 import me.rothes.protocolstringreplacer.commands.subcommands.Capture;
@@ -38,7 +39,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof CommandBlock) {
-            sender.sendMessage("§7[§cProtocol§6String§3Replacer§7] §c仅控制台和玩家可使用PSR的指令.");
+            sender.sendMessage(PSRLocalization.getLocaledMessage("Command-Block-Sender.Messages.Command-Not-Available"));
         } else {
             User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
             if (args.length > 0) {
@@ -47,14 +48,14 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
                 if (mergedArgs[0].equalsIgnoreCase("confirm")) {
                     if (user.hasCommandToConfirm()) {
                         if (user.isConfirmExpired()) {
-                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c确认操作已超时. 请重新执行.");
+                            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Confirm.Expired"));
                             user.clearCommandToConfirm();
                             return true;
                         } else {
                             mergedArgs = user.getCommandToConfirm();
                         }
                     } else {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您没有待确认的操作.");
+                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Confirm.Nothing-To-Confirm"));
                         return true;
                     }
                 }
@@ -64,7 +65,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
                         if (user.hasPermission(subCommand.getPermission())) {
                             subCommand.onExecute(user, mergedArgs);
                         } else {
-                            user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您没有权限这么做.");
+                            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.No-Permission"));
                         }
                         return true;
                     }
@@ -107,7 +108,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
 
     public void sendHelp(@Nonnull User user) {
         user.sendFilteredText("§7§m------§7§l §7[ §c§lProtocol§6§lString§3§lReplacer§7 ]§l §7§m------");
-        user.sendFilteredText("§7 * §e/psr help §7- §b插件指令列表");
+        user.sendFilteredText("§7 * §e/psr help §7- §b" + PSRLocalization.getLocaledMessage("Sender.Commands.Help.Description"));
         for (SubCommand subCommand : subCommands) {
             user.sendFilteredText("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
         }

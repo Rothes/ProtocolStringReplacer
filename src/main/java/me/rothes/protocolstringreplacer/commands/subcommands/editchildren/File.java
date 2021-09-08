@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.user.User;
@@ -30,7 +31,8 @@ public class File extends SubCommand {
     private static Pattern fileNamePrefix = Pattern.compile("(\")?Replacers/");
 
     public File() {
-        super("file", "protocolstringreplacer.command.edit", "替换配置文件相关指令");
+        super("file", "protocolstringreplacer.command.edit",
+                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Description"));
     }
 
     @Override
@@ -65,17 +67,19 @@ public class File extends SubCommand {
                 if (StringUtils.isNumeric(args[3])) {
                     page = Integer.parseInt(args[3]);
                 } else {
-                    user.sendFilteredText("§c§lP§6§lS§3§lR §e> §f" + args[3] + " §c不是一个有效的正整数!");
+                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                            "Sender.Error.Not-A-Positive-Integer", args[3]));
                     return;
                 }
             }
 
             if (page > totalPage) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定小于总页码 §f" + totalPage + " §c的页码.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Error.Page-Exceed", String.valueOf(totalPage)));
                 return;
             }
             if (page < 1) {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请指定大于 §f0 §c的页码.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Page-Low"));
                 return;
             }
 
@@ -123,7 +127,7 @@ public class File extends SubCommand {
 
             user.sendFilteredText("§7§m-----------------------------------------------");
         } else {
-            user.sendFilteredText("§7 * §e/psr edit file list [页码] §7- §b查看所有加载的替换配置文件");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Detailed-Help"));
         }
 
     }
@@ -133,12 +137,14 @@ public class File extends SubCommand {
             ReplacerConfig replacerConfig = getSpecifiedReplacerConfig(args[3]);
             if (replacerConfig != null) {
                 user.setEditorReplacerConfig(replacerConfig);
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已选定替换配置: §f" + replacerConfig.getRelativePath());
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Edit.Children.File.Children.Select.Replacer-Config-Selected", replacerConfig.getRelativePath()));
             } else {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c找不到此替换配置文件: §f" + args[3]);
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Edit.Children.File.Children.Select.Cannot-Find-Replacer-Config", args[3]));
             }
         } else {
-            user.sendFilteredText("§7 * §e/psr file select <替换配置文件|索引> §7- §b选定编辑的替换配置");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Detailed-Help"));
         }
     }
 
@@ -158,18 +164,19 @@ public class File extends SubCommand {
                         ReplacerConfig replacerConfig = new ReplacerConfig(file, configuration);
                         replacerConfig.saveConfig();
                         ProtocolStringReplacer.getInstance().getReplacerManager().addReplacerConfig(replacerConfig);
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已成功创建替换配置文件: §f" + replacerConfig.getRelativePath());
+                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                                "Sender.Commands.Edit.Children.File.Children.Create.File-Successfully-Created", replacerConfig.getRelativePath()));
                     } catch (IOException exception) {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c非法的文件路径.");
+                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Invaild-File-Path"));
                     }
                 } else {
-                    user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c此文件名后缀不为 \".yml\".");
+                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Not-Yml-File"));
                 }
             } else {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c替换配置文件必须存储于 \"Replacers/\" 文件夹中.");
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Not-In-Replacers-Folder"));
             }
         } else {
-            user.sendFilteredText("§7 * §e/psr file create <文件名> §7- §b在磁盘中新建一个替换配置文件");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Detailed-Help"));
         }
     }
 
@@ -178,25 +185,23 @@ public class File extends SubCommand {
             ReplacerConfig replacerConfig = getSpecifiedReplacerConfig(args[3]);
             if (replacerConfig != null) {
                 if (user.isConfirmed(args)) {
-                    if (user.isConfirmExpired()) {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c确认操作已超时. 请重新执行.");
-                        user.clearCommandToConfirm();
-                    } else {
-                        //noinspection ResultOfMethodCallIgnored
-                        replacerConfig.getFile().delete();
-                        ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList().remove(replacerConfig);
-                        user.clearCommandToConfirm();
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §a已删除替换配置文件: §f" + replacerConfig.getRelativePath());
-                    }
+                    //noinspection ResultOfMethodCallIgnored
+                    replacerConfig.getFile().delete();
+                    ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList().remove(replacerConfig);
+                    user.clearCommandToConfirm();
+                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                            "Sender.Commands.Edit.Children.File.Children.Delete.File-Successfully-Deleted", replacerConfig.getRelativePath()));
                 } else {
                     user.setCommandToConfirm(args);
-                    user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c请在 15 秒内重新执行一次操作或输入 §e/psr confirm §c以确认删除 §f" + replacerConfig.getRelativePath());
+                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                            "Sender.Commands.Edit.Children.File.Children.Delete.Delete-Need-To-Confirm", replacerConfig.getRelativePath()));
                 }
             } else {
-                user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c找不到此替换配置文件: §f" + args[3]);
+                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Edit.Children.File.Children.Delete.Cannot-Find-Replacer-Config", args[3]));
             }
         } else {
-            user.sendFilteredText("§7 * §e/psr file delete <替换配置文件|索引> §7- §b在磁盘中删除一个替换配置文件");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Delete.Detailed-Help"));
         }
     }
 
@@ -207,9 +212,10 @@ public class File extends SubCommand {
             list = Arrays.asList("help", "list", "select", "create", "delete");
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("list")) {
-                list.add("[页码]");
+                list.add("[" + PSRLocalization.getLocaledMessage("Enum.Page.Name") + "]");
             } else if (args[2].equalsIgnoreCase("delete") || args[2].equalsIgnoreCase("select")) {
-                list.add("<替换配置文件|索引>");
+                list.add("<" + PSRLocalization.getLocaledMessage("Enum.Replacer-Config.Name") + "|"
+                        + PSRLocalization.getLocaledMessage("Enum.Index.Name") + ">");
                 for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
                     list.add(ArgUtils.formatWithQuotes(replacerConfig.getRelativePath()));
                 }
@@ -242,13 +248,14 @@ public class File extends SubCommand {
 
     @Override
     public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e文件编辑器§7 ]§l §7§m-----------");
-        user.sendFilteredText("§7 * §e/psr edit file help §7- §b文件编辑器指令列表");
-        user.sendFilteredText("§7 * §e/psr edit file list §7- §b查看所有替换配置文件");
-        user.sendFilteredText("§7 * §e/psr edit file select §7- §b选定一个替换配置文件");
-        user.sendFilteredText("§7 * §e/psr edit file create §7- §b新建一个替换配置文件");
-        user.sendFilteredText("§7 * §e/psr edit file delete §7- §b删除一个替换配置文件");
-        user.sendFilteredText("§7§m---------------------------------------------");
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Header"));
+        user.sendFilteredText("§7 * §e/psr edit file help §7- §b" +
+                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Help-Description"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Simple-Help"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Simple-Help"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Simple-Help"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Delete.Simple-Help"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Footer"));
     }
 
     @Nullable

@@ -2,23 +2,23 @@ package me.rothes.protocolstringreplacer.replacer;
 
 public enum ReplacesMode {
 
-    COMMON("Common", "常规"),
-    JSON("Json", "Json");
+    COMMON("Common", "Enum.Replacers-Mode.Common"),
+    JSON("Json", "Enum.Replacers-Mode.Json");
 
     private String node;
-    private String name;
+    private String localeKey;
 
-    ReplacesMode(String node, String name) {
+    ReplacesMode(String node, String localeKey) {
         this.node = node;
-        this.name = name;
+        this.localeKey = localeKey;
     }
 
     public String getNode() {
         return node;
     }
 
-    public String getName() {
-        return name;
+    public String getLocaleKey() {
+        return localeKey;
     }
 
 }

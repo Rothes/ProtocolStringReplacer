@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
+import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.File;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Replace;
 import me.rothes.protocolstringreplacer.user.User;
@@ -16,7 +17,8 @@ public class Edit extends SubCommand {
     private LinkedList<SubCommand> childCommands = new LinkedList<>();
 
     public Edit() {
-        super("edit", "protocolstringreplacer.command.edit", "替换配置编辑器");
+        super("edit", "protocolstringreplacer.command.edit",
+                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Description"));
 
         childCommands.add(new File());
         childCommands.add(new Replace());
@@ -31,7 +33,7 @@ public class Edit extends SubCommand {
                     if (user.hasPermission(childCommand.getPermission())) {
                         childCommand.onExecute(user, args);
                     } else {
-                        user.sendFilteredText("§c§lP§6§lS§3§lR §e> §c您没有权限这么做.");
+                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.No-Permission"));
                     }
                     return;
                 }
@@ -62,12 +64,13 @@ public class Edit extends SubCommand {
 
     @Override
     public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e编辑器§7 ]§l §7§m-----------");
-        user.sendFilteredText("§7 * §e/psr edit help §7- §b编辑器指令列表");
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Header"));
+        user.sendFilteredText("§7 * §e/psr edit help §7- §b" + PSRLocalization.getLocaledMessage(
+                "Sender.Commands.Edit.Help.Help-Description"));
         for (SubCommand childCommand : childCommands) {
             user.sendFilteredText("§7 * §e/psr edit " + childCommand.getName() + " §7- §b" + childCommand.getDescription());
         }
-        user.sendFilteredText("§7§m-----------------------------------------");
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Footer"));
     }
 
 }
