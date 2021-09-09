@@ -5,6 +5,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
+import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -132,18 +133,7 @@ public class Capture extends SubCommand {
                     user.sendFilteredMessage(captureMessages.get(i));
                 }
 
-                ComponentBuilder pageComponent = new ComponentBuilder();
-                if (page > 1) {
-                    pageComponent.append(" ◀ ").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr capture list " + args[2] + " " + (page - 1))).color(ChatColor.YELLOW);
-                } else {
-                    pageComponent.append("   ");
-                }
-                pageComponent.append("第").reset().color(ChatColor.DARK_AQUA).append(" " + page + " ").color(ChatColor.WHITE).append("页").color(ChatColor.DARK_AQUA).append(" | ").color(ChatColor.GRAY).append("共").
-                        color(ChatColor.DARK_AQUA).append(" " + totalPage + " ").color(ChatColor.WHITE).append("页").color(ChatColor.DARK_AQUA);
-                if (page < totalPage) {
-                    pageComponent.append(" ▶ ").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr capture list " + args[2] + " " + (page + 1))).color(ChatColor.YELLOW);
-                }
-                user.sendFilteredMessage(pageComponent.create());
+                MessageUtils.sendPageButtons(user, "/psr capture list " + args[2] + " ", page, totalPage);
                 user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Footer"));
             });
         } else {

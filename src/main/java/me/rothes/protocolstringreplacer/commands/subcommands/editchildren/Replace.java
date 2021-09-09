@@ -7,6 +7,7 @@ import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -117,18 +118,7 @@ public class Replace extends SubCommand {
                         append(" §7§o==> ").reset().event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).append(ChatColors.showColorCodes(replacement)).color(ChatColor.BLUE).create());
             }
 
-            ComponentBuilder pageComponent = new ComponentBuilder("");
-            if (page > 1) {
-                pageComponent.append(" ◀ ").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit replace list " + replacesMode.getNode() + " " + (page - 1))).color(ChatColor.YELLOW);
-            } else {
-                pageComponent.append("   ");
-            }
-            pageComponent.append("第").reset().color(ChatColor.DARK_AQUA).append(" " + page + " ").color(ChatColor.WHITE).append("页").color(ChatColor.DARK_AQUA).append(" | ").color(ChatColor.GRAY).append("共").
-                    color(ChatColor.DARK_AQUA).append(" " + totalPage + " ").color(ChatColor.WHITE).append("页").color(ChatColor.DARK_AQUA);
-            if (page < totalPage) {
-                pageComponent.append(" ▶ ").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit replace list " + replacesMode.getNode() + " " + (page + 1))).color(ChatColor.YELLOW);
-            }
-            user.sendFilteredMessage(pageComponent.create());
+            MessageUtils.sendPageButtons(user, "/psr edit replace list " + replacesMode.getNode() + " ", page, totalPage);
 
             user.sendFilteredText("§7§m-----------------------------------------------");
         } else {
