@@ -111,31 +111,31 @@ Sender:
               File-Successfully-Deleted: '§a已删除替换配置文件: §f%0%'
               Delete-Need-To-Confirm: '§c请在 15 秒内重新执行一次操作或输入 §e/psr confirm §c以确认删除 §f%0%'
               Cannot-Find-Replacer-Config: '§c找不到此替换配置文件: §f%0%'
-       Replace:
-        Description: '替换项目相关指令'
-        Not-Selected-Replacer-Config: '§c请先选定一个替换配置文件, 再使用本指令.'
-        Help:
-          Header: '§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换项编辑器§7 ]§l §7§m-----------'
-          Footer: '§7§m-----------------------------------------------'
-          Help-Description: '替换项编辑器指令列表'
-        Children:
-          List:
-            Simple-Help: '§7 * §e/psr edit replace list §7- §b查看所有替换项'
-            Detailed-Help: '§7 * §e/psr edit replace list <替换模式> [页码] §7- §b查看所有替换项'
-          Set:
-            Simple-Help: '§7 * §e/psr edit replace set §7- §b编辑指定索引的替换项'
-            Detailed-Help: '§7 * §e/psr edit replace set <替换模式> <索引> [原文本] <新文本> §7- §b编辑指定索引的替换项'
-            Successfully-Set-Replace: '§a已修改索引 §f%0% §a为 §f%1% §7§o> §f%2%'
-            Same-Original-Text: '§c在索引 §f%0% §c处已有一个相同的原文本了.'
-          Add:
-            Simple-Help: '§7 * §e/psr edit replace add §7- §b在索引添加一个替换项'
-            Detailed-Help: '§7 * §e/psr edit replace add <替换模式> [索引] <原文本> <新文本> §7- §b在索引添加一个替换项'
-            Successfully-Added-Replace: '§a已在索引 §f%0% §a添加替换项: §f%1% §7§o> §f%2%'
-            Same-Original-Text: '§c在索引 §f%0% §c处已有一个相同的原文本了.'
-          Remove:
-            Simple-Help: '§7 * §e/psr edit replace remove §7- §b删除在索引的替换项'
-            Detailed-Help: '§7 * §e/psr edit replace remove <替换模式> <索引> §7- §b删除在索引的替换项'
-            Sucessfully-Removed-Replace: '§a已删除索引 §f%0% §a的替换项.'
+        Replace:
+          Description: '替换项目相关指令'
+          Not-Selected-Replacer-Config: '§c请先选定一个替换配置文件, 再使用本指令.'
+          Help:
+            Header: '§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换项编辑器§7 ]§l §7§m-----------'
+            Footer: '§7§m-----------------------------------------------'
+            Help-Description: '替换项编辑器指令列表'
+          Children:
+            List:
+              Simple-Help: '§7 * §e/psr edit replace list §7- §b查看所有替换项'
+              Detailed-Help: '§7 * §e/psr edit replace list <替换模式> [页码] §7- §b查看所有替换项'
+            Set:
+              Simple-Help: '§7 * §e/psr edit replace set §7- §b编辑指定索引的替换项'
+              Detailed-Help: '§7 * §e/psr edit replace set <替换模式> <索引> [原文本] <新文本> §7- §b编辑指定索引的替换项'
+              Successfully-Set-Replace: '§a已修改索引 §f%0% §a为 §f%1% §7§o> §f%2%'
+              Same-Original-Text: '§c在索引 §f%0% §c处已有一个相同的原文本了.'
+            Add:
+              Simple-Help: '§7 * §e/psr edit replace add §7- §b在索引添加一个替换项'
+              Detailed-Help: '§7 * §e/psr edit replace add <替换模式> [索引] <原文本> <新文本> §7- §b在索引添加一个替换项'
+              Successfully-Added-Replace: '§a已在索引 §f%0% §a添加替换项: §f%1% §7§o> §f%2%'
+              Same-Original-Text: '§c在索引 §f%0% §c处已有一个相同的原文本了.'
+            Remove:
+              Simple-Help: '§7 * §e/psr edit replace remove §7- §b删除在索引的替换项'
+              Detailed-Help: '§7 * §e/psr edit replace remove <替换模式> <索引> §7- §b删除在索引的替换项'
+              Sucessfully-Removed-Replace: '§a已删除索引 §f%0% §a的替换项.'
     Parse:
       Todo: ''
       # Todo
@@ -147,6 +147,10 @@ Sender:
         Header: '§7§m------§7§l §7[ §c§lP§6§lS§3§lR §7- §e重载§7 ]§l §7§m------'
         Footer: '§7§m-----------------------------------------'
         Help-Description: '重载指令列表'
+
+Utils:
+  Message:
+    Page-Info: '§3第 §f%0% §3页 §7| §3共 §f%1% §3页'
 
 Enum:
   Match-Type:
