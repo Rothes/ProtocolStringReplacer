@@ -6,7 +6,7 @@ import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.user.User;
-import me.rothes.protocolstringreplacer.api.ChatColors;
+import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -66,7 +66,7 @@ public class Parse extends SubCommand {
             ReplacesMode finalReplacesMode = replacesMode;
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
                 long startTime = System.nanoTime();
-                String original = ChatColors.getColored(args[1]);
+                String original = ColorUtils.getColored(args[1]);
                 String text = original;
                 LinkedList<HoverEvent> results = new LinkedList<>();
                 for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
@@ -84,9 +84,9 @@ public class Parse extends SubCommand {
                                                 "§7 --- §6第 §l" + (results.size() + 1) + "§6 次替换§7 --- \n" +
                                                         "§3§l替换配置文件: §b" + replacerConfig.getRelativePath() + "\n" +
                                                         "§3§l匹配方式: §b包含匹配\n" +
-                                                        "§3§l项原始文本: §b" + ChatColors.showColorCodes(key) + "\n" +
-                                                        "§3§l项替换文本: §b" + ChatColors.showColorCodes(value) + "\n" +
-                                                        "§3§l替换结果: §b" + ChatColors.showColorCodes(text))));
+                                                        "§3§l项原始文本: §b" + ColorUtils.showColorCodes(key) + "\n" +
+                                                        "§3§l项替换文本: §b" + ColorUtils.showColorCodes(value) + "\n" +
+                                                        "§3§l替换结果: §b" + ColorUtils.showColorCodes(text))));
                                     }
                                 }
                                 break;
@@ -101,9 +101,9 @@ public class Parse extends SubCommand {
                                                 "§7 --- §6第 §l" + (results.size() + 1) + "§6 次替换§7 --- \n" +
                                                         "§3§l替换配置文件: §b" + replacerConfig.getRelativePath() + "\n" +
                                                         "§3§l匹配方式: §b完全匹配\n" +
-                                                        "§3§l项原始文本: §b" + ChatColors.showColorCodes(key) + "\n" +
-                                                        "§3§l项替换文本: §b" + ChatColors.showColorCodes(value) + "\n" +
-                                                        "§3§l替换结果: §b" + ChatColors.showColorCodes(text))));
+                                                        "§3§l项原始文本: §b" + ColorUtils.showColorCodes(key) + "\n" +
+                                                        "§3§l项替换文本: §b" + ColorUtils.showColorCodes(value) + "\n" +
+                                                        "§3§l替换结果: §b" + ColorUtils.showColorCodes(text))));
                                     }
                                 }
                                 break;
@@ -119,9 +119,9 @@ public class Parse extends SubCommand {
                                                 "§7 --- §6第 §l" + (results.size() + 1) + "§6 次替换§7 --- \n" +
                                                         "§3§l替换配置文件: §b" + replacerConfig.getRelativePath() + "\n" +
                                                         "§3§l匹配方式: §b正则表达式\n" +
-                                                        "§3§l项原始文本: §b" + ChatColors.showColorCodes(key.toString()) + "\n" +
-                                                        "§3§l项替换文本: §b" + ChatColors.showColorCodes(value) + "\n" +
-                                                        "§3§l替换结果: §b" + ChatColors.showColorCodes(text))));
+                                                        "§3§l项原始文本: §b" + ColorUtils.showColorCodes(key.toString()) + "\n" +
+                                                        "§3§l项替换文本: §b" + ColorUtils.showColorCodes(value) + "\n" +
+                                                        "§3§l替换结果: §b" + ColorUtils.showColorCodes(text))));
                                     }
                                 }
                                 break;
@@ -138,8 +138,8 @@ public class Parse extends SubCommand {
                     placeholderMessage.append("§a占位符已替换 §7§o悬停查看详细内容").event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(
                             "§7 ---§6§l 占位符替换信息 §7--- \n" +
                             "§3§l占位符目标: §b" + (placeholderTarget.getPlayer() == null? "§7§onull" : placeholderTarget.getPlayer().getName()) + "\n" +
-                                    "§3§l解析前: §b" + ChatColors.showColorCodes(original1) + "\n" +
-                                    "§3§l解析后: §b" + ChatColors.showColorCodes(text))));
+                                    "§3§l解析前: §b" + ColorUtils.showColorCodes(original1) + "\n" +
+                                    "§3§l解析后: §b" + ColorUtils.showColorCodes(text))));
                 } else {
                     placeholderMessage.append("§c未发现占位符");
                 }
@@ -150,8 +150,8 @@ public class Parse extends SubCommand {
                 user.sendFilteredText(" §7* §3§l监听类型: §b" + listenType.getName());
                 user.sendFilteredText(" §7* §3§l替换模式: §b" + PSRLocalization.getLocaledMessage(
                         finalReplacesMode.getLocaleKey()));
-                user.sendFilteredText(" §7* §3§l原始文本: §b" + ChatColors.showColorCodes(original));
-                user.sendFilteredText(" §7* §3§l最终文本: §b" + ChatColors.showColorCodes(text));
+                user.sendFilteredText(" §7* §3§l原始文本: §b" + ColorUtils.showColorCodes(original));
+                user.sendFilteredText(" §7* §3§l最终文本: §b" + ColorUtils.showColorCodes(text));
                 ComponentBuilder componentBuilder = new ComponentBuilder(" §7* §3§l详细步骤:");
                 if (results.isEmpty()) {
                     componentBuilder.append(" §c未进行任何替换");

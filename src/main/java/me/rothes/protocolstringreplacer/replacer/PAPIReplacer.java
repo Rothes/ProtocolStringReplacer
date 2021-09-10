@@ -3,7 +3,7 @@
 package me.rothes.protocolstringreplacer.replacer;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.api.ChatColors;
+import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.replacer.Replacer;
 import org.bukkit.ChatColor;
@@ -159,7 +159,7 @@ public final class PAPIReplacer implements Replacer {
                 continue;
             }
 
-            builder.append(ChatColors.getColored(replacement));
+            builder.append(ColorUtils.getColored(replacement));
         }
 
         return builder.toString();

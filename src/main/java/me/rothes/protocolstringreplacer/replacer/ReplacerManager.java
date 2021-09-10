@@ -1,7 +1,7 @@
 package me.rothes.protocolstringreplacer.replacer;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
-import me.rothes.protocolstringreplacer.api.ChatColors;
+import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.helpers.ItemHelper;
@@ -205,7 +205,7 @@ public class ReplacerManager {
         Validate.notNull(filter, "Filter cannot be null");
         if (baseComponent instanceof TextComponent) {
             TextComponent textComponent = (TextComponent) baseComponent;
-            String color = ChatColors.getTextColor(textComponent);
+            String color = ColorUtils.getTextColor(textComponent);
             String replaced = getReplacedString(color + textComponent.getText(), user, filter, setPlaceholders);
             int length = color.length();
             if (replaced.substring(0, length).equals(color)) {

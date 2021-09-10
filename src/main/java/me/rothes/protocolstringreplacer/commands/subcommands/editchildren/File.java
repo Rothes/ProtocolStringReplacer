@@ -4,7 +4,7 @@ import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.user.User;
-import me.rothes.protocolstringreplacer.api.ArgUtils;
+import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;

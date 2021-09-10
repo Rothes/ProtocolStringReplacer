@@ -2,7 +2,7 @@ package me.rothes.protocolstringreplacer.commands;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.api.ArgUtils;
+import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.commands.subcommands.Capture;
 import me.rothes.protocolstringreplacer.commands.subcommands.Edit;
 import me.rothes.protocolstringreplacer.commands.subcommands.Parse;

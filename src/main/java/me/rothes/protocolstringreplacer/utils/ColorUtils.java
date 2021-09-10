@@ -1,4 +1,4 @@
-package me.rothes.protocolstringreplacer.api;
+package me.rothes.protocolstringreplacer.utils;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatColors {
+public class ColorUtils {
 
     private static String RGBRegex = "&#([0-9a-fA-F]{6})";
     private static Pattern pattern = Pattern.compile(RGBRegex);

@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer;
 
-import me.rothes.protocolstringreplacer.api.ChatColors;
+import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.exceptions.MissingInitialResourceException;
 import org.apache.commons.lang.Validate;
@@ -98,7 +98,7 @@ public class PSRLocalization {
             if (commentKeyPattern.matcher(key).find()) {
                 continue;
             }
-            localedMessages.put(key, ChatColors.getColored(locale.getString(key)));
+            localedMessages.put(key, ColorUtils.getColored(locale.getString(key)));
         }
     }
 

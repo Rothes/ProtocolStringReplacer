@@ -1,8 +1,8 @@
 package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
-import me.rothes.protocolstringreplacer.api.ArgUtils;
-import me.rothes.protocolstringreplacer.api.ChatColors;
+import me.rothes.protocolstringreplacer.utils.ArgUtils;
+import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
@@ -111,11 +111,11 @@ public class Replace extends SubCommand {
 
                 user.sendFilteredMessage(new ComponentBuilder("§6[+] ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace add " + replacesMode.getNode() + " " + i + " <原文本> <新文本>")).
                         event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
-                        append("§6[编辑]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace set " + replacesMode.getNode() + " " + i + " " + ArgUtils.formatWithQuotes(ChatColors.restoreColored(original)) + " " + ArgUtils.formatWithQuotes(ChatColors.restoreColored(replacement)))).append(" " + i + ". ").
+                        append("§6[编辑]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace set " + replacesMode.getNode() + " " + i + " " + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(original)) + " " + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(replacement)))).append(" " + i + ". ").
                         reset().event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
-                        append(ChatColors.showColorCodes(original)).color(ChatColor.AQUA).create());
+                        append(ColorUtils.showColorCodes(original)).color(ChatColor.AQUA).create());
                 user.sendFilteredMessage(new ComponentBuilder("§c[删除]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace remove " + replacesMode.getNode() + " " + i)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
-                        append(" §7§o==> ").reset().event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).append(ChatColors.showColorCodes(replacement)).color(ChatColor.BLUE).create());
+                        append(" §7§o==> ").reset().event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).append(ColorUtils.showColorCodes(replacement)).color(ChatColor.BLUE).create());
             }
 
             MessageUtils.sendPageButtons(user, "/psr edit replace list " + replacesMode.getNode() + " ", page, totalPage);
@@ -154,7 +154,7 @@ public class Replace extends SubCommand {
                     return;
                 }
 
-                String replacement = ChatColors.getColored(args[5]);
+                String replacement = ColorUtils.getColored(args[5]);
                 editorReplacerConfig.setReplace(index, replacement, replacesMode);
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Replace.Children.Set.Index-Set",
@@ -168,10 +168,10 @@ public class Replace extends SubCommand {
                                     String.valueOf(editorReplacerConfig.getReplaces(replacesMode).size())));
                     return;
                 }
-                String original = ChatColors.getColored(args[5]);
+                String original = ColorUtils.getColored(args[5]);
                 int i = editorReplacerConfig.checkReplaceKey(original, replacesMode);
                 if (i == -1 || i == index) {
-                    String replacement = ChatColors.getColored(args[6]);
+                    String replacement = ColorUtils.getColored(args[6]);
                     editorReplacerConfig.setReplace(index, original, replacement, replacesMode);
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Edit.Children.Replace.Children.Set.Successfully-Set-Replace",
@@ -197,11 +197,11 @@ public class Replace extends SubCommand {
                 return;
             }
             if (args.length == 6) {
-                String original = ChatColors.getColored(args[4]);
+                String original = ColorUtils.getColored(args[4]);
                 ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 int i = editorReplacerConfig.checkReplaceKey(original, replacesMode);
                 if (i == -1) {
-                    String replacement = ChatColors.getColored(args[5]);
+                    String replacement = ColorUtils.getColored(args[5]);
                     editorReplacerConfig.addReplace(original, replacement, replacesMode);
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Edit.Children.Replace.Children.Add.Successfully-Added-Replace",
@@ -223,11 +223,11 @@ public class Replace extends SubCommand {
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                     return;
                 }
-                String original = ChatColors.getColored(args[5]);
+                String original = ColorUtils.getColored(args[5]);
                 ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 int i = editorReplacerConfig.checkReplaceKey(original, replacesMode);
                 if (i == -1) {
-                    String replacement = ChatColors.getColored(args[6]);
+                    String replacement = ColorUtils.getColored(args[6]);
                     user.getEditorReplacerConfig().addReplace(index, original, replacement, replacesMode);
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Edit.Children.Replace.Children.Add.Successfully-Added-Replace",
