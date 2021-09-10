@@ -1,19 +1,14 @@
 package me.rothes.protocolstringreplacer.replacer;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.api.ChatColors;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.replacer.helpers.ItemHelper;
 import me.rothes.protocolstringreplacer.user.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.ItemTag;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.api.chat.hover.content.Content;
@@ -21,7 +16,6 @@ import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.chat.ComponentSerializer;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -237,6 +231,10 @@ public class ReplacerManager {
     }
 
     public void replaceHoverEvent(@Nonnull HoverEvent hoverEvent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        replaceHoverEvent(hoverEvent, user, filter, true);
+    }
+
+    public void replaceHoverEvent(@Nonnull HoverEvent hoverEvent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
         Validate.notNull(hoverEvent, "HoverEvent cannot be null");
         Validate.notNull(user, "user cannot be null");
         Validate.notNull(filter, "Filter cannot be null");
@@ -249,60 +247,41 @@ public class ReplacerManager {
                     Object object = ((Text) content).getValue();
                     Text result;
                     if (object instanceof BaseComponent[]) {
-                        result = new Text(getReplacedComponents((BaseComponent[]) object, user, filter));
+                        result = new Text(getReplacedComponents((BaseComponent[]) object, user, filter, setPlaceholders));
                     } else {
-                        result = new Text(getReplacedString((String) object, user, filter));
+                        result = new Text(getReplacedString((String) object, user, filter, setPlaceholders));
                     }
                     contents.set(i, result);
                 } else if (content instanceof Item) {
                     boolean edited = false;
                     Item itemContent = (Item) content;
-                    ItemTag tag = itemContent.getTag();
-                    if (tag != null) {
-                        String nbt = tag.getNbt();
-                        JsonElement element = new JsonParser().parse(nbt);
-                        JsonObject root = element.getAsJsonObject();
-                        JsonObject display = root.getAsJsonObject("display");
-
-                        if (display == null) {
-                            return;
+                    ItemHelper helper = ItemHelper.parse(itemContent);
+                    if (helper.hasName()) {
+                        helper.setName(getReplacedComponents(ComponentSerializer.parse(
+                                getReplacedJson(ComponentSerializer.toString(helper.getName()), user, filter, false))
+                                , user, filter, setPlaceholders));
+                        edited = true;
+                    }
+                    if (helper.hasLore()) {
+                        int size = helper.getLoreSize();
+                        for (int line = 0; line < size; line++) {
+                            helper.setLore(line, getReplacedComponents(ComponentSerializer.parse(
+                                            getReplacedJson(ComponentSerializer.toString(helper.getLore(line)), user, filter, false))
+                                    , user, filter, setPlaceholders));
                         }
-
-                        String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
-                        diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
-                        if (diaplayNameJson != null) {
-                            BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson)), user, filter);
-                            String result = ComponentSerializer.toString(parse);
-                            display.add("Name", new JsonParser().parse("'" + result + "'"));
-                            edited = true;
-                        }
-
-                        JsonArray lore = display.getAsJsonArray("Lore");
-                        if (lore != null) {
-                            for (int i1 = 0; i1 < lore.size(); i1++) {
-                                String loreJson = lore.get(i1).getAsJsonPrimitive().toString();
-                                loreJson = loreJson.substring(1, loreJson.length() - 1);
-                                BaseComponent[] parse = getReplacedComponents(ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)), user, filter);
-                                String result = ComponentSerializer.toString(parse);
-                                lore.set(i1, new JsonParser().parse("'" + result + "'"));
-                            }
-                            display.add("Lore", lore);
-                            edited = true;
-                        }
-
-                        if (edited) {
-                            checkJson(root);
-                            contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
-                        }
+                        edited = true;
+                    }
+                    if (edited) {
+                        contents.set(i, helper.getItem());
                     }
                 } else if (content instanceof Entity) {
                     Entity entityContent = (Entity) content;
-                    entityContent.setName(getReplacedComponent(entityContent.getName(), user, filter));
+                    entityContent.setName(getReplacedComponent(entityContent.getName(), user, filter, setPlaceholders));
                     contents.set(i, entityContent);
                 }
             }
         } else {
-            getReplacedComponents(hoverEvent.getValue(), user, filter);
+            getReplacedComponents(hoverEvent.getValue(), user, filter, setPlaceholders);
         }
     }
 
@@ -654,43 +633,20 @@ public class ReplacerManager {
                 } else if (content instanceof Item) {
                     boolean edited = false;
                     Item itemContent = (Item) content;
-                    ItemTag tag = itemContent.getTag();
-                    if (tag != null) {
-                        String nbt = tag.getNbt();
-                        JsonElement element = new JsonParser().parse(nbt);
-                        JsonObject root = element.getAsJsonObject();
-                        JsonObject display = root.getAsJsonObject("display");
-
-                        if (display == null) {
-                            return;
+                    ItemHelper helper = ItemHelper.parse(itemContent);
+                    if (helper.hasName()) {
+                        helper.setName(updatePlaceholders(user, helper.getName()));
+                        edited = true;
+                    }
+                    if (helper.hasLore()) {
+                        int size = helper.getLoreSize();
+                        for (int line = 0; line < size; line++) {
+                            helper.setLore(line, updatePlaceholders(user, helper.getLore(line)));
                         }
-
-                        String diaplayNameJson = display.getAsJsonPrimitive("Name").toString();
-                        diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
-                        if (diaplayNameJson != null) {
-                            BaseComponent[] parse = updatePlaceholders(user, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson)));
-                            String result = ComponentSerializer.toString(parse);
-                            display.add("Name", new JsonParser().parse("'" + result + "'"));
-                            edited = true;
-                        }
-
-                        JsonArray lore = display.getAsJsonArray("Lore");
-                        if (lore != null) {
-                            for (int i1 = 0; i1 < lore.size(); i1++) {
-                                String loreJson = lore.get(i1).getAsJsonPrimitive().toString();
-                                loreJson = loreJson.substring(1, loreJson.length() - 1);
-                                BaseComponent[] parse = updatePlaceholders(user, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)));
-                                String result = ComponentSerializer.toString(parse);
-                                lore.set(i1, new JsonParser().parse("'" + result + "'"));
-                            }
-                            display.add("Lore", lore);
-                            edited = true;
-                        }
-
-                        if (edited) {
-                            checkJson(root);
-                            contents.set(i, new Item(itemContent.getId(), itemContent.getCount(), ItemTag.ofNbt(element.toString())));
-                        }
+                        edited = true;
+                    }
+                    if (edited) {
+                        contents.set(i, helper.getItem());
                     }
                 } else if (content instanceof Entity) {
                     Entity entityContent = (Entity) content;
@@ -717,19 +673,6 @@ public class ReplacerManager {
             }
         } else {
             updatePlaceholders(user, hoverEvent.getValue());
-        }
-    }
-
-    private void checkJson(@NotNull JsonObject root) {
-        JsonObject skullOwner = root.getAsJsonObject("SkullOwner");
-        if (skullOwner != null) {
-            JsonArray id = skullOwner.getAsJsonArray("Id");
-            if (id != null && id.size() == 5) {
-                id.set(0, new JsonPrimitive(Integer.valueOf(id.get(1).getAsJsonPrimitive().toString())));
-                id.set(1, id.get(2));
-                id.set(2, id.get(3));
-                id.remove(3);
-            }
         }
     }
 
