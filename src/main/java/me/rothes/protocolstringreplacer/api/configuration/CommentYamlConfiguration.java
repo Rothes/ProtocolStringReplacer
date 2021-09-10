@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,17 +95,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             }
             // Convenient to edit comments in the configurations.
             if (isKey) {
-                startedSpace = getStartedSpace(line);
-                for (Comment comment : commentsToAdd) {
-                    stringBuilder.append(startedSpace).append(commentIndex++).append("㩵遌㚳这是注释");
-                    if (comment.plainComment) {
-                        stringBuilder.append("是");
-                    } else {
-                        stringBuilder.append("否");
-                    }
-                    stringBuilder.append(": '").append(comment.passedLines).append("| ").append(comment.commentString).append("'\n");
-                }
-                commentsToAdd.clear();
+                commentIndex = addComments(getStartedSpace(line), commentsToAdd, stringBuilder, commentIndex);
             }
             if (foundComment) {
                 commentsToAdd.add(0, new Comment(getEndedSpace(line.substring(0, cursor)) + line.substring(cursor).replace("'", "''"),
@@ -118,15 +109,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
 
         }
         if (!commentsToAdd.isEmpty()) {
-            for (Comment comment : commentsToAdd) {
-                stringBuilder.append(commentIndex++).append("㩵遌㚳这是注释");
-                if (comment.plainComment) {
-                    stringBuilder.append("是");
-                } else {
-                    stringBuilder.append("否");
-                }
-                stringBuilder.append(": '").append(comment.passedLines).append("| ").append(comment.commentString).append("'\n");
-            }
+            commentIndex = addComments("", commentsToAdd, stringBuilder, commentIndex);
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
         super.loadFromString(stringBuilder.toString());
@@ -207,7 +190,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         return "";
     }
 
-    protected static String getEndedSpace(@Nonnull String string) {
+    protected static String getEndedSpace(@NotNull String string) {
         Validate.notNull(string, "String cannot be null");
 
         Matcher matcher = endedSpacePattern.matcher(string);
@@ -215,6 +198,22 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             return matcher.group(1);
         }
         return "";
+    }
+
+    protected static short addComments(@NotNull String space,@NotNull List<Comment> commentsToAdd,
+                                      @NotNull StringBuilder stringBuilder, short commentIndex) {
+        short resultIndex = commentIndex;
+        for (Comment comment : commentsToAdd) {
+            stringBuilder.append(space).append(resultIndex++).append("㩵遌㚳这是注释");
+            if (comment.plainComment) {
+                stringBuilder.append("是");
+            } else {
+                stringBuilder.append("否");
+            }
+            stringBuilder.append(": '").append(comment.passedLines).append("| ").append(comment.commentString).append("'\n");
+        }
+        commentsToAdd.clear();
+        return resultIndex;
     }
 
 }
