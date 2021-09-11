@@ -9,7 +9,8 @@ public enum ListenType {
     BOSS_BAR("Boss-Bar", true),
     ITEMSTACK("ItemStack", false),
     WINDOW_TITLE("Window-Title", true),
-    SCOREBOARD("ScoreBoard", false);
+    SCOREBOARD("ScoreBoard", false),
+    CONSOLE("Console", false);
 
     private String name;
     private boolean capturable;

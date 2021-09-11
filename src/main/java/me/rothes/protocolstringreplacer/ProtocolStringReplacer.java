@@ -1,6 +1,8 @@
 package me.rothes.protocolstringreplacer;
 
 import com.sk89q.protocolstringreplacer.PSRDisguisePlugin;
+import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
+import me.rothes.protocolstringreplacer.console.PSRMessage;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
 import me.rothes.protocolstringreplacer.user.User;
@@ -39,6 +41,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private File configFile;
     private ReplacerManager replacerManager;
     private PacketListenerManager packetListenerManager;
+    private ConsoleReplaceManager consoleReplaceManager;
     private UserManager userManager;
     private ConfigManager configManager;
     private byte serverMajorVersion;
@@ -148,6 +151,9 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (consoleReplaceManager != null) {
+            consoleReplaceManager.disable();
+        }
         if (packetListenerManager != null) {
             packetListenerManager.removeListeners();
         }
@@ -193,11 +199,16 @@ public class ProtocolStringReplacer extends JavaPlugin {
         replacerManager = new ReplacerManager();
         CommandHandler commandHandler = new CommandHandler();
         userManager = new UserManager();
+        if (serverMajorVersion >= 12) {
+            PSRMessage.initialize(this);
+        }
+        consoleReplaceManager = new ConsoleReplaceManager(this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();
-        replacerManager.initialize();
+        consoleReplaceManager.initialize();
         commandHandler.initialize();
+        replacerManager.initialize();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();
