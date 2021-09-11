@@ -47,10 +47,9 @@ public class ItemHelper {
         JsonElement element = new JsonParser().parse(item.getTag().getNbt());
         helper.jsonElement = element;
         JsonObject root = element.getAsJsonObject();
-        JsonObject display = root.getAsJsonObject("display");
-        if (display != null) {
-            helper.jsonDisplay = display;
-            JsonPrimitive name = display.getAsJsonPrimitive("Name");
+        helper.jsonDisplay = root.getAsJsonObject("display");
+        if (helper.jsonDisplay != null) {
+            JsonPrimitive name = helper.jsonDisplay.getAsJsonPrimitive("Name");
             helper.hasName = name != null;
             if (helper.hasName) {
                 String diaplayNameJson = name.toString();
@@ -58,15 +57,14 @@ public class ItemHelper {
                 helper.name = ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson));
             }
 
-            JsonArray lore = display.getAsJsonArray("Lore");
-            helper.hasLore = lore != null;
+            helper.jsonLore = helper.jsonDisplay.getAsJsonArray("Lore");
+            helper.hasLore = helper.jsonLore != null;
             if (helper.hasLore) {
-                helper.jsonLore = lore;
-                helper.lore = new ArrayList<>(lore.size());
-                for (int i1 = 0; i1 < lore.size(); i1++) {
-                    String loreJson = lore.get(i1).getAsJsonPrimitive().toString();
+                helper.lore = new ArrayList<>(helper.jsonLore.size());
+                for (int i1 = 0; i1 < helper.jsonLore.size(); i1++) {
+                    String loreJson = helper.jsonLore.get(i1).getAsJsonPrimitive().toString();
                     loreJson = loreJson.substring(1, loreJson.length() - 1);
-                    helper.lore.set(i1, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)));
+                    helper.lore.add(i1, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)));
                 }
             }
         }
@@ -84,8 +82,12 @@ public class ItemHelper {
 
     public void setName(BaseComponent[] name) {
         this.name = name;
-        String result = ComponentSerializer.toString(name);
-        this.jsonDisplay.add("Name", new JsonParser().parse("'" + result + "'"));
+        if (name != null) {
+            String result = ComponentSerializer.toString(name);
+            this.jsonDisplay.add("Name", new JsonParser().parse("'" + result + "'"));
+        } else {
+            this.jsonDisplay.remove("Name");
+        }
     }
 
     public boolean hasLore() {
