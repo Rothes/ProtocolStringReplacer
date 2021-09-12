@@ -84,9 +84,11 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
             player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 80.0F, 1.0F);
         }
 
+        String[] mergedArgs = ArgUtils.mergeQuotes(args);
+
         List<String> list = new ArrayList<>();
         User user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
-        if (args.length == 1) {
+        if (mergedArgs.length == 1) {
             list.add("help");
             if (user.hasCommandToConfirm() && !user.isConfirmExpired()) {
                 list.add("confirm");
@@ -98,8 +100,8 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
             }
         } else {
             for (SubCommand subCommand : subCommands) {
-                if (subCommand.getName().equalsIgnoreCase(args[0])) {
-                    list = subCommand.onTab(user, args);
+                if (subCommand.getName().equalsIgnoreCase(mergedArgs[0])) {
+                    list = subCommand.onTab(user, mergedArgs);
                 }
             }
         }
