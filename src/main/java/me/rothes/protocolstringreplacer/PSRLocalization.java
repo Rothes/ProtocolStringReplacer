@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,7 @@ public class PSRLocalization {
     private static String systemLocale = null;
     private static String locale = null;
     private static HashMap<String, String> localedMessages = null;
+    private static String[] replaceHolders = new String[10];
 
     public static void initialize(@Nonnull ProtocolStringReplacer plugin) {
         PSRLocalization.plugin = plugin;
@@ -34,6 +36,11 @@ public class PSRLocalization {
 
         localedMessages = new HashMap<>();
         loadLocale();
+
+        for (byte i = 0; i < 10; i ++) {
+            replaceHolders[i] = "%" + i + '%';
+        }
+
     }
 
     @NotNull
@@ -43,12 +50,7 @@ public class PSRLocalization {
 
         String result = localedMessages.getOrDefault(key, "§cMissing localization key: " + key);
         byte length = (byte) replacements.length;
-        if (length > 0) {
-            for (byte i = 0; i < length; i++) {
-                result = StringUtils.replace(result, "%" + i + '%', replacements[i]);
-            }
-        }
-        return result;
+        return length > 0 ? StringUtils.replaceEach(result, Arrays.copyOf(replaceHolders, length), replacements) : result;
     }
 
     @NotNull
