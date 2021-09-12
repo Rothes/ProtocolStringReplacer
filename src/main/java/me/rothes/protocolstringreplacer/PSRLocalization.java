@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class PSRLocalization {
@@ -28,9 +29,9 @@ public class PSRLocalization {
     public static void initialize(@Nonnull ProtocolStringReplacer plugin) {
         PSRLocalization.plugin = plugin;
 
-        systemLocale = System.getProperty("user.language", "en");
+        systemLocale = System.getProperty("user.language", Locale.getDefault().getLanguage());
         systemLocale += '-';
-        systemLocale += System.getProperty("user.country", "US");
+        systemLocale += System.getProperty("user.country", Locale.getDefault().getCountry());
 
         locale = plugin.getConfig().getString("Options.Localization", systemLocale);
 
