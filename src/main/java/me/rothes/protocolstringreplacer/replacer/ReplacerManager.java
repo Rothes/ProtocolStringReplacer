@@ -120,7 +120,7 @@ public class ReplacerManager {
         long startTime = System.nanoTime();
         HashMap<File, DotYamlConfiguration> loadedFiles = loadReplacesFiles(path);
         ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Pre-Loaded-Replacers",
-                String.valueOf(loadedFiles.size()), String.valueOf((System.nanoTime() - startTime) / 1000000L)));
+                String.valueOf(loadedFiles.size()), String.valueOf((System.nanoTime() - startTime) / 1000000D)));
         if (loadedFiles.size() == 0) {
             return;
         }
