@@ -20,8 +20,7 @@ import java.util.List;
 
 public class ItemHelper {
 
-    private String id = null;
-    private Integer count = null;
+    private Item item;
 
     private JsonElement jsonElement = null;
     private JsonObject jsonDisplay = null;
@@ -39,11 +38,11 @@ public class ItemHelper {
 
     @NotNull
     public static ItemHelper parse(@Nonnull Item item) {
-        Validate.notNull(item, "ItemTag cannot be null");
+        Validate.notNull(item, "Item cannot be null");
         ItemHelper helper = new ItemHelper();
 
-        helper.id = item.getId();
-        helper.count = item.getCount();
+        helper.item = item;
+
         JsonElement element = new JsonParser().parse(item.getTag().getNbt());
         helper.jsonElement = element;
         JsonObject root = element.getAsJsonObject();
@@ -108,9 +107,9 @@ public class ItemHelper {
         this.jsonLore.set(line, new JsonParser().parse("'" + result + "'"));
     }
 
-    public Item getItem() {
-        checkJson(jsonElement.getAsJsonObject());
-        return new Item(id, count, ItemTag.ofNbt(jsonElement.toString()));
+    public void saveChanges() {
+        checkJson(jsonDisplay);
+        item.setTag(ItemTag.ofNbt(jsonElement.toString()));
     }
 
     private void checkJson(@NotNull JsonObject root) {

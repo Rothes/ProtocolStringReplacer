@@ -18,7 +18,7 @@ public final class TileEntityData extends AbstractServerSignPacketListener {
         // 9: Set the text on a sign
         if (packet.getIntegers().read(0) == 9) {
             NbtCompound nbtCompound = (NbtCompound) packet.getNbtModifier().read(0);
-            setSignText(nbtCompound, user, filter);
+            setSignText(packetEvent, nbtCompound, user, filter);
         }
     }
 

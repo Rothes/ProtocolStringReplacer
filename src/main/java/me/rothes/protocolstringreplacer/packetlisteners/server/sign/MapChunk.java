@@ -22,7 +22,7 @@ public final class MapChunk extends AbstractServerSignPacketListener {
         for (NbtBase<?> nbtBase : nbtBaseList) {
             NbtCompound nbtCompound = (NbtCompound) nbtBase;
             if ("minecraft:sign".equals(nbtCompound.getString("id"))) {
-                setSignText(nbtCompound, user, filter);
+                setSignText(packetEvent, nbtCompound, user, filter);
             }
         }
     }

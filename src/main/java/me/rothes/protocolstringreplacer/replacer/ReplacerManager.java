@@ -1,34 +1,24 @@
 package me.rothes.protocolstringreplacer.replacer;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
-import me.rothes.protocolstringreplacer.utils.ColorUtils;
+import me.rothes.protocolstringreplacer.replacer.containers.Container;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.replacer.helpers.ItemHelper;
+import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.user.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.TranslatableComponent;
-import net.md_5.bungee.api.chat.hover.content.Content;
-import net.md_5.bungee.api.chat.hover.content.Entity;
-import net.md_5.bungee.api.chat.hover.content.Item;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.neosearch.stringsearcher.Emit;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,18 +37,39 @@ public class ReplacerManager {
     private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
     private BukkitTask cleanTask;
 
-    private static class ItemMetaCache {
+    public static class ItemMetaCache {
 
         private ItemMeta replacedItemMeta;
         private Long lastAccessTime;
-        private Boolean hasPlaceholder;
+        private List<Integer> placeholderIndexes;
 
-        public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime, @Nonnull Boolean hasPlaceholder) {
+        public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime, @Nonnull List<Integer> placeholderIndexes) {
             Validate.notNull(lastAccessTime, "Last Access Time cannot be null");
-            Validate.notNull(hasPlaceholder, "Boolean cannot be null");
+            Validate.notNull(placeholderIndexes, "List cannot be null");
             this.replacedItemMeta = replacedItemMeta;
             this.lastAccessTime = lastAccessTime;
-            this.hasPlaceholder = hasPlaceholder;
+            this.placeholderIndexes = placeholderIndexes;
+        }
+
+        public ItemMeta getReplacedItemMeta() {
+            return replacedItemMeta;
+        }
+
+        public Long getLastAccessTime() {
+            return lastAccessTime;
+        }
+
+        public List<Integer> getPlaceholderIndexes() {
+            return placeholderIndexes;
+        }
+
+        public void setPlaceholderIndexes(@Nonnull List<Integer> placeholderIndexes) {
+            Validate.notNull(placeholderIndexes, "List cannot be null");
+            this.placeholderIndexes = placeholderIndexes;
+        }
+
+        public void setLastAccessTime(long lastAccessTime) {
+            this.lastAccessTime = lastAccessTime;
         }
 
     }
@@ -127,7 +138,7 @@ public class ReplacerManager {
         }
 
         // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false));
+        replacedItemCache.put(null, new ItemMetaCache(null, 1L, new ArrayList<>()));
 
         ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
         long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
@@ -178,264 +189,141 @@ public class ReplacerManager {
         return count;
     }
 
-    @Nonnull
-    public BaseComponent[] getReplacedComponents(@Nonnull BaseComponent[] baseComponents, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        return getReplacedComponents(baseComponents, user, filter, true);
-    }
-
-    @Nonnull
-    public BaseComponent[] getReplacedComponents(@Nonnull BaseComponent[] baseComponents, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
-        Validate.notNull(baseComponents, "BaseComponent Array cannot be null");
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(filter, "Filter cannot be null");
-        for (int i = 0; i < baseComponents.length; i++) {
-            BaseComponent baseComponent = baseComponents[i];
-            baseComponents[i] = getReplacedComponent(baseComponent, user, filter, setPlaceholders);
-        }
-        return baseComponents;
-    }
-
-    public BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        return getReplacedComponent(baseComponent, user, filter, true);
-    }
-
-    public BaseComponent getReplacedComponent(@Nonnull BaseComponent baseComponent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
-        Validate.notNull(baseComponent, "BaseComponent cannot be null");
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(filter, "Filter cannot be null");
-        if (baseComponent instanceof TextComponent) {
-            TextComponent textComponent = (TextComponent) baseComponent;
-            String color = ColorUtils.getTextColor(textComponent);
-            String replaced = getReplacedString(color + textComponent.getText(), user, filter, setPlaceholders);
-            int length = color.length();
-            if (replaced.substring(0, length).equals(color)) {
-                replaced = replaced.substring(length);
-            }
-            textComponent.setText(replaced);
-        } else if (baseComponent instanceof TranslatableComponent) {
-            TranslatableComponent translatableComponent = (TranslatableComponent) baseComponent;
-            if (translatableComponent.getWith() != null) {
-                translatableComponent.setWith(replaceExtra(translatableComponent.getWith(), user, filter));
-            }
-        }
-
-        HoverEvent hoverEvent = baseComponent.getHoverEvent();
-        if (hoverEvent != null) {
-            replaceHoverEvent(hoverEvent, user, filter);
-        }
-
-        if (baseComponent.getExtra() != null) {
-            baseComponent.setExtra(replaceExtra(baseComponent.getExtra(), user, filter));
-        }
-        return baseComponent;
-    }
-
-    public void replaceHoverEvent(@Nonnull HoverEvent hoverEvent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        replaceHoverEvent(hoverEvent, user, filter, true);
-    }
-
-    public void replaceHoverEvent(@Nonnull HoverEvent hoverEvent, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
-        Validate.notNull(hoverEvent, "HoverEvent cannot be null");
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(filter, "Filter cannot be null");
-
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 15) {
-            List<Content> contents = hoverEvent.getContents();
-            for (int i = 0; i < contents.size(); i++) {
-                Content content = contents.get(i);
-                if (content instanceof Text) {
-                    Object object = ((Text) content).getValue();
-                    Text result;
-                    if (object instanceof BaseComponent[]) {
-                        result = new Text(getReplacedComponents((BaseComponent[]) object, user, filter, setPlaceholders));
-                    } else {
-                        result = new Text(getReplacedString((String) object, user, filter, setPlaceholders));
-                    }
-                    contents.set(i, result);
-                } else if (content instanceof Item) {
-                    boolean edited = false;
-                    Item itemContent = (Item) content;
-                    ItemHelper helper = ItemHelper.parse(itemContent);
-                    if (helper.hasName()) {
-                        helper.setName(getReplacedComponents(ComponentSerializer.parse(
-                                getReplacedJson(ComponentSerializer.toString(helper.getName()), user, filter, false))
-                                , user, filter, setPlaceholders));
-                        edited = true;
-                    }
-                    if (helper.hasLore()) {
-                        int size = helper.getLoreSize();
-                        for (int line = 0; line < size; line++) {
-                            helper.setLore(line, getReplacedComponents(ComponentSerializer.parse(
-                                            getReplacedJson(ComponentSerializer.toString(helper.getLore(line)), user, filter, false))
-                                    , user, filter, setPlaceholders));
-                        }
-                        edited = true;
-                    }
-                    if (edited) {
-                        contents.set(i, helper.getItem());
-                    }
-                } else if (content instanceof Entity) {
-                    Entity entityContent = (Entity) content;
-                    entityContent.setName(getReplacedComponent(entityContent.getName(), user, filter, setPlaceholders));
-                    contents.set(i, entityContent);
-                }
-            }
-        } else {
-            getReplacedComponents(hoverEvent.getValue(), user, filter, setPlaceholders);
-        }
-    }
-
-    public List<BaseComponent> replaceExtra(@Nonnull List<BaseComponent> extra, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        Validate.notNull(extra, "BaseComponent List cannot be null");
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(filter, "Filter cannot be null");
-        for (BaseComponent extraComponent : extra) {
-            getReplacedComponent(extraComponent, user, filter);
-        }
-        return extra;
-    }
-
-    @Nonnull
-    public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        return getReplacedString(string, user, filter, true);
-    }
-
-    @Nonnull
-    public String getReplacedString(@Nonnull String string, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
-        Validate.notNull(string, "String cannot be null");
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(filter, "Filter cannot be null");
-
-        String result = string;
-        for (ReplacerConfig replacerConfig : replacerConfigList) {
-            if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.COMMON, setPlaceholders);
-            }
-        }
-        return result;
-    }
-
-    @Nonnull
-    public String getReplacedJson(@Nonnull String json, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        return getReplacedJson(json, user, filter, true);
-    }
-
-    @Nonnull
-    public String getReplacedJson(@Nonnull String json, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean setPlaceholders) {
-        Validate.notNull(json, "Json String cannot be null");
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(filter, "Filter cannot be null");
-
-        String result = json;
-        for (ReplacerConfig replacerConfig : replacerConfigList) {
-            if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                result = getFileReplacedString(user, result, replacerConfig, ReplacesMode.JSON, setPlaceholders);
-            }
-        }
-        return result;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    @Nonnull
-    public ItemStack getReplacedItemStack(@Nonnull ItemStack itemStack, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        Validate.notNull(itemStack, "itemstack cannot be null");
-        if (itemStack.hasItemMeta()) {
-            itemStack.setItemMeta(getReplacedItemMeta(itemStack.getItemMeta(), user, filter));
-        }
-        return itemStack;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    @Nonnull
-    public ItemMeta getReplacedItemMeta(@Nonnull ItemMeta itemMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        Validate.notNull(itemMeta, "ItemMeta cannot be null");
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(filter, "Filter cannot be null");
-
-        boolean hasPlaceholder = false;
-        ItemMeta result = itemMeta;
-        ItemMetaCache metaCache = replacedItemCache.get(result);
-        if (metaCache != null) {
-            metaCache.lastAccessTime = System.currentTimeMillis();
-            result = metaCache.replacedItemMeta;
-            hasPlaceholder = metaCache.hasPlaceholder;
-        } else {
-            ItemMeta original = result.clone();
-            String replaced;
-            for (ReplacerConfig replacerConfig : replacerConfigList) {
-                if (replacerConfig.isEnable() && filter.test(replacerConfig, user)) {
-                    if (result.hasDisplayName()) {
-                        replaced = getFileReplacedString(user, result.getDisplayName(), replacerConfig, ReplacesMode.COMMON, false);
-                        result.setDisplayName(replaced);
-                        hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-                    }
-
-                    if (result.hasLore()) {
-                        List<String> lore = result.getLore();
-                        for (int i = 0; i < lore.size(); i++) {
-                            replaced = getFileReplacedString(user, lore.get(i), replacerConfig, ReplacesMode.COMMON, false);
-                            lore.set(i, replaced);
-                            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-                        }
-                        result.setLore(lore);
-                    }
-                }
-            }
-            if (result instanceof BookMeta) {
-                hasPlaceholder = hasPlaceholder | replaceBookMeta((BookMeta) result, user, filter, hasPlaceholder);
-
-            }
-            replacedItemCache.put(original, new ItemMetaCache(result, System.currentTimeMillis(), hasPlaceholder));
-        }
-
-        return hasPlaceholder? updatePlaceholders(user, result) : result;
-    }
-
-    private boolean replaceBookMeta(@Nonnull BookMeta bookMeta, @Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter, boolean placeholder) {
-        boolean hasPlaceholder = placeholder;
-        String replaced;
-        if (bookMeta.hasAuthor()) {
-            replaced = getReplacedString(bookMeta.getAuthor(), user, filter, false);
-            bookMeta.setAuthor(replaced);
-            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-        }
-        if (bookMeta.hasTitle()) {
-            replaced = getReplacedString(bookMeta.getTitle(), user, filter, false);
-            bookMeta.setTitle(replaced);
-            hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-        }
-        if (bookMeta.hasPages()) {
-            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 11) {
-                List<BaseComponent[]> pages = new ArrayList<>(bookMeta.spigot().getPages());
-                for (int i = 0; i < pages.size(); i++) {
-                    BaseComponent[] result = ComponentSerializer.parse(
-                            getReplacedJson(ComponentSerializer.toString(pages.get(i)), user, filter, false)
-                    );
-                    result = getReplacedComponents(result, user, filter, false);
-                    pages.set(i, result);
-                    hasPlaceholder = hasPlaceholder || hasPlaceholder(result);
-                }
-                bookMeta.spigot().setPages(pages);
-
-            } else {
-                List<String> pages = new ArrayList<>(bookMeta.getPages());
-                for (int i = 0; i < pages.size(); i++) {
-                    replaced = getReplacedString(pages.get(i), user, filter, false);
-                    pages.set(i, replaced);
-                    hasPlaceholder = hasPlaceholder || hasPlaceholder(replaced);
-                }
-                bookMeta.setPages(pages);
-            }
-        }
-        return hasPlaceholder;
-    }
-
     public void saveReplacerConfigs() {
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEdited()) {
                 replacerConfig.saveConfig();
             }
         }
+    }
+
+    @Nullable
+    public ItemMetaCache getReplacedItemCache(ItemMeta itemMeta) {
+        return replacedItemCache.get(itemMeta);
+    }
+
+    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull ItemMeta replaced, @NotNull List<Integer> papiIndexes) {
+        Validate.notNull(replaced, "Replaced ItemMeta cannot be null");
+
+        ItemMetaCache itemMetaCache = new ItemMetaCache(replaced, System.currentTimeMillis(), papiIndexes);
+        replacedItemCache.put(original, itemMetaCache);
+        return itemMetaCache;
+    }
+
+    public List<ReplacerConfig> getAcceptedReplacers(@Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
+        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(filter, "BiPredicate Filter cannot be null");
+
+        List<ReplacerConfig> result = new ArrayList<>();
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            if (filter.test(replacerConfig, user)) {
+                result.add(replacerConfig);
+            }
+        }
+        return result;
+    }
+
+    public boolean isJsonBlocked(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
+        Validate.notNull(container, "Container cannot be null");
+        Validate.notNull(replacerConfigList, "List cannot be null");
+
+        boolean blocked = false;
+        for (Replaceable replaceable : container.getJsons()) {
+            String json = replaceable.getText();
+            if (json.isEmpty()) {
+                continue;
+            }
+            for (ReplacerConfig replacerConfig : replacerConfigList) {
+                blocked = getBlocked(json, replacerConfig, ReplacesMode.JSON);
+                if (blocked) {
+                    return true;
+                }
+            }
+        }
+        return blocked;
+    }
+
+    public boolean isTextBlocked(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
+        Validate.notNull(container, "Container cannot be null");
+        Validate.notNull(replacerConfigList, "List cannot be null");
+
+        boolean blocked = false;
+        for (Replaceable replaceable : container.getTexts()) {
+            String text = replaceable.getText();
+            if (text.isEmpty()) {
+                continue;
+            }
+            for (ReplacerConfig replacerConfig : replacerConfigList) {
+                blocked = getBlocked(text, replacerConfig, ReplacesMode.COMMON);
+                if (blocked) {
+                    return true;
+                }
+            }
+        }
+        return blocked;
+    }
+
+    public void replaceContainerJsons(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
+        Validate.notNull(container, "Container cannot be null");
+        Validate.notNull(replacerConfigList, "List cannot be null");
+
+        for (Replaceable replaceable : container.getJsons()) {
+            String json = replaceable.getText();
+            if (json.isEmpty()) {
+                continue;
+            }
+            for (ReplacerConfig replacerConfig : replacerConfigList) {
+                json = getReplaced(json, replacerConfig, ReplacesMode.JSON);
+            }
+            replaceable.setText(json);
+        }
+    }
+
+    public void replaceContainerTexts(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
+        Validate.notNull(container, "Container cannot be null");
+        Validate.notNull(replacerConfigList, "List cannot be null");
+
+        for (Replaceable replaceable : container.getTexts()) {
+            String text = replaceable.getText();
+            if (text.isEmpty()) {
+                continue;
+            }
+            for (ReplacerConfig replacerConfig : replacerConfigList) {
+                text = getReplaced(text, replacerConfig, ReplacesMode.COMMON);
+            }
+            replaceable.setText(text);
+        }
+    }
+
+    public void setPapi(@Nonnull User user, @Nonnull List<Replaceable> replaceables) {
+        setPapi(user, replaceables, getPapiIndexes(replaceables));
+    }
+
+    public void setPapi(@Nonnull User user, @Nonnull List<Replaceable> replaceables, List<Integer> indexes) {
+        Validate.notNull(user, "User cannot be null");
+        Validate.notNull(replaceables, "List cannot be null");
+        Validate.notNull(indexes, "List cannot be null");
+
+        if (indexes.isEmpty()) {
+            return;
+        }
+        for (int i : indexes) {
+            Replaceable replaceable = replaceables.get(i);
+            replaceable.setText(setPlaceholder(user, replaceable.getText()));
+        }
+    }
+
+    public List<Integer> getPapiIndexes(@Nonnull List<Replaceable> replaceables) {
+        Validate.notNull(replaceables, "List cannot be null");
+
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < replaceables.size(); i++) {
+            Replaceable replaceable = replaceables.get(i);
+            if (hasPlaceholder(replaceable.getText())) {
+                result.add(i);
+            }
+        }
+        return result;
     }
 
     public boolean hasPlaceholder(@NotNull String string) {
@@ -457,33 +345,6 @@ public class ReplacerManager {
         return tailFound;
     }
 
-    public boolean hasPlaceholder(@NotNull BaseComponent[] baseComponents) {
-        for (BaseComponent baseComponent : baseComponents) {
-            if (baseComponent instanceof TextComponent) {
-                String text = ((TextComponent) baseComponent).getText();
-                boolean headFound = false;
-                for(int i = 0; i < text.length(); i++) {
-                    char Char = text.charAt(i);
-                    if (!headFound) {
-                        if (Char == papihead) {
-                            headFound = true;
-                        }
-                    } else {
-                        if (Char == papitail) {
-                            return true;
-                        }
-                    }
-                }
-            } else if (baseComponent instanceof TranslatableComponent && hasPlaceholder(((TranslatableComponent) baseComponent).getWith().toArray(new BaseComponent[0]))) {
-                return true;
-            }
-            if (baseComponent.getExtra() != null && hasPlaceholder(baseComponent.getExtra().toArray(new BaseComponent[0]))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public String setPlaceholder(@NotNull User user, @NotNull String string) {
         return papiReplacer.apply(string, user.getPlayer(),
                 PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
@@ -491,24 +352,19 @@ public class ReplacerManager {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    private String getFileReplacedString(@Nonnull User user, @Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplacesMode replacesMode, boolean setPlaceholders) {
-        Validate.notNull(user, "user cannot be null");
+    private String getReplaced(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplacesMode replacesMode) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
         Validate.notNull(replacesMode, "Replaces Mode cannot be null");
 
         String result = string;
-        // Don't process empty String.
-        if (result.isEmpty()) {
-            return result;
-        }
 
         if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.CONTAIN) {
             // Using Aho-Corasick algorithm.
             int i = 0;
 
             StringBuilder resultBuilder = new StringBuilder();
-            for (Emit<String> emit : replacerConfig.getStringSearcher(replacesMode).parseText(string)) {
+            for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replacesMode).parseText(string)) {
                 if (emit.getStart() > i) {
                     resultBuilder.append(string.subSequence(i, emit.getStart()));
                 }
@@ -522,10 +378,12 @@ public class ReplacerManager {
 
             result = resultBuilder.toString();
         } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.EQUAL) {
-            Set<Map.Entry<String, String>> set = replacerConfig.getReplaces(replacesMode).entrySet();
-            for (Map.Entry<String, String> entry : set) {
-                if (result.equals(entry.getKey())) {
-                    result = entry.getValue();
+            // Using Aho-Corasick algorithm.
+            Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(string);
+            if (emits.size() == 1) {
+                Emit<String> emit = emits.iterator().next();
+                if (emit.getEnd() + 1 == string.length()) {
+                    result = (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString());
                 }
             }
         } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.REGEX) {
@@ -534,146 +392,32 @@ public class ReplacerManager {
                 result = entry.getKey().matcher(result).replaceAll(entry.getValue());
             }
         }
-        return setPlaceholders && hasPlaceholder(result)? setPlaceholder(user, result) : result;
-    }
-
-    private ItemMeta updatePlaceholders(@Nonnull User user, @Nonnull ItemMeta itemMeta) {
-        Validate.notNull(user, "user cannot be null");
-        Validate.notNull(itemMeta, "ItemMeta cannot be null");
-
-        ItemMeta result = itemMeta.clone();
-        if (hasPlaceholder(result.getDisplayName())) {
-            result.setDisplayName(setPlaceholder(user, result.getDisplayName()));
-        }
-        if (result.hasLore()) {
-            List<String> lore = result.getLore();
-            for (int i = 0; i < lore.size(); i++) {
-                if (hasPlaceholder(lore.get(i))) {
-                    lore.set(i, setPlaceholder(user, lore.get(i)));
-                }
-            }
-            result.setLore(lore);
-        }
-        if (result instanceof BookMeta) {
-            updatePlaceholders(user, (BookMeta) result);
-        }
         return result;
     }
 
-    private void updatePlaceholders(@Nonnull User user, @Nonnull BookMeta bookMeta) {
-        if (bookMeta.hasAuthor() && hasPlaceholder(bookMeta.getAuthor())) {
-            bookMeta.setAuthor(setPlaceholder(user, bookMeta.getAuthor()));
-        }
-        if (bookMeta.hasTitle() && hasPlaceholder(bookMeta.getTitle())) {
-            bookMeta.setTitle(setPlaceholder(user, bookMeta.getTitle()));
-        }
-        if (bookMeta.hasPages()) {
-            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 11) {
-                List<BaseComponent[]> pages = new ArrayList<>(bookMeta.spigot().getPages());
-                for (int i = 0; i < pages.size(); i++) {
-                    pages.set(i, updatePlaceholders(user, pages.get(i)));
-                }
-                bookMeta.spigot().setPages(pages);
-            } else {
-                List<String> pages = new ArrayList<>(bookMeta.getPages());
-                for (int i = 0; i < pages.size(); i++) {
-                    if (hasPlaceholder(pages.get(i))) {
-                        pages.set(i, setPlaceholder(user, pages.get(i)));
-                    }
-                }
-                bookMeta.setPages(pages);
-            }
-        }
-    }
+    @Nonnull
+    private boolean getBlocked(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplacesMode replacesMode) {
+        Validate.notNull(string, "String cannot be null");
+        Validate.notNull(replacerConfig, "Replacer File cannot be null");
+        Validate.notNull(replacesMode, "Replaces Mode cannot be null");
 
-    private BaseComponent[] updatePlaceholders(@Nonnull User user, @Nonnull BaseComponent[] baseComponents) {
-        for (int i = 0; i < baseComponents.length; i++) {
-            BaseComponent baseComponent = baseComponents[i];
-            if (baseComponent instanceof TextComponent) {
-                TextComponent textComponent = (TextComponent) baseComponent;
-                String text = textComponent.getText();
-                if (hasPlaceholder(text)) {
-                    textComponent.setText(setPlaceholder(user, text));
-                }
-            } else if (baseComponent instanceof TranslatableComponent) {
-                TranslatableComponent translatableComponent = (TranslatableComponent) baseComponent;
-                translatableComponent.setWith(Arrays.asList
-                        (updatePlaceholders(user, translatableComponent.getWith().toArray(new BaseComponent[0]))));
-            }
-            if (baseComponent.getExtra() != null) {
-                baseComponent.setExtra(Arrays.asList
-                        (updatePlaceholders(user, baseComponent.getExtra().toArray(new BaseComponent[0]))));
-            }
-            if (baseComponent.getHoverEvent() != null) {
-                updatePlaceholders(user, baseComponent.getHoverEvent());
-            }
-            baseComponents[i] = baseComponent;
-        }
-        return baseComponents;
-    }
+        if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.CONTAIN) {
+            return replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string).size() > 0;
 
-    private void updatePlaceholders(@Nonnull User user, @Nonnull HoverEvent hoverEvent) {
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 12) {
-            List<Content> contents = hoverEvent.getContents();
-            for (int i = 0; i < contents.size(); i++) {
-                Content content = contents.get(i);
-                if (content instanceof Text) {
-                    Object object = ((Text) content).getValue();
-                    Text result;
-                    if (object instanceof BaseComponent[]) {
-                        result = new Text(updatePlaceholders(user, (BaseComponent[]) object));
-                    } else {
-                        if (hasPlaceholder((String) object)) {
-                            result = new Text(setPlaceholder(user, (String) object));
-                        } else {
-                            continue;
-                        }
-                    }
-                    contents.set(i, result);
-                } else if (content instanceof Item) {
-                    boolean edited = false;
-                    Item itemContent = (Item) content;
-                    ItemHelper helper = ItemHelper.parse(itemContent);
-                    if (helper.hasName()) {
-                        helper.setName(updatePlaceholders(user, helper.getName()));
-                        edited = true;
-                    }
-                    if (helper.hasLore()) {
-                        int size = helper.getLoreSize();
-                        for (int line = 0; line < size; line++) {
-                            helper.setLore(line, updatePlaceholders(user, helper.getLore(line)));
-                        }
-                        edited = true;
-                    }
-                    if (edited) {
-                        contents.set(i, helper.getItem());
-                    }
-                } else if (content instanceof Entity) {
-                    Entity entityContent = (Entity) content;
-                    BaseComponent nameComponent = entityContent.getName();
-                    if (nameComponent instanceof TextComponent) {
-                        TextComponent textComponent = (TextComponent) nameComponent;
-                        if (hasPlaceholder(textComponent.getText())) {
-                            textComponent.setText(setPlaceholder(user, textComponent.getText()));
-                        }
-                    } else if (nameComponent instanceof TranslatableComponent) {
-                        TranslatableComponent translatableComponent = (TranslatableComponent) nameComponent;
-                        translatableComponent.setWith(Arrays.asList(updatePlaceholders(user,
-                                translatableComponent.getWith().toArray(new BaseComponent[0])
-                        )));
-                    }
-                    if (nameComponent.getExtra() != null) {
-                        nameComponent.setExtra(Arrays.asList(updatePlaceholders(user,
-                                nameComponent.getExtra().toArray(new BaseComponent[0])
-                        )));
-                    }
-                    entityContent.setName(nameComponent);
-                    contents.set(i, entityContent);
+        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.EQUAL) {
+            Collection<Emit<String>> emits = replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string);
+            return emits.size() == 1 && emits.iterator().next().getEnd() + 1 == string.length();
+
+        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.REGEX) {
+            List<Object> blocks = replacerConfig.getBlocks(replacesMode);
+            for (Object patternObject : blocks) {
+                Pattern pattern = (Pattern) patternObject;
+                if (pattern.matcher(string).find()) {
+                    return true;
                 }
             }
-        } else {
-            updatePlaceholders(user, hoverEvent.getValue());
         }
+        return false;
     }
 
 }

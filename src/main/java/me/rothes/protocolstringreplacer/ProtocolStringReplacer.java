@@ -199,9 +199,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         replacerManager = new ReplacerManager();
         CommandHandler commandHandler = new CommandHandler();
         userManager = new UserManager();
-        if (serverMajorVersion >= 12) {
-            PSRMessage.initialize(this);
-        }
+        PSRMessage.initialize(this);
         consoleReplaceManager = new ConsoleReplaceManager(this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
@@ -209,6 +207,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         consoleReplaceManager.initialize();
         commandHandler.initialize();
         replacerManager.initialize();
+        consoleReplaceManager.getPsrFilter().start();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();

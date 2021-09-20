@@ -12,9 +12,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetwrapper.WrapperPlayServerEntityMetadata;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
-import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -40,7 +38,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     "Console.Messages.Packet-Listener.Entity-Metadata.Cannot-Read-Entity.Line-3"));
             return;
         }
-        if (entity == null || (!ProtocolStringReplacer.getInstance().getConfigManager().listenDroppedItemEntity && entity.getType() == EntityType.DROPPED_ITEM)) {
+        if (entity == null) {
             return;
         }
         User user = getEventUser(packetEvent);
@@ -59,19 +57,20 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     if (value.isPresent() && MinecraftReflection.getIChatBaseComponentClass().isInstance(value.get())) {
                         WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
                         if (wrappedChatComponent != null) {
-                            wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                                    .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                            wrappedChatComponent.getJson(), user, filter, false)), user, filter)));
-                            watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
+                            String replacedJson = getReplacedJson(packetEvent, user, wrappedChatComponent.getJson(), filter);
+                            if (replacedJson != null) {
+                                wrappedChatComponent.setJson(replacedJson);
+                                watchableObject.setValue(Optional.of(wrappedChatComponent.getHandle()));
+                            } else {
+                                return;
+                            }
                         }
                     }
                 } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(watchableObject.getValue())) {
                     Object value = watchableObject.getValue();
                     if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(value)) {
                         ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(value);
-                        if (itemStack.hasItemMeta()) {
-                            ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedItemStack(itemStack, user, filter);
-                        }
+                        replacedItemStack(packetEvent, user, itemStack, filter);
                     }
                 }
                 packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());

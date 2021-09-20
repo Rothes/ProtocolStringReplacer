@@ -1,26 +1,17 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
-import org.bukkit.inventory.meta.tags.ItemTagType;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
 public abstract class AbstractServerItemPacketListener extends AbstractServerPacketListener {
 
     protected final BiPredicate<ReplacerConfig, User> itemFilter;
-    protected NamespacedKey userCacheKey;
 
     protected AbstractServerItemPacketListener(PacketType packetType) {
         super(packetType, ListenType.ITEMSTACK);
@@ -32,49 +23,6 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
             }
             return false;
         };
-    }
-
-    protected void saveUserMetaCache(User user, ItemStack originalItem, ItemStack replacedItem) {
-        if (user.hasPermission("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
-            ItemMeta originalMeta = originalItem.getItemMeta();
-            ItemMeta replacedMeta = replacedItem.getItemMeta();
-            if (!originalMeta.equals(replacedMeta)) {
-                Short uniqueCacheKey = user.nextUniqueCacheKey();
-                if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13) {
-                    CustomItemTagContainer tagContainer = replacedMeta.getCustomTagContainer();
-                    tagContainer.setCustomTag(getUserCacheKey(), ItemTagType.SHORT, uniqueCacheKey);
-                } else {
-                    addCacheLegacy(replacedMeta, uniqueCacheKey);
-                }
-                replacedItem.setItemMeta(replacedMeta);
-                user.getMetaCache().put(uniqueCacheKey, originalMeta);
-            }
-        }
-    }
-
-    private void addCacheLegacy(ItemMeta itemMeta, short uniqueCacheKey) {
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
-        lore.add(addColorHidedString(String.valueOf(uniqueCacheKey)));
-        itemMeta.setLore(lore);
-    }
-
-    private String addColorHidedString(String text) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("§p§s§r§-§x");
-        for (char Char : text.toCharArray()) {
-            stringBuilder.append('§').append(Char);
-        }
-        return stringBuilder.toString();
-    }
-
-    protected NamespacedKey getUserCacheKey() {
-        if (userCacheKey == null) {
-            userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
-        }
-        return userCacheKey;
     }
 
 }

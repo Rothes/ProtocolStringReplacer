@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.neosearch.stringsearcher.Emit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -144,11 +145,11 @@ public class Parse extends SubCommand {
     @NotNull
     private String containResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
                                @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
-        replacerConfig.getStringSearcher(replacesMode);
+        replacerConfig.getReplacesStringSearcher(replacesMode);
         int i = 0;
 
         StringBuilder resultBuilder = new StringBuilder();
-        for (Emit<String> emit : replacerConfig.getStringSearcher(replacesMode).parseText(text)) {
+        for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replacesMode).parseText(text)) {
             if (emit.getStart() > i) {
                 resultBuilder.append(text.subSequence(i, emit.getStart()));
             }
@@ -165,19 +166,17 @@ public class Parse extends SubCommand {
         return resultBuilder.toString();
     }
 
-    @SuppressWarnings("unchecked")
     @NotNull
     private String equalResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
                              @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
         String result = text;
-        Set<Map.Entry<String, String>> containSet = (Set<Map.Entry<String, String>>) replacerConfig.getReplaces(replacesMode).entrySet();
-        for (Map.Entry<String, String> entry : containSet) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (result.equals(key)) {
-                result = value;
+        Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(text);
+        if (emits.size() == 1) {
+            Emit<String> emit = emits.iterator().next();
+            if (emits.iterator().next().getEnd() + 1 == text.length()) {
+                result = (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString());
                 results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replacesMode,
-                        key, value, result)));
+                        emit.getSearchString(), result, result)));
             }
         }
         return result;

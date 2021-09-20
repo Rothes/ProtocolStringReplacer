@@ -5,7 +5,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.user.User;
@@ -38,11 +37,11 @@ public final class OpenWindow extends AbstractServerPacketListener {
         }
         user.setCurrentWindowTitle(currentTitle.toString());
 
-        wrappedChatComponent.setJson(ComponentSerializer.toString(ProtocolStringReplacer.getInstance().getReplacerManager()
-                .getReplacedComponents(ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                        json, user, filter, false
-                )), user, filter)));
-        wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
+        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+        if (replaced != null) {
+            wrappedChatComponentStructureModifier.write(0,
+                    replaced);
+        }
     }
 
 }

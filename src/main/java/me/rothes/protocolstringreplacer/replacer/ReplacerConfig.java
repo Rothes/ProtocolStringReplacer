@@ -9,7 +9,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.neosearch.stringsearcher.StringSearcher;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,11 +31,13 @@ public class ReplacerConfig {
     private MatchType matchType;
     private HashMap<ReplacesMode, ListOrderedMap> replaces = new HashMap<>();
     private HashMap<ReplacesMode, HashMap<Short, LinkedList<CommentLine>>> commentLines = new HashMap<>();
+    private HashMap<ReplacesMode, List<Object>> blocks = new HashMap<>();
     private String author;
     private String version;
     private boolean edited;
 
-    private HashMap<ReplacesMode, StringSearcher<String>> stringSearcher = new HashMap<>();
+    private HashMap<ReplacesMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
+    private HashMap<ReplacesMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
 
     public static class CommentLine {
         private String key;
@@ -105,9 +106,12 @@ public class ReplacerConfig {
         return listenTypeList;
     }
 
-    @Nullable
-    public ListOrderedMap getReplaces(ReplacesMode replacesMode) {
+    public ListOrderedMap getReplaces(@Nonnull ReplacesMode replacesMode) {
         return replaces.get(replacesMode);
+    }
+
+    public List<Object> getBlocks(@Nonnull ReplacesMode replacesMode) {
+        return blocks.get(replacesMode);
     }
 
     public String getAuthor() {
@@ -130,8 +134,12 @@ public class ReplacerConfig {
         return commentLines.get(replacesMode);
     }
 
-    public StringSearcher<String> getStringSearcher(ReplacesMode replacesMode) {
-        return stringSearcher.get(replacesMode);
+    public StringSearcher<String> getReplacesStringSearcher(ReplacesMode replacesMode) {
+        return replacesStringSearcher.get(replacesMode);
+    }
+
+    public StringSearcher<String> getBlocksStringSearcher(ReplacesMode replacesMode) {
+        return blocksStringSearcher.get(replacesMode);
     }
 
     public void saveConfig() {
@@ -339,16 +347,33 @@ public class ReplacerConfig {
                     }
                 }
             }
+
+            List<String> loadedBlockList = configuration.getStringList("Blocks鰠" + replacesMode.getNode());
+            ArrayList<Object> list;
+            if (this.matchType == MatchType.REGEX) {
+                list = new ArrayList<>();
+                for (String string : loadedBlockList) {
+                    list.add(Pattern.compile(string));
+                }
+            } else {
+                list = new ArrayList<>(loadedBlockList);
+            }
+            blocks.put(replacesMode, list);
             updateStringSearcher(replacesMode);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void updateStringSearcher(ReplacesMode replacesMode) {
-        if (matchType != MatchType.CONTAIN) {
+    private void updateStringSearcher(@Nonnull ReplacesMode replacesMode) {
+        if (matchType == MatchType.REGEX) {
             return;
         }
-        this.stringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(this.getReplaces(replacesMode).keySet()).build());
+        this.replacesStringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(this.getReplaces(replacesMode).keySet()).build());
+        String[] strings = new String[blocks.get(replacesMode).size()];
+        for (int i = 0; i < blocks.get(replacesMode).size(); i++) {
+            strings[i] = (String) blocks.get(replacesMode).get(i);
+        }
+        this.blocksStringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(strings).build());
     }
 
     @Override

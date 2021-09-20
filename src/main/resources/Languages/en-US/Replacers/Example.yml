@@ -58,3 +58,13 @@ Replaces:
   Json:
     # This can modify the furnace title on players' client.
     '{"translate":"container.furnace"}': '{"text":"Congratulations for opening a furnace! Nice job!"}'
+
+# The string list to block. If any string in a packet is matched by these,
+# PSR will block the entire packet sending to the player.
+# This feature also applies to console messages.
+Blocks:
+  Common:
+    - 'This message will be blocked'
+    - Also this message!
+  Json:
+    - {"text":"This Json will be blocked"}

@@ -34,9 +34,11 @@ public final class Chat extends AbstractServerPacketListener {
             if (wrappedChatComponent != null) {
                 json = wrappedChatComponent.getJson();
                 saveCaptureMessage(user, json);
-                json = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(json, user, filter, false);
-                BaseComponent[] replacedComponents = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(ComponentSerializer.parse(json), user, filter);
-                wrappedChatComponentStructureModifier.write(0, WrappedChatComponent.fromJson(ComponentSerializer.toString(replacedComponents)));
+                WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+                if (replaced != null) {
+                    wrappedChatComponentStructureModifier.write(0, replaced);
+                }
+
             } else {
                 StructureModifier<Object> structureModifier = packet.getModifier();
                 for (int fieldIndex = 1; fieldIndex < 3; fieldIndex++) {
@@ -45,23 +47,20 @@ public final class Chat extends AbstractServerPacketListener {
                         BaseComponent[] readComponents = (BaseComponent[]) read;
                         json = ComponentSerializer.toString(readComponents);
                         saveCaptureMessage(user, json);
-                        readComponents = ComponentSerializer.parse(ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                json, user, filter, false
-                        ));
-                        structureModifier.write(fieldIndex, ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(readComponents, user, filter));
+
+                        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+                        if (replaced != null) {
+                            wrappedChatComponentStructureModifier.write(0, replaced);
+                            structureModifier.write(fieldIndex, null);
+                        }
                     } else if (isPaperComponent(read)) {
                         json = getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read);
-                        saveCaptureMessage(user, json);
-                        structureModifier.write(fieldIndex, getPaperGsonComponentSerializer().deserialize(
-                                ComponentSerializer.toString(
-                                        ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedComponents(
-                                                ComponentSerializer.parse(
-                                                        ProtocolStringReplacer.getInstance().getReplacerManager().getReplacedJson(
-                                                                json, user, filter, false))
-                                                , user, filter
-                                        )
-                                )
-                        ));
+
+                        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+                        if (replaced != null) {
+                            wrappedChatComponentStructureModifier.write(0, replaced);
+                            structureModifier.write(fieldIndex, null);
+                        }
                     }
                 }
             }
