@@ -382,7 +382,7 @@ public class ReplacerManager {
             Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(string);
             if (emits.size() == 1) {
                 Emit<String> emit = emits.iterator().next();
-                if (emit.getEnd() + 1 == string.length()) {
+                if (emit.getStart() == 0 && emit.getEnd() + 1 == string.length()) {
                     result = (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString());
                 }
             }
@@ -406,7 +406,8 @@ public class ReplacerManager {
 
         } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.EQUAL) {
             Collection<Emit<String>> emits = replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string);
-            return emits.size() == 1 && emits.iterator().next().getEnd() + 1 == string.length();
+            Emit<String> emit = emits.iterator().next();
+            return emit.getStart() == 0 && emit.getStart() == 0 && emit.getEnd() + 1 == string.length();
 
         } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.REGEX) {
             List<Object> blocks = replacerConfig.getBlocks(replacesMode);

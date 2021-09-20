@@ -173,7 +173,7 @@ public class Parse extends SubCommand {
         Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(text);
         if (emits.size() == 1) {
             Emit<String> emit = emits.iterator().next();
-            if (emits.iterator().next().getEnd() + 1 == text.length()) {
+            if (emit.getStart() == 0 && emit.getEnd() + 1 == text.length()) {
                 result = (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString());
                 results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replacesMode,
                         emit.getSearchString(), result, result)));
