@@ -14,7 +14,7 @@ public final class SetSlot extends AbstractServerItemPacketListener {
     protected void process(PacketEvent packetEvent) {
         User user = getEventUser(packetEvent);
         ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
-        replacedItemStack(packetEvent, user, itemStack, itemFilter);
+        replaceItemStack(packetEvent, user, itemStack, itemFilter);
     }
 
 }

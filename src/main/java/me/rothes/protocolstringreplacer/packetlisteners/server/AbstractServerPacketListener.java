@@ -159,8 +159,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         return container.getResult();
     }
 
-    protected boolean replacedItemStack(@Nonnull PacketEvent packetEvent, @Nonnull User user,
-                                        @Nonnull ItemStack itemStack, BiPredicate<ReplacerConfig, User> filter) {
+    protected boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull User user,
+                                       @Nonnull ItemStack itemStack, BiPredicate<ReplacerConfig, User> filter) {
         if (itemStack.hasItemMeta()) {
             ItemStack original = itemStack.clone();
 

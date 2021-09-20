@@ -17,7 +17,7 @@ public class WindowItems extends AbstractServerItemPacketListener {
         Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
         for (Object item : read) {
             ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
-            boolean blocked = replacedItemStack(packetEvent, user, itemStack, itemFilter);
+            boolean blocked = replaceItemStack(packetEvent, user, itemStack, itemFilter);
             if (blocked) {
                 return;
             }

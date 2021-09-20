@@ -70,7 +70,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     Object value = watchableObject.getValue();
                     if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(value)) {
                         ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(value);
-                        replacedItemStack(packetEvent, user, itemStack, filter);
+                        replaceItemStack(packetEvent, user, itemStack, filter);
                     }
                 }
                 packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());

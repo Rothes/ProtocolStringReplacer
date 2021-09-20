@@ -14,7 +14,7 @@ public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
     protected void process(PacketEvent packetEvent) {
         User user = getEventUser(packetEvent);
         for (ItemStack itemStack : packetEvent.getPacket().getItemListModifier().read(0)) {
-            boolean blocked = replacedItemStack(packetEvent, user, itemStack, itemFilter);
+            boolean blocked = replaceItemStack(packetEvent, user, itemStack, itemFilter);
             if (blocked) {
                 return;
             }
