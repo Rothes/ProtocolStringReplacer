@@ -46,23 +46,20 @@ public class ArgUtils {
         LinkedList<String> merged = new LinkedList<>();
         for (int i = 0; i < strings.length; i++) {
             String arg = strings[i];
+            int length = arg.length();
             if (startIndex == -1) {
-                if (arg.length() > 0 && arg.charAt(0) == '\"') {
+                if (length > 0 && arg.charAt(0) == '\"') {
                     startIndex = i;
                 } else {
                     merged.add(arg);
                 }
             }
-            if (startIndex != -1
-                    && ((startIndex != i && arg.length() == 1 && arg.charAt(0) == '\"')
-                          || (arg.length() > 1 /* To avoid empty String */ && arg.charAt(arg.length() - 1) == '\"'))) {
+            if (startIndex != -1 && ((startIndex != i && length == 1 && arg.charAt(0) == '\"')
+                    || (length > 1 && arg.charAt(length - 1) == '\"'))) {
                 Matcher matcher = lastQuotes.matcher(strings[i]);
                 //noinspection ResultOfMethodCallIgnored
                 matcher.find();
                 String quotes = matcher.group(0);
-                if (startIndex == i && isAllQuote(arg)) {
-                    quotes = quotes.substring(1);
-                }
                 if ((quotes.length() % 2) == 1) {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append(strings[startIndex]);
@@ -95,12 +92,4 @@ public class ArgUtils {
         }
     }
 
-    private static boolean isAllQuote(@Nonnull String string) {
-        for (int i = 0 ;i < string.length(); i++) {
-            if (string.charAt(i) != '\"') {
-                return false;
-            }
-        }
-        return true;
-    }
 }
