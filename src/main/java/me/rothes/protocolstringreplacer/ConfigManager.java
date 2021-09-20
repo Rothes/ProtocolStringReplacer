@@ -14,7 +14,6 @@ public class ConfigManager {
 
     public final ListenerPriority listenerPriority;
     public final boolean forceReplace;
-    public final boolean listenDroppedItemEntity;
 
     public ConfigManager(ProtocolStringReplacer instance) {
         this.printReplacer = instance.getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false);
@@ -53,6 +52,5 @@ public class ConfigManager {
         this.listenerPriority = listenerPriority;
 
         this.forceReplace = instance.getConfig().getBoolean("Options.Features.Packet-Listener.Force-Replace", false);
-        this.listenDroppedItemEntity = instance.getConfig().getBoolean("Options.Features.Packet-Listener.Listen-Dropped-Item-Entity", true);
     }
 }
