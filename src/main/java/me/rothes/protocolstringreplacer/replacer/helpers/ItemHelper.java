@@ -43,27 +43,33 @@ public class ItemHelper {
 
         helper.item = item;
 
-        JsonElement element = new JsonParser().parse(item.getTag().getNbt());
-        helper.jsonElement = element;
-        JsonObject root = element.getAsJsonObject();
-        helper.jsonDisplay = root.getAsJsonObject("display");
-        if (helper.jsonDisplay != null) {
-            JsonPrimitive name = helper.jsonDisplay.getAsJsonPrimitive("Name");
-            helper.hasName = name != null;
-            if (helper.hasName) {
-                String diaplayNameJson = name.toString();
-                diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
-                helper.name = ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson));
-            }
+        ItemTag tag = item.getTag();
+        if (tag != null) {
+            JsonElement element = new JsonParser().parse(tag.getNbt());
+            helper.jsonElement = element;
+            JsonObject root = element.getAsJsonObject();
+            if (root != null) {
+                helper.jsonDisplay = root.getAsJsonObject("display");
+                if (helper.jsonDisplay != null) {
 
-            helper.jsonLore = helper.jsonDisplay.getAsJsonArray("Lore");
-            helper.hasLore = helper.jsonLore != null;
-            if (helper.hasLore) {
-                helper.lore = new ArrayList<>(helper.jsonLore.size());
-                for (int i1 = 0; i1 < helper.jsonLore.size(); i1++) {
-                    String loreJson = helper.jsonLore.get(i1).getAsJsonPrimitive().toString();
-                    loreJson = loreJson.substring(1, loreJson.length() - 1);
-                    helper.lore.add(i1, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)));
+                    JsonPrimitive name = helper.jsonDisplay.getAsJsonPrimitive("Name");
+                    helper.hasName = name != null;
+                    if (helper.hasName) {
+                        String diaplayNameJson = name.toString();
+                        diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
+                        helper.name = ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson));
+                    }
+
+                    helper.jsonLore = helper.jsonDisplay.getAsJsonArray("Lore");
+                    helper.hasLore = helper.jsonLore != null;
+                    if (helper.hasLore) {
+                        helper.lore = new ArrayList<>(helper.jsonLore.size());
+                        for (int i1 = 0; i1 < helper.jsonLore.size(); i1++) {
+                            String loreJson = helper.jsonLore.get(i1).getAsJsonPrimitive().toString();
+                            loreJson = loreJson.substring(1, loreJson.length() - 1);
+                            helper.lore.add(i1, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)));
+                        }
+                    }
                 }
             }
         }
