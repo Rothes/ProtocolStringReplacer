@@ -30,14 +30,7 @@ public class ChatJsonContainer extends AbstractContainer<String> {
     @Override
     public void createDefaultChildren() {
         if (createComponents) {
-            componentsContainer = new ComponentsContainer(ComponentSerializer.parse(content), root) {
-                @Override
-                public BaseComponent[] getResult() {
-                    BaseComponent[] result = super.getResult();
-                    ChatJsonContainer.this.content = ComponentSerializer.toString(result);
-                    return content;
-                }
-            };
+            componentsContainer = new ComponentsContainer(ComponentSerializer.parse(content), root);
             children.add(componentsContainer);
         }
         super.createDefaultChildren();
