@@ -2,13 +2,13 @@ package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.utils.FileUtils;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -138,26 +137,21 @@ public class File extends SubCommand {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createCommand(@Nonnull User user, @NotNull String[] args) {
         if (args.length == 4) {
             if (args[3].startsWith("Replacers/")) {
-                if (ReplacerManager.isYmlFile(args[3])) {
+                if (FileUtils.checkFileSuffix(args[3], ".yml")) {
                     java.io.File file = new java.io.File(ProtocolStringReplacer.getInstance().getDataFolder() + "/" + args[3]);
-                    try {
-                        java.io.File fileParent = file.getParentFile();
-                        if(!fileParent.exists()){
-                            fileParent.mkdirs();
-                        }
-                        file.createNewFile();
+                    if (FileUtils.createFile(file)) {
                         DotYamlConfiguration configuration = DotYamlConfiguration.loadConfiguration(file);
                         ReplacerConfig replacerConfig = new ReplacerConfig(file, configuration);
                         replacerConfig.saveConfig();
                         ProtocolStringReplacer.getInstance().getReplacerManager().addReplacerConfig(replacerConfig);
                         user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                                 "Sender.Commands.Edit.Children.File.Children.Create.File-Successfully-Created", replacerConfig.getRelativePath()));
-                    } catch (IOException exception) {
-                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Invaild-File-Path"));
+                    } else {
+                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                                "Sender.Commands.Edit.Children.File.Children.Create.File-Create-Failed", args[3]));
                     }
                 } else {
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Not-Yml-File"));

@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.exceptions.MissingInitialResourceException;
+import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -88,9 +89,8 @@ public class PSRLocalization {
             locale = CommentYamlConfiguration.loadConfiguration(localeFile);
         } else {
             locale = getDefaultLocale();
+            FileUtils.createFile(localeFile);
             try {
-                localeFile.getParentFile().mkdirs();
-                localeFile.createNewFile();
                 locale.save(localeFile);
             } catch (IOException e) {
                 e.printStackTrace();

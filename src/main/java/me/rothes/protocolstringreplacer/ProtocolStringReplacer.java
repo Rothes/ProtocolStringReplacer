@@ -13,6 +13,7 @@ import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
 import me.rothes.protocolstringreplacer.listeners.PlayerQuitListener;
 import me.rothes.protocolstringreplacer.packetlisteners.PacketListenerManager;
 import me.rothes.protocolstringreplacer.upgrades.UpgradeEnum;
+import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -241,8 +242,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         try {
             configFile = new File(instance.getDataFolder() + "/Config.yml");
             if (!configFile.exists()) {
-                configFile.getParentFile().mkdirs();
-                configFile.createNewFile();
+                FileUtils.createFile(configFile);
                 PSRLocalization.getDefaultLocaledConfig().save(configFile);
                 configFile = new File(instance.getDataFolder() + "/Config.yml");
             }
@@ -251,8 +251,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
 
                 File exampleFile = new File(instance.getDataFolder() + "/Replacers/Example.yml");
-                exampleFile.getParentFile().mkdirs();
-                exampleFile.createNewFile();
+                FileUtils.createFile(exampleFile);
                 PSRLocalization.getDefaultLocaledExample()
                         .save(exampleFile);
                 warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Created-Example-Replacer"));

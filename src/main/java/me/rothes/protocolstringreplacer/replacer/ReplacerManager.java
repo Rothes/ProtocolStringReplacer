@@ -7,6 +7,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.user.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -78,33 +79,11 @@ public class ReplacerManager {
     public static HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
         Validate.notNull(path, "Path cannot be null");
         HashMap<File, DotYamlConfiguration> loaded = new HashMap<>();
-        if (path.exists()) {
-            File[] files = path.listFiles();
-            for (File file : files) {
-                if (file.isFile() && isYmlFile(file)) {
-                    DotYamlConfiguration dotYamlConfiguration = DotYamlConfiguration.loadConfiguration(file);
-                    loaded.put(file, dotYamlConfiguration);
-                } else if (file.isDirectory()) {
-                    loaded.putAll(loadReplacesFiles(file));
-                }
-            }
+        List<File> files = FileUtils.getFolderFiles(path, true, ".yml");
+        for (File file : files) {
+            loaded.put(file, DotYamlConfiguration.loadConfiguration(file));
         }
         return loaded;
-    }
-
-    public static boolean isYmlFile(@Nonnull File file) {
-        Validate.notNull(file, "File cannot be null");
-        return isYmlFile(file.getName());
-    }
-
-    public static boolean isYmlFile(@Nonnull String name) {
-        Validate.notNull(name, "FileName cannot be null");
-        int length = name.length();
-        if (length > 4) {
-            String subfix = name.substring(length - 4, length);
-            return subfix.equalsIgnoreCase(".yml");
-        }
-        return false;
     }
 
     public BukkitTask getCleanTask() {

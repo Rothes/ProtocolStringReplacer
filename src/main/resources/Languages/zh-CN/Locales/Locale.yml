@@ -101,6 +101,7 @@ Sender:
             Create:
               Simple-Help: '§7 * §e/psr edit file create §7- §b新建一个替换配置文件'
               Detailed-Help: '"§7 * §e/psr file create <文件名> §7- §b在磁盘中新建一个替换配置文件'
+              File-Create-Failed: '§c创建替换配置文件失败: §f%0%'
               File-Successfully-Created: '§a已成功创建替换配置文件: §f%0%'
               Invaild-File-Path: '§c非法的文件路径.'
               Not-Yml-File: '§c此文件名后缀不为 ".yml".'
