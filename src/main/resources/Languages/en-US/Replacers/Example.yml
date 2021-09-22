@@ -53,7 +53,7 @@ Replaces:
 
   # Json replace mode, for advanced users.
   # The listen types that doesn't support Json replace:
-  # ItemStack(Except content of the book on 1.12 and upper server)、Sign on server version below 1.9.4,
+  # ItemStack(Except content of the book on 1.12 and upper server)、Console messages,
   # entity name in ScoreBoard、Scoreboard title in ScoreBoard on server version 1.12 or below 1.12.
   Json:
     # This can modify the furnace title on players' client.
