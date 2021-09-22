@@ -28,7 +28,7 @@ public class ReplacerConfig {
     private boolean enable;
     private int priority;
     private List<ListenType> listenTypeList = new ArrayList<>();
-    private MatchType matchType;
+    private MatchMode matchMode;
     private HashMap<ReplacesMode, ListOrderedMap> replaces = new HashMap<>();
     private HashMap<ReplacesMode, HashMap<Short, LinkedList<CommentLine>>> commentLines = new HashMap<>();
     private HashMap<ReplacesMode, List<Object>> blocks = new HashMap<>();
@@ -54,22 +54,6 @@ public class ReplacerConfig {
 
         public String getValue() {
             return value;
-        }
-    }
-
-    public enum MatchType {
-        CONTAIN("Contain"),
-        EQUAL("Equal"),
-        REGEX("Regex");
-
-        private String name;
-
-        MatchType(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
         }
     }
 
@@ -122,8 +106,8 @@ public class ReplacerConfig {
         return version;
     }
 
-    public MatchType getMatchType() {
-        return matchType;
+    public MatchMode getMatchMode() {
+        return matchMode;
     }
 
     public String getRelativePath() {
@@ -152,12 +136,12 @@ public class ReplacerConfig {
             types.add(listenType.getName());
         }
         configuration.set("Options鰠Filter鰠Listen-Types", types);
-        configuration.set("Options鰠Match-Type", matchType.getName());
+        configuration.set("Options鰠Match-Mode", matchMode.getName());
         configuration.set("Replaces鰠Common", new ArrayList<String>());
         for (ReplacesMode replacesMode : ReplacesMode.values()) {
             HashMap<Short, LinkedList<CommentLine>> commentLines = this.commentLines.get(replacesMode);
             ListOrderedMap replaces = this.replaces.get(replacesMode);
-            if (matchType == MatchType.REGEX) {
+            if (matchMode == MatchMode.REGEX) {
                 for (short i = 0; i < replaces.size(); i++) {
                     if (commentLines.containsKey(i)) {
                         LinkedList<CommentLine> commentLineList = commentLines.get(i);
@@ -209,7 +193,7 @@ public class ReplacerConfig {
 
     public void addReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
         if (index <= replaces.size()) {
-            if (this.matchType == MatchType.REGEX) {
+            if (this.matchMode == MatchMode.REGEX) {
                 replaces.get(replacesMode).put(index, Pattern.compile(key), value);
             } else {
                 replaces.get(replacesMode).put(index, key, value);
@@ -311,19 +295,19 @@ public class ReplacerConfig {
             }
         }
 
-        String matchType = configuration.getString("Options鰠Match-Type", "Contain");
+        String matchMode = configuration.getString("Options鰠Match-Mode", "Contain");
         typeFound = false;
-        for (MatchType availableMatchType : MatchType.values()) {
-            if (availableMatchType.name.equalsIgnoreCase(matchType)) {
-                this.matchType = availableMatchType;
+        for (MatchMode availableMatchMode : MatchMode.values()) {
+            if (availableMatchMode.getName().equalsIgnoreCase(matchMode)) {
+                this.matchMode = availableMatchMode;
                 typeFound = true;
                 break;
             }
         }
         if (!typeFound) {
-            this.matchType = MatchType.CONTAIN;
+            this.matchMode = MatchMode.CONTAIN;
             ProtocolStringReplacer.warn(PSRLocalization.getLocaledMessage(
-                    "Console-Sender.Messages.Replacer-Config.Invaild-Match-Mode", matchType));
+                    "Console-Sender.Messages.Replacer-Config.Invaild-Match-Mode", matchMode));
         }
         for (ReplacesMode replacesMode : ReplacesMode.values()) {
             ConfigurationSection section = configuration.getConfigurationSection("Replaces鰠" + replacesMode.getNode());
@@ -331,7 +315,7 @@ public class ReplacerConfig {
             commentLines.put(replacesMode, new HashMap<>());
             if (section != null) {
                 Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
-                if (this.matchType == MatchType.REGEX) {
+                if (this.matchMode == MatchMode.REGEX) {
                     for (String key : section.getKeys(true)) {
                         String value = section.getString(key);
                         if (!checkComment(key, value, commentKeyPattern, replacesMode)) {
@@ -350,7 +334,7 @@ public class ReplacerConfig {
 
             List<String> loadedBlockList = configuration.getStringList("Blocks鰠" + replacesMode.getNode());
             ArrayList<Object> list;
-            if (this.matchType == MatchType.REGEX) {
+            if (this.matchMode == MatchMode.REGEX) {
                 list = new ArrayList<>();
                 for (String string : loadedBlockList) {
                     list.add(Pattern.compile(string));
@@ -365,7 +349,7 @@ public class ReplacerConfig {
 
     @SuppressWarnings("unchecked")
     private void updateStringSearcher(@Nonnull ReplacesMode replacesMode) {
-        if (matchType == MatchType.REGEX) {
+        if (matchMode == MatchMode.REGEX) {
             return;
         }
         this.replacesStringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(this.getReplaces(replacesMode).keySet()).build());
@@ -384,12 +368,15 @@ public class ReplacerConfig {
                 ", enable=" + enable +
                 ", priority=" + priority +
                 ", listenTypeList=" + listenTypeList +
-                ", matchType=" + matchType +
+                ", matchMode=" + matchMode +
                 ", replaces=" + replaces +
                 ", commentLines=" + commentLines +
+                ", blocks=" + blocks +
                 ", author='" + author + '\'' +
                 ", version='" + version + '\'' +
                 ", edited=" + edited +
+                ", replacesStringSearcher=" + replacesStringSearcher +
+                ", blocksStringSearcher=" + blocksStringSearcher +
                 '}';
     }
 

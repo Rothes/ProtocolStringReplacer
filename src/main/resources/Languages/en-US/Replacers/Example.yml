@@ -15,7 +15,7 @@ Options:
   # 'Equal' : The original string must equal you set
   # 'Regex' : Use Java Regex
   # This is not case-sensitive.
-  Match-Type: 'Contain'
+  Match-Mode: 'Contain'
   # Filter function. Used to specify the conditions for replacing strings in this config.
   Filter:
     # Listen types.

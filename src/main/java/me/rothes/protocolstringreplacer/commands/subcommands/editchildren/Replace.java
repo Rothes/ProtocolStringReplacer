@@ -66,7 +66,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Type.Messages.Invaild-Type", args[3]));
+                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             ListOrderedMap replaces = user.getEditorReplacerConfig().getReplaces(replacesMode);
@@ -131,7 +131,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Type.Messages.Invaild-Type", args[3]));
+                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             if (!StringUtils.isNumeric(args[4])) {
@@ -193,7 +193,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Type.Messages.Invaild-Type", args[3]));
+                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             if (args.length == 6) {
@@ -249,7 +249,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Type.Messages.Invaild-Type", args[3]));
+                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             if (args.length == 5) {
@@ -286,7 +286,7 @@ public class Replace extends SubCommand {
         } else if (args.length == 4
                 && (args[2].equalsIgnoreCase("list") || args[2].equalsIgnoreCase("set")
                 || args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove"))) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Match-Type.Name") + ">");
+            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Match-Mode.Name") + ">");
             for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }

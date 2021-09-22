@@ -13,7 +13,7 @@ Options:
   # 'Equal' : 要求设置与原字符串完全匹配
   # 'Regex' : 使用Java正则表达式
   # 不区分大小写.
-  Match-Type: 'Contain'
+  Match-Mode: 'Contain'
   # 筛选功能. 用于指定此文件替换字符串的条件.
   Filter:
     # 监听类型.

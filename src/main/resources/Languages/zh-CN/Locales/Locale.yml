@@ -151,7 +151,7 @@ Sender:
         Header: '§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换测试结果§7 ]§l §7§m-----------'
         Duration: ' §7* §3§l测试耗时: §b%0% ms'
         Listen-Type: ' §7* §3§l监听类型: §b%0%'
-        Match-Type: ' §7* §3§l替换模式: §b%0%'
+        Match-Mode: ' §7* §3§l替换模式: §b%0%'
         Original-Text: ' §7* §3§l原始文本: §b%0%'
         Final-Text: ' §7* §3§l最终文本: §b%0%'
         Steps:
@@ -193,10 +193,10 @@ Utils:
     Page-Info: '§3第 §f%0% §3页 §7| §3共 §f%1% §3页'
 
 Enum:
-  Match-Type:
+  Match-Mode:
     Name: '替换模式'
     Messages:
-      Invaild-Type: '§c替换模式 §f%0% §c不存在.'
+      Invaild-Mode: '§c替换模式 §f%0% §c不存在.'
   Replacers-Mode:
     Common: 常规
     Json: Json

@@ -53,15 +53,15 @@ public class Parse extends SubCommand {
                 return;
             }
             ReplacesMode replacesMode = null;
-            for (ReplacesMode type : ReplacesMode.values()) {
-                if (type.getNode().equalsIgnoreCase(args[4])) {
-                    replacesMode = type;
+            for (ReplacesMode mode : ReplacesMode.values()) {
+                if (mode.getNode().equalsIgnoreCase(args[4])) {
+                    replacesMode = mode;
                     break;
                 }
             }
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Type.Messages.Invaild-Type", args[4]));
+                        "Enum.Match-Mode.Messages.Invaild-Mode", args[4]));
                 return;
             }
 
@@ -82,7 +82,7 @@ public class Parse extends SubCommand {
         ArrayList<HoverEvent> results = new ArrayList<>();
         for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
             if (replacerConfig.getListenTypeList().contains(listenType)) {
-                switch (replacerConfig.getMatchType()) {
+                switch (replacerConfig.getMatchMode()) {
                     case CONTAIN:
                         text = containResult(results, text, replacerConfig, replacesMode);
                         break;
@@ -115,7 +115,7 @@ public class Parse extends SubCommand {
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Header"));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Duration", String.valueOf(duration)));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Listen-Type", listenType.getName()));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Match-Type",
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Match-Mode",
                 PSRLocalization.getLocaledMessage(replacesMode.getLocaleKey())));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Original-Text",
                 ColorUtils.showColorCodes(original)));
@@ -227,7 +227,7 @@ public class Parse extends SubCommand {
                 list.add(listenType.getName());
             }
         } else if (args.length == 5) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Match-Type.Name") + ">");
+            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Match-Mode.Name") + ">");
             for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }

@@ -90,7 +90,7 @@ public class File extends SubCommand {
                 ComponentBuilder hoverBuilder = new ComponentBuilder("").append(replacerConfig.getRelativePath()).color(ChatColor.GOLD).bold(true).append("\n§3§l状态: ").bold(false).append(replacerConfig.isEnable()? "§a启用" : "§c禁用").
                         append("\n§3§l优先级: ").append(String.valueOf(replacerConfig.getPriority())).color(ChatColor.AQUA).append("\n§3§l版本: ").append(replacerConfig.getVersion() == null? "§7未定义" : replacerConfig.getVersion()).
                         append("\n§3§l作者: ").append(replacerConfig.getAuthor() == null? "§7未定义" : replacerConfig.getAuthor()).append("\n§3§l匹配方式: §b");
-                switch (replacerConfig.getMatchType()) {
+                switch (replacerConfig.getMatchMode()) {
                     case CONTAIN:
                         hoverBuilder.append("包含匹配");
                         break;
@@ -102,6 +102,7 @@ public class File extends SubCommand {
                         break;
                     default:
                         hoverBuilder.append("未知");
+                        break;
                 }
                 hoverBuilder.append("\n§3§l监听类型: ");
                 for (ListenType listenType : replacerConfig.getListenTypeList()) {

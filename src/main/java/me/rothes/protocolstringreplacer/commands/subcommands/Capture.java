@@ -50,7 +50,7 @@ public class Capture extends SubCommand {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Listen-Type.Messages.Invaild-Type", args[2]));
+                        "Enum.Listen-Mode.Messages.Invaild-Mode", args[2]));
                 return;
             }
             if (!listenType.isCapturable()) {

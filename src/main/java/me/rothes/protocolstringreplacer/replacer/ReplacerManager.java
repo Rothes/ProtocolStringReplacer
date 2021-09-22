@@ -338,7 +338,7 @@ public class ReplacerManager {
 
         String result = string;
 
-        if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.CONTAIN) {
+        if (replacerConfig.getMatchMode() == MatchMode.CONTAIN) {
             // Using Aho-Corasick algorithm.
             int i = 0;
 
@@ -356,7 +356,7 @@ public class ReplacerManager {
             }
 
             result = resultBuilder.toString();
-        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.EQUAL) {
+        } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
             // Using Aho-Corasick algorithm.
             Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(string);
             if (emits.size() == 1) {
@@ -365,7 +365,7 @@ public class ReplacerManager {
                     result = (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString());
                 }
             }
-        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.REGEX) {
+        } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
             Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replacesMode).entrySet();
             for (Map.Entry<Pattern, String> entry : set) {
                 result = entry.getKey().matcher(result).replaceAll(entry.getValue());
@@ -380,15 +380,15 @@ public class ReplacerManager {
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
         Validate.notNull(replacesMode, "Replaces Mode cannot be null");
 
-        if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.CONTAIN) {
+        if (replacerConfig.getMatchMode() == MatchMode.CONTAIN) {
             return replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string).size() > 0;
 
-        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.EQUAL) {
+        } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
             Collection<Emit<String>> emits = replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string);
             Emit<String> emit = emits.iterator().next();
             return emit.getStart() == 0 && emit.getStart() == 0 && emit.getEnd() + 1 == string.length();
 
-        } else if (replacerConfig.getMatchType() == ReplacerConfig.MatchType.REGEX) {
+        } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
             List<Object> blocks = replacerConfig.getBlocks(replacesMode);
             for (Object patternObject : blocks) {
                 Pattern pattern = (Pattern) patternObject;
