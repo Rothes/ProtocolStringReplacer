@@ -25,12 +25,6 @@ Console-Sender:
       Invaild-Placeholder-Head: '§cPlaceholder-Head 值无效! 请定义一个字符. 使用默认值 ''｛'''
       Invaild-Placeholder-Tail: '§cPlaceholder-Tail 值无效! 请定义一个字符. 使用默认值 ''｝'''
       Invaild-Listener-Priority: '§c数据包监听优先度值无效! 使用默认值 ''HIGHEST'''
-    Packet-Listener:
-      Entity-Metadata:
-        Cannot-Read-Entity:
-          Line-1: '§c解析实体时发生异常. 这是 ProtocolLib 导致的错误, 请不要向 PSR 的作者反馈.'
-          Line-2: '§c此异常一般不会导致问题. 但您也可以自行构建下方的 ProtocolLib, 来避免此异常.'
-          Line-3: '§cGit 链接: https://github.com/Rothes/ProtocolLib.git'
 
 Command-Block-Sender:
   Messages:

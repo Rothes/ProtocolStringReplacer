@@ -26,18 +26,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
 
     protected void process(PacketEvent packetEvent) {
         PacketContainer packet = packetEvent.getPacket();
-        Entity entity;
-        try {
-            entity = packet.getEntityModifier(packetEvent).read(0);
-        } catch (IllegalArgumentException exception) {
-            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
-                    "Console.Messages.Packet-Listener.Entity-Metadata.Cannot-Read-Entity.Line-1"));
-            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
-                    "Console.Messages.Packet-Listener.Entity-Metadata.Cannot-Read-Entity.Line-2"));
-            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
-                    "Console.Messages.Packet-Listener.Entity-Metadata.Cannot-Read-Entity.Line-3"));
-            return;
-        }
+        Entity entity = packet.getEntityModifier(packetEvent).read(0);
         if (entity == null) {
             return;
         }
