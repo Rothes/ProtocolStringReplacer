@@ -88,10 +88,12 @@ public class BookMetaContainer extends AbstractContainer<BookMeta> {
     @Override
     public BookMeta getResult() {
         BookMeta result = super.getResult();
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
-            content.spigot().setPages((List<BaseComponent[]>) pages);
-        } else {
-            content.setPages((List<String>) pages);
+        if (pages != null) {
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
+                content.spigot().setPages((List<BaseComponent[]>) pages);
+            } else {
+                content.setPages((List<String>) pages);
+            }
         }
         return result;
     }
