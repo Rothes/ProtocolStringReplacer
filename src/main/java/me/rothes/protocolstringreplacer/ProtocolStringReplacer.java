@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -310,7 +311,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private void checkConfigsVersion() {
         HashMap<Short, AbstractUpgradeHandler> upgrades = new HashMap<>();
         for (UpgradeEnum upgrade : UpgradeEnum.values()) {
-            upgrades.put(upgrade.getCurrentVersion(), upgrade.getUpgradeHandler());
+            try {
+                upgrades.put(upgrade.getCurrentVersion(), upgrade.getUpgradeHandler().getDeclaredConstructor().newInstance());
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
         for (short i = (short) config.getInt("Configs-Version", 1); i <= upgrades.size(); i++) {
             info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Upgrading-Configs", String.valueOf(i), String.valueOf(i + 1)));

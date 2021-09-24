@@ -10,6 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 
+/**
+ * Only used to upgrade old configs currently.
+ */
+@SuppressWarnings("DeprecatedIsStillUsed")
+@Deprecated
 public class DotYamlConfiguration extends CommentYamlConfiguration {
 
     public DotYamlConfiguration() {

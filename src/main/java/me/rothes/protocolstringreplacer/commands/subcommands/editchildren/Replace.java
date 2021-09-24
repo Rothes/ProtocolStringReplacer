@@ -11,7 +11,6 @@ import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,14 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class Replace extends SubCommand {
-
-    private static final Pattern commentValuePrefix = Pattern.compile("[0-9]+\\| ");
 
     public Replace() {
         super("replace", "protocolstringreplacer.command.edit",
@@ -70,7 +64,6 @@ public class Replace extends SubCommand {
                 return;
             }
             ListOrderedMap replaces = user.getEditorReplacerConfig().getReplaces(replacesMode);
-            HashMap<Short, LinkedList<ReplacerConfig.CommentLine>> commentLinesMap = user.getEditorReplacerConfig().getCommentLines(replacesMode);
             int totalPage = (int) Math.ceil((float) replaces.size() / 5);
             if (args.length == 5) {
                 if (StringUtils.isNumeric(args[4])) {
@@ -97,25 +90,17 @@ public class Replace extends SubCommand {
             for (int i = (page - 1) * 5; i < replaces.size() && i < page * 5; i++) {
                 String original = replaces.get(i).toString();
                 String replacement = (String) replaces.get(replaces.get(i));
-                LinkedList<ReplacerConfig.CommentLine> commentLines = commentLinesMap.get((short) i);
-                ComponentBuilder hoverBuilder = new ComponentBuilder("§6§l注释内容:").color(ChatColor.GREEN);
-                if (commentLines != null && !commentLines.isEmpty()) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (ReplacerConfig.CommentLine commentLine : commentLines) {
-                        stringBuilder.insert(0, commentValuePrefix.matcher(commentLine.getValue()).replaceFirst("")).insert(0, '\n');
-                    }
-                    hoverBuilder.append(stringBuilder.toString());
-                } else {
-                    hoverBuilder.append("\n§7无");
-                }
 
-                user.sendFilteredMessage(new ComponentBuilder("§6[+] ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace add " + replacesMode.getNode() + " " + i + " <原文本> <新文本>")).
-                        event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
-                        append("§6[编辑]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace set " + replacesMode.getNode() + " " + i + " " + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(original)) + " " + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(replacement)))).append(" " + i + ". ").
-                        reset().event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
-                        append(ColorUtils.showColorCodes(original)).color(ChatColor.AQUA).create());
-                user.sendFilteredMessage(new ComponentBuilder("§c[删除]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/psr edit replace remove " + replacesMode.getNode() + " " + i)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).
-                        append(" §7§o==> ").reset().event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).append(ColorUtils.showColorCodes(replacement)).color(ChatColor.BLUE).create());
+                user.sendFilteredMessage(new ComponentBuilder("§6[+] ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                        "/psr edit replace add " + replacesMode.getNode() + " " + i + " <原文本> <新文本>"))
+                        .append("§6[编辑]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                                "/psr edit replace set " + replacesMode.getNode() + " " + i + " "
+                                        + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(original))
+                                        + " " + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(replacement))))
+                        .append(" " + i + ". ").reset().append(ColorUtils.showColorCodes(original)).color(ChatColor.AQUA).create());
+                user.sendFilteredMessage(new ComponentBuilder("§c[删除]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                                "/psr edit replace remove " + replacesMode.getNode() + " " + i))
+                        .append(" §7§o==> ").reset().append(ColorUtils.showColorCodes(replacement)).color(ChatColor.BLUE).create());
             }
 
             MessageUtils.sendPageButtons(user, "/psr edit replace list " + replacesMode.getNode() + " ", page, totalPage);

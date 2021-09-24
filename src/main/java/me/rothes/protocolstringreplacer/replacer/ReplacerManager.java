@@ -1,8 +1,8 @@
 package me.rothes.protocolstringreplacer.replacer;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.replacer.containers.Container;
-import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.user.User;
@@ -76,12 +76,12 @@ public class ReplacerManager {
     }
 
     @Nonnull
-    public static HashMap<File, DotYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
+    public static HashMap<File, CommentYamlConfiguration> loadReplacesFiles(@Nonnull File path) {
         Validate.notNull(path, "Path cannot be null");
-        HashMap<File, DotYamlConfiguration> loaded = new HashMap<>();
+        HashMap<File, CommentYamlConfiguration> loaded = new HashMap<>();
         List<File> files = FileUtils.getFolderFiles(path, true, ".yml");
         for (File file : files) {
-            loaded.put(file, DotYamlConfiguration.loadConfiguration(file));
+            loaded.put(file, CommentYamlConfiguration.loadConfiguration(file));
         }
         return loaded;
     }
@@ -97,15 +97,15 @@ public class ReplacerManager {
 
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.nanoTime();
-        HashMap<File, DotYamlConfiguration> loadedFiles = loadReplacesFiles(path);
+        HashMap<File, CommentYamlConfiguration> loadedFiles = loadReplacesFiles(path);
         ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Pre-Loaded-Replacers",
                 String.valueOf(loadedFiles.size()), String.valueOf((System.nanoTime() - startTime) / 1000000D)));
         if (loadedFiles.size() == 0) {
             return;
         }
-        for (Map.Entry<File, DotYamlConfiguration> entry : loadedFiles.entrySet()) {
+        for (Map.Entry<File, CommentYamlConfiguration> entry : loadedFiles.entrySet()) {
             File file = entry.getKey();
-            DotYamlConfiguration config = entry.getValue();
+            CommentYamlConfiguration config = entry.getValue();
             try {
                 ReplacerConfig replacerConfig = new ReplacerConfig(file, config);
                 addReplacerConfig(replacerConfig);

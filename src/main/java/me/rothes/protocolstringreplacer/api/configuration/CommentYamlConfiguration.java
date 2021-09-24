@@ -63,9 +63,12 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             boolean isPlainComment = true;
             boolean isInQuote = false;
             boolean isKey = false;
+            boolean isList = false;
             boolean foundComment = false;
             if (cursor == line.length()) {
                 line = line + "#";
+            } else if (line.charAt(cursor) == '-') {
+                isList = true;
             }
             while (cursor < line.length()) {
                 char charAtCursor = line.charAt(cursor);
@@ -94,7 +97,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                 cursor++;
             }
             // Convenient to edit comments in the configurations.
-            if (isKey) {
+            if (isKey && !isList) {
                 commentIndex = addComments(getStartedSpace(line), commentsToAdd, stringBuilder, commentIndex);
             }
             if (foundComment) {
