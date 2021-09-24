@@ -48,16 +48,22 @@ Options:
 Replaces:
   # Common string replace mode.
   Common:
-    'My name': '｛player_name｝'
-    'a nametag': 'my nametag!'
-
+    - Original: 'My name'
+      Replacement: '｛player_name｝'
+    - Original: 'a nametag'
+      Replacement: 'my nametag!'
+    - Original: 'in this way to add new line'
+      Replacement: |-
+        in this way
+        to add new line
   # Json replace mode, for advanced users.
   # The listen types that doesn't support Json replace:
   # ItemStack(Except content of the book on 1.12 and upper server)、Console messages,
   # entity name in ScoreBoard、Scoreboard title in ScoreBoard on server version 1.12 or below 1.12.
   Json:
     # This can modify the furnace title on players' client.
-    '{"translate":"container.furnace"}': '{"text":"Congratulations for opening a furnace! Nice job!"}'
+    - Original: '{"translate":"container.furnace"}'
+      Replacement: '{"text":"Congratulations for opening a furnace! Nice job!"}'
 
 # The string list to block. If any string in a packet is matched by these,
 # PSR will block the entire packet sending to the player.
