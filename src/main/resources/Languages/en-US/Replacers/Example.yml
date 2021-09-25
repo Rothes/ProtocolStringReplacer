@@ -71,6 +71,6 @@ Replaces:
 Blocks:
   Common:
     - 'This message will be blocked'
-    - Also this message!
+    - 'Also this message!'
   Json:
-    - {"text":"This Json will be blocked"}
+    - '{"text":"This Json will be blocked"}'
