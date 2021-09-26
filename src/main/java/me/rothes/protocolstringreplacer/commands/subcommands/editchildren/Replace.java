@@ -212,7 +212,7 @@ public class Replace extends SubCommand {
                 int i = editorReplacerConfig.checkReplaceKey(original, replacesMode);
                 if (i == -1) {
                     String replacement = ColorUtils.getColored(args[6]);
-                    user.getEditorReplacerConfig().addReplace(index, original, replacement, replacesMode);
+                    editorReplacerConfig.addReplace(index, original, replacement, replacesMode);
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Edit.Children.Replace.Children.Add.Successfully-Added-Replace",
                                     String.valueOf(index),
