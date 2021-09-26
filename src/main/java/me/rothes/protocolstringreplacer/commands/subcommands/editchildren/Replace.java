@@ -142,7 +142,7 @@ public class Replace extends SubCommand {
                 String replacement = ColorUtils.getColored(args[5]);
                 editorReplacerConfig.setReplace(index, replacement, replacesMode);
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Sender.Commands.Edit.Children.Replace.Children.Set.Index-Set",
+                        "Sender.Commands.Edit.Children.Replace.Children.Set.Successfully-Set-Replace",
                                 args[4],
                         (String) editorReplacerConfig.getReplaces(replacesMode).get(index),
                                 replacement));
