@@ -118,7 +118,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
         logger = this.getLogger();
 
         serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
-//        info(PSRLocalization.getLocaledMessage("Console.Messages.Server-Version", String.valueOf(serverMajorVersion)));
         try {
             Class.forName("org.bukkit.entity.Player$Spigot");
             isSpigot = true;
@@ -133,7 +132,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
             isPaper = true;
             try {
                 Class.forName("io.papermc.paper.text.PaperComponents");
-//                info(PSRLocalization.getLocaledMessage("Console.Messages.Paper-Component-Support"));
                 hasPaperComponent = true;
             } catch (Throwable tr) {
                 hasPaperComponent = false;

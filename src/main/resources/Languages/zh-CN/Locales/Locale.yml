@@ -4,9 +4,7 @@ Console-Sender:
   Messages:
     Command-Not-Available: '§c仅玩家可使用该指令.'
     Initialize:
-      Server-Version: '§a服务端 Minecraft 版本: 1.%0%.X .'
       Require-Spigot: '§c本插件需要使用 Spigot 或其衍生服务端.'
-      Paper-Component-Support: '§3启用 Paper ChatComponent 支持.'
       Recommend-Paper: '您未使用 Paper 或其衍生服务端核心. 建议使用 Paper 以获得完整功能.'
       Out-Dated-Server: '您使用的服务端过旧, 可能无法正常享受一些功能..'
       Missing-Dependency: '§c未检测到前置插件 %0%，请安装后再使用本插件.'
