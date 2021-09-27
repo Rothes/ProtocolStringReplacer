@@ -131,6 +131,29 @@ Sender:
               Simple-Help: '§7 * §e/psr edit replace remove §7- §b删除在索引的替换项'
               Detailed-Help: '§7 * §e/psr edit replace remove <替换模式> <索引> §7- §b删除在索引的替换项'
               Sucessfully-Removed-Replace: '§a已删除索引 §f%0% §a的替换项.'
+        Block:
+          Description: '屏蔽项目相关指令'
+          Not-Selected-Replacer-Config: '§c请先选定一个替换配置文件, 再使用本指令.'
+          Help:
+            Header: '§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e屏蔽项编辑器§7 ]§l §7§m-----------'
+            Footer: '§7§m-----------------------------------------------'
+            Help-Description: '屏蔽项编辑器指令列表'
+          Children:
+            List:
+              Simple-Help: '§7 * §e/psr edit block list §7- §b查看所有屏蔽项'
+              Detailed-Help: '§7 * §e/psr edit block list <替换模式> [页码] §7- §b查看所有屏蔽项'
+            Set:
+              Simple-Help: '§7 * §e/psr edit block set §7- §b编辑指定索引的屏蔽项'
+              Detailed-Help: '§7 * §e/psr edit block set <替换模式> <索引> <屏蔽文本> §7- §b编辑指定索引的屏蔽项'
+              Successfully-Set-Block: '§a已修改索引 §f%0% §a为 §f%1%'
+            Add:
+              Simple-Help: '§7 * §e/psr edit block add §7- §b在索引添加一个屏蔽项'
+              Detailed-Help: '§7 * §e/psr edit block add <替换模式> [索引] <屏蔽文本> §7- §b在索引添加一个屏蔽项'
+              Successfully-Added-Block: '§a已在索引 §f%0% §a添加屏蔽项: §f%1%'
+            Remove:
+              Simple-Help: '§7 * §e/psr edit block remove §7- §b删除在索引的屏蔽项'
+              Detailed-Help: '§7 * §e/psr edit block remove <替换模式> <索引> §7- §b删除在索引的屏蔽项'
+              Sucessfully-Removed-Block: '§a已删除索引 §f%0% §a的屏蔽项.'
     Parse:
       Description: '测试替换字符串'
       Help:
@@ -212,3 +235,5 @@ Enum:
     Name: '原文本'
   Replacement-Text:
     Name: '新文本'
+  Block-Text:
+    Name: '屏蔽文本'

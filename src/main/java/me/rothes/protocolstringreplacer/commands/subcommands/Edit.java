@@ -1,6 +1,7 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Block;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.File;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Replace;
 import me.rothes.protocolstringreplacer.user.User;
@@ -22,6 +23,7 @@ public class Edit extends SubCommand {
 
         childCommands.add(new File());
         childCommands.add(new Replace());
+        childCommands.add(new Block());
 // TODO:        childCommands.add(new Option());
     }
 

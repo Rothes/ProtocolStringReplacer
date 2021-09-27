@@ -111,7 +111,6 @@ public class ReplacerConfig {
         }
         configuration.set("Options.Filter.Listen-Types", types);
         configuration.set("Options.Match-Mode", matchMode.getName());
-        configuration.set("Replaces.Common", new ArrayList<String>());
         for (ReplacesMode replacesMode : ReplacesMode.values()) {
             ListOrderedMap replaces = this.replaces.get(replacesMode);
             ArrayList<ListOrderedMap> result = new ArrayList<>();
@@ -123,6 +122,8 @@ public class ReplacerConfig {
                 result.add(entryMap);
             }
             configuration.set("Replaces." + replacesMode.getNode(), result);
+
+            configuration.set("Blocks." + replacesMode.getNode(), blocks.get(replacesMode));
         }
         try {
             configuration.save(file);
@@ -169,6 +170,39 @@ public class ReplacerConfig {
 
     public void removeReplace(int index, @Nonnull ReplacesMode replacesMode) {
         replaces.get(replacesMode).remove(index);
+        updateStringSearcher(replacesMode);
+        edited = true;
+        saveConfig();
+    }
+
+    public void setBlock(int index, @Nonnull String block, @Nonnull ReplacesMode replacesMode) {
+        if (index < replaces.size()) {
+            blocks.get(replacesMode).set(index, block);
+            updateStringSearcher(replacesMode);
+            edited = true;
+            saveConfig();
+        }
+    }
+
+    public void addBlock(int index, @Nonnull String block, @Nonnull ReplacesMode replacesMode) {
+        if (index <= replaces.size()) {
+            if (this.matchMode == MatchMode.REGEX) {
+                blocks.get(replacesMode).add(index, Pattern.compile(block));
+            } else {
+                blocks.get(replacesMode).add(index, block);
+            }
+            updateStringSearcher(replacesMode);
+            edited = true;
+            saveConfig();
+        }
+    }
+
+    public void addBlock(@Nonnull String block, @Nonnull ReplacesMode replacesMode) {
+        addBlock(blocks.get(replacesMode).size(), block, replacesMode);
+    }
+
+    public void removeBlock(int index, @Nonnull ReplacesMode replacesMode) {
+        blocks.get(replacesMode).remove(index);
         updateStringSearcher(replacesMode);
         edited = true;
         saveConfig();
