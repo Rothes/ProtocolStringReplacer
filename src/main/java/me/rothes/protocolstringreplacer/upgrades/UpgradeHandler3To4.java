@@ -37,6 +37,10 @@ public class UpgradeHandler3To4 extends AbstractUpgradeHandler{
             }
         }
         config.set("Configs-Version", 4);
+        config.set("Options.Features.ItemMetaCache.Purge-Task-Interval"
+                , config.getInt("Options.Features.ItemMetaCache.Clean-Task-Interval", 600));
+        config.set("Options.Features.ItemMetaCache.Purge-Access-Interval"
+                , config.getInt("Options.Features.ItemMetaCache.Clean-Task-Interval", 300));
         try {
             config.save(ProtocolStringReplacer.getInstance().getConfigFile());
         } catch (IOException e) {

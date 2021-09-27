@@ -24,9 +24,9 @@ Options:
     # 关于已替换物品缓存表的相关设定.
     ItemMetaCache:
       # 每多少秒执行一次清理缓存的任务.
-      Clean-Task-Interval: 600
+      Purge-Task-Interval: 600
       # 只清理多少秒未读取过的缓存条目.
-      Clean-Access-Interval: 300
+      Purge-Access-Interval: 300
 
     # 关于网络数据包监听器的相关设定.
     Packet-Listener:

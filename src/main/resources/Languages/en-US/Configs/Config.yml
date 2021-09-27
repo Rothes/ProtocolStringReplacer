@@ -26,9 +26,9 @@ Options:
     # Replaced ItemStack cache related options.
     ItemMetaCache:
       # Seconds to execute the task of purging the cache.
-      Clean-Task-Interval: 600
+      Purge-Task-Interval: 600
       # Only Purge the cache entries that have not been accessed in these seconds.
-      Clean-Access-Interval: 300
+      Purge-Access-Interval: 300
 
     # Packet listener related options.
     Packet-Listener:
