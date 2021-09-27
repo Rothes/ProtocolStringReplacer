@@ -36,6 +36,7 @@ public class UpgradeHandler3To4 extends AbstractUpgradeHandler{
                 coments.clear();
             }
         }
+        config.set("Configs-Version", 4);
         try {
             config.save(ProtocolStringReplacer.getInstance().getConfigFile());
         } catch (IOException e) {
