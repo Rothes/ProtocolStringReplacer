@@ -3,7 +3,9 @@ package me.rothes.protocolstringreplacer;
 import com.sk89q.protocolstringreplacer.PSRDisguisePlugin;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
 import me.rothes.protocolstringreplacer.console.PSRMessage;
+import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
 import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.user.UserManager;
@@ -16,7 +18,7 @@ import me.rothes.protocolstringreplacer.upgrades.UpgradeEnum;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
+import org.bstats.charts.DrilldownPie;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -32,6 +34,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -213,8 +216,36 @@ public class ProtocolStringReplacer extends JavaPlugin {
             player.updateInventory();
         }
         Metrics metrics = new Metrics(this, 11740);
-        metrics.addCustomChart(new SimplePie("replaces_count", () -> String.valueOf(replacerManager.getReplacesCount())));
-        metrics.addCustomChart(new SimplePie("replace_configs_count", () -> String.valueOf(replacerManager.getReplacerConfigList().size())));
+        metrics.addCustomChart(new DrilldownPie("Replaces_Count", () -> {
+            int configs = 0;
+            int replaces = 0;
+            for (ReplacerConfig replacerConfig : replacerManager.getReplacerConfigList()) {
+                configs++;
+                for (ReplacesMode mode : ReplacesMode.values()) {
+                    replaces += replacerConfig.getReplaces(mode).size();
+                }
+            }
+            Map<String, Map<String, Integer>> map = new HashMap<>();
+            Map<String, Integer> entry = new HashMap<>();
+            entry.put(String.valueOf(replaces), 1);
+            map.put(configs + " Configs", entry);
+            return map;
+        }));
+        metrics.addCustomChart(new DrilldownPie("Blocks_Count", () -> {
+            int configs = 0;
+            int blocks = 0;
+            for (ReplacerConfig replacerConfig : replacerManager.getReplacerConfigList()) {
+                configs++;
+                for (ReplacesMode mode : ReplacesMode.values()) {
+                    blocks += replacerConfig.getBlocks(mode).size();
+                }
+            }
+            Map<String, Map<String, Integer>> map = new HashMap<>();
+            Map<String, Integer> entry = new HashMap<>();
+            entry.put(String.valueOf(blocks), 1);
+            map.put(configs + " Configs", entry);
+            return map;
+        }));
     }
 
     private boolean checkDepends(String... depends) {
