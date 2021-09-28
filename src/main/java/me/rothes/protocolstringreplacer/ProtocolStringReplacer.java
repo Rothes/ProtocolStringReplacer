@@ -227,8 +227,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
             Map<String, Map<String, Integer>> map = new HashMap<>();
             Map<String, Integer> entry = new HashMap<>();
-            entry.put(String.valueOf(replaces), 1);
-            map.put(configs + " Configs", entry);
+            entry.put(replaces + replaces >= 1 ? " Replaces" : " Replace", 1);
+            map.put(configs + configs >= 1 ? " Configs" : " Config", entry);
             return map;
         }));
         metrics.addCustomChart(new DrilldownPie("Blocks_Count", () -> {
@@ -242,8 +242,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
             Map<String, Map<String, Integer>> map = new HashMap<>();
             Map<String, Integer> entry = new HashMap<>();
-            entry.put(String.valueOf(blocks), 1);
-            map.put(configs + " Configs", entry);
+            entry.put(blocks + blocks >= 1 ? " Blocks" : " Block", 1);
+            map.put(configs + configs >= 1 ? " Configs" : " Config", entry);
             return map;
         }));
     }
