@@ -59,7 +59,7 @@ public class Block extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             List<Object> blocks = user.getEditorReplacerConfig().getBlocks(replacesMode);
@@ -84,24 +84,28 @@ public class Block extends SubCommand {
                 return;
             }
 
-            user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e屏蔽项目列表§7 ]§l §7§m-----------");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Result.Header"));
 
             for (int i = (page - 1) * 10; i < blocks.size() && i < page * 10; i++) {
                 String block = blocks.get(i).toString();
 
-                user.sendFilteredMessage(new ComponentBuilder("§6[+] ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/psr edit block add " + replacesMode.getNode() + " " + i + " <屏蔽文本>"))
-                        .append("§6[编辑] ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                user.sendFilteredMessage(new ComponentBuilder(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Add"))
+                        .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                                "/psr edit block add " + replacesMode.getNode() + " " + i + " <"
+                                        + PSRLocalization.getLocaledMessage("Variables.Block-Text") + ">"))
+                        .append(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Edit"))
+                        .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/psr edit block set " + replacesMode.getNode() + " " + i + " "
                                         + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(block))))
-                                .append("§c[删除]").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                                .append(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Delete"))
+                        .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/psr edit block remove " + replacesMode.getNode() + " " + i))
                         .append(" " + i + ". ").reset().append(ColorUtils.showColorCodes(block)).color(ChatColor.AQUA).create());
             }
 
             MessageUtils.sendPageButtons(user, "/psr edit block list " + replacesMode.getNode() + " ", page, totalPage);
 
-            user.sendFilteredText("§7§m-----------------------------------------------");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Result.Footer"));
         } else {
             user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Detailed-Help"));
         }
@@ -112,7 +116,7 @@ public class Block extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             if (!StringUtils.isNumeric(args[4])) {
@@ -152,7 +156,7 @@ public class Block extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             if (args.length == 5) {
@@ -191,7 +195,7 @@ public class Block extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
                 return;
             }
             if (args.length == 5) {
@@ -228,26 +232,26 @@ public class Block extends SubCommand {
         } else if (args.length == 4
                 && (args[2].equalsIgnoreCase("list") || args[2].equalsIgnoreCase("set")
                 || args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove"))) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Match-Mode.Name") + ">");
+            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
             for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }
         } else if (args.length == 5) {
             if (args[2].equalsIgnoreCase("list")) {
-                list.add("[" + PSRLocalization.getLocaledMessage("Enum.Page.Name") + "]");
+                list.add("[" + PSRLocalization.getLocaledMessage("Variables.Page.Name") + "]");
             } else if (args[2].equalsIgnoreCase("set")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Enum.Index.Name") + ">");
+                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Index.Name") + ">");
             } else if (args[2].equalsIgnoreCase("add")) {
-                list.add("[" + PSRLocalization.getLocaledMessage("Enum.Index.Name") +"]|" +
-                        "<" + PSRLocalization.getLocaledMessage("Enum.Block-Text.Name") + ">");
+                list.add("[" + PSRLocalization.getLocaledMessage("Variables.Index.Name") +"]|" +
+                        "<" + PSRLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
             } else if (args[2].equalsIgnoreCase("remove")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Enum.Index.Name") + ">");
+                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Index.Name") + ">");
             }
         } else if (args.length == 6) {
             if (args[2].equalsIgnoreCase("set")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Enum.Block-Text.Name") + ">");
+                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
             } else if (args[2].equalsIgnoreCase("add") && StringUtils.isNumeric(args[3])) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Enum.Block-Text.Name") + ">");
+                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
             }
         }
         return list;
@@ -256,8 +260,6 @@ public class Block extends SubCommand {
     @Override
     public void sendHelp(@Nonnull User user) {
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Help.Header"));
-        user.sendFilteredText("§7 * §e/psr edit block help §7- §b" +
-                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Help.Help-Description"));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Simple-Help"));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Set.Simple-Help"));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Add.Simple-Help"));

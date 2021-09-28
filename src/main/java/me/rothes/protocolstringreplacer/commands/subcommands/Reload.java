@@ -35,8 +35,6 @@ public class Reload extends SubCommand {
     @Override
     public void sendHelp(@Nonnull User user) {
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Reload.Help.Header"));
-        user.sendFilteredText("§7 * §e/psr reload help §7- §b" + PSRLocalization.getLocaledMessage(
-                "Sender.Commands.Reload.Help.Help-Description"));
         user.sendFilteredText("§7 * §e/psr reload§7- §b" + this.getDescription());
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Reload.Help.Footer"));
     }

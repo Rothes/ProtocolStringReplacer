@@ -109,12 +109,12 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
     }
 
     public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText("§7§m------§7§l §7[ §c§lProtocol§6§lString§3§lReplacer§7 ]§l §7§m------");
-        user.sendFilteredText("§7 * §e/psr help §7- §b" + PSRLocalization.getLocaledMessage("Sender.Commands.Help.Description"));
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Help.Header"));
         for (SubCommand subCommand : subCommands) {
-            user.sendFilteredText("§7 * §e/psr " + subCommand.getName() + " §7- §b" + subCommand.getDescription());
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Subcommand-Help-Format",
+                    "/psr " + subCommand.getName(), subCommand.getDescription()));
         }
-        user.sendFilteredText("§7§m-----------------------------------------");
+        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Help.Footer"));
     }
 
 }

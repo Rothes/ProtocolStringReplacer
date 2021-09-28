@@ -9,8 +9,10 @@ import me.rothes.protocolstringreplacer.user.User;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -42,14 +44,14 @@ public class Parse extends SubCommand {
                 player = Bukkit.getPlayer(args[2]);
                 if (player == null) {
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                            "Enum.Player.Messages.Player-Is-Offline", args[2]));
+                            "Variables.Player.Messages.Player-Is-Offline", args[2]));
                     return;
                 }
             }
             ListenType listenType = ListenType.getType(args[3]);
             if (listenType == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Listen-Type.Messages.Invaild-Type", args[3]));
+                        "Variables.Listen-Type.Messages.Invaild-Type", args[3]));
                 return;
             }
             ReplacesMode replacesMode = null;
@@ -61,7 +63,7 @@ public class Parse extends SubCommand {
             }
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Match-Mode.Messages.Invaild-Mode", args[4]));
+                        "Variables.Match-Mode.Messages.Invaild-Mode", args[4]));
                 return;
             }
 
@@ -202,9 +204,9 @@ public class Parse extends SubCommand {
     }
 
     @NotNull
-    private Text createReplaceResultInfo(@NotNull ArrayList<HoverEvent> results, @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode,
-                                         @NotNull String original, @NotNull String replacement, @NotNull String result) {
-        return new Text(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Replace-Result-Info",
+    private BaseComponent[] createReplaceResultInfo(@NotNull ArrayList<HoverEvent> results, @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode,
+                                                  @NotNull String original, @NotNull String replacement, @NotNull String result) {
+        return TextComponent.fromLegacyText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Replace-Result-Info",
                 String.valueOf(results.size() + 1), replacerConfig.getRelativePath(),
                 PSRLocalization.getLocaledMessage(replacesMode.getLocaleKey()), ColorUtils.showColorCodes(original),
                 ColorUtils.showColorCodes(replacement), ColorUtils.showColorCodes(result)));
@@ -222,12 +224,12 @@ public class Parse extends SubCommand {
             }
             list.add("null");
         } else if (args.length == 4) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Listen-Type.Name") +">");
+            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Listen-Type.Name") +">");
             for (ListenType listenType : ListenType.values()) {
                 list.add(listenType.getName());
             }
         } else if (args.length == 5) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Match-Mode.Name") + ">");
+            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
             for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }

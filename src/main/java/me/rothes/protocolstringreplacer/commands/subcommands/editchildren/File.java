@@ -14,6 +14,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,39 +84,41 @@ public class File extends SubCommand {
                 return;
             }
 
-            user.sendFilteredText("§7§m-----------§7§l §7[ §c§lP§6§lS§3§lR §7- §e替换文件列表§7 ]§l §7§m-----------");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Header"));
 
             for (int i = (page - 1) * 10; i < replacerConfigList.size() && i < page * 10; i++) {
                 ReplacerConfig replacerConfig = replacerConfigList.get(i);
-                ComponentBuilder hoverBuilder = new ComponentBuilder("").append(replacerConfig.getRelativePath()).color(ChatColor.GOLD).bold(true).append("\n§3§l状态: ").bold(false).append(replacerConfig.isEnable()? "§a启用" : "§c禁用").
-                        append("\n§3§l优先级: ").append(String.valueOf(replacerConfig.getPriority())).color(ChatColor.AQUA).append("\n§3§l版本: ").append(replacerConfig.getVersion() == null? "§7未定义" : replacerConfig.getVersion()).
-                        append("\n§3§l作者: ").append(replacerConfig.getAuthor() == null? "§7未定义" : replacerConfig.getAuthor()).append("\n§3§l匹配方式: §b");
-                switch (replacerConfig.getMatchMode()) {
-                    case CONTAIN:
-                        hoverBuilder.append("包含匹配");
-                        break;
-                    case EQUAL:
-                        hoverBuilder.append("完全匹配");
-                        break;
-                    case REGEX:
-                        hoverBuilder.append("正则表达式");
-                        break;
-                    default:
-                        hoverBuilder.append("未知");
-                        break;
-                }
-                hoverBuilder.append("\n§3§l监听类型: ");
+                StringBuilder listens = new StringBuilder();
                 for (ListenType listenType : replacerConfig.getListenTypeList()) {
-                    hoverBuilder.append("\n§7- ").append(listenType.getName()).color(ChatColor.AQUA);
+                    listens.append("\n§7- §b").append(listenType.getName());
                 }
-
-                user.sendFilteredMessage(new ComponentBuilder("[选定]").color(ChatColor.GOLD).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit file select " + i)).append(" " + i + ". ").reset().color(ChatColor.WHITE).
-                        append(replacerConfig.getRelativePath()).color(ChatColor.AQUA).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create())).create());
+                user.sendFilteredMessage(new ComponentBuilder(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Select"))
+                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit file select " + i)).append(" " + i + ". ").reset().color(ChatColor.WHITE).
+                        append(replacerConfig.getRelativePath()).color(ChatColor.AQUA)
+                        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT
+                                , TextComponent.fromLegacyText(PSRLocalization.getLocaledMessage(
+                                        "Sender.Commands.Edit.Children.File.Children.List.Result.Replacer-Info",
+                                replacerConfig.getRelativePath(),
+                                replacerConfig.isEnable() ?
+                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Enabled") :
+                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Enabled"),
+                                String.valueOf(replacerConfig.getPriority()),
+                                replacerConfig.getVersion() == null ?
+                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
+                                        replacerConfig.getVersion(),
+                                replacerConfig.getAuthor() == null ?
+                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
+                                        replacerConfig.getAuthor(),
+                                PSRLocalization.getLocaledMessage(replacerConfig.getMatchMode().getLocaleKey()),
+                                listens.length() == 0 ?
+                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
+                                        listens.toString()
+                        )))).create());
             }
 
             MessageUtils.sendPageButtons(user, "/psr edit file list ", page, totalPage);
 
-            user.sendFilteredText("§7§m-----------------------------------------------");
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Footer"));
         } else {
             user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Detailed-Help"));
         }
@@ -131,7 +134,7 @@ public class File extends SubCommand {
                         "Sender.Commands.Edit.Children.File.Children.Select.Replacer-Config-Selected", replacerConfig.getRelativePath()));
             } else {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Sender.Commands.Edit.Children.File.Children.Select.Cannot-Find-Replacer-Config", args[3]));
+                        "Sender.Commands.Edit.Children.File.Children.Cannot-Find-Replacer-Config", args[3]));
             }
         } else {
             user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Detailed-Help"));
@@ -183,7 +186,7 @@ public class File extends SubCommand {
                 }
             } else {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Sender.Commands.Edit.Children.File.Children.Delete.Cannot-Find-Replacer-Config", args[3]));
+                        "Sender.Commands.Edit.Children.File.Children.Cannot-Find-Replacer-Config", args[3]));
             }
         } else {
             user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Delete.Detailed-Help"));
@@ -197,10 +200,10 @@ public class File extends SubCommand {
             list = Arrays.asList("help", "list", "select", "create", "delete");
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("list")) {
-                list.add("[" + PSRLocalization.getLocaledMessage("Enum.Page.Name") + "]");
+                list.add("[" + PSRLocalization.getLocaledMessage("Variables.Page.Name") + "]");
             } else if (args[2].equalsIgnoreCase("delete") || args[2].equalsIgnoreCase("select")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Enum.Replacer-Config.Name") + "|"
-                        + PSRLocalization.getLocaledMessage("Enum.Index.Name") + ">");
+                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Replacer-Config.Name") + "|"
+                        + PSRLocalization.getLocaledMessage("Variables.Index.Name") + ">");
                 for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
                     list.add(ArgUtils.formatWithQuotes(replacerConfig.getRelativePath()));
                 }
@@ -234,8 +237,6 @@ public class File extends SubCommand {
     @Override
     public void sendHelp(@Nonnull User user) {
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Header"));
-        user.sendFilteredText("§7 * §e/psr edit file help §7- §b" +
-                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Help-Description"));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Simple-Help"));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Simple-Help"));
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Simple-Help"));

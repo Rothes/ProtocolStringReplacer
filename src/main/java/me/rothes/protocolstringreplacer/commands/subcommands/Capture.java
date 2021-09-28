@@ -50,26 +50,26 @@ public class Capture extends SubCommand {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Listen-Mode.Messages.Invaild-Mode", args[2]));
+                        "Variables.Listen-Mode.Messages.Invaild-Mode", args[2]));
                 return;
             }
             if (!listenType.isCapturable()) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Sender.Commands.Capture.Listen-Type-Cannot-Be-Captured"));
+                        "Sender.Commands.Capture.Children.Add.Listen-Type-Cannot-Be-Captured"));
                 return;
             }
             if (user.isCapturing(listenType)) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Sender.Commands.Capture.Already-Capturing-Listen-Type", listenType.getName()));
+                        "Sender.Commands.Capture.Children.Add.Already-Capturing-Listen-Type", listenType.getName()));
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Remove-Capture-Tip", listenType.getName()));
                 return;
             }
             user.addCaptureType(listenType);
             user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                    "Sender.Commands.Capture.Capture-Added", listenType.getName()));
+                    "Sender.Commands.Capture.Children.Add.Capture-Added", listenType.getName()));
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Help"));
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Detailed-Help"));
         }
     }
 
@@ -78,19 +78,19 @@ public class Capture extends SubCommand {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Enum.Listen-Type.Messages.Invaild-Type", args[2]));
+                        "Variables.Listen-Type.Messages.Invaild-Type", args[2]));
                 return;
             }
             if (!user.isCapturing(listenType)) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Sender.Commands.Capture.Already-Not-Capturing-Listen-Type", listenType.getName()));
+                        "Sender.Commands.Capture.Children.Remove.Already-Not-Capturing-Listen-Type", listenType.getName()));
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Add-Capture-Tip", listenType.getName()));
                 return;
             }
             user.removeCaptureType(listenType);
             user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                    "Sender.Commands.Capture.Capture-Removed", listenType.getName()));
+                    "Sender.Commands.Capture.Children.Remove.Capture-Removed", listenType.getName()));
         } else {
             user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Remove.Detailed-Help"));
         }
@@ -102,12 +102,12 @@ public class Capture extends SubCommand {
                 ListenType listenType = ListenType.getType(args[2]);
                 if (listenType == null) {
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                            "Enum.Listen-Type.Messages.Invaild-Type", args[2]));
+                            "Variables.Listen-Type.Messages.Invaild-Type", args[2]));
                     return;
                 }
                 if (!user.isCapturing(listenType)) {
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                            "Sender.Commands.Capture.Not-Capturing-Listen-Type", listenType.getName()));
+                            "Sender.Commands.Capture.Children.List.Not-Capturing-Listen-Type", listenType.getName()));
                     user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Capture.Add-Capture-Tip", listenType.getName()));
                     return;
@@ -147,7 +147,7 @@ public class Capture extends SubCommand {
             list = Arrays.asList("add", "remove", "list");
         } else if (args.length == 3
                 && args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("list")) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Enum.Listen-Type.Name") + ">");
+            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Listen-Type.Name") + ">");
             for (ListenType listenType : ListenType.values()) {
                 if (listenType.isCapturable()) {
                     list.add(listenType.getName());
@@ -155,7 +155,7 @@ public class Capture extends SubCommand {
             }
         } else if (args.length == 4
                 && args[1].equalsIgnoreCase("list")) {
-            list.add("[" + PSRLocalization.getLocaledMessage("Enum.Page.Name") + "]");
+            list.add("[" + PSRLocalization.getLocaledMessage("Variables.Page.Name") + "]");
         }
         return list;
     }

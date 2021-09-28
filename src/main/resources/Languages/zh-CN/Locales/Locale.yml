@@ -1,5 +1,3 @@
-# This file is only for early preview.
-# Note that the path structure is not final.
 Console-Sender:
   Messages:
     Command-Not-Available: '&c仅玩家可使用该指令.'
@@ -38,8 +36,10 @@ Sender:
     Index-Exceed: '&c请指定小于总大小 &f%0% &c的索引.'
   Commands:
     No-Permission: '&c您没有权限这么做.'
+    Subcommand-Help-Format: '&7 * &e%0% &7- &b%1%'
     Help:
-      Description: '插件指令列表'
+      Header: '&7&m------&7&l &7[ &c&lProtocol&6&lString&3&lReplacer&7 ]&l &7&m------'
+      Footer: '&7&m-----------------------------------------'
     Confirm:
       Expired: '&c确认操作已超时. 请重新执行.'
       Nothing-To-Confirm: '&c您没有待确认的操作.'
@@ -48,48 +48,60 @@ Sender:
       Help:
         Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e捕获工具&7 ]&l &7&m-----------'
         Footer: '&7&m-------------------------------------------'
-      Listen-Type-Cannot-Be-Captured: '&c此监听类型不可捕获.'
-      Already-Capturing-Listen-Type: '&c您已经启用了 &f%0% &c的捕获了.'
-      Remove-Capture-Tip: '&c使用指令 &e/psr capture remove %0% &c即可取消捕获.'
-      Capture-Added: '&a已启用 &f%0% &a的捕获.'
-      Already-Not-Capturing-Listen-Type: '&c您已经关闭了 &f%0% &c的捕获了.'
       Add-Capture-Tip: '&c使用指令 &e/psr capture add %0% &c即可开启捕获.'
-      Capture-Removed: '&a已移除 &f%0% &a的捕获.'
-      Not-Capturing-Listen-Type: '&c您未在捕获 &f%0% &c.'
+      Remove-Capture-Tip: '&c使用指令 &e/psr capture remove %0% &c即可取消捕获.'
       Children:
         Add:
           Simple-Help: '&7 * &e/psr capture add &7- &b启用监听类型的Json捕获'
           Detailed-Help: '&7 * &e/psr capture add <监听类型> &7- &b启用监听类型的Json捕获'
+          Listen-Type-Cannot-Be-Captured: '&c此监听类型不可捕获.'
+          Capture-Added: '&a已启用 &f%0% &a的捕获.'
+          Already-Capturing-Listen-Type: '&c您已经启用了 &f%0% &c的捕获了.'
         Remove:
           Simple-Help: '&7 * &e/psr capture remove &7- &b移除监听类型的Json捕获'
           Detailed-Help: '&7 * &e/psr capture remove <监听类型> &7- &b移除监听类型的Json捕获'
+          Capture-Removed: '&a已移除 &f%0% &a的捕获.'
+          Already-Not-Capturing-Listen-Type: '&c您已经关闭了 &f%0% &c的捕获了.'
         List:
           Simple-Help: '&7 * &e/psr capture list &7- &b列出捕获的Json信息'
           Detailed-Help: '&7 * &e/psr capture list <监听类型> [页码] &7- &b列出捕获的Json信息'
           Results-Header: '&7&m---------&7&l &7[ &c&lP&6&lS&3&lR &7- &e捕获列表&7 ]&l &7&m---------'
           Results-Footer: '&7&m---------------------------------------'
+          Not-Capturing-Listen-Type: '&c您未在捕获 &f%0% &c.'
     Edit:
       Description: '替换配置编辑器'
       Help:
         Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e编辑器&7 ]&l &7&m-----------'
         Footer: '&7&m-----------------------------------------'
-        Help-Description: '编辑器指令列表'
       Children:
         File:
           Description: '替换配置文件相关指令'
           Help:
             Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e文件编辑器&7 ]&l &7&m-----------'
             Footer: '&7&m---------------------------------------------'
-            Help-Description: '文件编辑器指令列表'
           Children:
+            Cannot-Find-Replacer-Config: '&c找不到此替换配置文件: &f%0%'
             List:
               Simple-Help: '&7 * &e/psr edit file list &7- &b查看所有替换配置文件'
               Detailed-Help: '&7 * &e/psr edit file list [页码] &7- &b查看所有加载的替换配置文件'
+              Result:
+                Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e替换文件列表&7 ]&l &7&m-----------'
+                Replacer-Info: |-
+                  &6&l%0%
+                  &3&l状态: %1%
+                  &3&l优先级: %2%
+                  &3&l版本: %3%
+                  &3&l作者: %4%
+                  &3&l匹配方式: &b%5%
+                  &3&l监听类型: %6%
+                Enabled: '&a启用'
+                Not-Enabled: '&c禁用'
+                Not-Configured: '&7未定义'
+                Footer: '&7&m-----------------------------------------------'
             Select:
               Simple-Help: '&7 * &e/psr edit file select &7- &b选定一个替换配置文件'
               Detailed-Help: '"&7 * &e/psr file select <替换配置文件|索引> &7- &b选定编辑的替换配置'
               Replacer-Config-Selected: '&a已选定替换配置: &f%0%'
-              Cannot-Find-Replacer-Config: '&c找不到此替换配置文件: &f%0%'
             Create:
               Simple-Help: '&7 * &e/psr edit file create &7- &b新建一个替换配置文件'
               Detailed-Help: '"&7 * &e/psr file create <文件名> &7- &b在磁盘中新建一个替换配置文件'
@@ -103,28 +115,28 @@ Sender:
               Detailed-Help: '&7 * &e/psr file delete <替换配置文件|索引> &7- &b在磁盘中删除一个替换配置文件'
               File-Successfully-Deleted: '&a已删除替换配置文件: &f%0%'
               Delete-Need-To-Confirm: '&c请在 15 秒内重新执行一次操作或输入 &e/psr confirm &c以确认删除 &f%0%'
-              Cannot-Find-Replacer-Config: '&c找不到此替换配置文件: &f%0%'
         Replace:
           Description: '替换项目相关指令'
           Not-Selected-Replacer-Config: '&c请先选定一个替换配置文件, 再使用本指令.'
           Help:
             Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e替换项编辑器&7 ]&l &7&m-----------'
             Footer: '&7&m-----------------------------------------------'
-            Help-Description: '替换项编辑器指令列表'
           Children:
+            Same-Original-Text: '&c在索引 &f%0% &c处已有一个相同的原文本了.'
             List:
               Simple-Help: '&7 * &e/psr edit replace list &7- &b查看所有替换项'
               Detailed-Help: '&7 * &e/psr edit replace list <替换模式> [页码] &7- &b查看所有替换项'
+              Result:
+                Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e替换项目列表&7 ]&l &7&m-----------'
+                Footer: '&7&m-----------------------------------------------'
             Set:
               Simple-Help: '&7 * &e/psr edit replace set &7- &b编辑指定索引的替换项'
               Detailed-Help: '&7 * &e/psr edit replace set <替换模式> <索引> [原文本] <新文本> &7- &b编辑指定索引的替换项'
               Successfully-Set-Replace: '&a已修改索引 &f%0% &a为 &f%1% &7&o> &f%2%'
-              Same-Original-Text: '&c在索引 &f%0% &c处已有一个相同的原文本了.'
             Add:
               Simple-Help: '&7 * &e/psr edit replace add &7- &b在索引添加一个替换项'
               Detailed-Help: '&7 * &e/psr edit replace add <替换模式> [索引] <原文本> <新文本> &7- &b在索引添加一个替换项'
               Successfully-Added-Replace: '&a已在索引 &f%0% &a添加替换项: &f%1% &7&o> &f%2%'
-              Same-Original-Text: '&c在索引 &f%0% &c处已有一个相同的原文本了.'
             Remove:
               Simple-Help: '&7 * &e/psr edit replace remove &7- &b删除在索引的替换项'
               Detailed-Help: '&7 * &e/psr edit replace remove <替换模式> <索引> &7- &b删除在索引的替换项'
@@ -135,11 +147,13 @@ Sender:
           Help:
             Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e屏蔽项编辑器&7 ]&l &7&m-----------'
             Footer: '&7&m-----------------------------------------------'
-            Help-Description: '屏蔽项编辑器指令列表'
           Children:
             List:
               Simple-Help: '&7 * &e/psr edit block list &7- &b查看所有屏蔽项'
               Detailed-Help: '&7 * &e/psr edit block list <替换模式> [页码] &7- &b查看所有屏蔽项'
+              Result:
+                Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e屏蔽项目列表&7 ]&l &7&m-----------'
+                Footer: '&7&m-----------------------------------------------'
             Set:
               Simple-Help: '&7 * &e/psr edit block set &7- &b编辑指定索引的屏蔽项'
               Detailed-Help: '&7 * &e/psr edit block set <替换模式> <索引> <屏蔽文本> &7- &b编辑指定索引的屏蔽项'
@@ -193,7 +207,6 @@ Sender:
       Tab-Complete:
         String-To-Parse: '<要测试的字符串>'
         PAPI-Target: '<占位符目标玩家>'
-
     Reload:
       Description: '重载插件配置文件'
       Async-Reloading: '&b正在异步重载插件...'
@@ -201,20 +214,29 @@ Sender:
       Help:
         Header: '&7&m------&7&l &7[ &c&lP&6&lS&3&lR &7- &e重载&7 ]&l &7&m------'
         Footer: '&7&m-----------------------------------------'
-        Help-Description: '重载指令列表'
 
 Utils:
   Message:
     Page-Info: '&3第 &f%0% &3页 &7| &3共 &f%1% &3页'
+    Buttons:
+      Add: '&6[+] '
+      Edit: '&6[编辑] '
+      Delete: '&c[删除]'
+      Select: '&6[选定]'
 
-Enum:
+Variables:
   Match-Mode:
     Name: '替换模式'
+    Enums:
+      Contain: '包含匹配'
+      Equal: '完全匹配'
+      Regex: '正则表达式'
     Messages:
       Invaild-Mode: '&c替换模式 &f%0% &c不存在.'
   Replacers-Mode:
-    Common: 常规
-    Json: Json
+    Enums:
+      Common: 常规
+      Json: Json
   Listen-Type:
     Name: '监听类型'
     Messages:

@@ -67,10 +67,9 @@ public class Edit extends SubCommand {
     @Override
     public void sendHelp(@Nonnull User user) {
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Header"));
-        user.sendFilteredText("§7 * §e/psr edit help §7- §b" + PSRLocalization.getLocaledMessage(
-                "Sender.Commands.Edit.Help.Help-Description"));
         for (SubCommand childCommand : childCommands) {
-            user.sendFilteredText("§7 * §e/psr edit " + childCommand.getName() + " §7- §b" + childCommand.getDescription());
+            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Subcommand-Help-Format",
+                    "/psr edit " + childCommand.getName(), childCommand.getDescription()));
         }
         user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Footer"));
     }
