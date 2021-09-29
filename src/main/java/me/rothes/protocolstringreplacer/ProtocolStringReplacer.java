@@ -215,6 +215,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
             userManager.loadUser(player);
             player.updateInventory();
         }
+        initMetrics();
+    }
+
+    private void initMetrics() {
         Metrics metrics = new Metrics(this, 11740);
         metrics.addCustomChart(new DrilldownPie("Replaces_Count", () -> {
             int configs = 0;
@@ -227,8 +231,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
             Map<String, Map<String, Integer>> map = new HashMap<>();
             Map<String, Integer> entry = new HashMap<>();
-            entry.put(replaces + replaces >= 1 ? " Replaces" : " Replace", 1);
-            map.put(configs + configs >= 1 ? " Configs" : " Config", entry);
+            entry.put(replaces + (replaces >= 1 ? " Replaces" : " Replace"), 1);
+            map.put(configs + (configs >= 1 ? " Configs" : " Config"), entry);
             return map;
         }));
         metrics.addCustomChart(new DrilldownPie("Blocks_Count", () -> {
@@ -242,8 +246,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
             Map<String, Map<String, Integer>> map = new HashMap<>();
             Map<String, Integer> entry = new HashMap<>();
-            entry.put(blocks + blocks >= 1 ? " Blocks" : " Block", 1);
-            map.put(configs + configs >= 1 ? " Configs" : " Config", entry);
+            entry.put(blocks + (blocks >= 1 ? " Blocks" : " Block"), 1);
+            map.put(configs + (configs >= 1 ? " Configs" : " Config"), entry);
             return map;
         }));
     }
@@ -291,11 +295,16 @@ public class ProtocolStringReplacer extends JavaPlugin {
             e.printStackTrace();
         }
 
+        checkConfigKeys();
+    }
+
+    private void checkConfigKeys() {
         CommentYamlConfiguration configDefault = PSRLocalization.getDefaultLocaledConfig();
 
         Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
         boolean edited = false;
         LinkedList<String> comments = new LinkedList<>();
+        int index = 2333;
         for (String key : configDefault.getKeys(true)) {
             if (configDefault.get(key) instanceof ConfigurationSection) {
                 continue;
@@ -317,7 +326,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                     for (byte i = 0; i < split.length - 1; i++) {
                         stringBuilder.append(split[i]).append(".");
                     }
-                    stringBuilder.append("2333").append(split[split.length - 1]);
+                    stringBuilder.append(index++).append(split[split.length - 1]);
                     config.set(stringBuilder.toString(), configDefault.getString(commentKey));
                 }
                 config.set(key, configDefault.get(key));
@@ -334,7 +343,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-
     }
 
     private void checkConfigsVersion() {
