@@ -13,14 +13,14 @@ Console-Sender:
       Pre-Loaded-Replacers: '&a预加载 %0% 个替换配置文件. &8耗时 %1%ms'
       Replacer-Load-Complete: '&a成功载入替换配置: %0%. &8耗时 %1%ms'
       Replacer-Regex-Exception: '&c无法载入配置文件 %0% , 因为正则表达式有问题.'
-      Invaild-Listen-Type: '&c未知或不支持的监听类型: %0%'
-      Invaild-Match-Mode: '&c未知的文本匹配方式: %0%. 使用默认值"Contain"'
+      Invalid-Listen-Type: '&c未知或不支持的监听类型: %0%'
+      Invalid-Match-Mode: '&c未知的文本匹配方式: %0%. 使用默认值"Contain"'
     Schedule:
       Purging-Item-Cache: '&a正在执行缓存清理任务. 将清理 %0% 个条目.'
     Config:
-      Invaild-Placeholder-Head: '&cPlaceholder-Head 值无效! 请定义一个字符. 使用默认值 ''｛'''
-      Invaild-Placeholder-Tail: '&cPlaceholder-Tail 值无效! 请定义一个字符. 使用默认值 ''｝'''
-      Invaild-Listener-Priority: '&c数据包监听优先度值无效! 使用默认值 ''HIGHEST'''
+      Invalid-Placeholder-Head: '&cPlaceholder-Head 值无效! 请定义一个字符. 使用默认值 ''｛'''
+      Invalid-Placeholder-Tail: '&cPlaceholder-Tail 值无效! 请定义一个字符. 使用默认值 ''｝'''
+      Invalid-Listener-Priority: '&c数据包监听优先度值无效! 使用默认值 ''HIGHEST'''
 
 Command-Block-Sender:
   Messages:
@@ -107,7 +107,7 @@ Sender:
               Detailed-Help: '"&7 * &e/psr file create <文件名> &7- &b在磁盘中新建一个替换配置文件'
               File-Create-Failed: '&c创建替换配置文件失败: &f%0%'
               File-Successfully-Created: '&a已成功创建替换配置文件: &f%0%'
-              Invaild-File-Path: '&c非法的文件路径.'
+              Invalid-File-Path: '&c非法的文件路径.'
               Not-Yml-File: '&c此文件名后缀不为 ".yml".'
               Not-In-Replacers-Folder: '&c替换配置文件必须存储于 "Replacers/" 文件夹中.'
             Delete:
@@ -232,7 +232,7 @@ Variables:
       Equal: '完全匹配'
       Regex: '正则表达式'
     Messages:
-      Invaild-Mode: '&c替换模式 &f%0% &c不存在.'
+      Invalid-Mode: '&c替换模式 &f%0% &c不存在.'
   Replacers-Mode:
     Enums:
       Common: 常规
@@ -240,7 +240,7 @@ Variables:
   Listen-Type:
     Name: '监听类型'
     Messages:
-      Invaild-Type: '&c监听类型 &f%0% &c不存在.'
+      Invalid-Type: '&c监听类型 &f%0% &c不存在.'
   Replacer-Config:
     Name: '替换配置文件'
   Player:

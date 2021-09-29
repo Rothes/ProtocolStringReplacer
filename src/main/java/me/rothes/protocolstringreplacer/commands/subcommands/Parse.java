@@ -51,7 +51,7 @@ public class Parse extends SubCommand {
             ListenType listenType = ListenType.getType(args[3]);
             if (listenType == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Variables.Listen-Type.Messages.Invaild-Type", args[3]));
+                        "Variables.Listen-Type.Messages.Invalid-Type", args[3]));
                 return;
             }
             ReplacesMode replacesMode = null;
@@ -63,7 +63,7 @@ public class Parse extends SubCommand {
             }
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Variables.Match-Mode.Messages.Invaild-Mode", args[4]));
+                        "Variables.Match-Mode.Messages.Invalid-Mode", args[4]));
                 return;
             }
 

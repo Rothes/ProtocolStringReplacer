@@ -60,7 +60,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
             ListOrderedMap replaces = user.getEditorReplacerConfig().getReplaces(replacesMode);
@@ -121,7 +121,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
             if (!StringUtils.isNumeric(args[4])) {
@@ -182,7 +182,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
             if (args.length == 6) {
@@ -238,7 +238,7 @@ public class Replace extends SubCommand {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Variables.Match-Mode.Messages.Invaild-Mode", args[3]));
+                        "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
             if (args.length == 5) {

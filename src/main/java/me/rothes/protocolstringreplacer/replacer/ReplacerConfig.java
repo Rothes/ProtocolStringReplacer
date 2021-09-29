@@ -241,7 +241,7 @@ public class ReplacerConfig {
                 }
                 if (!typeFound) {
                     ProtocolStringReplacer.warn(PSRLocalization.getLocaledMessage(
-                            "Console-Sender.Messages.Replacer-Config.Invaild-Listen-Type", type));
+                            "Console-Sender.Messages.Replacer-Config.Invalid-Listen-Type", type));
                 }
             }
         }
@@ -258,7 +258,7 @@ public class ReplacerConfig {
         if (!typeFound) {
             this.matchMode = MatchMode.CONTAIN;
             ProtocolStringReplacer.warn(PSRLocalization.getLocaledMessage(
-                    "Console-Sender.Messages.Replacer-Config.Invaild-Match-Mode", matchMode));
+                    "Console-Sender.Messages.Replacer-Config.Invalid-Match-Mode", matchMode));
         }
         for (ReplacesMode replacesMode : ReplacesMode.values()) {
             List<Map<?, ?>> mapList = configuration.getMapList("Replaces." + replacesMode.getNode());
