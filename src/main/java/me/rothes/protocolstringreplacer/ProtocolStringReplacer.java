@@ -381,15 +381,12 @@ public class ProtocolStringReplacer extends JavaPlugin {
      */
     private boolean checkPluginVersion() {
         try {
-            final InputStream stream = new URL("https://raw.githubusercontent.com/Rothes/ProtocolStringReplacer/master/Version%20Infos.json").openStream();
+            final URL url = new URL("https://raw.githubusercontent.com/Rothes/ProtocolStringReplacer/master/Version%20Infos.json");
+            final InputStream stream = url.openStream();
             final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder jsonBuilder = new StringBuilder();
+            final StringBuilder jsonBuilder = new StringBuilder();
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                jsonBuilder.append("\n").append(line);
-            }
-            if (jsonBuilder == null) {
-                error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Checking-Version"));
-                return true;
+                jsonBuilder.append(line).append("\n");
             }
             try {
                 final JsonElement element = new JsonParser().parse(jsonBuilder.toString());
