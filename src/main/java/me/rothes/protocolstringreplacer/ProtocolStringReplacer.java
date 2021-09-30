@@ -1,5 +1,8 @@
 package me.rothes.protocolstringreplacer;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sk89q.protocolstringreplacer.PSRDisguisePlugin;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
 import me.rothes.protocolstringreplacer.console.PSRMessage;
@@ -28,14 +31,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProtocolStringReplacer extends JavaPlugin {
@@ -53,6 +61,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private boolean isSpigot;
     private boolean isPaper;
     private boolean hasPaperComponent;
+    private Pattern digits = Pattern.compile("[^0-9]+");
 
     public ProtocolStringReplacer() {
         super();
@@ -163,6 +172,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         if (replacerManager != null) {
             replacerManager.saveReplacerConfigs();
         }
+        Bukkit.getScheduler().cancelTasks(instance);
     }
 
     public byte getServerMajorVersion() {
@@ -216,6 +226,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
             player.updateInventory();
         }
         initMetrics();
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            if (!checkPluginVersion()) {
+                Bukkit.getPluginManager().disablePlugin(instance);
+            }
+        }, 0L, 72000L);
     }
 
     private void initMetrics() {
@@ -358,6 +373,84 @@ public class ProtocolStringReplacer extends JavaPlugin {
             info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Upgrading-Configs", String.valueOf(i), String.valueOf(i + 1)));
             upgrades.get(i).upgrade();
         }
+    }
+
+    /**
+     * @return false if plugin doesn't pass the check.
+     * @since 2.0.0
+     */
+    private boolean checkPluginVersion() {
+        try {
+            final InputStream stream = new URL("https://raw.githubusercontent.com/Rothes/ProtocolStringReplacer/master/Version%20Infos.json").openStream();
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            StringBuilder jsonBuilder = new StringBuilder();
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                jsonBuilder.append("\n").append(line);
+            }
+            if (jsonBuilder == null) {
+                error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Checking-Version"));
+                return true;
+            }
+            try {
+                final JsonElement element = new JsonParser().parse(jsonBuilder.toString());
+                final JsonObject root = element.getAsJsonObject();
+                String latestVersion = root.getAsJsonPrimitive("Latest_Version").getAsString();
+                if (!compareVersion(latestVersion)) {
+                    // Only to notice server admins to update the plugin here.
+                    warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available", latestVersion));
+                }
+                for (JsonElement version : root.getAsJsonArray("Prohibit_Versions")) {
+                    if (!compareVersion(version.getAsJsonPrimitive().getAsString())) {
+                        error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Prohibited-Version"));
+                        return false;
+                    }
+                }
+                return true;
+            } catch (IllegalStateException | NullPointerException e) {
+                error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Parsing-Json", e.toString()));
+                return true;
+            }
+        } catch (IOException e) {
+            error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Checking-Version", e.toString()));
+            return true;
+        }
+    }
+
+    /**
+     * @param version The version to check.
+     * @return false if version is newer than the current.
+     * @since 2.0.0
+     */
+    private boolean compareVersion(@NotNull String version) {
+        String[] ver = version.split("\\.");
+        String[] current = getDescription().getVersion().split("\\.");
+        for (byte i = 0 ; i < ver.length; i++) {
+            String s = getDigits(ver[i]);
+            if (s.isEmpty()) {
+                return true;
+            }
+            if (current.length <= i) {
+                return false;
+            }
+            String cur = getDigits(current[i]);
+            if (cur.isEmpty()) {
+                return false;
+            }
+            int verInt = Integer.parseInt(s);
+            int curInt = Integer.parseInt(cur);
+            if (verInt > curInt) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String getDigits(@NotNull String string) {
+        Matcher matcher = digits.matcher(string);
+        if (matcher.matches()) {
+            return matcher.replaceAll("");
+        }
+        return string;
     }
 
     public void reload(@Nonnull User user) {
