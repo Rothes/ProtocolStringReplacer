@@ -394,7 +394,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 String latestVersion = root.getAsJsonPrimitive("Latest_Version").getAsString();
                 if (!compareVersion(latestVersion)) {
                     // Only to notice server admins to update the plugin here.
-                    warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available", latestVersion));
+                    warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-1", latestVersion));
+                    warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-2", latestVersion));
                 }
                 for (JsonElement version : root.getAsJsonArray("Prohibit_Versions")) {
                     if (!compareVersion(version.getAsJsonPrimitive().getAsString())) {

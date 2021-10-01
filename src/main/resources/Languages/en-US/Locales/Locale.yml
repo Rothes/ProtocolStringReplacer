@@ -1,0 +1,265 @@
+Console-Sender:
+  Messages:
+    Command-Not-Available: '&cOnly players can execute this command.'
+    Initialize:
+      Require-Spigot: '&cThis plugin must run on Spigot server or its fork.'
+      Recommend-Paper: 'You are not running Paper server or its fork. It''s recommended to switch to Paper for full supports.'
+      Out-Dated-Server: 'Your server version is too outdated, and may not enjoy some features normally...'
+      Missing-Dependency: '&cDependency plugin ''%0%'' is not detected，please install it before using this plugin.'
+      Created-Example-Replacer: '&aGenerated example replacer configs in plugins/ProtocolStringReplacer/Replacers.'
+      Added-Missing-Config-Key: '&cAutomatically added missing configuration key in Config.yml %0%'
+      Upgrading-Configs: '&aUpgrading configurations version: %0% -> %1%'
+    Replacer-Config:
+      Pre-Loaded-Replacers: '&aPre-loaded %0% replacer config(s). &8Took %1%ms'
+      Replacer-Load-Complete: '&aSuccessfully loaded replacer config: %0%. &8Took %1%ms'
+      Replacer-Regex-Exception: '&cFailed to load replacer config %0% , because there''s a regex syntax error in it.'
+      Invalid-Listen-Type: '&cInvalid listen type: %0%'
+      Invalid-Match-Mode: '&cInvalid match mode: %0%. Using defaults "Contain"'
+    Schedule:
+      Purging-Item-Cache: '&aRunning itemmeta cache purging task. %0% items in total will be purged.'
+    Config:
+      Invalid-Placeholder-Head: '&cInvalid Placeholder-Head value! Please define one character. Using defaults ''｛'''
+      Invalid-Placeholder-Tail: '&cInvalid Placeholder-Tail value! Please define one character. Using defaults ''｝'''
+      Invalid-Listener-Priority: '&cInvalid Listener-Priority value! Using defaults ''HIGHEST'''
+    Version-Checker:
+      Error-Checking-Version: '§cFailed to check version informations via server: %0%'
+      Error-Parsing-Json: '§cFailed to parse version informations Json: %0%'
+      New-Version-Available-Line-1: '§bA new version of PSR (''%0%'') is available!'
+      New-Version-Available-Line-2: '§bDownload here: '
+      Prohibited-Version: '§cThe version of PSR you are running has been prohibited by the server. This is usually due to a serious problem. Please update the plugin.'
+
+Command-Block-Sender:
+  Messages:
+    Command-Not-Available: '&7[&cProtocol&6String&3Replacer&7] &cOnly console or players can execute these commands.'
+
+Sender:
+  Prefix: '&c&lP&6&lS&3&lR &e> '
+  Error:
+    Not-A-Positive-Integer: '&f%0% &cis not a valid positive integer!'
+    Page-Low: '&cPlease specify a page number greater than &f0.'
+    Index-Low: '&cPlease specify an index greater than or equal to &f0.'
+    Page-Exceed: '&cPlease specify a page number less than the total page number &f%0%.'
+    Index-Exceed: '&cPlease specify an index less than the total index number &f%0%.'
+  Commands:
+    No-Permission: '&cYou don''t have the permission to do that.'
+    Subcommand-Help-Format: '&7 * &e%0% &7- &b%1%'
+    Help:
+      Header: '&7&m------&7&l &7[ &c&lProtocol&6&lString&3&lReplacer&7 ]&l &7&m------'
+      Footer: '&7&m-----------------------------------------'
+    Confirm:
+      Expired: '&cOperation confirm has timed out. Please execute again.'
+      Nothing-To-Confirm: '&cYou have no pending operations to confirm.'
+    Capture:
+      Description: 'Capture contents in a packet'
+      Help:
+        Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eCapture Tool&7 ]&l &7&m------------'
+        Footer: '&7&m-----------------------------------------------'
+      Add-Capture-Tip: '&cExecute &e/psr capture add %0% &cto enable capture.'
+      Remove-Capture-Tip: '&cExecute &e/psr capture remove %0% &cto disable capture.'
+      Children:
+        Add:
+          Simple-Help: '&7 * &e/psr capture add &7- &bEnable capture of listen type'
+          Detailed-Help: '&7 * &e/psr capture add <Listen type> &7- &bEnable capture of listen type'
+          Listen-Type-Cannot-Be-Captured: '&cThis listen type is not capturable.'
+          Capture-Added: '&aEnabled capture of &f%0% &a.'
+          Already-Capturing-Listen-Type: '&cYou have already enabled capture of &f%0% &c.'
+        Remove:
+          Simple-Help: '&7 * &e/psr capture remove &7- &bDisable capture of listen type'
+          Detailed-Help: '&7 * &e/psr capture remove <Listen type> &7- &bDisable capture of listen type'
+          Capture-Removed: '&aDisabled capture of &f%0% &a.'
+          Already-Not-Capturing-Listen-Type: '&cYou have already disabled capture of &f%0% &c.'
+        List:
+          Simple-Help: '&7 * &e/psr capture list &7- &bList captured contents'
+          Detailed-Help: '&7 * &e/psr capture list <Listen type> [page] &7- &bList captured contents'
+          Results-Header: '&7&m---------&7&l &7[ &c&lP&6&lS&3&lR &7- &eCaptured list&7 ]&l &7&m---------'
+          Results-Footer: '&7&m------------------------------------------'
+          Not-Capturing-Listen-Type: '&cYou are not capturing &f%0% &c.'
+    Edit:
+      Description: 'Replacers editor'
+      Help:
+        Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eEditor&7 ]&l &7&m------------'
+        Footer: '&7&m-----------------------------------------'
+      Children:
+        File:
+          Description: 'Replacer files commands'
+          Help:
+            Header: '&7&m-------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eFile Editor&7 ]&l &7&m-------------'
+            Footer: '&7&m----------------------------------------------'
+          Children:
+            Cannot-Find-Replacer-Config: '&cCannot find this replacer config: &f%0%'
+            List:
+              Simple-Help: '&7 * &e/psr edit file list &7- &bList all loaded replacer configs'
+              Detailed-Help: '&7 * &e/psr edit file list [page] &7- &bList all loaded replacer configs'
+              Result:
+                Header: '&7&m-------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eFile List&7 ]&l &7&m--------------'
+                Replacer-Info: |-
+                  &6&l%0%
+                  &3&lStatus: %1%
+                  &3&lPriority: %2%
+                  &3&lVersion: %3%
+                  &3&lAuthor: %4%
+                  &3&lMatch mode: &b%5%
+                  &3&lListen types: %6%
+                Enabled: '&aEnabled'
+                Not-Enabled: '&cDisabled'
+                Not-Configured: '&7Not configured'
+                Footer: '&7&m-----------------------------------------------'
+            Select:
+              Simple-Help: '&7 * &e/psr edit file select &7- &bSelect a replacer config'
+              Detailed-Help: '"&7 * &e/psr file select <File name|Index> &7- &bSelect a replacer config'
+              Replacer-Config-Selected: '&aSelected replacer config: &f%0%'
+            Create:
+              Simple-Help: '&7 * &e/psr edit file create &7- &bCreate a replacer config'
+              Detailed-Help: '"&7 * &e/psr file create <File name> &7- &bCreate a replacer config in your disk'
+              File-Create-Failed: '&cFailed to create replacer config: &f%0%'
+              File-Successfully-Created: '&aCreated replacer config successfully: &f%0%'
+              Invalid-File-Path: '&cInvalid file path.'
+              Not-Yml-File: '&cThe file name suffix is not ".yml".'
+              Not-In-Replacers-Folder: '&cReplacer configs must be stored in "Replacers/" folder.'
+            Delete:
+              Simple-Help: '&7 * &e/psr edit file delete &7- &bDelete a replacer config'
+              Detailed-Help: '&7 * &e/psr file delete <File name|Index> &7- &bDelete a replacer config'
+              File-Successfully-Deleted: '&aDeleted replacer config: &f%0%'
+              Delete-Need-To-Confirm: '&cPlease execute &e/psr confirm &c or this command again with in 15 sec to delete &f%0%'
+        Replace:
+          Description: 'Replace items commands'
+          Not-Selected-Replacer-Config: '&cPlease select a replacer config first.'
+          Help:
+            Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &eReplace items Editor&7 ]&l &7&m-----------'
+            Footer: '&7&m----------------------------------------------------'
+          Children:
+            Same-Original-Text: '&cThere''s already a same original text at index &f%0% &c.'
+            List:
+              Simple-Help: '&7 * &e/psr edit replace list &7- &bList all replace items'
+              Detailed-Help: '&7 * &e/psr edit replace list <Replaces mode> [Page] &7- &bList all replace items'
+              Result:
+                Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &eReplace items List&7 ]&l &7&m-----------'
+                Footer: '&7&m--------------------------------------------------'
+            Set:
+              Simple-Help: '&7 * &e/psr edit replace set &7- &bEdit replace item at index'
+              Detailed-Help: '&7 * &e/psr edit replace set <Replaces mode> <Index> [Original] <Replacement> &7- &bEdit replace item at index'
+              Successfully-Set-Replace: '&aSet index &f%0% &ato: &f%1% &7&o> &f%2%'
+            Add:
+              Simple-Help: '&7 * &e/psr edit replace add &7- &bAdd a replace item at index'
+              Detailed-Help: '&7 * &e/psr edit replace add <Replaces mode> [Index] <Original> <Replacement> &7- &bAdd a replace item at index'
+              Successfully-Added-Replace: '&aAdded at index &f%0% &a: &f%1% &7&o> &f%2%'
+            Remove:
+              Simple-Help: '&7 * &e/psr edit replace remove &7- &bRemove the replace item at index'
+              Detailed-Help: '&7 * &e/psr edit replace remove <Replaces mode> <Index> &7- &bRemove the replace item at index'
+              Sucessfully-Removed-Replace: '&aRemoved index: &f%0%'
+        Block:
+          Description: 'Block items commands'
+          Not-Selected-Replacer-Config: '&cPlease select a replacer config first.'
+          Help:
+            Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &eBlock items Editor&7 ]&l &7&m-----------'
+            Footer: '&7&m---------------------------------------------------'
+          Children:
+            List:
+              Simple-Help: '&7 * &e/psr edit block list &7- &bList all block items'
+              Detailed-Help: '&7 * &e/psr edit block list <Replaces mode> [Page] &7- &bList all block items'
+              Result:
+                Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &eBlock items List&7 ]&l &7&m-----------'
+                Footer: '&7&m-------------------------------------------------'
+            Set:
+              Simple-Help: '&7 * &e/psr edit block set &7- &bEdit block item at index'
+              Detailed-Help: '&7 * &e/psr edit block set <Replaces mode> <Index> <Text> &7- &bEdit block item at index'
+              Successfully-Set-Block: '&aSet index &f%0% &ato: &f%1%'
+            Add:
+              Simple-Help: '&7 * &e/psr edit block add &7- &bAdd a block item at index'
+              Detailed-Help: '&7 * &e/psr edit block add <Replaces mode> [Index] <Text> &7- &bAdd a block item at index'
+              Successfully-Added-Block: '&aAdded at index &f%0% &a: &f%1%'
+            Remove:
+              Simple-Help: '&7 * &e/psr edit block remove &7- &bRemove the block item at index'
+              Detailed-Help: '&7 * &e/psr edit block remove <Replaces mode> <Index> &7- &bRemove the block item at index'
+              Sucessfully-Removed-Block: '&aRemoved index: &f%0%'
+    Parse:
+      Description: 'Test replacing string'
+      Help:
+        Header: '&7&m---------------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eReplacing Test&7 ]&l &7&m---------------------'
+        Line-1: '&7 * &e/psr parse <String> <Player|null> <Listen type> <Replaces mode> &7- &bTest replacing string'
+        Line-2: '&7 | &bWith this command, you can test whether the replacement config you set'
+        Line-3: '&7 | &bis taking effect, And understand the process of string replacement.'
+        Line-4: '&7 | &bTaken time will be much higher than the actual time due to additional operations.'
+        Footer: '&7&m-------------------------------------------------------------------'
+      Start-Parse: '&aRunning parse, please wait...'
+      Result:
+        Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &eParsing Result&7 ]&l &7&m-----------'
+        Duration: ' &7* &3&lTaken time: &b%0% ms'
+        Listen-Type: ' &7* &3&lListen type: &b%0%'
+        Match-Mode: ' &7* &3&lReplaces mode: &b%0%'
+        Original-Text: ' &7* &3&lOriginal Text: &b%0%'
+        Final-Text: ' &7* &3&lFinal Text: &b%0%'
+        Steps:
+          Start-Prefix: ' &7* &3&lDetails:'
+          Noting-Replaced: ' &cNo replacements'
+          Hover-To-View-Info: '&7 &oHover to view'
+        PAPI-Replace:
+          Start-Prefix: ' &7* &3&lPAPI replacement: '
+          Replaced: '&aReplaced &7&oHover to view'
+          Not-Replaced: '&cNo Placeholders found'
+        Footer: '&7&m-----------------------------------------------'
+      Replace-Result-Info: |-
+        &7 --- &6&l%0%&6st Replacement&7 ---
+        &3&lReplacer config: &b%1%
+        &3&lMatch mode: &b%2%
+        &3&lItem original: &b%3%
+        &3&lItem replacement: &b%4%
+        &3&lReplaced result: &b%5%
+      PAPI-Replace-Info: |-
+        &7 ---&6&l PAPI Repleacement &7---
+        &3&lPAPI target: &b%0%
+        &3&lBefore: &b%1%
+        &3&lAfter: &b%2%
+      Tab-Complete:
+        String-To-Parse: '<String to parse>'
+        PAPI-Target: '<PAPI target>'
+    Reload:
+      Description: 'Reload configs'
+      Async-Reloading: '&bReloading plugin in async...'
+      Complete: '&aConfigs has been reloaded.'
+      Help:
+        Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eReload&7 ]&l &7&m------------'
+        Footer: '&7&m------------------------------------------'
+
+Utils:
+  Message:
+    Page-Info: '&3Page &f%0%  &7|  &f%1% &3in total'
+    Buttons:
+      Add: '&6[+] '
+      Edit: '&6[Edit] '
+      Delete: '&c[Delete]'
+      Select: '&6[Select]'
+
+Variables:
+  Match-Mode:
+    Name: 'Match mode'
+    Enums:
+      Contain: 'Contain'
+      Equal: 'Equal'
+      Regex: 'Regex'
+    Messages:
+      Invalid-Mode: '&cInvalid Replace mode &f%0% &c.'
+  Replacers-Mode:
+    Enums:
+      Common: 'Common'
+      Json: 'Json'
+  Listen-Type:
+    Name: 'Listen type'
+    Messages:
+      Invalid-Type: '&cInvalid Listen type &f%0% &c.'
+  Replacer-Config:
+    Name: 'Replacer config'
+  Player:
+    Name: 'player'
+    Messages:
+      Player-Is-Offline: '&cPlayer &f%0% &cis offline.'
+  Index:
+    Name: 'Index'
+  Page:
+    Name: 'Page'
+  Original-Text:
+    Name: 'Original'
+  Replacement-Text:
+    Name: 'Replacement'
+  Block-Text:
+    Name: 'Block Text'

@@ -24,7 +24,8 @@ Console-Sender:
     Version-Checker:
       Error-Checking-Version: '§c无法通过远程服务器检查版本信息: %0%'
       Error-Parsing-Json: '§c无法正常解析版本信息 Json: %0%'
-      New-Version-Available: '§bPSR 有新版本(''%0%'')了! 请在 MCBBS 更新您的插件.'
+      New-Version-Available-Line-1: '§bProtocolStringReplacer 有新版本 (''%0%'') 了!'
+      New-Version-Available-Line-2: '§b请更新您的插件: https://www.mcbbs.net/thread-1209429-1-1.html'
       Prohibited-Version: '§c您使用的版本已被远程服务器禁止. 这通常是因为该版本存在重大问题. 请更新插件.'
 
 Command-Block-Sender:
@@ -105,11 +106,11 @@ Sender:
                 Footer: '&7&m-----------------------------------------------'
             Select:
               Simple-Help: '&7 * &e/psr edit file select &7- &b选定一个替换配置文件'
-              Detailed-Help: '"&7 * &e/psr file select <替换配置文件|索引> &7- &b选定编辑的替换配置'
+              Detailed-Help: '&7 * &e/psr file select <替换配置文件|索引> &7- &b选定编辑的替换配置'
               Replacer-Config-Selected: '&a已选定替换配置: &f%0%'
             Create:
               Simple-Help: '&7 * &e/psr edit file create &7- &b新建一个替换配置文件'
-              Detailed-Help: '"&7 * &e/psr file create <文件名> &7- &b在磁盘中新建一个替换配置文件'
+              Detailed-Help: '&7 * &e/psr file create <文件名> &7- &b在磁盘中新建一个替换配置文件'
               File-Create-Failed: '&c创建替换配置文件失败: &f%0%'
               File-Successfully-Created: '&a已成功创建替换配置文件: &f%0%'
               Invalid-File-Path: '&c非法的文件路径.'
@@ -217,7 +218,7 @@ Sender:
       Async-Reloading: '&b正在异步重载插件...'
       Complete: '&a插件已重载完毕.'
       Help:
-        Header: '&7&m------&7&l &7[ &c&lP&6&lS&3&lR &7- &e重载&7 ]&l &7&m------'
+        Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &e重载&7 ]&l &7&m------------'
         Footer: '&7&m-----------------------------------------'
 
 Utils:

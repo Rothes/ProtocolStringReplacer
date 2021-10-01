@@ -50,7 +50,7 @@ public class Capture extends SubCommand {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
                 user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
-                        "Variables.Listen-Mode.Messages.Invalid-Mode", args[2]));
+                        "Variables.Listen-Type.Messages.Invalid-Mode", args[2]));
                 return;
             }
             if (!listenType.isCapturable()) {
