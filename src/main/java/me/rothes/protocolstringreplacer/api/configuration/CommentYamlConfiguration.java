@@ -6,12 +6,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,6 +48,15 @@ public class CommentYamlConfiguration extends YamlConfiguration {
     public CommentYamlConfiguration() {
         super();
         options().copyHeader(false);
+        try {
+            final Field field = YamlConfiguration.class.getDeclaredField("yamlOptions");
+            field.setAccessible(true);
+            DumperOptions options = (DumperOptions) field.get(this);
+            field.setAccessible(false);
+            options.setWidth(10240);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
