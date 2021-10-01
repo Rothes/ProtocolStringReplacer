@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -357,13 +356,9 @@ public class ReplacerManager {
 
             result = resultBuilder.toString();
         } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
-            // Using Aho-Corasick algorithm.
-            Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(string);
-            if (emits.size() == 1) {
-                Emit<String> emit = emits.iterator().next();
-                if (emit.getStart() == 0 && emit.getEnd() + 1 == string.length()) {
-                    result = (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString());
-                }
+            Object get = replacerConfig.getReplaces(replacesMode).get(string);
+            if (get != null) {
+                result = (String) get;
             }
         } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
             Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replacesMode).entrySet();
@@ -384,9 +379,7 @@ public class ReplacerManager {
             return replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string).size() > 0;
 
         } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
-            Collection<Emit<String>> emits = replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string);
-            Emit<String> emit = emits.iterator().next();
-            return emit.getStart() == 0 && emit.getStart() == 0 && emit.getEnd() + 1 == string.length();
+            return replacerConfig.getBlocks(replacesMode).contains(string);
 
         } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
             List<Object> blocks = replacerConfig.getBlocks(replacesMode);

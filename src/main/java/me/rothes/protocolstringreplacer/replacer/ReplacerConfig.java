@@ -291,7 +291,7 @@ public class ReplacerConfig {
 
     @SuppressWarnings("unchecked")
     private void updateStringSearcher(@Nonnull ReplacesMode replacesMode) {
-        if (matchMode == MatchMode.REGEX) {
+        if (matchMode != MatchMode.CONTAIN) {
             return;
         }
         this.replacesStringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(this.getReplaces(replacesMode).keySet()).build());
