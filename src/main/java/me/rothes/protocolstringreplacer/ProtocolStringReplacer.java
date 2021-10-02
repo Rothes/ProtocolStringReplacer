@@ -438,6 +438,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
             int curInt = Integer.parseInt(cur);
             if (verInt > curInt) {
                 return false;
+            } else if (verInt < curInt) {
+                return true;
             }
         }
         return true;
