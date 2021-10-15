@@ -28,7 +28,7 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- §r" + text + "\n");
         }
         String json = "";
-        hoverTextBuilder.append("§b§lJsons: \n");
+        hoverTextBuilder.append("\n§b§lJsons: \n");
         for (String json1 : info.getJsons()) {
             json = json1;
             hoverTextBuilder.append("§6§l- §r" + json + "\n");
