@@ -42,7 +42,11 @@ public class ConsoleReplaceManager {
         Bukkit.getServer().getLogger().getParent().getHandlers()[0].setFormatter(new SimpleFormatter(){
             @Override
             public String formatMessage(LogRecord record) {
-                SimpleTextContainer container = new SimpleTextContainer(super.formatMessage(record));
+                String string = super.formatMessage(record);
+                if (string == null) {
+                    return string;
+                }
+                SimpleTextContainer container = new SimpleTextContainer(string);
                 container.createTexts(container);
                 ReplacerManager replacerManager = plugin.getReplacerManager();
                 List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(plugin.getUserManager().getConsoleUser(), filter);
