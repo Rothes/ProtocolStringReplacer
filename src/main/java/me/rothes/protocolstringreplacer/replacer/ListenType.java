@@ -3,13 +3,13 @@ package me.rothes.protocolstringreplacer.replacer;
 public enum ListenType {
 
     CHAT("Chat", true),
-    SIGN("Sign", false),
+    SIGN("Sign", true),
     TITLE("Title", true),
-    ENTITY("Entity", false),
+    ENTITY("Entity", true),
     BOSS_BAR("Boss-Bar", true),
-    ITEMSTACK("ItemStack", false),
+    ITEMSTACK("ItemStack", true),
     WINDOW_TITLE("Window-Title", true),
-    SCOREBOARD("ScoreBoard", false),
+    SCOREBOARD("ScoreBoard", true),
     CONSOLE("Console", false);
 
     private String name;

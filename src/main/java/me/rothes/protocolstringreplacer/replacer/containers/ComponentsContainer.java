@@ -15,6 +15,7 @@ public class ComponentsContainer extends AbstractContainer<BaseComponent[]> {
 
     @Override
     public void createDefaultChildren() {
+//        content = ComponentsUtils.mergeTexts(content);
         for (int i = 0; i < content.length; i++) {
             BaseComponent component = content[i];
             int finalI = i;

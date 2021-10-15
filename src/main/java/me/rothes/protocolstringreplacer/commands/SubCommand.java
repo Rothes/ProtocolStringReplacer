@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer.commands;
 
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 
 import javax.annotation.Nonnull;
 import java.util.List;

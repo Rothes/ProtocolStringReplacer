@@ -8,7 +8,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.papermc.paper.text.PaperComponents;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -33,8 +33,7 @@ public final class Chat extends AbstractServerPacketListener {
             String json;
             if (wrappedChatComponent != null) {
                 json = wrappedChatComponent.getJson();
-                saveCaptureMessage(user, json);
-                WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+                WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
                 if (replaced != null) {
                     wrappedChatComponentStructureModifier.write(0, replaced);
                 }
@@ -46,9 +45,8 @@ public final class Chat extends AbstractServerPacketListener {
                     if (read instanceof BaseComponent[]) {
                         BaseComponent[] readComponents = (BaseComponent[]) read;
                         json = ComponentSerializer.toString(readComponents);
-                        saveCaptureMessage(user, json);
 
-                        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+                        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
                         if (replaced != null) {
                             wrappedChatComponentStructureModifier.write(0, replaced);
                             structureModifier.write(fieldIndex, null);
@@ -56,7 +54,7 @@ public final class Chat extends AbstractServerPacketListener {
                     } else if (isPaperComponent(read)) {
                         json = getPaperGsonComponentSerializer().serialize((net.kyori.adventure.text.Component) read);
 
-                        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+                        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
                         if (replaced != null) {
                             wrappedChatComponentStructureModifier.write(0, replaced);
                             structureModifier.write(fieldIndex, null);

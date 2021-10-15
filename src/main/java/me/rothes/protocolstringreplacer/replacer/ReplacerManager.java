@@ -5,7 +5,7 @@ import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfigurati
 import me.rothes.protocolstringreplacer.replacer.containers.Container;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
@@ -41,13 +41,16 @@ public class ReplacerManager {
 
         private ItemMeta replacedItemMeta;
         private Long lastAccessTime;
+        private Boolean blocked;
         private List<Integer> placeholderIndexes;
 
-        public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime, @Nonnull List<Integer> placeholderIndexes) {
+        public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime,
+                             @Nonnull Boolean blocked, @Nonnull List<Integer> placeholderIndexes) {
             Validate.notNull(lastAccessTime, "Last Access Time cannot be null");
             Validate.notNull(placeholderIndexes, "List cannot be null");
             this.replacedItemMeta = replacedItemMeta;
             this.lastAccessTime = lastAccessTime;
+            this.blocked = blocked;
             this.placeholderIndexes = placeholderIndexes;
         }
 
@@ -57,6 +60,10 @@ public class ReplacerManager {
 
         public Long getLastAccessTime() {
             return lastAccessTime;
+        }
+
+        public Boolean isBlocked() {
+            return blocked;
         }
 
         public List<Integer> getPlaceholderIndexes() {
@@ -70,6 +77,11 @@ public class ReplacerManager {
 
         public void setLastAccessTime(long lastAccessTime) {
             this.lastAccessTime = lastAccessTime;
+        }
+
+        public void setBlocked(@Nonnull Boolean blocked) {
+            Validate.notNull(blocked, "Boolean cannot be null");
+            this.blocked = blocked;
         }
 
     }
@@ -116,7 +128,7 @@ public class ReplacerManager {
         }
 
         // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L, new ArrayList<>()));
+        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new ArrayList<>()));
 
         ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
         long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
@@ -180,10 +192,10 @@ public class ReplacerManager {
         return replacedItemCache.get(itemMeta);
     }
 
-    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull ItemMeta replaced, @NotNull List<Integer> papiIndexes) {
+    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull ItemMeta replaced, @NotNull Boolean blocked, @NotNull List<Integer> papiIndexes) {
         Validate.notNull(replaced, "Replaced ItemMeta cannot be null");
 
-        ItemMetaCache itemMetaCache = new ItemMetaCache(replaced, System.currentTimeMillis(), papiIndexes);
+        ItemMetaCache itemMetaCache = new ItemMetaCache(replaced, System.currentTimeMillis(), blocked, papiIndexes);
         replacedItemCache.put(original, itemMetaCache);
         return itemMetaCache;
     }

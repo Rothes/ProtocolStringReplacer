@@ -2,7 +2,7 @@ package me.rothes.protocolstringreplacer.commands.subcommands;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;

@@ -7,8 +7,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
-import me.rothes.protocolstringreplacer.replacer.containers.ChatJsonContainer;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,27 +23,15 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
     protected void setSignText(@NotNull PacketEvent packetEvent, @NotNull NbtCompound nbtCompound, @NotNull User user, @NotNull BiPredicate<ReplacerConfig, User> filter) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
-        ChatJsonContainer container;
 
         String key;
         for (int i = 1; i < 4; i++) {
             key = "Text" + i;
-            container = new ChatJsonContainer(nbtCompound.getString(key));
-            container.createJsons(container);
-            if (replacerManager.isJsonBlocked(container, replacers)) {
-                packetEvent.setCancelled(true);
+            String replacedJson = getReplacedJson(packetEvent, user, listenType, nbtCompound.getString(key), replacers);
+            if (replacedJson == null) {
                 return;
             }
-            replacerManager.replaceContainerJsons(container, replacers);
-            container.createDefaultChildren();
-            container.createTexts(container);
-            if (replacerManager.isTextBlocked(container, replacers)) {
-                packetEvent.setCancelled(true);
-                return;
-            }
-            replacerManager.replaceContainerTexts(container, replacers);
-            replacerManager.setPapi(user, container.getTexts());
-            nbtCompound.put(key, container.getResult());
+            nbtCompound.put(key, replacedJson);
 
         }
     }

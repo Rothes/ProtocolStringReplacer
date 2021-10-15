@@ -3,7 +3,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.client.itemstack;
 import com.comphenix.protocol.PacketType;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.client.AbstractClientPacketListener;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

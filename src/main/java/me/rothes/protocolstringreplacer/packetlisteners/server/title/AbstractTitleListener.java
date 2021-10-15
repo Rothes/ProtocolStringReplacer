@@ -7,7 +7,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 
 public abstract class AbstractTitleListener extends AbstractServerPacketListener {
 
@@ -22,8 +22,7 @@ public abstract class AbstractTitleListener extends AbstractServerPacketListener
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
         if (wrappedChatComponent != null) {
             String json = wrappedChatComponent.getJson();
-            saveCaptureMessage(user, json);
-            WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+            WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
             if (replaced != null) {
                 wrappedChatComponentStructureModifier.write(0, replaced);
             }

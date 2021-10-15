@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 
 public class UpdateScore extends AbstractScoreBoardListener {
 
@@ -18,7 +18,7 @@ public class UpdateScore extends AbstractScoreBoardListener {
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<String> strings = packet.getStrings();
 
-        String replaced = getReplacedText(packetEvent, user, strings.read(0), entityNameFilter);
+        String replaced = getReplacedText(packetEvent, user, listenType, strings.read(0), entityNameFilter);
         if (replaced != null) {
             strings.write(0, replaced);
         }

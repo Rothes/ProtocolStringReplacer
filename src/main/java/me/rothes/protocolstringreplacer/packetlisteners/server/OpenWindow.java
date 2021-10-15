@@ -7,7 +7,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -24,7 +24,6 @@ public final class OpenWindow extends AbstractServerPacketListener {
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
         String json = wrappedChatComponent.getJson();
         User user = getEventUser(packetEvent);
-        saveCaptureMessage(user, json);
 
         StringBuilder currentTitle = new StringBuilder();
         BaseComponent[] baseComponents = ComponentSerializer.parse(json);
@@ -37,7 +36,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
         }
         user.setCurrentWindowTitle(currentTitle.toString());
 
-        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, json, filter);
+        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
         if (replaced != null) {
             wrappedChatComponentStructureModifier.write(0,
                     replaced);

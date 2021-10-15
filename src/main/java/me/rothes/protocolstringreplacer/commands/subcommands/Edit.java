@@ -4,7 +4,7 @@ import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Block;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.File;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Replace;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import org.jetbrains.annotations.NotNull;
 

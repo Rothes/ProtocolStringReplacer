@@ -2,7 +2,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.client.itemstack;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import org.bukkit.inventory.ItemStack;
 
 public final class SetCreativeSlot extends AbstractClientItemPacketListener {

@@ -2,11 +2,11 @@ package me.rothes.protocolstringreplacer.commands.subcommands;
 
 import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Capture extends SubCommand {
@@ -124,10 +123,10 @@ public class Capture extends SubCommand {
                 }
                 user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Header"));
 
-                LinkedList<BaseComponent[]> captureMessages = user.getCaptureMessages(listenType);
+                List<CaptureInfo> captureMessages = user.getCaptureInfos(listenType);
                 int totalPage = (int) Math.ceil((float) captureMessages.size() / 10);
                 for (int i = (page - 1) * 10; i < captureMessages.size() && i < page * 10; i++) {
-                    user.sendFilteredMessage(captureMessages.get(i));
+                    MessageUtils.sendCaptureInfo(user, captureMessages.get(i));
                 }
 
                 MessageUtils.sendPageButtons(user, "/psr capture list " + args[2] + " ", page, totalPage);

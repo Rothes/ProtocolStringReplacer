@@ -5,7 +5,7 @@ import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfigurati
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 
 import java.util.function.BiPredicate;
 

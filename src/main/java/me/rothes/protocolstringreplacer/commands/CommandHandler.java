@@ -7,7 +7,7 @@ import me.rothes.protocolstringreplacer.commands.subcommands.Capture;
 import me.rothes.protocolstringreplacer.commands.subcommands.Edit;
 import me.rothes.protocolstringreplacer.commands.subcommands.Parse;
 import me.rothes.protocolstringreplacer.commands.subcommands.Reload;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.CommandBlock;

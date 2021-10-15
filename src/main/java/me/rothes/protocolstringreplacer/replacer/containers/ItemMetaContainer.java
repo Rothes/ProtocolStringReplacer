@@ -32,7 +32,7 @@ public class ItemMetaContainer extends AbstractContainer<ItemMeta> {
             fromCache = true;
         } else {
             ItemMeta original = content.clone();
-            metaCache = replacerManager.addReplacedItemCache(original, content, new ArrayList<>());
+            metaCache = replacerManager.addReplacedItemCache(original, content, false, new ArrayList<>());
         }
         if (content.hasDisplayName()) {
             children.add(new SimpleTextContainer(content.getDisplayName(), root) {

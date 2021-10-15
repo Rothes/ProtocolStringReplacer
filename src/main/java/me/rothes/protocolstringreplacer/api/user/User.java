@@ -1,10 +1,11 @@
-package me.rothes.protocolstringreplacer.user;
+package me.rothes.protocolstringreplacer.api.user;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -47,7 +48,7 @@ public class User {
     private Long confirmTime;
 
     private Set<ListenType> captureTypes = new HashSet<>();
-    private HashMap<ListenType, LinkedList<BaseComponent[]>> captureMessages = new HashMap<>();
+    private HashMap<ListenType, ArrayList<CaptureInfo>> captures = new HashMap<>();
 
     private ReplacerConfig editorReplacerConfig;
 //TODO:    private Integer editorIndex;
@@ -122,24 +123,24 @@ public class User {
 
     public void addCaptureType(ListenType listenType) {
         captureTypes.add(listenType);
-        captureMessages.put(listenType, new LinkedList<>());
+        captures.put(listenType, new ArrayList<>());
     }
 
     public void removeCaptureType(ListenType listenType) {
         captureTypes.remove(listenType);
-        captureMessages.remove(listenType);
+        captures.remove(listenType);
     }
 
     public boolean isCapturing(ListenType listenType) {
         return captureTypes.contains(listenType);
     }
 
-    public void addCaptureMessage(ListenType listenType, BaseComponent[] messages) {
-        captureMessages.get(listenType).add(0, messages);
+    public void addCaptureInfo(ListenType listenType, CaptureInfo info) {
+        captures.get(listenType).add(0, info);
     }
 
-    public LinkedList<BaseComponent[]> getCaptureMessages(ListenType listenType) {
-        return captureMessages.get(listenType);
+    public List<CaptureInfo> getCaptureInfos(ListenType listenType) {
+        return captures.get(listenType);
     }
 
     public void setEditorReplacerConfig(ReplacerConfig editorReplacerConfig) {

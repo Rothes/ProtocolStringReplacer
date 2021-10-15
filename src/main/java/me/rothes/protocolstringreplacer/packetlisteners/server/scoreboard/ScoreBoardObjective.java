@@ -7,7 +7,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.user.User;
+import me.rothes.protocolstringreplacer.api.user.User;
 
 public class ScoreBoardObjective extends AbstractScoreBoardListener {
 
@@ -23,13 +23,13 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 12) {
                 StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
                 WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-                String replaced = getReplacedJson(packetEvent, user, wrappedChatComponent.getJson(), titleFilter);
+                String replaced = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), titleFilter);
                 if (replaced != null) {
                     wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
                 }
             } else {
                 StructureModifier<String> strings = packet.getStrings();
-                String replaced = getReplacedText(packetEvent, user, strings.read(0), titleFilter);
+                String replaced = getReplacedText(packetEvent, user, listenType, strings.read(0), titleFilter);
                 if (replaced != null)
                 strings.write(0, replaced);
             }
