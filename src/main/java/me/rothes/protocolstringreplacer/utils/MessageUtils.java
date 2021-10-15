@@ -3,7 +3,6 @@ package me.rothes.protocolstringreplacer.utils;
 import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.user.User;
-import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
