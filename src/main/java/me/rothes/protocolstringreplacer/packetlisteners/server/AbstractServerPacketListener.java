@@ -154,7 +154,6 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             info.setTexts(container.getTexts());
             user.addCaptureInfo(listenType, info);
         }
-        user.addCaptureInfo(listenType, info);
         if (replacerManager.isTextBlocked(container, replacers)) {
             packetEvent.setCancelled(true);
             return null;
