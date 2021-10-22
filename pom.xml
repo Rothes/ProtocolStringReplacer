@@ -158,7 +158,6 @@
                     <artifactSet>
                         <includes>
                             <include>commons-collections:*</include>
-                            <include>org.apache.commons:*</include>
                             <include>org.bstats:*</include>
                             <include>org.neosearch.stringsearcher:*</include>
                         </includes>
@@ -168,6 +167,10 @@
                             <artifact>*:*</artifact>
                             <excludes>
                                 <exclude>META-INF/**</exclude>
+                                <exclude>org/apache/commons/collections/collection/*</exclude>
+                                <exclude>org/apache/commons/collections/list/*</exclude>
+                                <exclude>org/apache/commons/collections/Unmodifiable.class</exclude>
+                                <exclude>org/apache/commons/collections/ResettableIterator.class</exclude>
                             </excludes>
                         </filter>
                     </filters>
