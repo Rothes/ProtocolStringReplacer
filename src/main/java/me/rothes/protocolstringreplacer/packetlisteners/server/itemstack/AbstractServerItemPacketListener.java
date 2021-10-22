@@ -15,10 +15,10 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
 
     protected AbstractServerItemPacketListener(PacketType packetType) {
         super(packetType, ListenType.ITEMSTACK);
-        itemFilter = (replacerFile, user) -> {
-            CommentYamlConfiguration configuration = replacerFile.getConfiguration();
-            List<String> windowTitles = configuration.getStringList("Options.Filter.Itemstack.Window-Title");
-            if (containType(replacerFile)) {
+        itemFilter = (replacerConfig, user) -> {
+            if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
+                CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
+                List<String> windowTitles = configuration.getStringList("Options.Filter.Itemstack.Window-Title");
                 return windowTitles.isEmpty() || windowTitles.contains(user.getCurrentWindowTitle());
             }
             return false;

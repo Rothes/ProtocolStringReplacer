@@ -41,6 +41,10 @@ Options:
       # Whether replace for entities' name in scoreboard. Default is false.
       # Note: For players, entity name is player's name, else is entity UUID.
       Replace-Entity-Name: false
+    User:
+      # Required permission. If set, user must have this permission
+      # to make this replacer config take effects.
+      Permission: 'example.permission.1'
 
 # List of replace strings.
 # Original strings on left (key), and corresponding replacement on right (value).

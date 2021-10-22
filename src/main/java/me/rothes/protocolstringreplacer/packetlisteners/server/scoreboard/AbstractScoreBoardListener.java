@@ -16,15 +16,19 @@ public abstract class AbstractScoreBoardListener extends AbstractServerPacketLis
 
     protected AbstractScoreBoardListener(PacketType packetType, ListenType listenType) {
         super(packetType, listenType);
-        titleFilter = (replacerFile, user) -> {
-            CommentYamlConfiguration configuration = replacerFile.getConfiguration();
-            boolean replace = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
-            return replace && containType(replacerFile);
+        titleFilter = (replacerConfig, user) -> {
+            if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
+                CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
+                return configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
+            }
+            return false;
         };
-        entityNameFilter = (replacerFile, user) -> {
-            CommentYamlConfiguration configuration = replacerFile.getConfiguration();
-            boolean replace = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
-            return replace && containType(replacerFile);
+        entityNameFilter = (replacerConfig, user) -> {
+            if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
+                CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
+                return configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
+            }
+            return false;
         };
     }
 

@@ -39,6 +39,10 @@ Options:
       # 是否替换计分板中的实体名称. 默认为false.
       # 注: 对于玩家, 实体名称为玩家名称; 对于非玩家则为UUID.
       Replace-Entity-Name: false
+    User:
+      # 替换所需权限. 若设定, 用于必须拥有该权限
+      # 才能使该替换配置为其生效.
+      Permission: 'example.permission.1'
 
 # 替换的字符串列表.
 # 左侧的key为原字符串 右侧的value为替换后的字符串.

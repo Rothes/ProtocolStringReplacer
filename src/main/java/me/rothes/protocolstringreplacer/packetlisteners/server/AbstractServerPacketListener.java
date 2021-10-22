@@ -30,7 +30,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     protected AbstractServerPacketListener(PacketType packetType, ListenType listenType) {
         super(packetType);
         this.listenType = listenType;
-        filter = (replacerFile, user) -> containType(replacerFile);
+        filter = (replacerConfig, user) -> containType(replacerConfig) && checkPermission(user, replacerConfig);
         packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
             public void onPacketSending(PacketEvent packetEvent) {
                 boolean readOnly = packetEvent.isReadOnly();
@@ -47,6 +47,14 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     protected final boolean containType(ReplacerConfig replacerConfig) {
         return replacerConfig.getListenTypeList().contains(listenType);
+    }
+
+    protected final boolean checkPermission(User user, ReplacerConfig replacerConfig) {
+        String permission = replacerConfig.getConfiguration().getString("Options.Filter.User.Permission");
+        if (permission != null) {
+            return user.hasPermission(permission);
+        }
+        return true;
     }
 
     protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
