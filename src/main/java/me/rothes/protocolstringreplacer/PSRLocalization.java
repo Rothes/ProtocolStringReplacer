@@ -34,7 +34,7 @@ public class PSRLocalization {
         systemLocale += '-';
         systemLocale += System.getProperty("user.country", Locale.getDefault().getCountry());
 
-        locale = plugin.getConfig().getString("Options.Localization", systemLocale);
+        locale = plugin.getConfig().getString("Options.Locale", systemLocale);
 
         localedMessages = new HashMap<>();
         loadLocale();

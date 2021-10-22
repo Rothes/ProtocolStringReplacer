@@ -4,7 +4,7 @@ Configs-Version: 4
 Options:
   # 本地语言. 将在 ProtocolStringReplacer/Locales 中寻找对应 yml 文件.
   # 此设定也涉及一些内部操作, 建议按照规范 语言缩写(小写)-地区缩写(大写) 来填写.
-  Localization: zh-CN
+  Locale: zh-CN
 
   Features:
     # 控制台相关设定.

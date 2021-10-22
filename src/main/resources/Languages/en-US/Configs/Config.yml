@@ -5,7 +5,7 @@ Options:
   # Locale language. Will search for specified .yml file in ProtocolStringReplacer/Locales.
   # This setting also involve some internal operations, so it's recommended to
   # follow the specification: language(Lower case)-location(Upper case)
-  Localization: en-US
+  Locale: en-US
 
   Features:
     # Console related options.

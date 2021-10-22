@@ -313,7 +313,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         checkConfigKeys();
     }
 
-    private void checkConfigKeys() {
+    public void checkConfigKeys() {
         CommentYamlConfiguration configDefault = PSRLocalization.getDefaultLocaledConfig();
 
         Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
@@ -360,7 +360,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
     }
 
-    private void checkConfigsVersion() {
+    public void checkConfigsVersion() {
         HashMap<Short, AbstractUpgradeHandler> upgrades = new HashMap<>();
         for (UpgradeEnum upgrade : UpgradeEnum.values()) {
             try {
@@ -379,7 +379,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
      * @return false if plugin doesn't pass the check.
      * @since 2.0.0
      */
-    private boolean checkPluginVersion() {
+    public boolean checkPluginVersion() {
         try {
             final URL url = new URL("https://raw.githubusercontent.com/Rothes/ProtocolStringReplacer/master/Version%20Infos.json");
             final InputStream stream = url.openStream();
