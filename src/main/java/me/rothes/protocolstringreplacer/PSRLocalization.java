@@ -5,7 +5,7 @@ import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfigurati
 import me.rothes.protocolstringreplacer.api.exceptions.MissingInitialResourceException;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;

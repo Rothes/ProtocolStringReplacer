@@ -10,7 +10,7 @@ import net.md_5.bungee.api.chat.ItemTag;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -57,7 +57,7 @@ public class ItemHelper {
                     if (helper.hasName) {
                         String diaplayNameJson = name.toString();
                         diaplayNameJson = diaplayNameJson.substring(1, diaplayNameJson.length() - 1);
-                        helper.name = ComponentSerializer.parse(StringEscapeUtils.unescapeJson(diaplayNameJson));
+                        helper.name = ComponentSerializer.parse(StringEscapeUtils.unescapeJava(diaplayNameJson));
                     }
 
                     helper.jsonLore = helper.jsonDisplay.getAsJsonArray("Lore");
@@ -67,7 +67,7 @@ public class ItemHelper {
                         for (int i1 = 0; i1 < helper.jsonLore.size(); i1++) {
                             String loreJson = helper.jsonLore.get(i1).getAsJsonPrimitive().toString();
                             loreJson = loreJson.substring(1, loreJson.length() - 1);
-                            helper.lore.add(i1, ComponentSerializer.parse(StringEscapeUtils.unescapeJson(loreJson)));
+                            helper.lore.add(i1, ComponentSerializer.parse(StringEscapeUtils.unescapeJava(loreJson)));
                         }
                     }
                 }

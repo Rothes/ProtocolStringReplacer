@@ -1,13 +1,12 @@
 package me.rothes.protocolstringreplacer.api.configuration;
 
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
 
 import javax.annotation.Nonnull;
 import java.io.File;
