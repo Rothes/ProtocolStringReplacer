@@ -4,6 +4,7 @@ import me.rothes.protocolstringreplacer.PSRLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.neosearch.stringsearcher.SimpleStringSearcherBuilder;
 import org.neosearch.stringsearcher.StringSearcher;
 
 import javax.annotation.Nonnull;
@@ -289,12 +290,21 @@ public class ReplacerConfig {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void updateStringSearcher(@Nonnull ReplacesMode replacesMode) {
         if (matchMode != MatchMode.CONTAIN) {
             return;
         }
-        this.replacesStringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(this.getReplaces(replacesMode).keySet()).build());
+        SimpleStringSearcherBuilder builder = StringSearcher.builder().ignoreOverlaps();
+        for (Object object : this.getReplaces(replacesMode).keySet()) {
+            if (object instanceof String) {
+                builder.addSearchString((String) object);
+            } else {
+                ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
+                        "Console-Sender.Messages.Replacer-Config.Invalid-Original-Format",
+                        getRelativePath(), object.toString()));
+            }
+        }
+        this.replacesStringSearcher.put(replacesMode, builder.build());
         String[] strings = new String[blocks.get(replacesMode).size()];
         for (int i = 0; i < blocks.get(replacesMode).size(); i++) {
             strings[i] = (String) blocks.get(replacesMode).get(i);
