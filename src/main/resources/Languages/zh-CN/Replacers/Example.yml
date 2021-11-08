@@ -26,6 +26,7 @@ Options:
     # ItemStack 替换物品(物品名|Lore|书署名|书内容)文本
     # Window-Title 替换容器标题文本
     # ScoreBoard 替换计分板(标题|实体名称)
+    # Console 替换控制台内显示的文本信息
     # 不区分大小写.
     Listen-Types:
       - Chat

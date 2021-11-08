@@ -28,6 +28,7 @@ Options:
     # 'ItemStack': Replace strings in item such as display name|Lore|author of the book|content of the book
     # 'Window-Title': Replace strings of containers name
     # 'ScoreBoard': Replace strings in scoreboard title|entity name
+    # 'Console': Replace strings in console
     # This is not case-sensitive.
     Listen-Types:
       - Chat
