@@ -9,6 +9,7 @@ Console-Sender:
       Created-Example-Replacer: '&aGenerated example replacer configs in plugins/ProtocolStringReplacer/Replacers.'
       Added-Missing-Config-Key: '&cAutomatically added missing configuration key in Config.yml %0%'
       Upgrading-Configs: '&aUpgrading configurations version: %0% -> %1%'
+      Wiki-Creating: '§bWiki is creating in progress! Preview here with your machine translation: https://rothes.gitbook.io/protocolstringreplacer/'
     Replacer-Config:
       Pre-Loaded-Replacers: '&aPre-loaded %0% replacer config(s). &8Took %1%ms'
       Replacer-Load-Complete: '&aSuccessfully loaded replacer config: %0%. &8Took %1%ms'
