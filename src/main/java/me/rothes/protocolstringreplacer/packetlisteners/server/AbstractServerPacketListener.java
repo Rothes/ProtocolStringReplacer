@@ -12,6 +12,7 @@ import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.containers.ChatJsonContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.ItemMetaContainer;
+import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
 import me.rothes.protocolstringreplacer.api.user.User;
 import org.bukkit.inventory.ItemStack;
@@ -58,15 +59,15 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
-                                                       @Nonnull String json, BiPredicate<ReplacerConfig, User> filter) {
+                                                       @Nonnull String json, BiPredicate<ReplacerConfig, User> filter, boolean saveTitle) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
 
-        return deployContainer(packetEvent, user, listenType, json, replacers);
+        return deployContainer(packetEvent, user, listenType, json, replacers, saveTitle);
     }
 
     protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
-                                                       @Nonnull String json, List<ReplacerConfig> replacers) {
+                                                       @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
         boolean blocked = false;
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
 
@@ -80,6 +81,10 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         }
 
         container.createJsons(container);
+        if (saveTitle) {
+            List<Replaceable> jsons = container.getJsons();
+            user.setCurrentWindowTitle(jsons.get(jsons.size() - 1).getText());
+        }
         if (user.isCapturing(listenType)) {
             info.setJsons(container.getJsons());
         }
@@ -109,7 +114,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     @Nullable
     protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
                                             @Nonnull String json, BiPredicate<ReplacerConfig, User> filter) {
-        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter);
+        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter, false);
 
         if (container != null) {
             return container.getResult();
@@ -121,7 +126,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     @Nullable
     protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
                                             @Nonnull String json, List<ReplacerConfig> replacers) {
-        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, replacers);
+        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, replacers, false);
 
         if (container != null) {
             return container.getResult();
@@ -132,14 +137,20 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     @Nullable
     protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull User user,  @Nonnull ListenType listenType,
-                                                                   @Nonnull String json, BiPredicate<ReplacerConfig, User> filter) {
-        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter);
+                                                                          @Nonnull String json, BiPredicate<ReplacerConfig, User> filter, boolean saveTitle) {
+        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter, saveTitle);
 
         if (container != null) {
             return WrappedChatComponent.fromJson(container.getResult());
         } else {
             return null;
         }
+    }
+
+    @Nullable
+    protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull User user,  @Nonnull ListenType listenType,
+                                                                   @Nonnull String json, BiPredicate<ReplacerConfig, User> filter) {
+        return getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter, false);
     }
 
     @Nullable

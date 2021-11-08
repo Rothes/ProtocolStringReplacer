@@ -17,9 +17,17 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
         super(packetType, ListenType.ITEMSTACK);
         itemFilter = (replacerConfig, user) -> {
             if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
+                String currentWindowTitle = user.getCurrentWindowTitle();
                 CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
                 List<String> windowTitles = configuration.getStringList("Options.Filter.ItemStack.Window-Title");
-                return windowTitles.isEmpty() || windowTitles.contains(user.getCurrentWindowTitle());
+                if (windowTitles.isEmpty()) {
+                    return true;
+                }
+                if (currentWindowTitle == null) {
+                    return configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
+                } else {
+                    return windowTitles.contains(currentWindowTitle);
+                }
             }
             return false;
         };
