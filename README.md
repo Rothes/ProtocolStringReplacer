@@ -4,8 +4,10 @@
 
 A plugin for Spigot 1.8 - 1.17 that allows you to edit the String in packet sends to players.
 
-## Spigotmc
-https://www.spigotmc.org/resources/protocolstringreplacer.96573/
+### Related Links
 
-## MCBBS
-https://www.mcbbs.net/forum.php?mod=viewthread&tid=1209429
+* **Wiki**: [https://rothes.gitbook.io/protocolstringreplacer/](https://rothes.gitbook.io/protocolstringreplacer)
+* **MCBBS**: [https://www.mcbbs.net/thread-1209429-1-1.html](https://www.mcbbs.net/thread-1209429-1-1.html)
+* **SpigotMC**: [https://www.spigotmc.org/resources/protocolstringreplacer.96573/](https://www.spigotmc.org/resources/protocolstringreplacer.96573/)
+* **bStats**: [https://bstats.org/plugin/bukkit/ProtocolStringReplacer/11740](https://bstats.org/plugin/bukkit/ProtocolStringReplacer/11740)
+https://rothes.gitbook.io/protocolstringreplacer/
