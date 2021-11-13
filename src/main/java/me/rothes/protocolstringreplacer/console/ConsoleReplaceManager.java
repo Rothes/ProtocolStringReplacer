@@ -57,7 +57,6 @@ public class ConsoleReplaceManager {
     }
 
     public void initialize() {
-        StatusLogger.getLogger().registerListener(new StatusConsoleListener(Level.ALL));
         if (plugin.getServerMajorVersion() >= 12) {
             LoggerContext context = (LoggerContext) LogManager.getContext(false);
             Configuration config = context.getConfiguration();
