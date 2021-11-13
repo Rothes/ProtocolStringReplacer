@@ -2,8 +2,6 @@ package me.rothes.protocolstringreplacer;
 
 import com.comphenix.protocol.events.ListenerPriority;
 
-import java.io.Console;
-
 public class ConfigManager {
 
     public final boolean printReplacer;
