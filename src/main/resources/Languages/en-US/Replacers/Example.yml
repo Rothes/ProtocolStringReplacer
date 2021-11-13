@@ -48,7 +48,6 @@ Options:
       Permission: 'example.permission.1'
 
 # List of replace strings.
-# Original strings on left (key), and corresponding replacement on right (value).
 # Replace mode priority: Json > Common. This ignores priority in replacer configs.
 Replaces:
   # Common string replace mode.

@@ -46,7 +46,6 @@ Options:
       Permission: 'example.permission.1'
 
 # 替换的字符串列表.
-# 左侧的key为原字符串 右侧的value为替换后的字符串.
 # 替换模式优先度: Json > Common, 忽略文件优先度.
 Replaces:
   # 常规文本替换模式.
