@@ -7,6 +7,9 @@ Options:
   # follow the specification: language(Lower case)-location(Upper case)
   Locale: en-US
 
+  # Set the host of update server, if you need.
+  Git-Raw-Host: 'raw.githubusercontent.com'
+
   Features:
     # Console related options.
     Console:

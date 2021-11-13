@@ -16,6 +16,8 @@ public class ConfigManager {
     public final boolean forceReplace;
     public final boolean consolePlaceholder;
 
+    public final String gitRawHost;
+
     public ConfigManager(ProtocolStringReplacer instance) {
         this.printReplacer = instance.getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false);
 
@@ -54,5 +56,6 @@ public class ConfigManager {
 
         this.forceReplace = instance.getConfig().getBoolean("Options.Features.Packet-Listener.Force-Replace", false);
         this.consolePlaceholder = instance.getConfig().getBoolean("Options.Features.Placeholder.Parse-For-Console", true);
+        this.gitRawHost = instance.getConfig().getString("Options.Git-Raw-Host", "raw.githubusercontent.com");
     }
 }

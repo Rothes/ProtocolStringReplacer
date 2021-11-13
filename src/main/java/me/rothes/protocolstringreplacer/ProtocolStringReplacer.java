@@ -388,13 +388,14 @@ public class ProtocolStringReplacer extends JavaPlugin {
      */
     public boolean checkPluginVersion() {
         try {
-            final URL url = new URL("https://raw.githubusercontent.com/Rothes/ProtocolStringReplacer/master/Version%20Infos.json");
+            final URL url = new URL("https://" + getConfigManager().gitRawHost + "/Rothes/ProtocolStringReplacer/master/Version%20Infos.json");
             final InputStream stream = url.openStream();
             final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             final StringBuilder jsonBuilder = new StringBuilder();
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 jsonBuilder.append(line).append("\n");
             }
+            ProtocolStringReplacer.info(jsonBuilder.toString());
             try {
                 final JsonElement element = new JsonParser().parse(jsonBuilder.toString());
                 final JsonObject root = element.getAsJsonObject();
