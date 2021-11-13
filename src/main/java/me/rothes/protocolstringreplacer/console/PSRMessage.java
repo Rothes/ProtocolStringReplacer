@@ -1,6 +1,7 @@
 package me.rothes.protocolstringreplacer.console;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
@@ -27,15 +28,24 @@ public class PSRMessage implements Message, CharSequence{
      * @param message The String message.
      */
     public PSRMessage(final String message) {
-        SimpleTextContainer container = new SimpleTextContainer(message);
-        container.createTexts(container);
-        ReplacerManager replacerManager = plugin.getReplacerManager();
-        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(plugin.getUserManager().getConsoleUser(),
-                ConsoleReplaceManager.getFilter());
-        replacerManager.replaceContainerTexts(container, replacers);
-        String result = container.getResult();
-        this.message = result;
-        this.charSequence = result;
+        if (plugin.hasStarted()) {
+            SimpleTextContainer container = new SimpleTextContainer(message);
+            container.createTexts(container);
+            ReplacerManager replacerManager = plugin.getReplacerManager();
+            User consoleUser = plugin.getUserManager().getConsoleUser();
+            List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(consoleUser,
+                    ConsoleReplaceManager.getFilter());
+            replacerManager.replaceContainerTexts(container, replacers);
+            if (plugin.getConfigManager().consolePlaceholder) {
+                replacerManager.setPapi(consoleUser, container.getTexts());
+            }
+            String result = container.getResult();
+            this.message = result;
+            this.charSequence = result;
+        } else {
+            this.message = message;
+            this.charSequence = message;
+        }
     }
 
     /**
@@ -43,14 +53,22 @@ public class PSRMessage implements Message, CharSequence{
      * @param charSequence The CharSequence message.
      */
     public PSRMessage(final CharSequence charSequence) {
-        SimpleTextContainer container = new SimpleTextContainer(charSequence.toString());
-        container.createTexts(container);
-        ReplacerManager replacerManager = plugin.getReplacerManager();
-        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(plugin.getUserManager().getConsoleUser(),
-                ConsoleReplaceManager.getFilter());
-        replacerManager.replaceContainerTexts(container, replacers);
-        // this.message = String.valueOf(charSequence); // postponed until getFormattedMessage
-        this.charSequence = container.getResult();
+        if (plugin.hasStarted()) {
+            SimpleTextContainer container = new SimpleTextContainer(charSequence.toString());
+            container.createTexts(container);
+            ReplacerManager replacerManager = plugin.getReplacerManager();
+            User consoleUser = plugin.getUserManager().getConsoleUser();
+            List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(consoleUser,
+                    ConsoleReplaceManager.getFilter());
+            replacerManager.replaceContainerTexts(container, replacers);
+            if (plugin.getConfigManager().consolePlaceholder) {
+                replacerManager.setPapi(consoleUser, container.getTexts());
+            }
+            // this.message = String.valueOf(charSequence); // postponed until getFormattedMessage
+            this.charSequence = container.getResult();
+        } else {
+            this.charSequence = charSequence;
+        }
     }
 
     public static void initialize(ProtocolStringReplacer plugin) {

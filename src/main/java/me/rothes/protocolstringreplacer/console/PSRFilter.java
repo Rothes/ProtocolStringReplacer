@@ -35,17 +35,20 @@ public class PSRFilter implements Filter {
 
     @NotNull
     private Result getBlocked(@NotNull String message) {
-        SimpleTextContainer container = new SimpleTextContainer(message);
-        container.createTexts(container);
-        ReplacerManager replacerManager = plugin.getReplacerManager();
-        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(plugin.getUserManager().getConsoleUser(),
-                ConsoleReplaceManager.getFilter());
-        boolean textBlocked = replacerManager.isTextBlocked(container, replacers);
-        if (textBlocked) {
-            return Result.DENY;
-        } else {
-            return Result.NEUTRAL;
+        if (ProtocolStringReplacer.getInstance().hasStarted() && message != null) {
+            SimpleTextContainer container = new SimpleTextContainer(message);
+            container.createTexts(container);
+            ReplacerManager replacerManager = plugin.getReplacerManager();
+            List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(plugin.getUserManager().getConsoleUser(),
+                    ConsoleReplaceManager.getFilter());
+            boolean textBlocked = replacerManager.isTextBlocked(container, replacers);
+            if (textBlocked) {
+                return Result.DENY;
+            } else {
+                return Result.NEUTRAL;
+            }
         }
+        return Result.NEUTRAL;
     }
 
     @Override

@@ -22,6 +22,8 @@ Options:
       Placeholder-Head: ｛
       # The suffix of a placeholder. Only one character allowed.
       Placeholder-Tail: ｝
+      # Whether PSR should parse placeholders for console or not.
+      Parse-For-Console: true
 
     # Replaced ItemStack cache related options.
     ItemMetaCache:

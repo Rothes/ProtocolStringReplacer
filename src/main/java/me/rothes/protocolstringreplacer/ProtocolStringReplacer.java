@@ -61,11 +61,18 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private boolean isSpigot;
     private boolean isPaper;
     private boolean hasPaperComponent;
+    private boolean hasStarted;
     private Pattern digits = Pattern.compile("[^0-9]+");
 
     public ProtocolStringReplacer() {
         super();
+        instance = this;
 
+        // Start Console Replacer first to remove the Ansi in log files.
+        PSRMessage.initialize(instance);
+        serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
+        consoleReplaceManager = new ConsoleReplaceManager(this);
+        consoleReplaceManager.initialize();
         // Hack the prefix of the Logger of this plugin.
         try {
             Field logger = JavaPlugin.class.getDeclaredField("logger");
@@ -77,11 +84,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
             name.setAccessible(true);
 
             final String background = ";48;2;5;15;40";
-            final String bracket = "\033[38;2;255;106;0" + background + "m";
-            final String red = "\033[0;91" + background + "m";
-            final String gold = "\033[0;33" + background + "m";
-            final String brightGold = "\033[38;2;220;175;0" + background + "m";
-            final String reset = "\033[0m";
+            final String bracket = "\u001b[38;2;255;106;0" + background + "m";
+            final String red = "\u001b[0;91" + background + "m";
+            final String gold = "\u001b[0;33" + background + "m";
+            final String brightGold = "\u001b[38;2;220;175;0" + background + "m";
+            final String reset = "\u001b[0m";
 
             name.set(this.getLogger(), bracket + "[" + red + "Protocol"
                     + gold + "String" + brightGold + "Replacer" + bracket + "]" + reset + " ");
@@ -107,6 +114,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
         logger.severe(message);
     }
 
+    public boolean hasStarted() {
+        return hasStarted;
+    }
+
     @NotNull
     @Override
     public CommentYamlConfiguration getConfig() {
@@ -124,12 +135,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
         loadConfig();
         PSRLocalization.initialize(instance);
         logger = this.getLogger();
 
-        serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
         try {
             Class.forName("org.bukkit.entity.Player$Spigot");
             isSpigot = true;
@@ -212,19 +221,16 @@ public class ProtocolStringReplacer extends JavaPlugin {
         replacerManager = new ReplacerManager();
         CommandHandler commandHandler = new CommandHandler();
         userManager = new UserManager();
-        PSRMessage.initialize(this);
-        consoleReplaceManager = new ConsoleReplaceManager(this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();
-        consoleReplaceManager.initialize();
         commandHandler.initialize();
         replacerManager.initialize();
-        consoleReplaceManager.getPsrFilter().start();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();
         }
+        this.hasStarted = true;
         initMetrics();
         info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Wiki-Creating"));
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {

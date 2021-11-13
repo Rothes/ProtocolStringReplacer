@@ -20,6 +20,8 @@ Options:
       Placeholder-Head: ｛
       # 使用占位符的后缀. 仅允许一个字符.
       Placeholder-Tail: ｝
+      # 是否为显示在控制台的文本解析占位符.
+      Parse-For-Console: true
 
     # 关于已替换物品缓存表的相关设定.
     ItemMetaCache:
