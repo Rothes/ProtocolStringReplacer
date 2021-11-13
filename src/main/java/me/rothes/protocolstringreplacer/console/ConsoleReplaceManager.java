@@ -42,10 +42,10 @@ import java.util.function.BiPredicate;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
-public class ConsoleReplaceManager {
+public final class ConsoleReplaceManager {
 
     private static final BiPredicate<ReplacerConfig, User> filter = (replacerConfig, user) -> replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
-    private ProtocolStringReplacer plugin;
+    private final ProtocolStringReplacer plugin;
     private PSRFilter psrFilter;
 
     public ConsoleReplaceManager(ProtocolStringReplacer plugin) {
