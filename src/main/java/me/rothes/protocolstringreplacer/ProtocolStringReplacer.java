@@ -395,7 +395,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 jsonBuilder.append(line).append("\n");
             }
-            ProtocolStringReplacer.info(jsonBuilder.toString());
             try {
                 final JsonElement element = new JsonParser().parse(jsonBuilder.toString());
                 final JsonObject root = element.getAsJsonObject();
