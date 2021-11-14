@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -42,6 +43,7 @@ import java.util.logging.SimpleFormatter;
 public final class ConsoleReplaceManager {
 
     private static final BiPredicate<ReplacerConfig, User> filter = (replacerConfig, user) -> replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
+    private static final List<String> patterns = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
     private PSRFilter psrFilter;
 
@@ -51,6 +53,11 @@ public final class ConsoleReplaceManager {
 
     public static BiPredicate<ReplacerConfig, User> getFilter() {
         return filter;
+    }
+
+    @Nullable
+    public static List<String> getPatterns() {
+        return patterns;
     }
 
     public void initialize() {
@@ -190,6 +197,7 @@ public final class ConsoleReplaceManager {
             field.setAccessible(true);
             PatternLayout layout = (PatternLayout) field.get(config.getAppender(appenderName));
             Node selectorNode = getChild(appenderNode, "LoggerNamePatternSelector");
+            int index = patterns.size();
             if (selectorNode != null) {
                 PatternParser parser = PatternLayout.createPatternParser(config);
                 String defaultPattern = selectorNode.getAttributes().getNamedItem("defaultPattern").getNodeValue();
@@ -200,7 +208,8 @@ public final class ConsoleReplaceManager {
 
                 field = LoggerNamePatternSelector.class.getDeclaredField("defaultFormatters");
                 field.setAccessible(true);
-                field.set(selector, parser.parse(restore ? defaultPattern : ("%PSRFormatting{" + defaultPattern + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
+                patterns.add(defaultPattern);
+                field.set(selector, parser.parse(restore ? defaultPattern : ("%PSRFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
 
                 Node patternMatch = getChild(selectorNode, "PatternMatch");
                 String pattern = patternMatch.getAttributes().getNamedItem("pattern").getNodeValue();
@@ -210,15 +219,17 @@ public final class ConsoleReplaceManager {
                 for (Object formatter : formatters) {
                     field = formatter.getClass().getDeclaredField("formatters");
                     field.setAccessible(true);
-                    field.set(formatter, parser.parse(restore ? pattern : ("%PSRFormatting{" + pattern + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
+                    patterns.add(pattern);
+                    field.set(formatter, parser.parse(restore ? pattern : ("%PSRFormatting{" + ++index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
                 }
 
             } else {
                 field = PatternLayout.class.getDeclaredField("conversionPattern");
                 field.setAccessible(true);
                 String defaultPattern = (String) field.get(layout);
+                patterns.add(defaultPattern);
                 String pattern = restore ? appenderNode.getAttributes().getNamedItem("pattern").getNodeValue()
-                        : ("%PSRFormatting{" + defaultPattern + "}" + (removeAnsi ? "{removeAnsi}" : ""));
+                        : ("%PSRFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""));
                 field.set(layout, pattern);
                 field = PatternLayout.class.getDeclaredField("eventSerializer");
                 field.setAccessible(true);
@@ -288,14 +299,6 @@ public final class ConsoleReplaceManager {
             }
         }
         return null;
-    }/*
-
-    @Nullable
-    private String getAttribute(@Nonnull Node node, @Nonnull String key) {
-        NamedNodeMap attributes = node.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
-            attributes.it
-        }
-    }*/
+    }
 
 }
