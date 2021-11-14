@@ -69,7 +69,7 @@ public class PSRLogEventPatternConverter extends LogEventPatternConverter {
     }
 
     public static PSRLogEventPatternConverter newInstance(Configuration config, String[] options) {
-        return new PSRLogEventPatternConverter(PatternLayout.createPatternParser(config).parse(ConsoleReplaceManager.getPatterns().get(Integer.parseInt(options[0]))),
+        return new PSRLogEventPatternConverter(PatternLayout.createPatternParser(config).parse(ConsoleReplaceManager.getPatterns().get(Short.parseShort(options[0]))),
                 options.length >= 2 && "removeAnsi".equals(options[1]));
     }
 
