@@ -6,7 +6,7 @@
 
     <groupId>me.rothes</groupId>
     <artifactId>ProtocolStringReplacer</artifactId>
-    <version>2.1.1</version>
+    <version>2.1.2</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -194,6 +194,7 @@
                         <filter>
                             <artifact>*:*</artifact>
                             <excludes>
+                                <exclude>META-INF/**</exclude>
                                 <exclude>org/apache/commons/collections/collection/*</exclude>
                                 <exclude>org/apache/commons/collections/list/*</exclude>
                                 <exclude>org/apache/commons/collections/Unmodifiable.class</exclude>
