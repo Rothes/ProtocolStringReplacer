@@ -108,7 +108,11 @@ public class PSRFilter implements Filter {
 
     @Override
     public Result filter(Logger logger, Level level, Marker marker, Object msg, Throwable t) {
-        return getBlocked(msg.toString());
+        if (msg != null) {
+            return getBlocked(msg.toString());
+        } else {
+            return Result.NEUTRAL;
+        }
     }
 
     @Override
