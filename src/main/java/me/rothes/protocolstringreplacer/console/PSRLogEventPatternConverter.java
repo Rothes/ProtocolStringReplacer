@@ -13,17 +13,14 @@ import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
 import org.apache.logging.log4j.core.pattern.PatternConverter;
 import org.apache.logging.log4j.core.pattern.PatternFormatter;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 @ConverterKeys({"PSRFormatting"})
 @Plugin(name = "PSRFormatting", category = PatternConverter.CATEGORY)
-@SuppressWarnings("unused")
 public class PSRLogEventPatternConverter extends LogEventPatternConverter {
 
     private final List<PatternFormatter> formatters;
     private final boolean removeAnsi;
-    private Field levelField;
 
     protected PSRLogEventPatternConverter(List<PatternFormatter> formatters, boolean removeAnsi) {
         super("PSRFormatting", null);
@@ -68,7 +65,12 @@ public class PSRLogEventPatternConverter extends LogEventPatternConverter {
         }
     }
 
+    @SuppressWarnings("unused")
     public static PSRLogEventPatternConverter newInstance(Configuration config, String[] options) {
+        if (options.length < 1 || options.length > 2) {
+            LOGGER.error("Incorrect number of options on minecraftFormatting. Expected at least 1, max 2 received " + options.length);
+            return null;
+        }
         return new PSRLogEventPatternConverter(PatternLayout.createPatternParser(config).parse(ConsoleReplaceManager.getPatterns().get(Short.parseShort(options[0]))),
                 options.length >= 2 && "removeAnsi".equals(options[1]));
     }
