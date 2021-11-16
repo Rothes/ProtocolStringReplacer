@@ -70,20 +70,8 @@ public final class ConsoleReplaceManager {
             // Add PSR converter.
             getConverters(config).put("PSRFormatting", PSRLogEventPatternConverter.class);
 
-            NodeList childNodes = appenders.getChildNodes();
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                Node item = childNodes.item(i);
-                if (item.getNodeName().equals("#text")) {
-                    continue;
-                }
-                String name = item.getAttributes().getNamedItem("name").getNodeValue();
-                boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile") || item.getNodeName().equals("ServerGuiConsole");
-                Node appenderNode = getChild(item, "PatternLayout");
-                if (appenderNode != null) {
-                    setAppender(config, appenderNode, name, removeAnsi, false);
-                }
-            }
-
+            processAppenders(config, appenders, false);
+            patterns.clear();
             // For some version we still need to do this.
             psrFilter = new PSRFilter(plugin);
             config.addFilter(psrFilter);
@@ -145,20 +133,7 @@ public final class ConsoleReplaceManager {
             // Remove PSR converter.
             getConverters(config).remove("PSRFormatting");
 
-            NodeList childNodes = appenders.getChildNodes();
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                Node item = childNodes.item(i);
-                if (item.getNodeName().equals("#text")) {
-                    continue;
-                }
-                String name = item.getAttributes().getNamedItem("name").getNodeValue();
-                boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile") || item.getNodeName().equals("ServerGuiConsole");
-                Node appenderNode = getChild(item, "PatternLayout");
-                if (appenderNode != null) {
-                    setAppender(config, appenderNode, name, removeAnsi, true);
-                }
-            }
-
+            processAppenders(config, appenders, true);
             config.removeFilter(psrFilter);
 
         } else {
@@ -186,6 +161,22 @@ public final class ConsoleReplaceManager {
                 config.getLoggerConfig(rootLogger.getName()).removeFilter(psrFilter);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void processAppenders(Configuration config, Node appenders, boolean restore) {
+        NodeList childNodes = appenders.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+            if (item.getNodeName().equals("#text")) {
+                continue;
+            }
+            String name = item.getAttributes().getNamedItem("name").getNodeValue();
+            boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile") || item.getNodeName().equals("ServerGuiConsole");
+            Node appenderNode = getChild(item, "PatternLayout");
+            if (appenderNode != null) {
+                setAppender(config, appenderNode, name, removeAnsi, restore);
             }
         }
     }
@@ -273,18 +264,6 @@ public final class ConsoleReplaceManager {
         return (Map<String, Class<?>>) field.get(patternParser);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Nullable
-    private Node getChild(@Nonnull Element element, @Nonnull String childName) {
-        NodeList childNodes = element.getChildNodes();
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            Node childNode = childNodes.item(i);
-            if (childNode.getNodeName().equals(childName)) {
-                return childNode;
-            }
         }
         return null;
     }
