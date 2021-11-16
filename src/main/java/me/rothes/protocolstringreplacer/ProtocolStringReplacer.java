@@ -159,7 +159,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
         } catch (Throwable tr) {
             isPaper = false;
-            if (serverMajorVersion > 12) {
+            if (serverMajorVersion >= 12) {
                 warn("\033[0;31m" + PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Recommend-Paper") + "\033[0m");
             } else {
                 warn("\033[0;31m" + PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Out-Dated-Server") + "\033[0m");
