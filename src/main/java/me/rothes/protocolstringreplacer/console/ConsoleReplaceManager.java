@@ -6,7 +6,6 @@ import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
-import net.minecrell.terminalconsole.util.LoggerNamePatternSelector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -16,7 +15,6 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.pattern.PatternFormatter;
 import org.apache.logging.log4j.core.pattern.PatternParser;
-import org.apache.logging.log4j.message.ReusableMessageFactory;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.bukkit.Bukkit;
 import org.w3c.dom.Document;
@@ -46,6 +44,7 @@ public final class ConsoleReplaceManager {
     private static final List<String> patterns = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
     private PSRFilter psrFilter;
+    private Object oriFactory;
 
     public ConsoleReplaceManager(ProtocolStringReplacer plugin) {
         this.plugin = plugin;
@@ -112,6 +111,7 @@ public final class ConsoleReplaceManager {
             try {
                 Field field = AbstractLogger.class.getDeclaredField("messageFactory");
                 field.setAccessible(true);
+                oriFactory = field.get(LogManager.getRootLogger());
                 PSRMessageFactory psrMessageFactory = new PSRMessageFactory();
                 field.set(LogManager.getRootLogger(), psrMessageFactory);
                 field.setAccessible(false);
@@ -124,9 +124,9 @@ public final class ConsoleReplaceManager {
     }
 
     public void disable() {
+        LoggerContext context = (LoggerContext) LogManager.getContext(false);
+        Configuration config = context.getConfiguration();
         if (plugin.getServerMajorVersion() >= 12) {
-            LoggerContext context = (LoggerContext) LogManager.getContext(false);
-            Configuration config = context.getConfiguration();
             // Get the default xml configuration from server jar.
             Node appenders = getAppendersNode(config);
 
@@ -134,7 +134,6 @@ public final class ConsoleReplaceManager {
             getConverters(config).remove("PSRFormatting");
 
             processAppenders(config, appenders, true);
-            config.removeFilter(psrFilter);
 
         } else {
             Bukkit.getServer().getLogger().getParent().getHandlers()[0].setFormatter(new SimpleFormatter());
@@ -142,27 +141,16 @@ public final class ConsoleReplaceManager {
             try {
                 Field field = AbstractLogger.class.getDeclaredField("messageFactory");
                 field.setAccessible(true);
-                ReusableMessageFactory reusableMessageFactory = new ReusableMessageFactory();
-                field.set(LogManager.getRootLogger(), reusableMessageFactory);
+                field.set(LogManager.getRootLogger(), oriFactory);
                 field.setAccessible(false);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
 
-            // Try to remove the filter we added.
-            Logger rootLogger = (Logger) LogManager.getRootLogger();
-            try {
-                Field privateConfig = Logger.class.getDeclaredField("privateConfig");
-                privateConfig.setAccessible(true);
-                Object o = privateConfig.get(rootLogger);
-                privateConfig.setAccessible(false);
-                Field configField = o.getClass().getDeclaredField("config");
-                AbstractConfiguration config = (AbstractConfiguration) configField.get(o);
-                config.getLoggerConfig(rootLogger.getName()).removeFilter(psrFilter);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
         }
+
+        // Remove PsrFilter
+        config.removeFilter(psrFilter);
     }
 
     private void processAppenders(Configuration config, Node appenders, boolean restore) {
@@ -182,6 +170,7 @@ public final class ConsoleReplaceManager {
     }
 
     private void setAppender(Configuration config, Node appenderNode, String appenderName, boolean removeAnsi, boolean restore) {
+        Class<?> loggerNamePatternSelector = ((AbstractConfiguration) config).getPluginManager().getPlugins().get("loggernamepatternselector").getPluginClass();
         try {
             Field field;
             field = AbstractAppender.class.getDeclaredField("layout");
@@ -195,23 +184,30 @@ public final class ConsoleReplaceManager {
 
                 field = PatternLayout.class.getDeclaredField("patternSelector");
                 field.setAccessible(true);
-                LoggerNamePatternSelector selector = (LoggerNamePatternSelector) field.get(layout);
+                Object selector = field.get(layout);
+                field.setAccessible(false);
 
-                field = LoggerNamePatternSelector.class.getDeclaredField("defaultFormatters");
+                field = loggerNamePatternSelector.getDeclaredField("defaultFormatters");
                 field.setAccessible(true);
                 patterns.add(defaultPattern);
                 field.set(selector, parser.parse(restore ? defaultPattern : ("%PSRFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
+                field.setAccessible(false);
 
                 Node patternMatch = getChild(selectorNode, "PatternMatch");
+                if (patternMatch == null) {
+                    return;
+                }
                 String pattern = patternMatch.getAttributes().getNamedItem("pattern").getNodeValue();
-                field = LoggerNamePatternSelector.class.getDeclaredField("formatters");
+                field = loggerNamePatternSelector.getDeclaredField("formatters");
                 field.setAccessible(true);
                 List<?> formatters = (List<?>) field.get(selector);
+                field.setAccessible(false);
                 for (Object formatter : formatters) {
                     field = formatter.getClass().getDeclaredField("formatters");
                     field.setAccessible(true);
                     patterns.add(pattern);
                     field.set(formatter, parser.parse(restore ? pattern : ("%PSRFormatting{" + ++index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
+                    field.setAccessible(false);
                 }
 
             } else {
@@ -222,9 +218,11 @@ public final class ConsoleReplaceManager {
                 String pattern = restore ? appenderNode.getAttributes().getNamedItem("pattern").getNodeValue()
                         : ("%PSRFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""));
                 field.set(layout, pattern);
+                field.setAccessible(false);
                 field = PatternLayout.class.getDeclaredField("eventSerializer");
                 field.setAccessible(true);
                 field.set(layout, PatternLayout.newSerializerBuilder().setConfiguration(config).setPattern(pattern).setDefaultPattern(pattern).build());
+                field.setAccessible(false);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
