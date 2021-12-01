@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
 public final class TileEntityData extends AbstractServerSignPacketListener {
 
@@ -14,7 +14,7 @@ public final class TileEntityData extends AbstractServerSignPacketListener {
 
     protected void process(PacketEvent packetEvent) {
         PacketContainer packet = packetEvent.getPacket();
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         // 9: Set the text on a sign
         if (packet.getIntegers().read(0) == 9) {
             NbtCompound nbtCompound = (NbtCompound) packet.getNbtModifier().read(0);

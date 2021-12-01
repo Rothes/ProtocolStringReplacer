@@ -7,7 +7,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
 public abstract class AbstractTitleListener extends AbstractServerPacketListener {
 
@@ -16,7 +16,7 @@ public abstract class AbstractTitleListener extends AbstractServerPacketListener
     }
 
     protected void process(PacketEvent packetEvent) {
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);

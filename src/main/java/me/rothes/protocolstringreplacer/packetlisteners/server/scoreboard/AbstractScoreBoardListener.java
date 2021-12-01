@@ -5,14 +5,14 @@ import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfigurati
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
 import java.util.function.BiPredicate;
 
 public abstract class AbstractScoreBoardListener extends AbstractServerPacketListener {
 
-    protected final BiPredicate<ReplacerConfig, User> titleFilter;
-    protected final BiPredicate<ReplacerConfig, User> entityNameFilter;
+    protected final BiPredicate<ReplacerConfig, PsrUser> titleFilter;
+    protected final BiPredicate<ReplacerConfig, PsrUser> entityNameFilter;
 
     protected AbstractScoreBoardListener(PacketType packetType, ListenType listenType) {
         super(packetType, listenType);

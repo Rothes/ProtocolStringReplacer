@@ -1,10 +1,10 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Block;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.File;
 import me.rothes.protocolstringreplacer.commands.subcommands.editchildren.Replace;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public class Edit extends SubCommand {
 
     public Edit() {
         super("edit", "protocolstringreplacer.command.edit",
-                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Description"));
+                PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Description"));
 
         childCommands.add(new File());
         childCommands.add(new Replace());
@@ -28,14 +28,14 @@ public class Edit extends SubCommand {
     }
 
     @Override
-    public void onExecute(@Nonnull User user, @Nonnull String[] args) {
+    public void onExecute(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length > 1) {
             for (SubCommand childCommand : childCommands) {
                 if (childCommand.getName().equalsIgnoreCase(args[1])) {
                     if (user.hasPermission(childCommand.getPermission())) {
                         childCommand.onExecute(user, args);
                     } else {
-                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.No-Permission"));
+                        user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.No-Permission"));
                     }
                     return;
                 }
@@ -45,7 +45,7 @@ public class Edit extends SubCommand {
     }
 
     @Override
-    public List<String> onTab(@NotNull User user, @NotNull String[] args) {
+    public List<String> onTab(@NotNull PsrUser user, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
         if (args.length == 2) {
             list.add("help");
@@ -65,13 +65,13 @@ public class Edit extends SubCommand {
     }
 
     @Override
-    public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Header"));
+    public void sendHelp(@Nonnull PsrUser user) {
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Header"));
         for (SubCommand childCommand : childCommands) {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Subcommand-Help-Format",
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Subcommand-Help-Format",
                     "/psr edit " + childCommand.getName(), childCommand.getDescription()));
         }
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Footer"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Help.Footer"));
     }
 
 }

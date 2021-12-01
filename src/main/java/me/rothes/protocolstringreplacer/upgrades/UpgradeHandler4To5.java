@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer.upgrades;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
@@ -38,7 +38,7 @@ public class UpgradeHandler4To5 extends AbstractUpgradeHandler{
             ProtocolStringReplacer.getInstance().checkConfigKeys();
             config.set("Options.Locale", locale);
             config.save(ProtocolStringReplacer.getInstance().getConfigFile());
-            PSRLocalization.initialize(ProtocolStringReplacer.getInstance());
+            PsrLocalization.initialize(ProtocolStringReplacer.getInstance());
         } catch (IOException e) {
             e.printStackTrace();
         }

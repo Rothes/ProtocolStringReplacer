@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer.api.capture;
 
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import org.jetbrains.annotations.NotNull;
@@ -39,11 +39,11 @@ public interface CaptureInfo {
     @NotNull Long getTime();
 
     /**
-     * Get the User that capture the packet.
+     * Get the PsrUser that capture the packet.
      *
-     * @return User that capture the packet.
+     * @return PsrUser that capture the packet.
      */
-    @NotNull User getUser();
+    @NotNull PsrUser getUser();
 
     /**
      * Get the description added by container.
@@ -88,10 +88,10 @@ public interface CaptureInfo {
     /**
      * Set the user that capture the packet.
      *
-     * @param user The User to set
-     * @throws IllegalStateException if User is already been set.
+     * @param user The PsrUser to set
+     * @throws IllegalStateException if PsrUser is already been set.
      */
-    void setUser(@NotNull User user);
+    void setUser(@NotNull PsrUser user);
 
     /**
      * Set the description.

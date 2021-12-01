@@ -3,7 +3,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +17,7 @@ public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
         for (ItemStack itemStack : packetEvent.getPacket().getItemListModifier().read(0)) {

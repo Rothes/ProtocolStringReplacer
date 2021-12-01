@@ -3,7 +3,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.client.itemstack;
 import com.comphenix.protocol.PacketType;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.client.AbstractClientPacketListener;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,7 +21,7 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
         super(packetType);
     }
 
-    protected void resotreItem(User user, ItemStack itemStack) {
+    protected void resotreItem(PsrUser user, ItemStack itemStack) {
         if (itemStack.hasItemMeta()) {
             ItemMeta itemMeta = itemStack.getItemMeta();
             Short uniqueCacheKey = null;

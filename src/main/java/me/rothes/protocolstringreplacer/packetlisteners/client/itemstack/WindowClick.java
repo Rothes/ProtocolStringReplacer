@@ -2,7 +2,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.client.itemstack;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.inventory.ItemStack;
 
 public final class WindowClick extends AbstractClientItemPacketListener {
@@ -12,7 +12,7 @@ public final class WindowClick extends AbstractClientItemPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         if (user.hasPermission("protocolstringreplacer.feature.usermetacache.noncreative")) {
             ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
             resotreItem(user, itemStack);

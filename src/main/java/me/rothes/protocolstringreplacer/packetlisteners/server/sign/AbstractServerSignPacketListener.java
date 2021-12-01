@@ -4,10 +4,10 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
-import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +20,7 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
         super(packetType, ListenType.SIGN);
     }
 
-    protected void setSignText(@NotNull PacketEvent packetEvent, @NotNull NbtCompound nbtCompound, @NotNull User user, @NotNull BiPredicate<ReplacerConfig, User> filter) {
+    protected void setSignText(@NotNull PacketEvent packetEvent, @NotNull NbtCompound nbtCompound, @NotNull PsrUser user, @NotNull BiPredicate<ReplacerConfig, PsrUser> filter) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
 

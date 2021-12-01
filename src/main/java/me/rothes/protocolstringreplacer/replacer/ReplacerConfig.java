@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer.replacer;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -39,7 +39,7 @@ public class ReplacerConfig {
         long startTime = System.nanoTime();
         loadData(file, configuration);
         if (ProtocolStringReplacer.getInstance().getConfigManager().printReplacer) {
-            ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Load-Complete",
+            ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Load-Complete",
                     getRelativePath(), String.valueOf((System.nanoTime() - startTime) / 1000000d)));
         }
     }
@@ -241,7 +241,7 @@ public class ReplacerConfig {
                     }
                 }
                 if (!typeFound) {
-                    ProtocolStringReplacer.warn(PSRLocalization.getLocaledMessage(
+                    ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage(
                             "Console-Sender.Messages.Replacer-Config.Invalid-Listen-Type", type));
                 }
             }
@@ -258,7 +258,7 @@ public class ReplacerConfig {
         }
         if (!typeFound) {
             this.matchMode = MatchMode.CONTAIN;
-            ProtocolStringReplacer.warn(PSRLocalization.getLocaledMessage(
+            ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage(
                     "Console-Sender.Messages.Replacer-Config.Invalid-Match-Mode", matchMode));
         }
         for (ReplacesMode replacesMode : ReplacesMode.values()) {
@@ -299,7 +299,7 @@ public class ReplacerConfig {
             if (object instanceof String) {
                 builder.addSearchString((String) object);
             } else {
-                ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage(
+                ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage(
                         "Console-Sender.Messages.Replacer-Config.Invalid-Original-Format",
                         getRelativePath(), object.toString()));
             }

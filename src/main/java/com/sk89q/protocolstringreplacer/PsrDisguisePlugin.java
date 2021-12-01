@@ -27,11 +27,11 @@ import java.util.logging.Logger;
  * See this thread for the detail:
  * https://www.mcbbs.net/thread-1258172-1-1.html
  */
-public class PSRDisguisePlugin implements Plugin {
+public class PsrDisguisePlugin implements Plugin {
 
     private final ProtocolStringReplacer plugin;
 
-    public PSRDisguisePlugin(@Nonnull final ProtocolStringReplacer plugin) {
+    public PsrDisguisePlugin(@Nonnull final ProtocolStringReplacer plugin) {
         Validate.notNull(plugin, "ProtocolStringReplacer cannot be null");
         this.plugin = plugin;
     }

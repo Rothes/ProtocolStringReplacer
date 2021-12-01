@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +18,7 @@ public class WindowItems extends AbstractServerItemPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);

@@ -23,7 +23,7 @@ public class ConfigManager {
 
         String placeholderHead = instance.getConfig().getString("Options.Features.Placeholder.Placeholder-Head");
         if (placeholderHead == null || placeholderHead.isEmpty()) {
-            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Placeholder-Head"));
+            ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Placeholder-Head"));
             this.placeholderHead = '｛';
         } else {
             this.placeholderHead = placeholderHead.charAt(0);
@@ -31,7 +31,7 @@ public class ConfigManager {
 
         String placeholderTail = instance.getConfig().getString("Options.Features.Placeholder.Placeholder-Tail");
         if (placeholderTail == null || placeholderTail.isEmpty()) {
-            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Placeholder-Tail"));
+            ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Placeholder-Tail"));
             this.placeholderTail = '｝';
         } else {
             this.placeholderTail = placeholderTail.charAt(0);
@@ -49,7 +49,7 @@ public class ConfigManager {
             }
         }
         if (listenerPriority == null) {
-            ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Listener-Priority"));
+            ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Listener-Priority"));
             listenerPriority = ListenerPriority.HIGHEST;
         }
         this.listenerPriority = listenerPriority;

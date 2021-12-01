@@ -1,7 +1,7 @@
 package me.rothes.protocolstringreplacer.console;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
@@ -40,17 +40,17 @@ import java.util.logging.SimpleFormatter;
 
 public final class ConsoleReplaceManager {
 
-    private static final BiPredicate<ReplacerConfig, User> filter = (replacerConfig, user) -> replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
+    private static final BiPredicate<ReplacerConfig, PsrUser> filter = (replacerConfig, user) -> replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
     private static final List<String> patterns = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
-    private PSRFilter psrFilter;
+    private PsrFilter psrFilter;
     private Object oriFactory;
 
     public ConsoleReplaceManager(ProtocolStringReplacer plugin) {
         this.plugin = plugin;
     }
 
-    public static BiPredicate<ReplacerConfig, User> getFilter() {
+    public static BiPredicate<ReplacerConfig, PsrUser> getFilter() {
         return filter;
     }
 
@@ -67,12 +67,12 @@ public final class ConsoleReplaceManager {
             Node appenders = getAppendersNode(config);
 
             // Add PSR converter.
-            getConverters(config).put("PSRFormatting", PSRLogEventPatternConverter.class);
+            getConverters(config).put("PSRFormatting", PsrLogEventPatternConverter.class);
 
             processAppenders(config, appenders, false);
             patterns.clear();
             // For some version we still need to do this.
-            psrFilter = new PSRFilter(plugin);
+            psrFilter = new PsrFilter(plugin);
             config.addFilter(psrFilter);
 
         } else {
@@ -87,7 +87,7 @@ public final class ConsoleReplaceManager {
                     SimpleTextContainer container = new SimpleTextContainer(string);
                     container.createTexts(container);
                     ReplacerManager replacerManager = plugin.getReplacerManager();
-                    User consoleUser = plugin.getUserManager().getConsoleUser();
+                    PsrUser consoleUser = plugin.getUserManager().getConsoleUser();
                     List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(consoleUser, filter);
                     replacerManager.replaceContainerTexts(container, replacers);
                     if (plugin.getConfigManager().consolePlaceholder) {
@@ -112,13 +112,13 @@ public final class ConsoleReplaceManager {
                 Field field = AbstractLogger.class.getDeclaredField("messageFactory");
                 field.setAccessible(true);
                 oriFactory = field.get(LogManager.getRootLogger());
-                PSRMessageFactory psrMessageFactory = new PSRMessageFactory();
+                PsrMessageFactory psrMessageFactory = new PsrMessageFactory();
                 field.set(LogManager.getRootLogger(), psrMessageFactory);
                 field.setAccessible(false);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
-            psrFilter = new PSRFilter(plugin);
+            psrFilter = new PsrFilter(plugin);
             ((Logger) LogManager.getRootLogger()).addFilter(psrFilter);
         }
     }

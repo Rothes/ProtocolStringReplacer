@@ -9,7 +9,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import me.rothes.protocolstringreplacer.libs.com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,7 +28,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         if (entity == null) {
             return;
         }
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata;
         try {
             wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());

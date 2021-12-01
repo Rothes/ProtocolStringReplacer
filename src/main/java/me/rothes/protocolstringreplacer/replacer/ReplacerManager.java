@@ -1,11 +1,11 @@
 package me.rothes.protocolstringreplacer.replacer;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.replacer.containers.Container;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
@@ -109,7 +109,7 @@ public class ReplacerManager {
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.nanoTime();
         HashMap<File, CommentYamlConfiguration> loadedFiles = loadReplacesFiles(path);
-        ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Pre-Loaded-Replacers",
+        ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Pre-Loaded-Replacers",
                 String.valueOf(loadedFiles.size()), String.valueOf((System.nanoTime() - startTime) / 1000000D)));
         if (loadedFiles.size() == 0) {
             return;
@@ -122,7 +122,7 @@ public class ReplacerManager {
                 addReplacerConfig(replacerConfig);
             } catch (PatternSyntaxException exception) {
                 exception.printStackTrace();
-                ProtocolStringReplacer.error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Regex-Exception",
+                ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Regex-Exception",
                         file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/')));
             }
         }
@@ -143,7 +143,7 @@ public class ReplacerManager {
             }
             if (!needToRemove.isEmpty()) {
                 Bukkit.getScheduler().runTask(instrance, () -> {
-                    ProtocolStringReplacer.info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
+                    ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
                             String.valueOf(needToRemove.size())));
                     for (ItemMeta itemMeta : needToRemove) {
                         replacedItemCache.remove(itemMeta);
@@ -200,8 +200,8 @@ public class ReplacerManager {
         return itemMetaCache;
     }
 
-    public List<ReplacerConfig> getAcceptedReplacers(@Nonnull User user, @Nonnull BiPredicate<ReplacerConfig, User> filter) {
-        Validate.notNull(user, "User cannot be null");
+    public List<ReplacerConfig> getAcceptedReplacers(@Nonnull PsrUser user, @Nonnull BiPredicate<ReplacerConfig, PsrUser> filter) {
+        Validate.notNull(user, "PsrUser cannot be null");
         Validate.notNull(filter, "BiPredicate Filter cannot be null");
 
         List<ReplacerConfig> result = new ArrayList<>();
@@ -285,12 +285,12 @@ public class ReplacerManager {
         }
     }
 
-    public void setPapi(@Nonnull User user, @Nonnull List<Replaceable> replaceables) {
+    public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables) {
         setPapi(user, replaceables, getPapiIndexes(replaceables));
     }
 
-    public void setPapi(@Nonnull User user, @Nonnull List<Replaceable> replaceables, List<Integer> indexes) {
-        Validate.notNull(user, "User cannot be null");
+    public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables, List<Integer> indexes) {
+        Validate.notNull(user, "PsrUser cannot be null");
         Validate.notNull(replaceables, "List cannot be null");
         Validate.notNull(indexes, "List cannot be null");
 
@@ -335,7 +335,7 @@ public class ReplacerManager {
         return tailFound;
     }
 
-    public String setPlaceholder(@NotNull User user, @NotNull String string) {
+    public String setPlaceholder(@NotNull PsrUser user, @NotNull String string) {
         return papiReplacer.apply(string, user.getPlayer(),
                 PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
     }

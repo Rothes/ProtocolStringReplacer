@@ -4,8 +4,8 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
 
 public class UpdateScore extends AbstractScoreBoardListener {
 
@@ -14,7 +14,7 @@ public class UpdateScore extends AbstractScoreBoardListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<String> strings = packet.getStrings();
 

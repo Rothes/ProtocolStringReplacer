@@ -8,7 +8,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.papermc.paper.text.PaperComponents;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -27,7 +27,7 @@ public final class Chat extends AbstractServerPacketListener {
         PacketContainer packet = packetEvent.getPacket();
         Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
         if (!(isFiltered.isPresent() && isFiltered.get())) {
-            User user = getEventUser(packetEvent);
+            PsrUser user = getEventUser(packetEvent);
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             String json;

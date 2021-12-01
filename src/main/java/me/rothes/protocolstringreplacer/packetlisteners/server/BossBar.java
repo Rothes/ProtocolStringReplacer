@@ -4,8 +4,8 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
 
 public final class BossBar extends AbstractServerPacketListener {
 
@@ -14,7 +14,7 @@ public final class BossBar extends AbstractServerPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
         if (wrappedChatComponentStructureModifier.size() != 0) {
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);

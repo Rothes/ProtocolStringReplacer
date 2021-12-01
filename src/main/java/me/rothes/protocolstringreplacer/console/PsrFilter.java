@@ -14,12 +14,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PSRFilter implements Filter {
+public class PsrFilter implements Filter {
 
     private ProtocolStringReplacer plugin;
     private boolean started = false;
 
-    public PSRFilter(@NotNull ProtocolStringReplacer plugin) {
+    public PsrFilter(@NotNull ProtocolStringReplacer plugin) {
         this.plugin = plugin;
     }
 

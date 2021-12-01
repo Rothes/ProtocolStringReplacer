@@ -1,10 +1,10 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import org.apache.commons.lang.StringUtils;
@@ -20,13 +20,13 @@ public class Capture extends SubCommand {
 
     public Capture() {
         super("capture", "protocolstringreplacer.command.capture",
-                PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Description"));
+                PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Description"));
     }
 
     @Override
-    public void onExecute(@Nonnull User user, @Nonnull String[] args) {
+    public void onExecute(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (!user.isOnline()) {
-            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Console-Sender.Messages.Command-Not-Available"));
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Console-Sender.Messages.Command-Not-Available"));
             return;
         }
         if (args.length > 1) {
@@ -44,70 +44,70 @@ public class Capture extends SubCommand {
         sendHelp(user);
     }
 
-    private void addCommand(@Nonnull User user, @Nonnull String[] args) {
+    private void addCommand(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length == 3) {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Listen-Type.Messages.Invalid-Mode", args[2]));
                 return;
             }
             if (!listenType.isCapturable()) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Children.Add.Listen-Type-Cannot-Be-Captured"));
                 return;
             }
             if (user.isCapturing(listenType)) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Children.Add.Already-Capturing-Listen-Type", listenType.getName()));
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Remove-Capture-Tip", listenType.getName()));
                 return;
             }
             user.addCaptureType(listenType);
-            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                     "Sender.Commands.Capture.Children.Add.Capture-Added", listenType.getName()));
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Detailed-Help"));
         }
     }
 
-    private void removeCommand(@Nonnull User user, @Nonnull String[] args) {
+    private void removeCommand(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length == 3) {
             ListenType listenType = ListenType.getType(args[2]);
             if (listenType == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Listen-Type.Messages.Invalid-Type", args[2]));
                 return;
             }
             if (!user.isCapturing(listenType)) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Children.Remove.Already-Not-Capturing-Listen-Type", listenType.getName()));
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Add-Capture-Tip", listenType.getName()));
                 return;
             }
             user.removeCaptureType(listenType);
-            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                     "Sender.Commands.Capture.Children.Remove.Capture-Removed", listenType.getName()));
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Remove.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Remove.Detailed-Help"));
         }
     }
 
-    private void listCommand(@Nonnull User user, @Nonnull String[] args) {
+    private void listCommand(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length == 3 || args.length == 4) {
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
                 ListenType listenType = ListenType.getType(args[2]);
                 if (listenType == null) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Variables.Listen-Type.Messages.Invalid-Type", args[2]));
                     return;
                 }
                 if (!user.isCapturing(listenType)) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Capture.Children.List.Not-Capturing-Listen-Type", listenType.getName()));
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Capture.Add-Capture-Tip", listenType.getName()));
                     return;
                 }
@@ -116,12 +116,12 @@ public class Capture extends SubCommand {
                     if (StringUtils.isNumeric(args[3])) {
                         page = Integer.parseInt(args[3]);
                     } else {
-                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                                 "Sender.Error.Not-A-Positive-Integer", args[3]));
                         return;
                     }
                 }
-                user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Header"));
+                user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Header"));
 
                 List<CaptureInfo> captureMessages = user.getCaptureInfos(listenType);
                 int totalPage = (int) Math.ceil((float) captureMessages.size() / 10);
@@ -130,23 +130,23 @@ public class Capture extends SubCommand {
                 }
 
                 MessageUtils.sendPageButtons(user, "/psr capture list " + args[2] + " ", page, totalPage);
-                user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Footer"));
+                user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Footer"));
             });
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Detailed-Help"));
         }
     }
 
 
 
     @Override
-    public List<String> onTab(@NotNull User user, @NotNull String[] args) {
+    public List<String> onTab(@NotNull PsrUser user, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
         if (args.length == 2) {
             list = Arrays.asList("add", "remove", "list");
         } else if (args.length == 3
                 && args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("list")) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Listen-Type.Name") + ">");
+            list.add("<" + PsrLocalization.getLocaledMessage("Variables.Listen-Type.Name") + ">");
             for (ListenType listenType : ListenType.values()) {
                 if (listenType.isCapturable()) {
                     list.add(listenType.getName());
@@ -154,18 +154,18 @@ public class Capture extends SubCommand {
             }
         } else if (args.length == 4
                 && args[1].equalsIgnoreCase("list")) {
-            list.add("[" + PSRLocalization.getLocaledMessage("Variables.Page.Name") + "]");
+            list.add("[" + PsrLocalization.getLocaledMessage("Variables.Page.Name") + "]");
         }
         return list;
     }
 
     @Override
-    public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Help.Header"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Remove.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Capture.Help.Footer"));
+    public void sendHelp(@Nonnull PsrUser user) {
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Help.Header"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Remove.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Help.Footer"));
     }
 
 }

@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
@@ -14,7 +15,6 @@ import me.rothes.protocolstringreplacer.replacer.containers.ChatJsonContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.ItemMetaContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
-import me.rothes.protocolstringreplacer.api.user.User;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import java.util.function.BiPredicate;
 
 public abstract class AbstractServerPacketListener extends AbstractPacketListener {
 
-    protected final BiPredicate<ReplacerConfig, User> filter;
+    protected final BiPredicate<ReplacerConfig, PsrUser> filter;
     protected final ListenType listenType;
 
     protected AbstractServerPacketListener(PacketType packetType, ListenType listenType) {
@@ -50,23 +50,23 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         return replacerConfig.getListenTypeList().contains(listenType);
     }
 
-    protected final boolean checkPermission(User user, ReplacerConfig replacerConfig) {
-        String permission = replacerConfig.getConfiguration().getString("Options.Filter.User.Permission");
+    protected final boolean checkPermission(PsrUser user, ReplacerConfig replacerConfig) {
+        String permission = replacerConfig.getConfiguration().getString("Options.Filter.PsrUser.Permission");
         if (permission != null) {
             return user.hasPermission(permission);
         }
         return true;
     }
 
-    protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
-                                                       @Nonnull String json, BiPredicate<ReplacerConfig, User> filter, boolean saveTitle) {
+    protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                                       @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter, boolean saveTitle) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
 
         return deployContainer(packetEvent, user, listenType, json, replacers, saveTitle);
     }
 
-    protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
+    protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                                        @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
         boolean blocked = false;
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
@@ -112,8 +112,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     @Nullable
-    protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
-                                            @Nonnull String json, BiPredicate<ReplacerConfig, User> filter) {
+    protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                            @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter) {
         ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter, false);
 
         if (container != null) {
@@ -124,7 +124,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     @Nullable
-    protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
+    protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                             @Nonnull String json, List<ReplacerConfig> replacers) {
         ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, replacers, false);
 
@@ -136,8 +136,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     @Nullable
-    protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull User user,  @Nonnull ListenType listenType,
-                                                                          @Nonnull String json, BiPredicate<ReplacerConfig, User> filter, boolean saveTitle) {
+    protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                                                          @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter, boolean saveTitle) {
         ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter, saveTitle);
 
         if (container != null) {
@@ -148,14 +148,14 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     @Nullable
-    protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull User user,  @Nonnull ListenType listenType,
-                                                                   @Nonnull String json, BiPredicate<ReplacerConfig, User> filter) {
+    protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                                                          @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter) {
         return getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter, false);
     }
 
     @Nullable
-    protected static String getReplacedText(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
-                                     @Nonnull String text, BiPredicate<ReplacerConfig, User> filter) {
+    protected static String getReplacedText(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                            @Nonnull String text, BiPredicate<ReplacerConfig, PsrUser> filter) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
         SimpleTextContainer container = new SimpleTextContainer(text);
@@ -182,14 +182,14 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         return container.getResult();
     }
 
-    protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
-                                              @Nonnull ItemStack itemStack, BiPredicate<ReplacerConfig, User> filter) {
+    protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                              @Nonnull ItemStack itemStack, BiPredicate<ReplacerConfig, PsrUser> filter) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
         return replaceItemStack(packetEvent, user, listenType, itemStack, replacers);
     }
 
-    protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull User user, @Nonnull ListenType listenType,
+    protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                               @Nonnull ItemStack itemStack, List<ReplacerConfig> replacers) {
         if (itemStack.hasItemMeta()) {
             ItemStack original = itemStack.clone();

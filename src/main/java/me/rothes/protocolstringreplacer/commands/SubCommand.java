@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer.commands;
 
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -17,9 +17,9 @@ public abstract class SubCommand {
         this.description = description;
     }
 
-    public abstract void onExecute(@Nonnull User user, @Nonnull String[] args);
+    public abstract void onExecute(@Nonnull PsrUser user, @Nonnull String[] args);
 
-    public abstract List<String> onTab(@Nonnull User user, @Nonnull String[] args);
+    public abstract List<String> onTab(@Nonnull PsrUser user, @Nonnull String[] args);
 
     @Nonnull
     public final String getName() {
@@ -36,5 +36,5 @@ public abstract class SubCommand {
         return description;
     }
 
-    public abstract void sendHelp(@Nonnull User user);
+    public abstract void sendHelp(@Nonnull PsrUser user);
 }

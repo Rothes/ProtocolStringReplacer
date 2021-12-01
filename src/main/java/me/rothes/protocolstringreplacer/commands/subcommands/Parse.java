@@ -1,11 +1,11 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
-import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import net.md_5.bungee.api.ChatColor;
@@ -31,11 +31,11 @@ public class Parse extends SubCommand {
 
     public Parse() {
         super("parse", "protocolstringreplacer.command.parse",
-                PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Description"));
+                PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Description"));
     }
 
     @Override
-    public void onExecute(@NotNull User user, @NotNull String[] args) {
+    public void onExecute(@NotNull PsrUser user, @NotNull String[] args) {
         if (args.length == 5) {
             Player player;
             if ("null".equals(args[2])) {
@@ -43,14 +43,14 @@ public class Parse extends SubCommand {
             } else {
                 player = Bukkit.getPlayer(args[2]);
                 if (player == null) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Variables.Player.Messages.Player-Is-Offline", args[2]));
                     return;
                 }
             }
             ListenType listenType = ListenType.getType(args[3]);
             if (listenType == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Listen-Type.Messages.Invalid-Type", args[3]));
                 return;
             }
@@ -62,12 +62,12 @@ public class Parse extends SubCommand {
                 }
             }
             if (replacesMode == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[4]));
                 return;
             }
 
-            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Parse.Start-Parse"));
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Parse.Start-Parse"));
             ReplacesMode finalReplacesMode = replacesMode;
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () ->
                     startParse(user, args[1], player, listenType, finalReplacesMode));
@@ -76,7 +76,7 @@ public class Parse extends SubCommand {
         sendHelp(user);
     }
 
-    private void startParse(@NotNull User user, @NotNull String originalText, Player player,
+    private void startParse(@NotNull PsrUser user, @NotNull String originalText, Player player,
                             @NotNull ListenType listenType, @NotNull ReplacesMode replacesMode) {
         long startTime = System.nanoTime();
         String original = ColorUtils.getColored(originalText);
@@ -99,34 +99,34 @@ public class Parse extends SubCommand {
             }
         }
 
-        ComponentBuilder placeholderMessage = new ComponentBuilder(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Start-Prefix"));
+        ComponentBuilder placeholderMessage = new ComponentBuilder(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Start-Prefix"));
         if (ProtocolStringReplacer.getInstance().getReplacerManager().hasPlaceholder(text)) {
             String original1 = text;
-            User placeholderTarget = player == null ? ProtocolStringReplacer.getInstance().getUserManager().getConsoleUser() :
+            PsrUser placeholderTarget = player == null ? ProtocolStringReplacer.getInstance().getUserManager().getConsoleUser() :
                     ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
             text = ProtocolStringReplacer.getInstance().getReplacerManager().setPlaceholder(placeholderTarget, text);
-            placeholderMessage.append(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Replaced")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(
-                    PSRLocalization.getLocaledMessage("Sender.Commands.Parse.PAPI-Replace-Info",
+            placeholderMessage.append(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Replaced")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(
+                    PsrLocalization.getLocaledMessage("Sender.Commands.Parse.PAPI-Replace-Info",
                             placeholderTarget.getPlayer() == null ? "§7§onull" : placeholderTarget.getPlayer().getName(),
                             ColorUtils.showColorCodes(original1), ColorUtils.showColorCodes(text)))));
         } else {
-            placeholderMessage.append(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Not-Replaced"));
+            placeholderMessage.append(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Not-Replaced"));
         }
 
         double duration = (System.nanoTime() - startTime) / 1000000d;
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Header"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Duration", String.valueOf(duration)));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Listen-Type", listenType.getName()));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Match-Mode",
-                PSRLocalization.getLocaledMessage(replacesMode.getLocaleKey())));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Original-Text",
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Header"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Duration", String.valueOf(duration)));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Listen-Type", listenType.getName()));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Match-Mode",
+                PsrLocalization.getLocaledMessage(replacesMode.getLocaleKey())));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Original-Text",
                 ColorUtils.showColorCodes(original)));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Final-Text",
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Final-Text",
                 ColorUtils.showColorCodes(text)));
-        ComponentBuilder componentBuilder = new ComponentBuilder(PSRLocalization
+        ComponentBuilder componentBuilder = new ComponentBuilder(PsrLocalization
                 .getLocaledMessage("Sender.Commands.Parse.Result.Steps.Start-Prefix"));
         if (results.isEmpty()) {
-            componentBuilder.append(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Steps.Noting-Replaced"));
+            componentBuilder.append(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Steps.Noting-Replaced"));
         } else {
             for (int i = 0; i < results.size(); i++) {
                 componentBuilder.append(" " + (i + 1) + " ");
@@ -137,11 +137,11 @@ public class Parse extends SubCommand {
                 }
                 componentBuilder.event(results.get(i)).append("|").reset();
             }
-            componentBuilder.append(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Steps.Hover-To-View-Info")).reset();
+            componentBuilder.append(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Steps.Hover-To-View-Info")).reset();
         }
         user.sendFilteredMessage(componentBuilder.create());
         user.sendFilteredMessage(placeholderMessage.create());
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Footer"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Footer"));
     }
 
     @NotNull
@@ -206,30 +206,30 @@ public class Parse extends SubCommand {
     @NotNull
     private BaseComponent[] createReplaceResultInfo(@NotNull ArrayList<HoverEvent> results, @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode,
                                                   @NotNull String original, @NotNull String replacement, @NotNull String result) {
-        return TextComponent.fromLegacyText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Replace-Result-Info",
+        return TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Replace-Result-Info",
                 String.valueOf(results.size() + 1), replacerConfig.getRelativePath(),
-                PSRLocalization.getLocaledMessage(replacesMode.getLocaleKey()), ColorUtils.showColorCodes(original),
+                PsrLocalization.getLocaledMessage(replacesMode.getLocaleKey()), ColorUtils.showColorCodes(original),
                 ColorUtils.showColorCodes(replacement), ColorUtils.showColorCodes(result)));
     }
 
     @Override
-    public List<String> onTab(@NotNull User user, @NotNull String[] args) {
+    public List<String> onTab(@NotNull PsrUser user, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
         if (args.length == 2) {
-            list.add(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Tab-Complete.String-To-Parse"));
+            list.add(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Tab-Complete.String-To-Parse"));
         } else if (args.length == 3) {
-            list.add(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Tab-Complete.PAPI-Target"));
+            list.add(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Tab-Complete.PAPI-Target"));
             for (Player player : Bukkit.getOnlinePlayers()) {
                 list.add(player.getName());
             }
             list.add("null");
         } else if (args.length == 4) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Listen-Type.Name") +">");
+            list.add("<" + PsrLocalization.getLocaledMessage("Variables.Listen-Type.Name") +">");
             for (ListenType listenType : ListenType.values()) {
                 list.add(listenType.getName());
             }
         } else if (args.length == 5) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
+            list.add("<" + PsrLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
             for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }
@@ -238,13 +238,13 @@ public class Parse extends SubCommand {
     }
 
     @Override
-    public void sendHelp(@NotNull User user) {
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Header"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-1"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-2"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-3"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-4"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Footer"));
+    public void sendHelp(@NotNull PsrUser user) {
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Header"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-1"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-2"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-3"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Line-4"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Help.Footer"));
     }
 
 }

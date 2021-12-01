@@ -1,8 +1,8 @@
 package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
@@ -33,11 +33,11 @@ public class File extends SubCommand {
 
     public File() {
         super("file", "protocolstringreplacer.command.edit",
-                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Description"));
+                PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Description"));
     }
 
     @Override
-    public void onExecute(@Nonnull User user, @NotNull String[] args) {
+    public void onExecute(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length > 2) {
             if ("list".equalsIgnoreCase(args[2])) {
                 listCommand(user, args);
@@ -59,7 +59,7 @@ public class File extends SubCommand {
         sendHelp(user);
     }
 
-    private void listCommand(@Nonnull User user, @NotNull String[] args) {
+    private void listCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length < 5) {
             int page = 1;
             LinkedList<ReplacerConfig> replacerConfigList = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList();
@@ -68,23 +68,23 @@ public class File extends SubCommand {
                 if (StringUtils.isNumeric(args[3])) {
                     page = Integer.parseInt(args[3]);
                 } else {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Error.Not-A-Positive-Integer", args[3]));
                     return;
                 }
             }
 
             if (page > totalPage) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Error.Page-Exceed", String.valueOf(totalPage)));
                 return;
             }
             if (page < 1) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Page-Low"));
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Page-Low"));
                 return;
             }
 
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Header"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Header"));
 
             for (int i = (page - 1) * 10; i < replacerConfigList.size() && i < page * 10; i++) {
                 ReplacerConfig replacerConfig = replacerConfigList.get(i);
@@ -92,56 +92,56 @@ public class File extends SubCommand {
                 for (ListenType listenType : replacerConfig.getListenTypeList()) {
                     listens.append("\n§7- §b").append(listenType.getName());
                 }
-                user.sendFilteredMessage(new ComponentBuilder(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Select"))
+                user.sendFilteredMessage(new ComponentBuilder(PsrLocalization.getLocaledMessage("Utils.Message.Buttons.Select"))
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr edit file select " + i)).append(" " + i + ". ").reset().color(ChatColor.WHITE).
                         append(replacerConfig.getRelativePath()).color(ChatColor.AQUA)
                         .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT
-                                , TextComponent.fromLegacyText(PSRLocalization.getLocaledMessage(
+                                , TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage(
                                         "Sender.Commands.Edit.Children.File.Children.List.Result.Replacer-Info",
                                 replacerConfig.getRelativePath(),
                                 replacerConfig.isEnable() ?
-                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Enabled") :
-                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Enabled"),
+                                        PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Enabled") :
+                                        PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Enabled"),
                                 String.valueOf(replacerConfig.getPriority()),
                                 replacerConfig.getVersion() == null ?
-                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
+                                        PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
                                         replacerConfig.getVersion(),
                                 replacerConfig.getAuthor() == null ?
-                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
+                                        PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
                                         replacerConfig.getAuthor(),
-                                PSRLocalization.getLocaledMessage(replacerConfig.getMatchMode().getLocaleKey()),
+                                PsrLocalization.getLocaledMessage(replacerConfig.getMatchMode().getLocaleKey()),
                                 listens.length() == 0 ?
-                                        PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
+                                        PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Configured") :
                                         listens.toString()
                         )))).create());
             }
 
             MessageUtils.sendPageButtons(user, "/psr edit file list ", page, totalPage);
 
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Footer"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Footer"));
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Detailed-Help"));
         }
 
     }
 
-    private void selectCommand(@Nonnull User user, @NotNull String[] args) {
+    private void selectCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length == 4) {
             ReplacerConfig replacerConfig = getSpecifiedReplacerConfig(args[3]);
             if (replacerConfig != null) {
                 user.setEditorReplacerConfig(replacerConfig);
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.File.Children.Select.Replacer-Config-Selected", replacerConfig.getRelativePath()));
             } else {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.File.Children.Cannot-Find-Replacer-Config", args[3]));
             }
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Detailed-Help"));
         }
     }
 
-    private void createCommand(@Nonnull User user, @NotNull String[] args) {
+    private void createCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length == 4) {
             if (args[3].startsWith("Replacers/")) {
                 if (FileUtils.checkFileSuffix(args[3], ".yml")) {
@@ -151,24 +151,24 @@ public class File extends SubCommand {
                         ReplacerConfig replacerConfig = new ReplacerConfig(file, configuration);
                         replacerConfig.saveConfig();
                         ProtocolStringReplacer.getInstance().getReplacerManager().addReplacerConfig(replacerConfig);
-                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                                 "Sender.Commands.Edit.Children.File.Children.Create.File-Successfully-Created", replacerConfig.getRelativePath()));
                     } else {
-                        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                        user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                                 "Sender.Commands.Edit.Children.File.Children.Create.File-Create-Failed", args[3]));
                     }
                 } else {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Not-Yml-File"));
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Not-Yml-File"));
                 }
             } else {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Not-In-Replacers-Folder"));
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Not-In-Replacers-Folder"));
             }
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Detailed-Help"));
         }
     }
 
-    private void deleteCommand(@Nonnull User user, @NotNull String[] args) {
+    private void deleteCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length == 4) {
             ReplacerConfig replacerConfig = getSpecifiedReplacerConfig(args[3]);
             if (replacerConfig != null) {
@@ -177,33 +177,33 @@ public class File extends SubCommand {
                     replacerConfig.getFile().delete();
                     ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList().remove(replacerConfig);
                     user.clearCommandToConfirm();
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Edit.Children.File.Children.Delete.File-Successfully-Deleted", replacerConfig.getRelativePath()));
                 } else {
                     user.setCommandToConfirm(args);
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Commands.Edit.Children.File.Children.Delete.Delete-Need-To-Confirm", replacerConfig.getRelativePath()));
                 }
             } else {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.File.Children.Cannot-Find-Replacer-Config", args[3]));
             }
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Delete.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Delete.Detailed-Help"));
         }
     }
 
     @Override
-    public List<String> onTab(@NotNull User user, @NotNull String[] args) {
+    public List<String> onTab(@NotNull PsrUser user, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
         if (args.length == 3) {
             list = Arrays.asList("help", "list", "select", "create", "delete");
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("list")) {
-                list.add("[" + PSRLocalization.getLocaledMessage("Variables.Page.Name") + "]");
+                list.add("[" + PsrLocalization.getLocaledMessage("Variables.Page.Name") + "]");
             } else if (args[2].equalsIgnoreCase("delete") || args[2].equalsIgnoreCase("select")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Replacer-Config.Name") + "|"
-                        + PSRLocalization.getLocaledMessage("Variables.Index.Name") + ">");
+                list.add("<" + PsrLocalization.getLocaledMessage("Variables.Replacer-Config.Name") + "|"
+                        + PsrLocalization.getLocaledMessage("Variables.Index.Name") + ">");
                 for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
                     list.add(ArgUtils.formatWithQuotes(replacerConfig.getRelativePath()));
                 }
@@ -235,13 +235,13 @@ public class File extends SubCommand {
     }
 
     @Override
-    public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Header"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Delete.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Footer"));
+    public void sendHelp(@Nonnull PsrUser user) {
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Header"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Select.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Create.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.Delete.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Help.Footer"));
     }
 
     @Nullable

@@ -5,8 +5,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
 
 public final class OpenWindow extends AbstractServerPacketListener {
 
@@ -19,7 +19,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
         String json = wrappedChatComponent.getJson();
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
 
         WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter, true);
         if (replaced != null) {

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class User {
+public class PsrUser {
 
     private UUID uuid;
     private Player player;
@@ -56,19 +56,19 @@ public class User {
 
     protected NamespacedKey userCacheKey;
 
-    public User(Player player) {
+    public PsrUser(Player player) {
         this.player = player;
         uuid = player.getUniqueId();
         sender = player;
     }
 
-    public User(UUID uuid) {
+    public PsrUser(UUID uuid) {
         this.uuid = uuid;
         player = Bukkit.getPlayer(uuid);
         sender = player;
     }
 
-    public User(CommandSender sender) {
+    public PsrUser(CommandSender sender) {
         this.sender = sender;
         if (sender instanceof Player) {
             this.player = (Player) sender;

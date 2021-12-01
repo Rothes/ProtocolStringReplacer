@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.server.TemporaryPlayer;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 
@@ -20,7 +20,7 @@ public abstract class AbstractPacketListener {
         this.packetType = packetType;
     }
 
-    protected final User getEventUser(@Nonnull PacketEvent packetEvent) {
+    protected final PsrUser getEventUser(@Nonnull PacketEvent packetEvent) {
         Validate.notNull(packetEvent, "Packet Event cannot be null");
         Player player = packetEvent.getPlayer();
         return player instanceof TemporaryPlayer? ProtocolStringReplacer.getInstance().getUserManager().getUser(player.getPlayer()) : ProtocolStringReplacer.getInstance().getUserManager().getUser(player);

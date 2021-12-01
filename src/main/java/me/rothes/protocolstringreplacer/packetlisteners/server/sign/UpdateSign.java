@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
 public class UpdateSign extends AbstractServerSignPacketListener {
 
@@ -15,7 +15,7 @@ public class UpdateSign extends AbstractServerSignPacketListener {
 
     protected void process(PacketEvent packetEvent) {
         PacketContainer packet = packetEvent.getPacket();
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         Object[] read = (Object[]) packet.getModifier().read(2);
         for (int i = 0; i < read.length; i++) {
             String replaced = getReplacedJson(packetEvent, user, listenType,

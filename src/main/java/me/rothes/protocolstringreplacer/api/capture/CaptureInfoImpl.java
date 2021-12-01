@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer.api.capture;
 
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
@@ -17,7 +17,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
     private List<String> texts;
     private ListenType listenType;
     private Long time;
-    private User user;
+    private PsrUser user;
     private String description;
 
     /**
@@ -61,12 +61,12 @@ public final class CaptureInfoImpl implements CaptureInfo {
     }
 
     /**
-     * Get the User that capture the packet.
+     * Get the PsrUser that capture the packet.
      *
-     * @return User that capture the packet.
+     * @return PsrUser that capture the packet.
      */
     @Override
-    public @NotNull User getUser() {
+    public @NotNull PsrUser getUser() {
         return user;
     }
 
@@ -150,16 +150,16 @@ public final class CaptureInfoImpl implements CaptureInfo {
     }
 
     /**
-     * Set the User that capture the packet.
+     * Set the PsrUser that capture the packet.
      *
-     * @param user The User to set.
-     * @throws IllegalStateException if User is already been set.
+     * @param user The PsrUser to set.
+     * @throws IllegalStateException if PsrUser is already been set.
      */
     @Override
-    public void setUser(@NotNull User user) {
-        Validate.notNull(user, "User cannot be null");
+    public void setUser(@NotNull PsrUser user) {
+        Validate.notNull(user, "PsrUser cannot be null");
         if (this.user != null) {
-            throw new IllegalStateException("User has already been set");
+            throw new IllegalStateException("PsrUser has already been set");
         }
         this.user = user;
     }

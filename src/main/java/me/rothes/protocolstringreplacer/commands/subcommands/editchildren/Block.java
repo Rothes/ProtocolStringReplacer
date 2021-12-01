@@ -1,10 +1,10 @@
 package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
-import me.rothes.protocolstringreplacer.api.user.User;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
@@ -23,13 +23,13 @@ public class Block extends SubCommand {
 
     public Block() {
         super("block", "protocolstringreplacer.command.edit",
-                PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Description"));
+                PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Description"));
     }
 
     @Override
-    public void onExecute(@Nonnull User user, @NotNull String[] args) {
+    public void onExecute(@Nonnull PsrUser user, @NotNull String[] args) {
         if (user.getEditorReplacerConfig() == null) {
-            user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.Replace.Not-Selected-Replacer-Config"));
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Edit.Children.Replace.Not-Selected-Replacer-Config"));
             return;
         }
 
@@ -53,12 +53,12 @@ public class Block extends SubCommand {
         sendHelp(user);
     }
 
-    private void listCommand(@Nonnull User user, @NotNull String[] args) {
+    private void listCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length < 6 && args.length > 3) {
             int page = 1;
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
@@ -68,36 +68,36 @@ public class Block extends SubCommand {
                 if (StringUtils.isNumeric(args[4])) {
                     page = Integer.parseInt(args[4]);
                 } else {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Error.Not-A-Positive-Integer", args[4]));
                     return;
                 }
             }
 
             if (page > totalPage) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Error.Page-Exceed", String.valueOf(totalPage)));
                 return;
             }
             if (page < 1) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Page-Low"));
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Page-Low"));
                 return;
             }
 
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Result.Header"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Result.Header"));
 
             for (int i = (page - 1) * 10; i < blocks.size() && i < page * 10; i++) {
                 String block = blocks.get(i).toString();
 
-                user.sendFilteredMessage(new ComponentBuilder(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Add"))
+                user.sendFilteredMessage(new ComponentBuilder(PsrLocalization.getLocaledMessage("Utils.Message.Buttons.Add"))
                         .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/psr edit block add " + replacesMode.getNode() + " " + i + " <"
-                                        + PSRLocalization.getLocaledMessage("Variables.Block-Text") + ">"))
-                        .append(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Edit"))
+                                        + PsrLocalization.getLocaledMessage("Variables.Block-Text") + ">"))
+                        .append(PsrLocalization.getLocaledMessage("Utils.Message.Buttons.Edit"))
                         .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/psr edit block set " + replacesMode.getNode() + " " + i + " "
                                         + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(block))))
-                                .append(PSRLocalization.getLocaledMessage("Utils.Message.Buttons.Delete"))
+                                .append(PsrLocalization.getLocaledMessage("Utils.Message.Buttons.Delete"))
                         .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/psr edit block remove " + replacesMode.getNode() + " " + i))
                         .append(" " + i + ". ").reset().append(ColorUtils.showColorCodes(block)).color(ChatColor.AQUA).create());
@@ -105,35 +105,35 @@ public class Block extends SubCommand {
 
             MessageUtils.sendPageButtons(user, "/psr edit block list " + replacesMode.getNode() + " ", page, totalPage);
 
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Result.Footer"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Result.Footer"));
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Detailed-Help"));
         }
     }
 
-    private void setCommand(@Nonnull User user, @NotNull String[] args) {
+    private void setCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length > 4) {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
             if (!StringUtils.isNumeric(args[4])) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Error.Not-A-Positive-Integer", args[4]));
                 return;
             }
             int index = Integer.parseInt(args[4]);
             ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
             if (index < 0) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                 return;
             }
 
             if (args.length == 6) {
                 if (index >= editorReplacerConfig.getBlocks(replacesMode).size()) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Error.Index-Exceed",
                             String.valueOf(editorReplacerConfig.getBlocks(replacesMode).size())));
                     return;
@@ -141,21 +141,21 @@ public class Block extends SubCommand {
 
                 String block = ColorUtils.getColored(args[5]);
                 editorReplacerConfig.setBlock(index, block, replacesMode);
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Set.Successfully-Set-Block",
                         args[4], ColorUtils.showColorCodes(block)));
 
                 return;
             }
         }
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Set.Detailed-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Set.Detailed-Help"));
     }
 
-    private void addCommand(@Nonnull User user, @NotNull String[] args) {
+    private void addCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length > 3) {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
@@ -163,108 +163,108 @@ public class Block extends SubCommand {
                 String block = ColorUtils.getColored(args[4]);
                 ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 editorReplacerConfig.addBlock(block, replacesMode);
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Add.Successfully-Added-Block",
                         String.valueOf(editorReplacerConfig.getBlocks(replacesMode).size()),
                         ColorUtils.showColorCodes(block)));
             } else if (args.length == 6) {
                 if (!StringUtils.isNumeric(args[4])) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Error.Not-A-Positive-Integer", args[4]));
                     return;
                 }
                 int index = Integer.parseInt(args[4]);
                 if (index < 0) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                     return;
                 }
                 String block = ColorUtils.getColored(args[5]);
                 user.getEditorReplacerConfig().addBlock(index, block, replacesMode);
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Add.Successfully-Added-Block",
                         String.valueOf(index),
                         ColorUtils.showColorCodes(block)));
             }
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Add.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Add.Detailed-Help"));
         }
     }
 
-    private void removeCommand(@Nonnull User user, @NotNull String[] args) {
+    private void removeCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length > 3) {
             ReplacesMode replacesMode = getReplacesMode(args[3]);
             if (replacesMode == null) {
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
             if (args.length == 5) {
                 if (!StringUtils.isNumeric(args[4])) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Error.Not-A-Positive-Integer", args[4]));
                     return;
                 }
                 int index = Integer.parseInt(args[4]);
                 if (index < 0) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                     return;
                 }
                 ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 if (index > editorReplacerConfig.getBlocks(replacesMode).size()) {
-                    user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Exceed",
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Exceed",
                             String.valueOf(editorReplacerConfig.getBlocks(replacesMode).size())));
                     return;
                 }
                 editorReplacerConfig.removeBlock(index, replacesMode);
-                user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage(
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Remove.Sucessfully-Removed-Block", String.valueOf(index)));
             }
         } else {
-            user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Replace.Children.Remove.Detailed-Help"));
+            user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Replace.Children.Remove.Detailed-Help"));
         }
     }
 
     @Override
-    public List<String> onTab(@NotNull User user, @NotNull String[] args) {
+    public List<String> onTab(@NotNull PsrUser user, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
         if (args.length == 3) {
             list = Arrays.asList("help", "list", "set", "add", "remove");
         } else if (args.length == 4
                 && (args[2].equalsIgnoreCase("list") || args[2].equalsIgnoreCase("set")
                 || args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove"))) {
-            list.add("<" + PSRLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
+            list.add("<" + PsrLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
             for (ReplacesMode replacesMode : ReplacesMode.values()) {
                 list.add(replacesMode.getNode());
             }
         } else if (args.length == 5) {
             if (args[2].equalsIgnoreCase("list")) {
-                list.add("[" + PSRLocalization.getLocaledMessage("Variables.Page.Name") + "]");
+                list.add("[" + PsrLocalization.getLocaledMessage("Variables.Page.Name") + "]");
             } else if (args[2].equalsIgnoreCase("set")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Index.Name") + ">");
+                list.add("<" + PsrLocalization.getLocaledMessage("Variables.Index.Name") + ">");
             } else if (args[2].equalsIgnoreCase("add")) {
-                list.add("[" + PSRLocalization.getLocaledMessage("Variables.Index.Name") +"]|" +
-                        "<" + PSRLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
+                list.add("[" + PsrLocalization.getLocaledMessage("Variables.Index.Name") +"]|" +
+                        "<" + PsrLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
             } else if (args[2].equalsIgnoreCase("remove")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Index.Name") + ">");
+                list.add("<" + PsrLocalization.getLocaledMessage("Variables.Index.Name") + ">");
             }
         } else if (args.length == 6) {
             if (args[2].equalsIgnoreCase("set")) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
+                list.add("<" + PsrLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
             } else if (args[2].equalsIgnoreCase("add") && StringUtils.isNumeric(args[3])) {
-                list.add("<" + PSRLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
+                list.add("<" + PsrLocalization.getLocaledMessage("Variables.Block-Text.Name") + ">");
             }
         }
         return list;
     }
 
     @Override
-    public void sendHelp(@Nonnull User user) {
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Help.Header"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Set.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Add.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Remove.Simple-Help"));
-        user.sendFilteredText(PSRLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Help.Footer"));
+    public void sendHelp(@Nonnull PsrUser user) {
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Help.Header"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Set.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Add.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.Remove.Simple-Help"));
+        user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Help.Footer"));
     }
 
     private ReplacesMode getReplacesMode(@NotNull String string) {

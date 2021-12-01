@@ -1,8 +1,8 @@
 package me.rothes.protocolstringreplacer.utils;
 
-import me.rothes.protocolstringreplacer.PSRLocalization;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
-import me.rothes.protocolstringreplacer.api.user.User;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -17,7 +17,7 @@ public class MessageUtils {
 
     protected static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public static void sendCaptureInfo(@Nonnull User user, @Nonnull CaptureInfo info) {
+    public static void sendCaptureInfo(@Nonnull PsrUser user, @Nonnull CaptureInfo info) {
         Validate.notNull(info, "CaptureInfo cannot be null");
 
         String time = dateFormat.format(new Date(info.getTime()));
@@ -39,8 +39,8 @@ public class MessageUtils {
         user.sendFilteredMessage(captureMessageBuilder.create());
     }
 
-    public static void sendPageButtons(@Nonnull User user, @Nonnull String command, int currentPage, int totalPage) {
-        Validate.notNull(user, "User cannot be null");
+    public static void sendPageButtons(@Nonnull PsrUser user, @Nonnull String command, int currentPage, int totalPage) {
+        Validate.notNull(user, "PsrUser cannot be null");
         Validate.notNull(command, "Command String cannot be null");
 
         ComponentBuilder pageComponent = new ComponentBuilder("");
@@ -50,7 +50,7 @@ public class MessageUtils {
         } else {
             pageComponent.append("   ");
         }
-        pageComponent.append(PSRLocalization.getLocaledMessage("Utils.Message.Page-Info",
+        pageComponent.append(PsrLocalization.getLocaledMessage("Utils.Message.Page-Info",
                 String.valueOf(currentPage), String.valueOf(totalPage)));
         if (currentPage < totalPage) {
             pageComponent.append(" ▶ ").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,

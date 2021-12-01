@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class PSRLocalization {
+public class PsrLocalization {
 
     private static ProtocolStringReplacer plugin = null;
     private static String systemLocale = null;
@@ -28,7 +28,7 @@ public class PSRLocalization {
     private static String[] replaceHolders = new String[10];
 
     public static void initialize(@Nonnull ProtocolStringReplacer plugin) {
-        PSRLocalization.plugin = plugin;
+        PsrLocalization.plugin = plugin;
 
         systemLocale = System.getProperty("user.language", Locale.getDefault().getLanguage());
         systemLocale += '-';

@@ -3,15 +3,15 @@ package me.rothes.protocolstringreplacer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sk89q.protocolstringreplacer.PSRDisguisePlugin;
+import com.sk89q.protocolstringreplacer.PsrDisguisePlugin;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
-import me.rothes.protocolstringreplacer.console.PSRMessage;
+import me.rothes.protocolstringreplacer.console.PsrMessage;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
-import me.rothes.protocolstringreplacer.api.user.User;
-import me.rothes.protocolstringreplacer.api.user.UserManager;
+import me.rothes.protocolstringreplacer.api.user.PsrUserManager;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.commands.CommandHandler;
 import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
@@ -55,7 +55,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private ReplacerManager replacerManager;
     private PacketListenerManager packetListenerManager;
     private ConsoleReplaceManager consoleReplaceManager;
-    private UserManager userManager;
+    private PsrUserManager userManager;
     private ConfigManager configManager;
     private byte serverMajorVersion;
     private boolean isSpigot;
@@ -69,7 +69,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         instance = this;
 
         // Start Console Replacer first to remove the Ansi in log files.
-        PSRMessage.initialize(instance);
+        PsrMessage.initialize(instance);
         serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
         consoleReplaceManager = new ConsoleReplaceManager(this);
         consoleReplaceManager.initialize();
@@ -77,7 +77,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         try {
             Field logger = JavaPlugin.class.getDeclaredField("logger");
             logger.setAccessible(true);
-            logger.set(this, new PluginLogger(new PSRDisguisePlugin(this)));
+            logger.set(this, new PluginLogger(new PsrDisguisePlugin(this)));
             logger.setAccessible(false);
 
             Field name = PluginLogger.class.getDeclaredField("pluginName");
@@ -136,7 +136,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     @Override
     public void onEnable() {
         loadConfig();
-        PSRLocalization.initialize(instance);
+        PsrLocalization.initialize(instance);
         logger = this.getLogger();
 
         try {
@@ -144,7 +144,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             isSpigot = true;
         } catch (Throwable tr) {
             isSpigot = false;
-            error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Require-Spigot"));
+            error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Require-Spigot"));
             Bukkit.getPluginManager().disablePlugin(instance);
             return;
         }
@@ -160,9 +160,9 @@ public class ProtocolStringReplacer extends JavaPlugin {
         } catch (Throwable tr) {
             isPaper = false;
             if (serverMajorVersion >= 12) {
-                warn("\033[0;31m" + PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Recommend-Paper") + "\033[0m");
+                warn("\033[0;31m" + PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Recommend-Paper") + "\033[0m");
             } else {
-                warn("\033[0;31m" + PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Out-Dated-Server") + "\033[0m");
+                warn("\033[0;31m" + PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Out-Dated-Server") + "\033[0m");
             }
         }
         if (!checkDepends("PlaceholderAPI", "ProtocolLib")) {
@@ -206,7 +206,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     @Nonnull
-    public UserManager getUserManager() {
+    public PsrUserManager getUserManager() {
         return userManager;
     }
 
@@ -220,7 +220,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         packetListenerManager = new PacketListenerManager();
         replacerManager = new ReplacerManager();
         CommandHandler commandHandler = new CommandHandler();
-        userManager = new UserManager();
+        userManager = new PsrUserManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();
@@ -232,7 +232,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
         this.hasStarted = true;
         initMetrics();
-        info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Wiki-Creating"));
+        info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Wiki-Creating"));
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!checkPluginVersion()) {
                 Bukkit.getPluginManager().disablePlugin(instance);
@@ -279,7 +279,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         for (String depend : depends) {
             if (pluginManager.getPlugin(depend) == null) {
-                error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Missing-Dependency", depend));
+                error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Missing-Dependency", depend));
                 missingDepend = true;
             }
         }
@@ -299,7 +299,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             configFile = new File(instance.getDataFolder() + "/Config.yml");
             if (!configFile.exists()) {
                 FileUtils.createFile(configFile);
-                PSRLocalization.getDefaultLocaledConfig().save(configFile);
+                PsrLocalization.getDefaultLocaledConfig().save(configFile);
                 configFile = new File(instance.getDataFolder() + "/Config.yml");
             }
             config = CommentYamlConfiguration.loadConfiguration(configFile);
@@ -308,9 +308,9 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
                 File exampleFile = new File(instance.getDataFolder() + "/Replacers/Example.yml");
                 FileUtils.createFile(exampleFile);
-                PSRLocalization.getDefaultLocaledExample()
+                PsrLocalization.getDefaultLocaledExample()
                         .save(exampleFile);
-                warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Created-Example-Replacer"));
+                warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Created-Example-Replacer"));
             }
             configManager = new ConfigManager(instance);
         } catch (IOException e) {
@@ -321,7 +321,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     public void checkConfigKeys() {
-        CommentYamlConfiguration configDefault = PSRLocalization.getDefaultLocaledConfig();
+        CommentYamlConfiguration configDefault = PsrLocalization.getDefaultLocaledConfig();
 
         Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
         boolean edited = false;
@@ -352,7 +352,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                     config.set(stringBuilder.toString(), configDefault.getString(commentKey));
                 }
                 config.set(key, configDefault.get(key));
-                warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Added-Missing-Config-Key", key));
+                warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Added-Missing-Config-Key", key));
                 edited = true;
             }
             comments.clear();
@@ -377,7 +377,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
         }
         for (short i = (short) config.getInt("Configs-Version", 1); i <= upgrades.size(); i++) {
-            info(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Upgrading-Configs", String.valueOf(i), String.valueOf(i + 1)));
+            info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Upgrading-Configs", String.valueOf(i), String.valueOf(i + 1)));
             upgrades.get(i).upgrade();
         }
     }
@@ -401,22 +401,22 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 String latestVersion = root.getAsJsonPrimitive("Latest_Version").getAsString();
                 if (!compareVersion(latestVersion)) {
                     // Only to notice server admins to update the plugin here.
-                    warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-1", latestVersion));
-                    warn(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-2", latestVersion));
+                    warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-1", latestVersion));
+                    warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-2", latestVersion));
                 }
                 for (JsonElement version : root.getAsJsonArray("Prohibit_Versions")) {
                     if (!compareVersion(version.getAsJsonPrimitive().getAsString())) {
-                        error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Prohibited-Version"));
+                        error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Prohibited-Version"));
                         return false;
                     }
                 }
                 return true;
             } catch (IllegalStateException | NullPointerException e) {
-                error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Parsing-Json", e.toString()));
+                error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Parsing-Json", e.toString()));
                 return true;
             }
         } catch (IOException e) {
-            error(PSRLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Checking-Version", e.toString()));
+            error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Checking-Version", e.toString()));
             return true;
         }
     }
@@ -460,20 +460,20 @@ public class ProtocolStringReplacer extends JavaPlugin {
         return string;
     }
 
-    public void reload(@Nonnull User user) {
+    public void reload(@Nonnull PsrUser user) {
         Validate.notNull(user, "user cannot be null");
         loadConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager = new ReplacerManager();
         replacerManager.initialize();
-        userManager = new UserManager();
+        userManager = new PsrUserManager();
         packetListenerManager.removeListeners();
         packetListenerManager.addListeners();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();
         }
-        user.sendFilteredText(PSRLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
+        user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
     }
 
 }

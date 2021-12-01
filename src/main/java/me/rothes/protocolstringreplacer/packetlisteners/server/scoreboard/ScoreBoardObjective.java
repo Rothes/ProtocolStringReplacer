@@ -6,8 +6,8 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.api.user.User;
 
 public class ScoreBoardObjective extends AbstractScoreBoardListener {
 
@@ -16,7 +16,7 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        User user = getEventUser(packetEvent);
+        PsrUser user = getEventUser(packetEvent);
         PacketContainer packet = packetEvent.getPacket();
 
         if (packet.getIntegers().read(0) != 1) {
