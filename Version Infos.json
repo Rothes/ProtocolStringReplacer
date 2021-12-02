@@ -1,11 +1,11 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 73,
-      "Latest_Version_String": "2.2.0",
+      "Latest_Version_Number": 74,
+      "Latest_Version_String": "2.2.1",
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.2.0\") is available!\nDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.2.0\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/"
+        "en-US": "§bA new version of PSR (\"2.2.1\") is available!\nDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.2.1\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/"
       }
     }
   },
