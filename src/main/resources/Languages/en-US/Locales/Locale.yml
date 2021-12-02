@@ -23,12 +23,10 @@ Console-Sender:
       Invalid-Placeholder-Head: '&cInvalid Placeholder-Head value! Please define one character. Using defaults ''｛'''
       Invalid-Placeholder-Tail: '&cInvalid Placeholder-Tail value! Please define one character. Using defaults ''｝'''
       Invalid-Listener-Priority: '&cInvalid Listener-Priority value! Using defaults ''HIGHEST'''
-    Version-Checker:
-      Error-Checking-Version: '§cFailed to check version informations via server: %0%'
-      Error-Parsing-Json: '§cFailed to parse version informations Json: %0%'
-      New-Version-Available-Line-1: '§bA new version of PSR (''%0%'') is available!'
-      New-Version-Available-Line-2: '§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/'
-      Prohibited-Version: '§cThe version of PSR you are running has been prohibited by the server. This is usually due to a serious problem. Please update the plugin.'
+    Updater:
+      Invalid-Channel: '§cPSR is in a invalid channel ("%0%"). Please update your plugin to the latest version.'
+      Error-Checking-Version: '§cFailed to check version informations via server, Please try updating your plugin: %0%'
+      Error-Parsing-Json: '§cFailed to parse version informations Json, Please try updating your plugin: %0%'
 
 Command-Block-Sender:
   Messages:

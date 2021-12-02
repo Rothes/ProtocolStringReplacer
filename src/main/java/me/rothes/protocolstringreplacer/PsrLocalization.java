@@ -45,6 +45,10 @@ public class PsrLocalization {
 
     }
 
+    public static String getLocale() {
+        return locale;
+    }
+
     @NotNull
     public static String getLocaledMessage(@Nonnull String key, @Nonnull String... replacements) {
         Validate.notNull(key, "Key cannot be null");

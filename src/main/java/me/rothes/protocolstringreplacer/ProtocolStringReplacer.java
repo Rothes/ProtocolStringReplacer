@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,6 +49,8 @@ import java.util.regex.Pattern;
 
 public class ProtocolStringReplacer extends JavaPlugin {
 
+    public static final String VERSION_CHANNCEL = "Stable";
+    public static final int VERSION_NUMBER = 73;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private CommentYamlConfiguration config;
@@ -395,30 +398,59 @@ public class ProtocolStringReplacer extends JavaPlugin {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 jsonBuilder.append(line).append("\n");
             }
+            stream.close();
+            reader.close();
             try {
                 final JsonElement element = new JsonParser().parse(jsonBuilder.toString());
                 final JsonObject root = element.getAsJsonObject();
-                String latestVersion = root.getAsJsonPrimitive("Latest_Version").getAsString();
-                if (!compareVersion(latestVersion)) {
-                    // Only to notice server admins to update the plugin here.
-                    warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-1", latestVersion));
-                    warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.New-Version-Available-Line-2", latestVersion));
-                }
-                for (JsonElement version : root.getAsJsonArray("Prohibit_Versions")) {
-                    if (!compareVersion(version.getAsJsonPrimitive().getAsString())) {
-                        error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Prohibited-Version"));
-                        return false;
+                JsonObject channel = root.getAsJsonObject("Version_Channels").getAsJsonObject(VERSION_CHANNCEL);
+                if (channel == null) {
+                    warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel"));
+                } else {
+                    if (Integer.parseInt(channel.getAsJsonPrimitive("Latest_Version_Number").getAsString())
+                        > VERSION_NUMBER) {
+
+                        for (String s : getLocaledJsonMessage(channel.getAsJsonObject("Message")).split("\n")) {
+                            warn(s);
+                        }
                     }
                 }
-                return true;
+
+                boolean prohibit = false;
+                for (Map.Entry<String, JsonElement> entry : root.getAsJsonObject("Version_Actions").entrySet()) {
+                    String[] split = entry.getKey().split("-");
+                    if (Integer.parseInt(split[1]) > VERSION_NUMBER
+                            && VERSION_NUMBER > Integer.parseInt(split[0])) {
+                        JsonObject message = ((JsonObject) entry.getValue()).getAsJsonObject("Message");
+                        if (message != null) {
+                            for (String s : getLocaledJsonMessage(message).split("\n")) {
+                                error(s);
+                            }
+                        }
+                        for (JsonElement action : ((JsonObject) entry.getValue()).getAsJsonArray("Actions")) {
+                            prohibit = prohibit || action.getAsString().equals("Prohibit");
+                        }
+                    }
+                }
+                return !prohibit;
             } catch (IllegalStateException | NullPointerException e) {
-                error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Parsing-Json", e.toString()));
-                return true;
+                error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Parsing-Json", e.toString()));
+                e.printStackTrace();
             }
         } catch (IOException e) {
-            error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Version-Checker.Error-Checking-Version", e.toString()));
-            return true;
+            error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Checking-Version", e.toString()));
         }
+        return true;
+    }
+
+    public static String getLocaledJsonMessage(@NotNull JsonObject messageJson) {
+        String msg;
+        if (messageJson.has(PsrLocalization.getLocale())) {
+            msg = messageJson.get(PsrLocalization.getLocale()).getAsString();
+        } else {
+            msg = messageJson.get("en-US").getAsString();
+        }
+        return msg;
     }
 
     /**
