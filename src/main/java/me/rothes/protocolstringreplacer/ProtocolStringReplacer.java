@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 public class ProtocolStringReplacer extends JavaPlugin {
 
     public static final String VERSION_CHANNCEL = "Stable";
-    public static final int VERSION_NUMBER = 73;
+    public static final int VERSION_NUMBER = 74;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private CommentYamlConfiguration config;
