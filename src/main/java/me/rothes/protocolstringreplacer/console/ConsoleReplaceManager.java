@@ -7,6 +7,7 @@ import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
@@ -177,7 +178,12 @@ public final class ConsoleReplaceManager {
             Field field;
             field = AbstractAppender.class.getDeclaredField("layout");
             field.setAccessible(true);
-            PatternLayout layout = (PatternLayout) field.get(config.getAppender(appenderName));
+            Appender appender = config.getAppender(appenderName);
+            if (appender == null) {
+                ProtocolStringReplacer.error("§4Appender \"" + appenderName + "\" is null, ignoring.");
+                return;
+            }
+            PatternLayout layout = (PatternLayout) field.get(appender);
             Node selectorNode = getChild(appenderNode, "LoggerNamePatternSelector");
             int index = patterns.size();
             if (selectorNode != null) {
