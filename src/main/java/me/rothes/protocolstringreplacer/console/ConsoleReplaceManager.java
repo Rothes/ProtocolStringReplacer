@@ -13,6 +13,7 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.AbstractConfiguration;
 import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.plugins.util.PluginType;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.pattern.PatternFormatter;
 import org.apache.logging.log4j.core.pattern.PatternParser;
@@ -173,7 +174,8 @@ public final class ConsoleReplaceManager {
     }
 
     private void setAppender(Configuration config, Node appenderNode, String appenderName, boolean removeAnsi, boolean restore) {
-        Class<?> loggerNamePatternSelector = ((AbstractConfiguration) config).getPluginManager().getPlugins().get("loggernamepatternselector").getPluginClass();
+        PluginType<?> plugin = ((AbstractConfiguration) config).getPluginManager().getPlugins().get("loggernamepatternselector");
+        Class<?> loggerNamePatternSelector = plugin == null ? null : plugin.getPluginClass();
         try {
             Field field;
             field = AbstractAppender.class.getDeclaredField("layout");
@@ -186,7 +188,7 @@ public final class ConsoleReplaceManager {
             PatternLayout layout = (PatternLayout) field.get(appender);
             Node selectorNode = getChild(appenderNode, "LoggerNamePatternSelector");
             int index = patterns.size();
-            if (selectorNode != null) {
+            if (selectorNode != null && loggerNamePatternSelector != null) {
                 PatternParser parser = PatternLayout.createPatternParser(config);
                 String defaultPattern = selectorNode.getAttributes().getNamedItem("defaultPattern").getNodeValue();
 
