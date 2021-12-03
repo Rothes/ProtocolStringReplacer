@@ -33,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,7 +43,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProtocolStringReplacer extends JavaPlugin {
@@ -65,7 +63,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private boolean isPaper;
     private boolean hasPaperComponent;
     private boolean hasStarted;
-    private Pattern digits = Pattern.compile("[^0-9]+");
 
     public ProtocolStringReplacer() {
         super();
@@ -451,45 +448,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
             msg = messageJson.get("en-US").getAsString();
         }
         return msg;
-    }
-
-    /**
-     * @param version The version to check.
-     * @return false if version is newer than the current.
-     * @since 2.0.0
-     */
-    private boolean compareVersion(@NotNull String version) {
-        String[] ver = version.split("\\.");
-        String[] current = getDescription().getVersion().split("\\.");
-        for (byte i = 0 ; i < ver.length; i++) {
-            String s = getDigits(ver[i]);
-            if (s.isEmpty()) {
-                return true;
-            }
-            if (current.length <= i) {
-                return false;
-            }
-            String cur = getDigits(current[i]);
-            if (cur.isEmpty()) {
-                return false;
-            }
-            int verInt = Integer.parseInt(s);
-            int curInt = Integer.parseInt(cur);
-            if (verInt > curInt) {
-                return false;
-            } else if (verInt < curInt) {
-                return true;
-            }
-        }
-        return true;
-    }
-
-    private String getDigits(@NotNull String string) {
-        Matcher matcher = digits.matcher(string);
-        if (matcher.matches()) {
-            return matcher.replaceAll("");
-        }
-        return string;
     }
 
     public void reload(@Nonnull PsrUser user) {
