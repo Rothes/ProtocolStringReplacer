@@ -68,12 +68,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
     public ProtocolStringReplacer() {
         super();
         instance = this;
-
-        // Start Console Replacer first to remove the Ansi in log files.
-        PsrMessage.initialize(instance);
-        serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
-        consoleReplaceManager = new ConsoleReplaceManager(this);
-        consoleReplaceManager.initialize();
         // Hack the prefix of the Logger of this plugin.
         try {
             Field logger = JavaPlugin.class.getDeclaredField("logger");
@@ -97,6 +91,13 @@ public class ProtocolStringReplacer extends JavaPlugin {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
+        logger = this.getLogger();
+
+        // Start Console Replacer first to remove the Ansi in log files.
+        PsrMessage.initialize(instance);
+        serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
+        consoleReplaceManager = new ConsoleReplaceManager(this);
+        consoleReplaceManager.initialize();
     }
 
     public static ProtocolStringReplacer getInstance() {
@@ -138,7 +139,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
     public void onEnable() {
         loadConfig();
         PsrLocalization.initialize(instance);
-        logger = this.getLogger();
 
         try {
             Class.forName("org.bukkit.entity.Player$Spigot");
