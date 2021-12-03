@@ -51,6 +51,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     public static final int VERSION_NUMBER = 74;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
+    private final HashMap<String, Integer> msgTimes = new HashMap<>();
     private CommentYamlConfiguration config;
     private File configFile;
     private ReplacerManager replacerManager;
@@ -420,8 +421,26 @@ public class ProtocolStringReplacer extends JavaPlugin {
                             && VERSION_NUMBER > Integer.parseInt(split[0])) {
                         JsonObject message = ((JsonObject) entry.getValue()).getAsJsonObject("Message");
                         if (message != null) {
-                            for (String s : getLocaledJsonMessage(message).split("\n")) {
-                                error(s);
+                            JsonElement temp = ((JsonObject) entry.getValue()).get("Message_Times");
+                            final int msgTimes = temp == null ? -1 : temp.getAsInt();
+                            final int curTimes = this.msgTimes.get(entry.getKey()) == null ? 0 : this.msgTimes.get(entry.getKey());
+                            if (msgTimes == -1 && curTimes < msgTimes) {
+                                temp = ((JsonObject) entry.getValue()).get("Log_Level");
+                                for (String s : getLocaledJsonMessage(message).split("\n")) {
+                                    switch (temp == null ? "default maybe" : temp.getAsString()) {
+                                        case "Error":
+                                            error(s);
+                                            break;
+                                        case "Warn":
+                                            warn(s);
+                                            break;
+                                        case "Info":
+                                        default:
+                                            info(s);
+                                            break;
+                                    }
+                                }
+                                this.msgTimes.put(entry.getKey(), curTimes + 1);
                             }
                         }
                         for (JsonElement action : ((JsonObject) entry.getValue()).getAsJsonArray("Actions")) {
