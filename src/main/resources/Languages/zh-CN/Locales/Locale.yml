@@ -9,7 +9,6 @@ Console-Sender:
       Created-Example-Replacer: '&a已生成示例配置于 plugins/ProtocolStringReplacer/Replacers.'
       Added-Missing-Config-Key: '&c自动补充了 Config.yml 缺失的配置键 %0%'
       Upgrading-Configs: '&a正在升级配置文件版本 %0% -> %1%'
-      Wiki-Creating: '§b维基编写进行中! 欢迎预览: https://rothes.gitbook.io/protocolstringreplacer/'
     Replacer-Config:
       Pre-Loaded-Replacers: '&a预加载 %0% 个替换配置文件. &8耗时 %1%ms'
       Replacer-Load-Complete: '&a成功载入替换配置: %0%. &8耗时 %1%ms'

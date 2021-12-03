@@ -233,7 +233,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
         this.hasStarted = true;
         initMetrics();
-        info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Wiki-Creating"));
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!checkPluginVersion()) {
                 Bukkit.getPluginManager().disablePlugin(instance);
