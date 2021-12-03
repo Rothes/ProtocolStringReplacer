@@ -161,7 +161,9 @@ public final class ConsoleReplaceManager {
                 continue;
             }
             String name = item.getAttributes().getNamedItem("name").getNodeValue();
-            boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile") || item.getNodeName().equals("ServerGuiConsole");
+            boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile")
+                    || item.getNodeName().equals("ServerGuiConsole")
+                    || item.getNodeName().equals("Queue");
             Node appenderNode = getChild(item, "PatternLayout");
             if (appenderNode != null) {
                 setAppender(config, appenderNode, name, removeAnsi, restore);
