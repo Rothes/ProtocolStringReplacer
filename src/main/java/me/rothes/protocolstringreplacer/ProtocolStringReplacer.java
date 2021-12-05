@@ -39,6 +39,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -390,7 +391,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         try {
             final URL url = new URL("https://" + getConfigManager().gitRawHost + "/Rothes/ProtocolStringReplacer/master/Version%20Infos.json");
             final InputStream stream = url.openStream();
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
             final StringBuilder jsonBuilder = new StringBuilder();
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 jsonBuilder.append(line).append("\n");
