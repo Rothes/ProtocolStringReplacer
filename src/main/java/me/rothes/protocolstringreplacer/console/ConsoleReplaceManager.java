@@ -162,7 +162,11 @@ public final class ConsoleReplaceManager {
             if (item.getNodeName().equals("#text")) {
                 continue;
             }
-            String name = item.getAttributes().getNamedItem("name").getNodeValue();
+            Node nameNode = item.getAttributes().getNamedItem("name");
+            if (nameNode == null) {
+                return;
+            }
+            String name = nameNode.getNodeValue();
             boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile")
                     || item.getNodeName().equals("ServerGuiConsole")
                     || item.getNodeName().equals("Queue");
