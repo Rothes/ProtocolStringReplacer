@@ -404,7 +404,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 JsonObject channel = root.getAsJsonObject("Version_Channels").getAsJsonObject(VERSION_CHANNCEL);
                 if (channel == null) {
                     warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel"));
-                } else {
+                } else if (channel.has("Message")){
                     if (Integer.parseInt(channel.getAsJsonPrimitive("Latest_Version_Number").getAsString())
                         > VERSION_NUMBER) {
 
@@ -419,14 +419,14 @@ public class ProtocolStringReplacer extends JavaPlugin {
                     String[] split = entry.getKey().split("-");
                     if (Integer.parseInt(split[1]) > VERSION_NUMBER
                             && VERSION_NUMBER > Integer.parseInt(split[0])) {
-                        JsonObject message = ((JsonObject) entry.getValue()).getAsJsonObject("Message");
-                        if (message != null) {
-                            JsonElement temp = ((JsonObject) entry.getValue()).get("Message_Times");
+                        JsonObject json = (JsonObject) entry.getValue();
+                        if (json.has("Message")) {
+                            JsonElement temp = json.get("Message_Times");
                             final int msgTimes = temp == null ? -1 : temp.getAsInt();
                             final int curTimes = this.msgTimes.get(entry.getKey()) == null ? 0 : this.msgTimes.get(entry.getKey());
                             if (msgTimes == -1 && curTimes < msgTimes) {
-                                temp = ((JsonObject) entry.getValue()).get("Log_Level");
-                                for (String s : getLocaledJsonMessage(message).split("\n")) {
+                                temp = json.get("Log_Level");
+                                for (String s : getLocaledJsonMessage(json.getAsJsonObject("Message")).split("\n")) {
                                     switch (temp == null ? "default maybe" : temp.getAsString()) {
                                         case "Error":
                                             error(s);
@@ -443,7 +443,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                                 this.msgTimes.put(entry.getKey(), curTimes + 1);
                             }
                         }
-                        for (JsonElement action : ((JsonObject) entry.getValue()).getAsJsonArray("Actions")) {
+                        for (JsonElement action : json.getAsJsonArray("Actions")) {
                             prohibit = prohibit || action.getAsString().equals("Prohibit");
                         }
                     }
