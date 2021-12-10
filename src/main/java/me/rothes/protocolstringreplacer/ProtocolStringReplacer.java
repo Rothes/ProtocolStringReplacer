@@ -424,7 +424,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                             JsonElement temp = json.get("Message_Times");
                             final int msgTimes = temp == null ? -1 : temp.getAsInt();
                             final int curTimes = this.msgTimes.get(entry.getKey()) == null ? 0 : this.msgTimes.get(entry.getKey());
-                            if (msgTimes == -1 && curTimes < msgTimes) {
+                            if (msgTimes == -1 || curTimes < msgTimes) {
                                 temp = json.get("Log_Level");
                                 for (String s : getLocaledJsonMessage(json.getAsJsonObject("Message")).split("\n")) {
                                     switch (temp == null ? "default maybe" : temp.getAsString()) {
