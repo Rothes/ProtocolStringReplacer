@@ -15,6 +15,10 @@ import org.apache.logging.log4j.core.config.AbstractConfiguration;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.util.PluginType;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.core.lookup.Interpolator;
+import org.apache.logging.log4j.core.lookup.JndiLookup;
+import org.apache.logging.log4j.core.lookup.StrLookup;
+import org.apache.logging.log4j.core.lookup.StrSubstitutor;
 import org.apache.logging.log4j.core.pattern.PatternFormatter;
 import org.apache.logging.log4j.core.pattern.PatternParser;
 import org.apache.logging.log4j.spi.AbstractLogger;
@@ -62,9 +66,9 @@ public final class ConsoleReplaceManager {
     }
 
     public void initialize() {
+        LoggerContext context = (LoggerContext) LogManager.getContext(false);
+        Configuration config = context.getConfiguration();
         if (plugin.getServerMajorVersion() >= 12) {
-            LoggerContext context = (LoggerContext) LogManager.getContext(false);
-            Configuration config = context.getConfiguration();
             // Get the default xml configuration from server jar.
             Node appenders = getAppendersNode(config);
 
@@ -123,6 +127,8 @@ public final class ConsoleReplaceManager {
             psrFilter = new PsrFilter(plugin);
             ((Logger) LogManager.getRootLogger()).addFilter(psrFilter);
         }
+
+        fixJndi(config, false);
     }
 
     public void disable() {
@@ -153,6 +159,8 @@ public final class ConsoleReplaceManager {
 
         // Remove PsrFilter
         config.removeFilter(psrFilter);
+
+        fixJndi(config, true);
     }
 
     private void processAppenders(Configuration config, Node appenders, boolean restore) {
@@ -290,6 +298,26 @@ public final class ConsoleReplaceManager {
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void fixJndi(Configuration config, boolean restore) {
+        try {
+            Field field = config.getClass().getSuperclass().getDeclaredField("subst");
+            field.setAccessible(true);
+            StrSubstitutor substitutor = (StrSubstitutor) field.get(config);
+            Interpolator interpolator = (Interpolator) substitutor.getVariableResolver();
+            try {
+                field = interpolator.getClass().getDeclaredField("strLookupMap");
+            } catch (NoSuchFieldException e) {
+                field = interpolator.getClass().getDeclaredField("lookups");
+            }
+            field.setAccessible(true);
+            Map<String, StrLookup> pluginsMap = (Map<String, StrLookup>) field.get(interpolator);
+            pluginsMap.put("jndi", restore ? new JndiLookup() : new PsrJndiLookup());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 }
