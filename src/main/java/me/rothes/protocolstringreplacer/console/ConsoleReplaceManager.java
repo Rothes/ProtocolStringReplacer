@@ -307,6 +307,8 @@ public final class ConsoleReplaceManager {
             field.setAccessible(true);
             StrSubstitutor substitutor = (StrSubstitutor) field.get(config);
             Interpolator interpolator = (Interpolator) substitutor.getVariableResolver();
+            if (interpolator == null)
+                return;
             try {
                 field = interpolator.getClass().getDeclaredField("strLookupMap");
             } catch (NoSuchFieldException e) {
