@@ -1,11 +1,10 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 77,
-      "Latest_Version_String": "2.3.2",
+      "Latest_Version_Number": 78,
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.3.2\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Fix Log4j JNDI vulnerability",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.3.2\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复 Log4j JNDI 漏洞"
+        "en-US": "§bA new version of PSR (\"2.3.3\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Fix Log4j JNDI vulnerability",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.3.3\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复 Log4j JNDI 漏洞"
       }
     }
   },
