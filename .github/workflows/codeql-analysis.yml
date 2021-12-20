@@ -39,8 +39,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    # Initializes the CodeQL tools for scanning.
+    - name: Setup Java JDK
+      uses: actions/setup-java@v2.4.0
+      with:
+        java-version: 16
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
