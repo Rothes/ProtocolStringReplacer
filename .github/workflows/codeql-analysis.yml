@@ -42,7 +42,7 @@ jobs:
     - name: Setup Java JDK
       uses: actions/setup-java@v2.4.0
       with:
-        distribution: jdk
+        distribution: zulu
         java-version: 16
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
