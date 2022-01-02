@@ -51,6 +51,7 @@ public final class ConsoleReplaceManager {
     private final ProtocolStringReplacer plugin;
     private PsrFilter psrFilter;
     private Object oriFactory;
+    private Object oriJndiLkup;
 
     public ConsoleReplaceManager(ProtocolStringReplacer plugin) {
         this.plugin = plugin;
@@ -316,7 +317,12 @@ public final class ConsoleReplaceManager {
             }
             field.setAccessible(true);
             Map<String, StrLookup> pluginsMap = (Map<String, StrLookup>) field.get(interpolator);
-            pluginsMap.put("jndi", restore ? new JndiLookup() : new PsrJndiLookup());
+            if (restore) {
+                pluginsMap.put("jndi", (oriJndiLkup instanceof StrLookup) ? (StrLookup) oriJndiLkup : null);
+            } else {
+                oriJndiLkup = pluginsMap.get("jndi");
+                pluginsMap.put("jndi", new PsrJndiLookup());
+            }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
