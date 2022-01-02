@@ -48,7 +48,12 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         super();
         options().copyHeader(false);
         try {
-            final Field field = YamlConfiguration.class.getDeclaredField("yamlOptions");
+            Field field;
+            try {
+                field = YamlConfiguration.class.getDeclaredField("yamlOptions");
+            } catch (NoSuchFieldException e) {
+                field = YamlConfiguration.class.getDeclaredField("yamlDumperOptions");
+            }
             field.setAccessible(true);
             DumperOptions options = (DumperOptions) field.get(this);
             field.setAccessible(false);
@@ -123,7 +128,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
 
         }
         if (!commentsToAdd.isEmpty()) {
-            commentIndex = addComments("", commentsToAdd, stringBuilder, commentIndex);
+            addComments("", commentsToAdd, stringBuilder, commentIndex);
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
         super.loadFromString(stringBuilder.toString());
@@ -188,7 +193,10 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         return config;
     }
 
-    @Override
+    /**
+     * Override.
+     * Disable Header for legacy servers.
+     */
     @NotNull
     protected String parseHeader(@NotNull String input) {
         return "";
