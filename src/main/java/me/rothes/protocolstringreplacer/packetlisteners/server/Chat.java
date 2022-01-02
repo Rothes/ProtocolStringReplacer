@@ -40,7 +40,7 @@ public final class Chat extends AbstractServerPacketListener {
 
             } else {
                 StructureModifier<Object> structureModifier = packet.getModifier();
-                for (int fieldIndex = 1; fieldIndex < 3; fieldIndex++) {
+                for (int fieldIndex = 1; fieldIndex < 4 && fieldIndex < structureModifier.size(); fieldIndex++) {
                     Object read = structureModifier.read(fieldIndex);
                     if (read instanceof BaseComponent[]) {
                         BaseComponent[] readComponents = (BaseComponent[]) read;
