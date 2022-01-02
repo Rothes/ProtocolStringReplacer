@@ -135,7 +135,7 @@ public class ReplacerConfig {
     }
 
     public void setReplace(int index, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
-        if (index < replaces.size()) {
+        if (index < replaces.get(replacesMode).size()) {
             replaces.get(replacesMode).setValue(index, value);
             updateStringSearcher(replacesMode);
             edited = true;
@@ -144,16 +144,16 @@ public class ReplacerConfig {
     }
 
     public void setReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
-        if (index < replaces.size()) {
+        if (index < replaces.get(replacesMode).size()) {
             removeReplace(index, replacesMode);
         }
-        if (index <= replaces.size()) {
+        if (index <= replaces.get(replacesMode).size()) {
             addReplace(index, key, value, replacesMode);
         }
     }
 
     public void addReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
-        if (index <= replaces.size()) {
+        if (index <= replaces.get(replacesMode).size()) {
             if (this.matchMode == MatchMode.REGEX) {
                 replaces.get(replacesMode).put(index, Pattern.compile(key), value);
             } else {
@@ -177,7 +177,7 @@ public class ReplacerConfig {
     }
 
     public void setBlock(int index, @Nonnull String block, @Nonnull ReplacesMode replacesMode) {
-        if (index < replaces.size()) {
+        if (index < blocks.get(replacesMode).size()) {
             blocks.get(replacesMode).set(index, block);
             updateStringSearcher(replacesMode);
             edited = true;
@@ -186,7 +186,7 @@ public class ReplacerConfig {
     }
 
     public void addBlock(int index, @Nonnull String block, @Nonnull ReplacesMode replacesMode) {
-        if (index <= replaces.size()) {
+        if (index <= blocks.get(replacesMode).size()) {
             if (this.matchMode == MatchMode.REGEX) {
                 blocks.get(replacesMode).add(index, Pattern.compile(block));
             } else {
