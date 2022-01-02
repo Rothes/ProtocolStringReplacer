@@ -52,6 +52,7 @@ public final class ConsoleReplaceManager {
     private PsrFilter psrFilter;
     private Object oriFactory;
     private Object oriJndiLkup;
+    private boolean canReplacePatterns = false;
 
     public ConsoleReplaceManager(ProtocolStringReplacer plugin) {
         this.plugin = plugin;
@@ -69,20 +70,10 @@ public final class ConsoleReplaceManager {
     public void initialize() {
         LoggerContext context = (LoggerContext) LogManager.getContext(false);
         Configuration config = context.getConfiguration();
-        if (plugin.getServerMajorVersion() >= 12) {
-            // Get the default xml configuration from server jar.
-            Node appenders = getAppendersNode(config);
-
-            // Add PSR converter.
-            getConverters(config).put("PSRFormatting", PsrLogEventPatternConverter.class);
-
-            processAppenders(config, appenders, false);
-            patterns.clear();
-            // For some version we still need to do this.
-            psrFilter = new PsrFilter(plugin);
-            config.addFilter(psrFilter);
-
-        } else {
+        try {
+            tryReplaceLogPatterns(config);
+            canReplacePatterns = true;
+        } catch (Throwable ignored) {
             // This is for plugin Logger and server things.
             Bukkit.getServer().getLogger().getParent().getHandlers()[0].setFormatter(new SimpleFormatter(){
                 @Override
@@ -135,7 +126,7 @@ public final class ConsoleReplaceManager {
     public void disable() {
         LoggerContext context = (LoggerContext) LogManager.getContext(false);
         Configuration config = context.getConfiguration();
-        if (plugin.getServerMajorVersion() >= 12) {
+        if (canReplacePatterns) {
             // Get the default xml configuration from server jar.
             Node appenders = getAppendersNode(config);
 
@@ -162,6 +153,20 @@ public final class ConsoleReplaceManager {
         config.removeFilter(psrFilter);
 
         fixJndi(config, true);
+    }
+
+    private void tryReplaceLogPatterns(Configuration config) {
+        // Get the default xml configuration from server jar.
+        Node appenders = getAppendersNode(config);
+
+        // Add PSR converter.
+        getConverters(config).put("PSRFormatting", PsrLogEventPatternConverter.class);
+
+        processAppenders(config, appenders, false);
+        patterns.clear();
+        // For some version we still need to do this.
+        psrFilter = new PsrFilter(plugin);
+        config.addFilter(psrFilter);
     }
 
     private void processAppenders(Configuration config, Node appenders, boolean restore) {
