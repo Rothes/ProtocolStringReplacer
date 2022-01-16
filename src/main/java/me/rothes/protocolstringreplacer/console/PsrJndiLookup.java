@@ -25,7 +25,6 @@ public class PsrJndiLookup implements StrLookup {
         if (key == null) {
             return null;
         }
-        final String jndiName = convertJndiName(key);
         // TODO: Maybe add a config for those really need jndi..?
         if (true) {
             // runTaskLater to avoid errors.
@@ -36,6 +35,7 @@ public class PsrJndiLookup implements StrLookup {
         }
 
         try (final JndiManager jndiManager = JndiManager.getDefaultManager()) {
+            final String jndiName = convertJndiName(key);
             return Objects.toString(jndiManager.lookup(jndiName), null);
         } catch (final NamingException e) {
             return null;
