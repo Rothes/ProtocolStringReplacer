@@ -163,8 +163,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
             isPaper = false;
             if (serverMajorVersion >= 12) {
                 warn("\033[0;31m" + PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Recommend-Paper") + "\033[0m");
-            } else {
-                warn("\033[0;31m" + PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Out-Dated-Server") + "\033[0m");
             }
         }
         if (!checkDepends("PlaceholderAPI", "ProtocolLib")) {

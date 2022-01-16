@@ -13,16 +13,15 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.AbstractConfiguration;
 import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.plugins.util.PluginType;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.lookup.Interpolator;
-import org.apache.logging.log4j.core.lookup.JndiLookup;
 import org.apache.logging.log4j.core.lookup.StrLookup;
 import org.apache.logging.log4j.core.lookup.StrSubstitutor;
 import org.apache.logging.log4j.core.pattern.PatternFormatter;
 import org.apache.logging.log4j.core.pattern.PatternParser;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.bukkit.Bukkit;
+import org.jline.reader.LineReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -53,6 +52,7 @@ public final class ConsoleReplaceManager {
     private Object oriFactory;
     private Object oriJndiLkup;
     private boolean canReplacePatterns = false;
+    private boolean isLegacy = false;
 
     public ConsoleReplaceManager(ProtocolStringReplacer plugin) {
         this.plugin = plugin;
@@ -72,8 +72,10 @@ public final class ConsoleReplaceManager {
         Configuration config = context.getConfiguration();
         try {
             tryReplaceLogPatterns(config);
+            replaceReader(config, false);
             canReplacePatterns = true;
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
             // This is for plugin Logger and server things.
             Bukkit.getServer().getLogger().getParent().getHandlers()[0].setFormatter(new SimpleFormatter(){
                 @Override
@@ -113,7 +115,7 @@ public final class ConsoleReplaceManager {
                 PsrMessageFactory psrMessageFactory = new PsrMessageFactory();
                 field.set(LogManager.getRootLogger(), psrMessageFactory);
                 field.setAccessible(false);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
                 e.printStackTrace();
             }
             psrFilter = new PsrFilter(plugin);
@@ -134,6 +136,7 @@ public final class ConsoleReplaceManager {
             getConverters(config).remove("PSRFormatting");
 
             processAppenders(config, appenders, true);
+            replaceReader(config, true);
 
         } else {
             Bukkit.getServer().getLogger().getParent().getHandlers()[0].setFormatter(new SimpleFormatter());
@@ -146,13 +149,26 @@ public final class ConsoleReplaceManager {
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
+            config.removeFilter(psrFilter);
 
         }
 
-        // Remove PsrFilter
-        config.removeFilter(psrFilter);
-
         fixJndi(config, true);
+    }
+
+    private void replaceReader(Configuration config, boolean restore) {
+        try {
+            Class<?> terminalconsole = getPluginClass(config, "terminalconsole");
+            if (terminalconsole == null) {
+                return;
+            }
+            LineReader reader = (LineReader) terminalconsole.getDeclaredMethod("getReader").invoke(null);
+            //noinspection JavaReflectionInvocation
+            terminalconsole.getDeclaredMethod("setReader", LineReader.class).invoke(null,
+                    restore ? ((PsrWrappedLineReader) reader).getOriReader() : new PsrWrappedLineReader(reader));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     private void tryReplaceLogPatterns(Configuration config) {
@@ -164,9 +180,6 @@ public final class ConsoleReplaceManager {
 
         processAppenders(config, appenders, false);
         patterns.clear();
-        // For some version we still need to do this.
-        psrFilter = new PsrFilter(plugin);
-        config.addFilter(psrFilter);
     }
 
     private void processAppenders(Configuration config, Node appenders, boolean restore) {
@@ -183,7 +196,7 @@ public final class ConsoleReplaceManager {
             String name = nameNode.getNodeValue();
             boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile")
                     || item.getNodeName().equals("ServerGuiConsole")
-                    || item.getNodeName().equals("Queue");
+                    || (!isLegacy && item.getNodeName().equals("Queue"));
             Node appenderNode = getChild(item, "PatternLayout");
             if (appenderNode != null) {
                 setAppender(config, appenderNode, name, removeAnsi, restore);
@@ -192,13 +205,12 @@ public final class ConsoleReplaceManager {
     }
 
     private void setAppender(Configuration config, Node appenderNode, String appenderName, boolean removeAnsi, boolean restore) {
-        PluginType<?> plugin = ((AbstractConfiguration) config).getPluginManager().getPlugins().get("loggernamepatternselector");
-        Class<?> loggerNamePatternSelector = plugin == null ? null : plugin.getPluginClass();
+        Class<?> loggerNamePatternSelector = getPluginClass(config, "loggernamepatternselector");
         try {
             Field field;
             field = AbstractAppender.class.getDeclaredField("layout");
             field.setAccessible(true);
-            Appender appender = config.getAppender(appenderName);
+            Appender appender = config.getAppenders().get(appenderName);
             if (appender == null) {
                 ProtocolStringReplacer.error("§4Appender \"" + appenderName + "\" is null, ignoring.");
                 return;
@@ -206,8 +218,8 @@ public final class ConsoleReplaceManager {
             PatternLayout layout = (PatternLayout) field.get(appender);
             Node selectorNode = getChild(appenderNode, "LoggerNamePatternSelector");
             int index = patterns.size();
+            PatternParser parser = PatternLayout.createPatternParser(config);
             if (selectorNode != null && loggerNamePatternSelector != null) {
-                PatternParser parser = PatternLayout.createPatternParser(config);
                 String defaultPattern = selectorNode.getAttributes().getNamedItem("defaultPattern").getNodeValue();
 
                 field = PatternLayout.class.getDeclaredField("patternSelector");
@@ -247,10 +259,16 @@ public final class ConsoleReplaceManager {
                         : ("%PSRFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""));
                 field.set(layout, pattern);
                 field.setAccessible(false);
-                field = PatternLayout.class.getDeclaredField("eventSerializer");
-                field.setAccessible(true);
-                field.set(layout, PatternLayout.newSerializerBuilder().setConfiguration(config).setPattern(pattern).setDefaultPattern(pattern).build());
-                field.setAccessible(false);
+                if (isLegacy) {
+                    field = layout.getClass().getDeclaredField("formatters");
+                    field.setAccessible(true);
+                    field.set(layout, parser.parse(pattern));
+                } else {
+                    field = PatternLayout.class.getDeclaredField("eventSerializer");
+                    field.setAccessible(true);
+                    field.set(layout, PatternLayout.newSerializerBuilder().setConfiguration(config).setPattern(pattern).setDefaultPattern(pattern).build());
+                    field.setAccessible(false);
+                }
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
@@ -262,13 +280,31 @@ public final class ConsoleReplaceManager {
             Class<?> xmlConfigurationClass;
             try {
                 xmlConfigurationClass = Class.forName("org.apache.logging.log4j.core.config.xml.XmlConfiguration");
-            } catch (ClassNotFoundException e) {
-                return null;
+            } catch (ClassNotFoundException ignored) {
+                try {
+                    xmlConfigurationClass = Class.forName("org.apache.logging.log4j.core.config.XMLConfiguration");
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
-            Method method = xmlConfigurationClass.getDeclaredMethod("newDocumentBuilder", boolean.class);
+            Method method;
+            try {
+                method = xmlConfigurationClass.getDeclaredMethod("newDocumentBuilder", boolean.class);
+            } catch (NoSuchMethodException e) {
+                method = xmlConfigurationClass.getDeclaredMethod("newDocumentBuilder");
+                isLegacy = true;
+            }
             method.setAccessible(true);
-            DocumentBuilder builder = (DocumentBuilder) method.invoke(config, true);
-            InputStream inputStream = config.getConfigurationSource().resetInputStream().getInputStream();
+            DocumentBuilder builder;
+            InputStream inputStream;
+            if (!isLegacy) {
+                builder = (DocumentBuilder) method.invoke(config, true);
+                inputStream = config.getConfigurationSource().resetInputStream().getInputStream();
+            } else {
+                builder = (DocumentBuilder) method.invoke(config);
+                inputStream = config.getClass().getClassLoader().getResourceAsStream("log4j2.xml");
+            }
             Document document = builder.parse(inputStream);
             inputStream.close();
             Element element = document.getDocumentElement();
@@ -282,12 +318,15 @@ public final class ConsoleReplaceManager {
     @SuppressWarnings("unchecked")
     private Map<String, Class<?>> getConverters(Configuration config) {
         try {
-        config.getPluginPackages().add("me.rothes.protocolstringreplacer.console");
-        Field field;
-        PatternParser patternParser = PatternLayout.createPatternParser(config);
+            config.getPluginPackages().add("me.rothes.protocolstringreplacer.console");
+        } catch (NoSuchMethodError ignored) {}
+
+        try {
+            Field field;
+            PatternParser patternParser = PatternLayout.createPatternParser(config);
             field = PatternParser.class.getDeclaredField("converterRules");
-        field.setAccessible(true);
-        return (Map<String, Class<?>>) field.get(patternParser);
+            field.setAccessible(true);
+            return (Map<String, Class<?>>) field.get(patternParser);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -304,6 +343,32 @@ public final class ConsoleReplaceManager {
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<?> getPluginClass(Configuration config, String name) {
+        Map<String, ?> map;
+        try {
+            map = ((AbstractConfiguration) config).getPluginManager().getPlugins();
+        } catch (NoClassDefFoundError e) {
+            try {
+                Class<?> clazz = Class.forName("org.apache.logging.log4j.core.config.BaseConfiguration");
+                Field pluginManagerField = clazz.getDeclaredField("pluginManager");
+                pluginManagerField.setAccessible(true);
+                Object pluginManager = pluginManagerField.get(config);
+                map = (Map<String, ?>) pluginManager.getClass().getDeclaredMethod("getPlugins").invoke(pluginManager);
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+                ex.printStackTrace();
+                return null;
+            }
+        }
+        Object o = map.get(name);
+        try {
+            return o == null ? null : (Class<?>) o.getClass().getDeclaredMethod("getPluginClass").invoke(o);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
