@@ -1,10 +1,10 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 79,
+      "Latest_Version_Number": 80,
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.4.0\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Adapt to 1.18.1 Spigot changes, some Forge/Fabric servers changes, NachoSpigot changes.\n§bPSR 3.0.0 is still developing in progress.",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.4.0\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 适配 Spigot 在 1.18.1 的更改, Forge/Fabric 服务器更改, NachoSpigot 核心.\n§bPSR 3.0.0 仍在开发进程中."
+        "en-US": "§bA new version of PSR (\"2.5.0\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Full support for Spigot 1.8-1.18 Console message Replace/Block.\n§bPSR 3.0.0 is still developing in progress.",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.5.0\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 对 Spigot 1.8-1.18 服务端开发了完全的控制台处理功能.n§bPSR 3.0.0 仍在开发进程中."
       }
     }
   },
@@ -15,7 +15,7 @@
       "Message_Times": 2,
       "Message": {
         "en-US": "§bEnjoy PSR? Join our Discord: https://discord.gg/EJ9FsbMPkj",
-        "zh-CN": "§b欢迎加入我们的空巢 QQ群: 422532220!"
+        "zh-CN": "§b欢迎加入我们的空巢 QQ群: 422532220 !"
       }
     },
     "0-45": {
