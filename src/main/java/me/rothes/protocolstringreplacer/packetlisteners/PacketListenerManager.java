@@ -6,6 +6,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
+import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.BossBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
@@ -50,6 +51,7 @@ public class PacketListenerManager {
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
             protocolManager.addPacketListener(new SetTitleText().packetAdapter);
             protocolManager.addPacketListener(new SetSubtitleText().packetAdapter);
+            protocolManager.addPacketListener(new ActionBar().packetAdapter);
         } else {
             protocolManager.addPacketListener(new Title().packetAdapter);
         }
