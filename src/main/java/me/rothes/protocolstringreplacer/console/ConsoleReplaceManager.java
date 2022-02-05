@@ -45,7 +45,8 @@ import java.util.logging.SimpleFormatter;
 
 public final class ConsoleReplaceManager {
 
-    private static final BiPredicate<ReplacerConfig, PsrUser> filter = (replacerConfig, user) -> replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
+    private static final BiPredicate<ReplacerConfig, PsrUser> filter = (replacerConfig, user) ->
+            replacerConfig.isEnable() && replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
     private static final List<String> patterns = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
     private PsrFilter psrFilter;
