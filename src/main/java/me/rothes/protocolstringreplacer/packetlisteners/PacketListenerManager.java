@@ -72,7 +72,7 @@ public class PacketListenerManager {
             protocolManager.addPacketListener(new UpdateSign().packetAdapter);
         }
 
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 8) {
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
             protocolManager.addPacketListener(new BossBar().packetAdapter);
         }
 
