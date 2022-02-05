@@ -114,6 +114,9 @@ public class ItemHelper {
     }
 
     public void saveChanges() {
+        if (jsonDisplay == null) {
+            return;
+        }
         checkJson(jsonDisplay);
         item.setTag(ItemTag.ofNbt(jsonElement.toString()));
     }
