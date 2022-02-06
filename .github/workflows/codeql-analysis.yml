@@ -43,7 +43,7 @@ jobs:
       uses: actions/setup-java@v2.4.0
       with:
         distribution: zulu
-        java-version: 16
+        java-version: 17
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
