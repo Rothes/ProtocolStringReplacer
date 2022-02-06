@@ -7,6 +7,7 @@ import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.libs.com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
@@ -18,6 +19,8 @@ import java.util.Optional;
 
 public final class EntityMetadata extends AbstractServerPacketListener {
 
+    public byte exceptionTimes = 0;
+
     public EntityMetadata() {
         super(PacketType.Play.Server.ENTITY_METADATA, ListenType.ENTITY);
     }
@@ -28,14 +31,21 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             return;
         }
         PacketContainer packet = packetEvent.getPacket();
-        Entity entity = packet.getEntityModifier(packetEvent).read(0);
-        if (entity == null) {
-            return;
-        }
+        Entity entity;
         WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata;
         try {
+            entity = packet.getEntityModifier(packetEvent).read(0);
+            if (entity == null) {
+                return;
+            }
             wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
         } catch (RuntimeException e) {
+            if (exceptionTimes < 3) {
+                e.printStackTrace();
+                ProtocolStringReplacer.warn("This may be a ProtocolLib side problem.");
+            } else {
+                exceptionTimes++;
+            }
             return;
         }
         List<WrappedWatchableObject> metadataList = wrapperPlayServerEntityMetadata.getMetadata();
