@@ -23,12 +23,15 @@ public final class EntityMetadata extends AbstractServerPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
+        PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         PacketContainer packet = packetEvent.getPacket();
         Entity entity = packet.getEntityModifier(packetEvent).read(0);
         if (entity == null) {
             return;
         }
-        PsrUser user = getEventUser(packetEvent);
         WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata;
         try {
             wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());

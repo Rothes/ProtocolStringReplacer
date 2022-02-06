@@ -17,6 +17,9 @@ public abstract class AbstractTitleListener extends AbstractServerPacketListener
 
     protected void process(PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);

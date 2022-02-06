@@ -8,6 +8,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
@@ -20,10 +21,11 @@ public abstract class AbstractPacketListener {
         this.packetType = packetType;
     }
 
+    @Nullable
     protected final PsrUser getEventUser(@Nonnull PacketEvent packetEvent) {
         Validate.notNull(packetEvent, "Packet Event cannot be null");
         Player player = packetEvent.getPlayer();
-        return player instanceof TemporaryPlayer? ProtocolStringReplacer.getInstance().getUserManager().getUser(player.getPlayer()) : ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
+        return player instanceof TemporaryPlayer? null : ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
     }
 
     protected boolean canWrite(@Nonnull PacketEvent packetEvent) {

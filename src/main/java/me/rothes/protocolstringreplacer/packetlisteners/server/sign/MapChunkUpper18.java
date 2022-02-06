@@ -130,8 +130,11 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
         if (!hooked) {
             return;
         }
-        PacketContainer packet = packetEvent.getPacket();
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
+        PacketContainer packet = packetEvent.getPacket();
         processPacket(packetEvent, user, packet.getHandle());
     }
 

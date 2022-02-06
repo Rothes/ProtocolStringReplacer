@@ -19,6 +19,9 @@ public class WindowItems extends AbstractServerItemPacketListener {
 
     protected void process(PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);

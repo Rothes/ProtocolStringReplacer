@@ -26,8 +26,11 @@ public class TileEntityDataUpper18 extends AbstractServerSignPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        PacketContainer packet = packetEvent.getPacket();
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
+        PacketContainer packet = packetEvent.getPacket();
         if (packet.getModifier().read(1).equals(signType)) {
             NbtCompound nbtCompound = (NbtCompound) packet.getNbtModifier().read(0);
             setSignText(packetEvent, nbtCompound, user, filter);

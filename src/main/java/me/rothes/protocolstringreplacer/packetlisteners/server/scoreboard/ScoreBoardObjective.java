@@ -17,6 +17,9 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
 
     protected void process(PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         PacketContainer packet = packetEvent.getPacket();
 
         if (packet.getIntegers().read(0) != 1) {

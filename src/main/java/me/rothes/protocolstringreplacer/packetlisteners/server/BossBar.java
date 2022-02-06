@@ -15,6 +15,9 @@ public final class BossBar extends AbstractServerPacketListener {
 
     protected void process(PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packetEvent.getPacket().getChatComponents();
         if (wrappedChatComponentStructureModifier.size() != 0) {
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);

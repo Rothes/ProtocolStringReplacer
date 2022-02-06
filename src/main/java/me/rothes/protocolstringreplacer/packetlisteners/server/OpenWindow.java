@@ -15,11 +15,14 @@ public final class OpenWindow extends AbstractServerPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
+        PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
         String json = wrappedChatComponent.getJson();
-        PsrUser user = getEventUser(packetEvent);
 
         WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter, true);
         if (replaced != null) {

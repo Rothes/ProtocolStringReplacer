@@ -28,6 +28,9 @@ public final class Chat extends AbstractServerPacketListener {
         Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
         if (!(isFiltered.isPresent() && isFiltered.get())) {
             PsrUser user = getEventUser(packetEvent);
+            if (user == null) {
+                return;
+            }
             StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
             WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
             String json;

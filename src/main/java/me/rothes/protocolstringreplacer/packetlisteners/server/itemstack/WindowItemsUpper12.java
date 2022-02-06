@@ -18,6 +18,9 @@ public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
 
     protected void process(PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
         for (ItemStack itemStack : packetEvent.getPacket().getItemListModifier().read(0)) {

@@ -15,6 +15,9 @@ public class UpdateScore extends AbstractScoreBoardListener {
 
     protected void process(PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<String> strings = packet.getStrings();
 

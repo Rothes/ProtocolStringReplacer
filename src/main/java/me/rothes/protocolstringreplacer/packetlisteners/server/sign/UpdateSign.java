@@ -14,8 +14,11 @@ public class UpdateSign extends AbstractServerSignPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        PacketContainer packet = packetEvent.getPacket();
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
+        PacketContainer packet = packetEvent.getPacket();
         Object[] read = (Object[]) packet.getModifier().read(2);
         for (int i = 0; i < read.length; i++) {
             String replaced = getReplacedJson(packetEvent, user, listenType,

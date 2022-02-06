@@ -16,8 +16,11 @@ public final class MapChunk extends AbstractServerSignPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        PacketContainer packet = packetEvent.getPacket();
         PsrUser user = getEventUser(packetEvent);
+        if (user == null) {
+            return;
+        }
+        PacketContainer packet = packetEvent.getPacket();
         List<NbtBase<?>> nbtBaseList = packet.getListNbtModifier().read(0);
         for (NbtBase<?> nbtBase : nbtBaseList) {
             NbtCompound nbtCompound = (NbtCompound) nbtBase;
