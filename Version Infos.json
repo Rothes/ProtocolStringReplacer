@@ -1,10 +1,10 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 81,
+      "Latest_Version_Number": 82,
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.5.1\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Some fixes.\n§bPSR 3.0.0 is still developing in progress.",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.5.1\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复一些漏洞.\n§bPSR 3.0.0 仍在开发进程中."
+        "en-US": "§bA new version of PSR (\"2.5.2\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Fix the problem with TemporaryPlayer.\n§bPSR 3.0.0 is still developing in progress.",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.5.2\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复 TemporaryPlayer 相关问题.\n§bPSR 3.0.0 仍在开发进程中."
       }
     }
   },
