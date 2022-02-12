@@ -247,6 +247,10 @@ public class PsrUser {
     }
 
 
+    public void cleanUserMetaCache() {
+        getMetaCache().clear();
+    }
+
     public void saveUserMetaCache(ItemStack originalItem, ItemStack replacedItem) {
         if (this.hasPermission("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
             ItemMeta originalMeta = originalItem.getItemMeta();
