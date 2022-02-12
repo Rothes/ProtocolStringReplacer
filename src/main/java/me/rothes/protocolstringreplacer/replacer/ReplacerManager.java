@@ -31,8 +31,8 @@ import java.util.regex.PatternSyntaxException;
 public class ReplacerManager {
 
     private PAPIReplacer papiReplacer;
-    private char papihead;
-    private char papitail;
+    private char papiHead;
+    private char papiTail;
     private LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
     private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
     private BukkitTask cleanTask;
@@ -103,8 +103,8 @@ public class ReplacerManager {
 
     public void initialize() {
         this.papiReplacer = new PAPIReplacer();
-        papihead = papiReplacer.getHead();
-        papitail = papiReplacer.getTail();
+        papiHead = papiReplacer.getHead();
+        papiTail = papiReplacer.getTail();
 
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.nanoTime();
@@ -322,11 +322,11 @@ public class ReplacerManager {
         for(int i = 0; i < string.length(); i++) {
             char Char = string.charAt(i);
             if (!headFound) {
-                if (Char == papihead) {
+                if (Char == papiHead) {
                     headFound = true;
                 }
             } else {
-                if (Char == papitail) {
+                if (Char == papiTail) {
                     tailFound = true;
                     break;
                 }
