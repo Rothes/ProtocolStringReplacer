@@ -37,7 +37,7 @@ public class ConfigManager {
             this.placeholderTail = placeholderTail.charAt(0);
         }
 
-        this.cleanTaskInterval = 1000L * instance.getConfig().getInt("Options.Features.ItemMetaCache.Purge-Task-Interval", 600);
+        this.cleanTaskInterval = 20L * instance.getConfig().getInt("Options.Features.ItemMetaCache.Purge-Task-Interval", 600);
         this.cleanAccessInterval = 1000L * instance.getConfig().getInt("Options.Features.ItemMetaCache.Purge-Access-Interval", 300);
 
         String priority = instance.getConfig().getString("Options.Features.Packet-Listener.Listener-Priority", "HIGHEST");
