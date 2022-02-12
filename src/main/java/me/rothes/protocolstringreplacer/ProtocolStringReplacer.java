@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 public class ProtocolStringReplacer extends JavaPlugin {
 
     public static final String VERSION_CHANNCEL = "Stable";
-    public static final int VERSION_NUMBER = 82;
+    public static final int VERSION_NUMBER = 83;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private final HashMap<String, Integer> msgTimes = new HashMap<>();
@@ -452,7 +452,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 e.printStackTrace();
             }
         } catch (IOException e) {
-            error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Checking-Version", e.toString()));
+            // error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Checking-Version", e.toString()));
         }
         return true;
     }
