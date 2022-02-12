@@ -235,11 +235,6 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                     user.addCaptureInfo(listenType, info);
                 }
                 replacerManager.replaceContainerTexts(container, replacers);
-                itemStack.setItemMeta(container.getResult());
-            }
-
-            if (!fromCache && !original.isSimilar(itemStack)) {
-                user.saveUserMetaCache(original, itemStack);
             }
 
             List<Integer> papiIndexes;
@@ -251,6 +246,10 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             }
             replacerManager.setPapi(user, container.getTexts(), papiIndexes);
             itemStack.setItemMeta(container.getResult());
+
+            if (!original.isSimilar(itemStack)) {
+                user.saveUserMetaCache(original, itemStack);
+            }
         }
         return false;
     }
