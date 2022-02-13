@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.api.configuration;
 
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -58,6 +59,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             DumperOptions options = (DumperOptions) field.get(this);
             field.setAccessible(false);
             options.setWidth(10240);
+            options.setSplitLines(false);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
