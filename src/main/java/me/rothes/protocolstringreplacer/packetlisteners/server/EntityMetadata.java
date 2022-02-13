@@ -40,10 +40,9 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             }
             wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
         } catch (RuntimeException e) {
-            if (exceptionTimes < 3) {
+            if (exceptionTimes < ProtocolStringReplacer.getInstance().getConfigManager().protocollibSideStackPrintCount) {
                 e.printStackTrace();
                 ProtocolStringReplacer.warn("This may be a ProtocolLib side problem.");
-            } else {
                 exceptionTimes++;
             }
             return;
