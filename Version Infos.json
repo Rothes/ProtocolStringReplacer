@@ -1,10 +1,10 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 83,
+      "Latest_Version_Number": 84,
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.6.0\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Fix a possible memory leak problem and user metacache system.\n§bPSR 3.0.0 is still developing in progress.",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.6.0\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复可能的内存泄露问题和用户 MetaCache 系统.\n§bPSR 3.0.0 仍在开发进程中."
+        "en-US": "§bA new version of PSR (\"2.6.1\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Fix a possible memory leak problem and user metacache system.\n§bPSR 3.0.0 is still developing in progress.",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.6.1\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复可能的内存泄露问题和用户 MetaCache 系统.\n§bPSR 3.0.0 仍在开发进程中."
       }
     }
   },
