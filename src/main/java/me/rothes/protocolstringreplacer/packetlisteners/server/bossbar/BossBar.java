@@ -1,10 +1,11 @@
-package me.rothes.protocolstringreplacer.packetlisteners.server;
+package me.rothes.protocolstringreplacer.packetlisteners.server.bossbar;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 
 public final class BossBar extends AbstractServerPacketListener {

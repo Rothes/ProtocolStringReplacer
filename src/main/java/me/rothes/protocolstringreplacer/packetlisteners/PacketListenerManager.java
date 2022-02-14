@@ -7,10 +7,11 @@ import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
 import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
-import me.rothes.protocolstringreplacer.packetlisteners.server.BossBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
 import me.rothes.protocolstringreplacer.packetlisteners.server.OpenWindow;
+import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBarUpper17;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunkUpper18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityDataUpper18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.title.SetSubtitleText;
@@ -72,7 +73,9 @@ public class PacketListenerManager {
             protocolManager.addPacketListener(new UpdateSign().packetAdapter);
         }
 
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
+            protocolManager.addPacketListener(new BossBarUpper17().packetAdapter);
+        } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
             protocolManager.addPacketListener(new BossBar().packetAdapter);
         }
 
