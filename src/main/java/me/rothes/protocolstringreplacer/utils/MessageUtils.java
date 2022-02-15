@@ -21,7 +21,7 @@ public class MessageUtils {
         Validate.notNull(info, "CaptureInfo cannot be null");
 
         String time = dateFormat.format(new Date(info.getTime()));
-        ComponentBuilder hoverTextBuilder = new ComponentBuilder().append("§3§l§m----------------------§3§l Captured Contents §m----------------------\n")
+        ComponentBuilder hoverTextBuilder = new ComponentBuilder("").append("§3§l§m----------------------§3§l Captured Contents §m----------------------\n")
                 .append("§b§lCommons: \n");
         for (String text : info.getTexts()) {
             hoverTextBuilder.append("§6§l- §r" + text + "\n");
@@ -33,7 +33,7 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- §r" + json + "\n");
         }
         hoverTextBuilder.append("§aClick to copy Json");
-        ComponentBuilder captureMessageBuilder = new ComponentBuilder().append("§3 §l" + info.getListenType().getName() + "§3: §b" + time)
+        ComponentBuilder captureMessageBuilder = new ComponentBuilder("").append("§3 §l" + info.getListenType().getName() + "§3: §b" + time)
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverTextBuilder.create()))
                 .event(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json));
         user.sendFilteredMessage(captureMessageBuilder.create());
