@@ -195,9 +195,21 @@ public final class ConsoleReplaceManager {
                 return;
             }
             String name = nameNode.getNodeValue();
-            boolean removeAnsi = item.getNodeName().equals("RollingRandomAccessFile")
-                    || item.getNodeName().equals("ServerGuiConsole")
-                    || (!isLegacy && item.getNodeName().equals("Queue"));
+            boolean removeAnsi = false;
+            switch (item.getNodeName()) {
+                case "RollingRandomAccessFile":
+                case "ServerGuiConsole":
+                    removeAnsi = true;
+                    break;
+                case "Queue":
+                    if (!item.hasAttributes()) {
+                        break;
+                    }
+                    Node nameAttr = item.getAttributes().getNamedItem("name");
+                    if (nameAttr != null && nameAttr.getNodeValue().equals("ServerGuiConsole")) {
+                        removeAnsi = true;
+                    }
+            }
             Node appenderNode = getChild(item, "PatternLayout");
             if (appenderNode != null) {
                 setAppender(config, appenderNode, name, removeAnsi, restore);
