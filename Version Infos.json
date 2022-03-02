@@ -1,10 +1,10 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 88,
+      "Latest_Version_Number": 89,
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.6.5\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Fix RemoveAnsi on some servers.\n§bPSR 3.0.0 is still developing in progress.",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.6.5\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复在一些服务端上会错误地移除控制台中的Ansi色彩码的问题.\n§bPSR 3.0.0 仍在开发进程中."
+        "en-US": "§bA new version of PSR (\"2.6.6\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§bMainly: Fix exception on Legacy servers.\n§bPSR 3.0.0 is still developing in progress.",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.6.6\") 了!\n§b请更新您的插件: https://www.spigotmc.org/resources/protocolstringreplacer.96573/\n§b内容: 修复旧版本服务端上无法加载的问题.\n§bPSR 3.0.0 仍在开发进程中."
       }
     }
   },
@@ -29,5 +29,5 @@
     }
   },
   "Comment": "Latest_Version below here is only for old version support...",
-  "Latest_Version": "2.6.5"
+  "Latest_Version": "2.6.6"
 }
