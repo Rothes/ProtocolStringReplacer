@@ -51,6 +51,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
         try {
             Field field;
             try {
+                // Legacy support
                 field = YamlConfiguration.class.getDeclaredField("yamlOptions");
             } catch (NoSuchFieldException e) {
                 field = YamlConfiguration.class.getDeclaredField("yamlDumperOptions");
@@ -59,9 +60,11 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             DumperOptions options = (DumperOptions) field.get(this);
             field.setAccessible(false);
             options.setWidth(10240);
-            options.setSplitLines(false);
+            options.setSplitLines(false); // throws NoSuchMethodError on Legacy
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
+        } catch (NoSuchMethodError ignored) {
+
         }
     }
 
