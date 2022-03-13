@@ -3,7 +3,6 @@ package me.rothes.protocolstringreplacer.packetlisteners;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.injector.server.TemporaryPlayer;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.apache.commons.lang.Validate;
@@ -25,7 +24,7 @@ public abstract class AbstractPacketListener {
     protected final PsrUser getEventUser(@Nonnull PacketEvent packetEvent) {
         Validate.notNull(packetEvent, "Packet Event cannot be null");
         Player player = packetEvent.getPlayer();
-        return player instanceof TemporaryPlayer? null : ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
+        return player instanceof Player? ProtocolStringReplacer.getInstance().getUserManager().getUser(player): null;
     }
 
     protected boolean canWrite(@Nonnull PacketEvent packetEvent) {
