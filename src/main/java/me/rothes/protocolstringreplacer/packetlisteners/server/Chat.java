@@ -51,7 +51,6 @@ public final class Chat extends AbstractServerPacketListener {
                 StructureModifier<Object> modifier = packet.getModifier();
                 setupFields(modifier.getFields());
                 if (bungeeComponentsField != -1) {
-                    ProtocolStringReplacer.info(String.valueOf(modifier.getFields()));
                     Object obj = modifier.read(bungeeComponentsField);
 
                     if (obj == null) {
@@ -90,7 +89,6 @@ public final class Chat extends AbstractServerPacketListener {
             Field field = fields.get(i);
             Class<?> type = field.getType();
             if (ProtocolStringReplacer.getInstance().isSpigot() && type.getCanonicalName().equals("net.md_5.bungee.api.chat.BaseComponent[]")) {
-                ProtocolStringReplacer.info(field +".");
                 bungeeComponentsField = i;
             } else if (ProtocolStringReplacer.getInstance().hasPaperComponent() && type == Component.class) {
                 paperComponentField = i;
