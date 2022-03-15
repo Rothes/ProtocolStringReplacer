@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.utils;
 
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
@@ -33,9 +34,11 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- §r" + json + "\n");
         }
         hoverTextBuilder.append("§aClick to copy Json");
+        ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
+                new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
         ComponentBuilder captureMessageBuilder = new ComponentBuilder("").append("§3 §l" + info.getListenType().getName() + "§3: §b" + time)
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverTextBuilder.create()))
-                .event(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json));
+                .event(clickEvent);
         user.sendFilteredMessage(captureMessageBuilder.create());
     }
 
