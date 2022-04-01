@@ -51,7 +51,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     protected final boolean checkPermission(PsrUser user, ReplacerConfig replacerConfig) {
-        String permission = replacerConfig.getConfiguration().getString("Options.Filter.PsrUser.Permission");
+        String permission = replacerConfig.getConfiguration().getString("Options.Filter.User.Permission");
         if (permission != null) {
             return user.hasPermission(permission);
         }
