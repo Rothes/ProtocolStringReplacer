@@ -25,7 +25,7 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
 
         String key;
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i <= 4; i++) {
             key = "Text" + i;
             String replacedJson = getReplacedJson(packetEvent, user, listenType, nbtCompound.getString(key), replacers);
             if (replacedJson == null) {
