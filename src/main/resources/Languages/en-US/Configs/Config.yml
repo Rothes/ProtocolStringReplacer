@@ -41,7 +41,7 @@ Options:
     # Packet listener related options.
     Packet-Listener:
       # Specify the listener priority of ProtocolStringReplacer.
-      # Configure it only when you know what you are doing.
+      # If PSR conflicts with other plugins also using ProtocolLib, please change this value.
       Listener-Priority: HIGHEST
       # Should PSR forcibly edit the data in packets that are not allowed to be written?
       # It's ok to set it to true.

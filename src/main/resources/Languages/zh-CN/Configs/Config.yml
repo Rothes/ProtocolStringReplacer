@@ -39,7 +39,8 @@ Options:
 
     # 关于网络数据包监听器的相关设定.
     Packet-Listener:
-      # 定义 ProtocolStringReplacer 监听数据包全局优先度. 不要随意修改.
+      # 定义 ProtocolStringReplacer 监听数据包全局优先度.
+      # 如果与其他发包插件产生冲突, 请修改该值.
       Listener-Priority: HIGHEST
       # 是否强行修改不允许修改的数据包.
       Force-Replace: false
