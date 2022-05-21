@@ -164,6 +164,9 @@ public final class ConsoleReplaceManager {
                 return;
             }
             LineReader reader = (LineReader) terminalconsole.getDeclaredMethod("getReader").invoke(null);
+            if (reader == null) {
+                return;
+            }
             //noinspection JavaReflectionInvocation
             terminalconsole.getDeclaredMethod("setReader", LineReader.class).invoke(null,
                     restore ? ((PsrWrappedLineReader) reader).getOriReader() : new PsrWrappedLineReader(reader));
