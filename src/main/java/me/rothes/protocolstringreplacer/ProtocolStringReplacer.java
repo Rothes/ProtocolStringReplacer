@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 public class ProtocolStringReplacer extends JavaPlugin {
 
     public static final String VERSION_CHANNCEL = "Stable";
-    public static final int VERSION_NUMBER = 89;
+    public static final int VERSION_NUMBER = 90;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private final HashMap<String, Integer> msgTimes = new HashMap<>();
