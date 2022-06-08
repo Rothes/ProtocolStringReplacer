@@ -18,7 +18,6 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
     private final Class<?> packetClass = PacketType.Play.Server.MAP_CHUNK.getPacketClass();
     private final Field dataField;
     private final Field listField;
-    private final Field extraField;
     private final Object signType;
     private final Field subTypeField;
     private final Field subNbtField;
@@ -48,7 +47,6 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
             ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 1");
             hooked = false;
             listField = null;
-            extraField = null;
             signType = null;
             subTypeField = null;
             subNbtField = null;
@@ -67,6 +65,10 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
         }
         listField = field;
 
+        /*
+
+        // Not necessary and removed in 1.19
+
         try {
             field = dataClass.getDeclaredField("extraPackets");
             field.setAccessible(true);
@@ -77,6 +79,7 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
             hooked = false;
         }
         extraField = field;
+        */
 
         Object type;
         try {
@@ -155,9 +158,6 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
                     nbtCompound = (NbtCompound) converter.getSpecific(nbt);
                     setSignText(packetEvent, nbtCompound, user, filter);
                 }
-            }
-            for (Object extra : (List<?>) extraField.get(data)) {
-                processPacket(packetEvent, user, extra);
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
