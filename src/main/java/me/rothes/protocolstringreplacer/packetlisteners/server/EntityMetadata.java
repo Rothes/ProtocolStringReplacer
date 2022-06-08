@@ -11,7 +11,6 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.libs.com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -31,18 +30,15 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             return;
         }
         PacketContainer packet = packetEvent.getPacket();
-        Entity entity;
         WrapperPlayServerEntityMetadata wrapperPlayServerEntityMetadata;
         try {
-            entity = packet.getEntityModifier(packetEvent).read(0);
-            if (entity == null) {
+            if (packet.getEntityModifier(packetEvent).read(0) == null) {
                 return;
             }
             wrapperPlayServerEntityMetadata = new WrapperPlayServerEntityMetadata(packet.deepClone());
         } catch (RuntimeException e) {
             if (exceptionTimes < ProtocolStringReplacer.getInstance().getConfigManager().protocollibSideStackPrintCount) {
-                e.printStackTrace();
-                ProtocolStringReplacer.warn("This may be a ProtocolLib side problem.");
+                ProtocolStringReplacer.warn("Exception which may be a ProtocolLib side problem:", e);
                 exceptionTimes++;
             }
             return;
@@ -51,8 +47,10 @@ public final class EntityMetadata extends AbstractServerPacketListener {
 
         if (metadataList != null) {
             for (WrappedWatchableObject watchableObject : metadataList) {
-                if (watchableObject.getValue() instanceof Optional<?>) {
-                    Optional<?> value = (Optional<?>) watchableObject.getValue();
+                Object getValue = watchableObject.getValue();
+                if (getValue instanceof Optional<?>) {
+                    // Name of the entity
+                    Optional<?> value = (Optional<?>) getValue;
                     if (value.isPresent() && MinecraftReflection.getIChatBaseComponentClass().isInstance(value.get())) {
                         WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(value.get());
                         if (wrappedChatComponent != null) {
@@ -65,12 +63,11 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                             }
                         }
                     }
-                } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(watchableObject.getValue())) {
-                    Object value = watchableObject.getValue();
-                    if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(value)) {
-                        ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(value);
-                        replaceItemStack(packetEvent, user, listenType, itemStack, filter);
-                    }
+
+                } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(getValue)) {
+                    // Item in Item Frame
+                    ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(getValue);
+                    replaceItemStack(packetEvent, user, listenType, itemStack, filter);
                 }
                 packetEvent.setPacket(wrapperPlayServerEntityMetadata.getHandle());
             }

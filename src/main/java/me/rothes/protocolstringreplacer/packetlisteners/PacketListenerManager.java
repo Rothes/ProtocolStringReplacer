@@ -12,6 +12,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
 import me.rothes.protocolstringreplacer.packetlisteners.server.OpenWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBarUpper17;
+import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.MerchantTradeList;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunkUpper18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityDataUpper18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.title.SetSubtitleText;
@@ -61,6 +62,9 @@ public class PacketListenerManager {
             protocolManager.addPacketListener(new WindowItemsUpper12().packetAdapter);
         } else {
             protocolManager.addPacketListener(new WindowItems().packetAdapter);
+        }
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 14) {
+            protocolManager.addPacketListener(new MerchantTradeList().packetAdapter);
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 18) {

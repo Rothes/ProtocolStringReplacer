@@ -43,6 +43,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -111,6 +112,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     public static void warn(String message) {
         logger.warning(message);
+    }
+
+    public static void warn(String message, Throwable throwable) {
+        logger.log(Level.WARNING, message, throwable);
     }
 
     public static void error(String message) {
