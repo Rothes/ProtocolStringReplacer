@@ -29,6 +29,7 @@ Options:
     # 'Window-Title': Replace strings of containers name
     # 'ScoreBoard': Replace strings in scoreboard title|entity name
     # 'Console': Replace strings in console
+    # 'Kick-Disconnect' Replace strings in kick message on client when kicking player
     # This is not case-sensitive.
     Listen-Types:
       - Chat
