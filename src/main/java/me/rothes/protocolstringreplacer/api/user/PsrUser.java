@@ -221,16 +221,20 @@ public class PsrUser {
                 sender.sendMessage(stringBuilder.toString());
             }
         } else {
-            PacketContainer packet = new PacketContainer(PacketType.Play.Server.CHAT);
-            packet.getChatComponents().write(0, ComponentConverter.fromBaseComponent(baseComponents));
-            packet.getChatTypes().write(0, EnumWrappers.ChatType.SYSTEM);
-            packet.setMeta("psr_filtered_packet", true);
-            try {
-                ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
-                        sendServerPacket(player, packet);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+            PacketContainer packet;
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
+                packet = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
+                packet.getStrings().write(0, ComponentSerializer.toString(baseComponents));
+                packet.getIntegers().write(0, (int) EnumWrappers.ChatType.SYSTEM.getId());
+            } else {
+                packet = new PacketContainer(PacketType.Play.Server.CHAT);
+                packet.getChatComponents().write(0, ComponentConverter.fromBaseComponent(baseComponents));
+                packet.getChatTypes().write(0, EnumWrappers.ChatType.SYSTEM);
             }
+            packet.setMeta("psr_filtered_packet", true);
+            ProtocolStringReplacer.info("333");
+            ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
+                    sendServerPacket(player, packet);
         }
     }
 
