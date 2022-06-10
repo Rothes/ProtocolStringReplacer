@@ -10,7 +10,8 @@ public enum ListenType {
     ITEMSTACK("ItemStack", true),
     WINDOW_TITLE("Window-Title", true),
     SCOREBOARD("ScoreBoard", true),
-    CONSOLE("Console", false);
+    CONSOLE("Console", false),
+    COMBAT_KILL("Combat-Kill", true);
 
     private String name;
     private boolean capturable;

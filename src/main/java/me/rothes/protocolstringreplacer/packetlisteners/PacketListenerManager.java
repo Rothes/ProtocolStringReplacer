@@ -12,6 +12,8 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
 import me.rothes.protocolstringreplacer.packetlisteners.server.OpenWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBarUpper17;
+import me.rothes.protocolstringreplacer.packetlisteners.server.combat.CombatEvent;
+import me.rothes.protocolstringreplacer.packetlisteners.server.combat.PlayerCombatKill;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.MerchantTradeList;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunkUpper18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityDataUpper18;
@@ -56,6 +58,12 @@ public class PacketListenerManager {
             protocolManager.addPacketListener(new ActionBar().packetAdapter);
         } else {
             protocolManager.addPacketListener(new Title().packetAdapter);
+        }
+
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
+            protocolManager.addPacketListener(new PlayerCombatKill().packetAdapter);
+        } else {
+            protocolManager.addPacketListener(new CombatEvent().packetAdapter);
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 11) {
