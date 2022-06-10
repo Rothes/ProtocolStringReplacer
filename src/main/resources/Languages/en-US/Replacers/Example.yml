@@ -20,18 +20,18 @@ Options:
   Filter:
     # Listen types.
     # Specify where to replace the string. All by default. Options:
-    # 'Chat': Replace strings in chat|actionbar
-    # 'Chat-Preview': Replace strings in Chat Preview
-    # 'Sign': Replace strings on signs
-    # 'Title': Replace strings in title|subtitle
-    # 'Entity': Replace strings of entity display name, itemframe name, etc.
-    # 'Boss-Bar': Replace strings of Boss health bar
-    # 'ItemStack': Replace strings in item such as display name|Lore|author of the book|content of the book
-    # 'Window-Title': Replace strings of containers name
-    # 'ScoreBoard': Replace strings in scoreboard title|entity name
-    # 'Console': Replace strings in console
-    # 'Kick-Disconnect': Replace strings in kick message on client when kicking player
-    # 'Combat-Kill': Replace strings in death message on respawn screen
+    # 'Chat' : Replace strings in chat|actionbar
+    # 'Chat-Preview' : Replace strings in Chat Preview
+    # 'Sign' : Replace strings on signs
+    # 'Title' : Replace strings in title|subtitle
+    # 'Entity' : Replace strings of entity display name, itemframe name, etc.
+    # 'Boss-Bar' : Replace strings of Boss health bar
+    # 'ItemStack' : Replace strings in item such as display name|Lore|author of the book|content of the book
+    # 'Window-Title' : Replace strings of containers name
+    # 'ScoreBoard' : Replace strings in scoreboard title|entity name
+    # 'Console' : Replace strings in console
+    # 'Kick-Disconnect' : Replace strings in kick message on client when kicking player
+    # 'Combat-Kill' : Replace strings in death message on respawn screen
     # This is not case-sensitive.
     Listen-Types:
       - Chat

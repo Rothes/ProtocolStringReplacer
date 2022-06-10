@@ -18,18 +18,18 @@ Options:
   Filter:
     # 监听类型.
     # 指定替换何处的字符串. 默认为全部. 可选值:
-    # Chat 替换聊天(chat|actionbar)信息文本
-    # Chat-Preview 替换聊天预览(Chat Preview)中的文本
-    # Sign 替换告示牌文本
-    # Title 替换标题(title|subtitle)文本
-    # Entity 替换实体名文本
-    # Boss-Bar 替换Boss血量条文本
-    # ItemStack 替换物品(物品名|Lore|书署名|书内容)文本
-    # Window-Title 替换容器标题文本
-    # ScoreBoard 替换计分板(标题|实体名称)
-    # Console 替换控制台内显示的文本信息
-    # Kick-Disconnect 替换踢出玩家时客户端上的踢出消息
-    # Combat-Kill 替换玩家重生界面上的死亡信息
+    # 'Chat' : 替换聊天(chat|actionbar)信息文本
+    # 'Chat-Preview' : 替换聊天预览(Chat Preview)中的文本
+    # 'Sign' : 替换告示牌文本
+    # 'Title' : 替换标题(title|subtitle)文本
+    # 'Entity' : 替换实体名文本
+    # 'Boss-Bar' : 替换Boss血量条文本
+    # 'ItemStack' : 替换物品(物品名|Lore|书署名|书内容)文本
+    # 'Window-Title' : 替换容器标题文本
+    # 'ScoreBoard' : 替换计分板(标题|实体名称)
+    # 'Console' : 替换控制台内显示的文本信息
+    # 'Kick-Disconnect' : 替换踢出玩家时客户端上的踢出消息
+    # 'Combat-Kill' : 替换玩家重生界面上的死亡信息
     # 不区分大小写.
     Listen-Types:
       - Chat
