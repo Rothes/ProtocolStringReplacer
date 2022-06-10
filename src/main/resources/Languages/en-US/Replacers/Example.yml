@@ -29,7 +29,8 @@ Options:
     # 'Window-Title': Replace strings of containers name
     # 'ScoreBoard': Replace strings in scoreboard title|entity name
     # 'Console': Replace strings in console
-    # 'Kick-Disconnect' Replace strings in kick message on client when kicking player
+    # 'Kick-Disconnect': Replace strings in kick message on client when kicking player
+    # 'Combat-Kill': Replace strings in death message on respawn screen
     # This is not case-sensitive.
     Listen-Types:
       - Chat

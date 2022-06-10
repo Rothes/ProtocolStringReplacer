@@ -28,6 +28,7 @@ Options:
     # ScoreBoard 替换计分板(标题|实体名称)
     # Console 替换控制台内显示的文本信息
     # Kick-Disconnect 替换踢出玩家时客户端上的踢出消息
+    # Combat-Kill 替换玩家重生界面上的死亡信息
     # 不区分大小写.
     Listen-Types:
       - Chat
