@@ -79,7 +79,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
+        if (sender instanceof Player && ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
             Player player = (Player) sender;
             player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 80.0F, 1.0F);
         }
