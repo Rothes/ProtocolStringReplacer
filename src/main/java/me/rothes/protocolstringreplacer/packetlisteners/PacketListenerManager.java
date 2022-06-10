@@ -7,6 +7,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
 import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.KickDisconnect;
 import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;

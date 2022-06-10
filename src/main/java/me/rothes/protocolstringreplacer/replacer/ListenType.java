@@ -11,6 +11,7 @@ public enum ListenType {
     WINDOW_TITLE("Window-Title", true),
     SCOREBOARD("ScoreBoard", true),
     CONSOLE("Console", false),
+    KICK_DISCONNECT("Disconnect", true), // Is it important capture-able now? lol
     COMBAT_KILL("Combat-Kill", true);
 
     private String name;
