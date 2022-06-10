@@ -1,9 +1,10 @@
-package me.rothes.protocolstringreplacer.packetlisteners.server;
+package me.rothes.protocolstringreplacer.packetlisteners.server.chat;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 

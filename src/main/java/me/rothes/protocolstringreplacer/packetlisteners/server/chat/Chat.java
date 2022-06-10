@@ -1,4 +1,4 @@
-package me.rothes.protocolstringreplacer.packetlisteners.server;
+package me.rothes.protocolstringreplacer.packetlisteners.server.chat;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
@@ -7,6 +7,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.papermc.paper.text.PaperComponents;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import net.kyori.adventure.text.Component;
