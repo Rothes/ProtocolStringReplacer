@@ -49,8 +49,8 @@ import java.util.regex.Pattern;
 
 public class ProtocolStringReplacer extends JavaPlugin {
 
-    public static final String VERSION_CHANNCEL = "Stable";
-    public static final int VERSION_NUMBER = 90;
+    public static final String VERSION_CHANNEL = "Stable";
+    public static final int VERSION_NUMBER = 91;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private final HashMap<String, Integer> msgTimes = new HashMap<>();
@@ -404,7 +404,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             try {
                 final JsonElement element = new JsonParser().parse(jsonBuilder.toString());
                 final JsonObject root = element.getAsJsonObject();
-                JsonObject channel = root.getAsJsonObject("Version_Channels").getAsJsonObject(VERSION_CHANNCEL);
+                JsonObject channel = root.getAsJsonObject("Version_Channels").getAsJsonObject(VERSION_CHANNEL);
                 if (channel == null) {
                     warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel"));
                 } else if (channel.has("Message")){
