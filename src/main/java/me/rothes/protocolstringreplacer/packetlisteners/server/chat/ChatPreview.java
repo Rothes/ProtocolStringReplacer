@@ -26,7 +26,6 @@ public class ChatPreview extends AbstractServerPacketListener {
         }
 
         StructureModifier<WrappedChatComponent> chatComponents = packet.getChatComponents();
-        ProtocolStringReplacer.info(chatComponents.read(0).getJson());
         WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType,
                 chatComponents.read(0).getJson(), filter);
         if (replaced != null) {
