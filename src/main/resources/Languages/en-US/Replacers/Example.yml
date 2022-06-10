@@ -21,6 +21,7 @@ Options:
     # Listen types.
     # Specify where to replace the string. All by default. Options:
     # 'Chat': Replace strings in chat|actionbar
+    # 'Chat-Preview': Replace strings in Chat Preview
     # 'Sign': Replace strings on signs
     # 'Title': Replace strings in title|subtitle
     # 'Entity': Replace strings of entity display name, itemframe name, etc.

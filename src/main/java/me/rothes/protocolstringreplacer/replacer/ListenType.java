@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.replacer;
 public enum ListenType {
 
     CHAT("Chat", true),
+    CHAT_PREVIEW("Chat-Preview", true),
     SIGN("Sign", true),
     TITLE("Title", true),
     ENTITY("Entity", true),
