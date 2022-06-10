@@ -4,6 +4,7 @@ public enum ListenType {
 
     CHAT("Chat", true),
     CHAT_PREVIEW("Chat-Preview", true),
+    TAB_COMPLETE("Tab-Complete", true),
     SIGN("Sign", true),
     TITLE("Title", true),
     ENTITY("Entity", true),

@@ -20,6 +20,7 @@ Options:
     # 指定替换何处的字符串. 默认为全部. 可选值:
     # 'Chat' : 替换聊天(chat|actionbar)信息文本
     # 'Chat-Preview' : 替换聊天预览(Chat Preview)中的文本
+    # 'Tab-Complete' : 替换 Tab Complete 中的文本
     # 'Sign' : 替换告示牌文本
     # 'Title' : 替换标题(title|subtitle)文本
     # 'Entity' : 替换实体名文本
