@@ -232,7 +232,6 @@ public class PsrUser {
                 packet.getChatTypes().write(0, EnumWrappers.ChatType.SYSTEM);
             }
             packet.setMeta("psr_filtered_packet", true);
-            ProtocolStringReplacer.info("333");
             ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
                     sendServerPacket(player, packet);
         }
