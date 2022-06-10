@@ -8,6 +8,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCrea
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
 import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.KickDisconnect;
+import me.rothes.protocolstringreplacer.packetlisteners.server.SystemChat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
@@ -90,6 +91,10 @@ public class PacketListenerManager {
             protocolManager.addPacketListener(new BossBarUpper17().packetAdapter);
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
             protocolManager.addPacketListener(new BossBar().packetAdapter);
+        }
+
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
+            protocolManager.addPacketListener(new SystemChat().packetAdapter);
         }
 
         protocolManager.addPacketListener(new Chat().packetAdapter);
