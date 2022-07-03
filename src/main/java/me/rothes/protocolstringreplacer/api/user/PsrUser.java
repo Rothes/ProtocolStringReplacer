@@ -1,6 +1,7 @@
 package me.rothes.protocolstringreplacer.api.user;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
@@ -8,6 +9,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -232,8 +234,7 @@ public class PsrUser {
                 packet.getChatTypes().write(0, EnumWrappers.ChatType.SYSTEM);
             }
             packet.setMeta("psr_filtered_packet", true);
-            ProtocolStringReplacer.getInstance().getPacketListenerManager().getProtocolManager().
-                    sendServerPacket(player, packet);
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         }
     }
 
@@ -243,6 +244,14 @@ public class PsrUser {
 
     public void sendFilteredText(String text) {
         sendFilteredMessage(TextComponent.fromLegacyText(text));
+    }
+
+    public void sendMessage(BaseComponent... components) {
+        sender.spigot().sendMessage(components);
+    }
+
+    public void sendActionBar(BaseComponent... components) {
+        ((Player) sender).spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
     }
 
     public void sendMessage(String text) {

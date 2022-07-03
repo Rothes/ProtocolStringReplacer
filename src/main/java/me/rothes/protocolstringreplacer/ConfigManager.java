@@ -16,6 +16,7 @@ public class ConfigManager {
     public final boolean forceReplace;
     public final boolean consolePlaceholder;
 
+    public final boolean convertPlayerChat;
     public final int protocolLibSideStackPrintCount;
 
     public final String gitRawHost;
@@ -60,5 +61,6 @@ public class ConfigManager {
         this.consolePlaceholder = instance.getConfig().getBoolean("Options.Features.Placeholder.Parse-For-Console", true);
         this.gitRawHost = instance.getConfig().getString("Options.Git-Raw-Host", "raw.githubusercontent.com");
         this.protocolLibSideStackPrintCount = instance.getConfig().getInt("Options.ProtocolLib-Side-Stack-Print-Count", 3);
+        this.convertPlayerChat = instance.getServerMajorVersion() >= 19 && instance.getConfig().getBoolean("Options.Features.Chat-Packet.Convert-Player-Chat", true);
     }
 }

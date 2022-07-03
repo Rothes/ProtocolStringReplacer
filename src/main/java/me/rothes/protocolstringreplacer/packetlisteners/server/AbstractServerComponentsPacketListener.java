@@ -13,41 +13,60 @@ import net.md_5.bungee.chat.ComponentSerializer;
 
 public abstract class AbstractServerComponentsPacketListener extends AbstractServerPacketListener {
 
-    private static final String BLOCKED_JSON = "{\"text\":\"ProtocolStringReplacer blocked message. If you see this, it's caused by other plugin(s).\"}";
+    protected static final String BLOCKED_JSON = "{\"text\":\"ProtocolStringReplacer blocked message. If you see this, it's caused by other plugin(s).\"}";
 
     protected AbstractServerComponentsPacketListener(PacketType packetType, ListenType listenType) {
         super(packetType, listenType);
+    }
+
+    protected BaseComponent[] getSpigotComponent(StructureModifier<Object> modifier) {
+        if (!ProtocolStringReplacer.getInstance().isSpigot()) {
+            return null;
+        }
+        StructureModifier<BaseComponent[]> componentModifier = modifier.withType(BaseComponent[].class);
+        if (componentModifier.size() == 0) {
+            return null;
+        }
+        return componentModifier.read(0);
     }
 
     protected String processSpigotComponent(StructureModifier<Object> modifier, PacketEvent packetEvent, PsrUser user) {
         if (!ProtocolStringReplacer.getInstance().isSpigot()) {
             return null;
         }
-        StructureModifier<Object> componentModifier = modifier.withType(BaseComponent[].class);
+        StructureModifier<BaseComponent[]> componentModifier = modifier.withType(BaseComponent[].class);
         if (componentModifier.size() == 0) {
             return null;
         }
-        Object read = componentModifier.read(0);
+        BaseComponent[] read = componentModifier.read(0);
         if (read == null) {
             return null;
         }
 
-        String result = getReplacedJson(packetEvent, user, listenType, ComponentSerializer.toString((BaseComponent[]) read), filter);
+        String result = getReplacedJson(packetEvent, user, listenType, ComponentSerializer.toString(read), filter);
         componentModifier.write(0, null);
         return result == null ? BLOCKED_JSON : result;
+    }
+
+    protected Component getPaperComponent(StructureModifier<Object> modifier) {
+        if (!ProtocolStringReplacer.getInstance().isPaper()) {
+            return null;
+        }
+        StructureModifier<Component> componentModifier = modifier.withType(Component.class);
+        return componentModifier.read(0);
     }
 
     protected String processPaperComponent(StructureModifier<Object> modifier, PacketEvent packetEvent, PsrUser user) {
         if (!ProtocolStringReplacer.getInstance().isPaper()) {
             return null;
         }
-        StructureModifier<Object> componentModifier = modifier.withType(Component.class);
-        Object read = componentModifier.read(0);
+        StructureModifier<Component> componentModifier = modifier.withType(Component.class);
+        Component read = componentModifier.read(0);
         if (read == null) {
             return null;
         }
 
-        String result = getReplacedJson(packetEvent, user, listenType, PaperUtils.getPaperGsonComponentSerializer().serialize((Component) read), filter);
+        String result = getReplacedJson(packetEvent, user, listenType, PaperUtils.getPaperGsonComponentSerializer().serialize(read), filter);
         componentModifier.write(0, null);
         return result == null ? BLOCKED_JSON : result;
     }
