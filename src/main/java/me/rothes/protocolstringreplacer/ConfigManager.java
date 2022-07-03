@@ -16,7 +16,7 @@ public class ConfigManager {
     public final boolean forceReplace;
     public final boolean consolePlaceholder;
 
-    public final int protocollibSideStackPrintCount;
+    public final int protocolLibSideStackPrintCount;
 
     public final String gitRawHost;
 
@@ -59,6 +59,6 @@ public class ConfigManager {
         this.forceReplace = instance.getConfig().getBoolean("Options.Features.Packet-Listener.Force-Replace", false);
         this.consolePlaceholder = instance.getConfig().getBoolean("Options.Features.Placeholder.Parse-For-Console", true);
         this.gitRawHost = instance.getConfig().getString("Options.Git-Raw-Host", "raw.githubusercontent.com");
-        this.protocollibSideStackPrintCount = instance.getConfig().getInt("Options.ProtocolLib-Side-Stack-Print-Count", 3);
+        this.protocolLibSideStackPrintCount = instance.getConfig().getInt("Options.ProtocolLib-Side-Stack-Print-Count", 3);
     }
 }
