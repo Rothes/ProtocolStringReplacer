@@ -5,26 +5,13 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import io.papermc.paper.text.PaperComponents;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 
-import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Optional;
 
-public final class Chat extends AbstractServerPacketListener {
-
-    private boolean setup = false;
-    private int bungeeComponentsField = -1;
-    private int paperComponentField = -1;
-    private GsonComponentSerializer paperGsonComponentSerializer;
+public final class Chat extends AbstractServerComponentsPacketListener {
 
     public Chat() {
         super(PacketType.Play.Server.CHAT, ListenType.CHAT);
@@ -38,71 +25,26 @@ public final class Chat extends AbstractServerPacketListener {
             if (user == null) {
                 return;
             }
-            StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
-            WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
-            String json;
-            if (wrappedChatComponent != null) {
-                json = wrappedChatComponent.getJson();
-                WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
-                if (replaced != null) {
-                    wrappedChatComponentStructureModifier.write(0, replaced);
-                }
 
+            String replaced;
+
+            StructureModifier<WrappedChatComponent> componentModifier = packet.getChatComponents();
+            WrappedChatComponent wrappedChatComponent = componentModifier.read(0);
+            if (wrappedChatComponent != null) {
+                String json = wrappedChatComponent.getJson();
+                replaced = getReplacedJson(packetEvent, user, listenType, json, filter);
             } else {
                 StructureModifier<Object> modifier = packet.getModifier();
-                setupFields(modifier.getFields());
-                if (bungeeComponentsField != -1) {
-                    Object obj = modifier.read(bungeeComponentsField);
-
-                    if (obj == null) {
-                        if (paperComponentField != -1) {
-                            obj = modifier.read(paperComponentField);
-                            Component component = (Component) obj;
-                            json = getPaperGsonComponentSerializer().serialize(component);
-
-                            WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
-                            if (replaced != null) {
-                                wrappedChatComponentStructureModifier.write(0, replaced);
-                                modifier.write(paperComponentField, null);
-                            }
-                        }
-                        return;
-                    }
-
-                    BaseComponent[] components = (BaseComponent[]) obj;
-                    json = ComponentSerializer.toString(components);
-
-                    WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
-                    if (replaced != null) {
-                        wrappedChatComponentStructureModifier.write(0, replaced);
-                        modifier.write(bungeeComponentsField, null);
-                    }
+                replaced = processSpigotComponent(modifier, packetEvent, user);
+                if (replaced == null) {
+                    replaced = processPaperComponent(modifier, packetEvent, user);
                 }
             }
-        }
-    }
-
-    private void setupFields(List<Field> fields) {
-        if (setup) {
-            return;
-        }
-        for (int i = 0; i < fields.size(); i++) {
-            Field field = fields.get(i);
-            Class<?> type = field.getType();
-            if (ProtocolStringReplacer.getInstance().isSpigot() && type.getCanonicalName().equals("net.md_5.bungee.api.chat.BaseComponent[]")) {
-                bungeeComponentsField = i;
-            } else if (ProtocolStringReplacer.getInstance().hasPaperComponent() && type == Component.class) {
-                paperComponentField = i;
+            if (replaced != null) {
+                componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
             }
-        }
-        setup = true;
-    }
 
-    private GsonComponentSerializer getPaperGsonComponentSerializer() {
-        if (paperGsonComponentSerializer == null) {
-            paperGsonComponentSerializer = PaperComponents.gsonSerializer();
         }
-        return paperGsonComponentSerializer;
     }
 
 }

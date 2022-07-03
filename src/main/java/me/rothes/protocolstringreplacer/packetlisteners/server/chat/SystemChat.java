@@ -3,14 +3,15 @@ package me.rothes.protocolstringreplacer.packetlisteners.server.chat;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
-import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class SystemChat extends AbstractServerPacketListener {
+public class SystemChat extends AbstractServerComponentsPacketListener {
 
     public SystemChat() {
         super(PacketType.Play.Server.SYSTEM_CHAT, ListenType.CHAT);
@@ -26,9 +27,18 @@ public class SystemChat extends AbstractServerPacketListener {
                 return;
             }
 
-            String replaced = getReplacedJson(packetEvent, user, listenType, packet.getStrings().read(0), filter);
+            String replaced;
+
+            StructureModifier<String> stringModifier = packet.getStrings();
+            String read = stringModifier.read(0);
+            if (read != null) {
+                replaced = getReplacedJson(packetEvent, user, listenType, read, filter);
+            } else {
+                replaced = processPaperComponent(packet.getModifier(), packetEvent, user);
+            }
+
             if (replaced != null) {
-                packet.getStrings().write(0, replaced);
+                stringModifier.write(0, replaced);
             }
         }
     }

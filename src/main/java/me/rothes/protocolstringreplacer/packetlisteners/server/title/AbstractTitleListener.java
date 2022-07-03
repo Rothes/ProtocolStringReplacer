@@ -5,11 +5,11 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
-public abstract class AbstractTitleListener extends AbstractServerPacketListener {
+public abstract class AbstractTitleListener extends AbstractServerComponentsPacketListener {
 
     protected AbstractTitleListener(PacketType packetType) {
         super(packetType, ListenType.TITLE);
@@ -21,14 +21,22 @@ public abstract class AbstractTitleListener extends AbstractServerPacketListener
             return;
         }
         PacketContainer packet = packetEvent.getPacket();
+
+        String replaced;
         StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
         if (wrappedChatComponent != null) {
             String json = wrappedChatComponent.getJson();
-            WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
-            if (replaced != null) {
-                wrappedChatComponentStructureModifier.write(0, replaced);
+            replaced = getReplacedJson(packetEvent, user, listenType, json, filter);
+        } else {
+            replaced = processSpigotComponent(packet.getModifier(), packetEvent, user);
+            if (replaced == null) {
+                replaced = processPaperComponent(packet.getModifier(), packetEvent, user);
             }
+        }
+
+        if (replaced != null) {
+            wrappedChatComponentStructureModifier.write(0, WrappedChatComponent.fromJson(replaced));
         }
     }
 
