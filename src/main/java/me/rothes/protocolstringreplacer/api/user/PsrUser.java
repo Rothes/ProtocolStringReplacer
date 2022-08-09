@@ -26,7 +26,6 @@ import org.bukkit.inventory.meta.tags.ItemTagType;
 import org.bukkit.permissions.Permission;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

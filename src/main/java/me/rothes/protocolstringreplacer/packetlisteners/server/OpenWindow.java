@@ -26,8 +26,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
 
         WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter, true);
         if (replaced != null) {
-            wrappedChatComponentStructureModifier.write(0,
-                    replaced);
+            wrappedChatComponentStructureModifier.write(0, replaced);
         }
     }
 
