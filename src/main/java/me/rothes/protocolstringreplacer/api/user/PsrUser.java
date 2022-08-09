@@ -37,6 +37,8 @@ import java.util.UUID;
 
 public class PsrUser {
 
+    private static final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
+
     private UUID uuid;
     private Player player;
     private CommandSender sender;
@@ -56,8 +58,6 @@ public class PsrUser {
 //TODO:    private String editorPattern;
 //TODO:    private String editorReplacement;
 
-    protected NamespacedKey userCacheKey;
-
     public PsrUser(Player player) {
         this.player = player;
         uuid = player.getUniqueId();
@@ -76,6 +76,10 @@ public class PsrUser {
             this.player = (Player) sender;
             uuid = player.getUniqueId();
         }
+    }
+
+    public static NamespacedKey getUserCacheKey() {
+        return userCacheKey;
     }
 
     public CommandSender getSender() {
@@ -297,13 +301,6 @@ public class PsrUser {
             stringBuilder.append('§').append(Char);
         }
         return stringBuilder.toString();
-    }
-
-    public NamespacedKey getUserCacheKey() {
-        if (userCacheKey == null) {
-            userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
-        }
-        return userCacheKey;
     }
 
     @Override
