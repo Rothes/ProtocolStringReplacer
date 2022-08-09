@@ -24,8 +24,12 @@ public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
         user.cleanUserMetaCache();
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
+        boolean firstReplaced = false;
         for (ItemStack itemStack : packetEvent.getPacket().getItemListModifier().read(0)) {
-            boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, replacers);
+            boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, replacers,
+                    // Avoid too many packets kick
+                    firstReplaced && user.isInAnvil());
+            firstReplaced = true;
             if (blocked) {
                 return;
             }

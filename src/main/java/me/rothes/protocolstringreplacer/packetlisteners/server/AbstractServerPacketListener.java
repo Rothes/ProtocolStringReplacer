@@ -191,6 +191,11 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                               @Nonnull ItemStack itemStack, List<ReplacerConfig> replacers) {
+        return replaceItemStack(packetEvent, user, listenType, itemStack, replacers, true);
+    }
+
+    protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                              @Nonnull ItemStack itemStack, List<ReplacerConfig> replacers, boolean saveCache) {
         if (itemStack.hasItemMeta()) {
             ItemStack original = itemStack.clone();
 
@@ -247,7 +252,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             replacerManager.setPapi(user, container.getTexts(), papiIndexes);
             itemStack.setItemMeta(container.getResult());
 
-            if (!original.isSimilar(itemStack)) {
+            if (saveCache && !original.isSimilar(itemStack)) {
                 user.saveUserMetaCache(original, itemStack);
             }
         }

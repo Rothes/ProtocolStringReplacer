@@ -12,7 +12,9 @@ public class CloseWindow extends AbstractClientItemPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        getEventUser(packetEvent).setCurrentWindowTitle(null);
+        PsrUser user = getEventUser(packetEvent);
+        user.setCurrentWindowTitle(null);
+        user.setInAnvil(false);
     }
 
 }

@@ -44,6 +44,7 @@ public class PsrUser {
 
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private String currentWindowTitle;
+    private boolean inAnvil;
     private Short uniqueCacheKey = 0;
 
     private String[] commandToConfirm;
@@ -101,6 +102,10 @@ public class PsrUser {
         return currentWindowTitle;
     }
 
+    public boolean isInAnvil() {
+        return inAnvil;
+    }
+
     public String[] getCommandToConfirm() {
         return commandToConfirm;
     }
@@ -123,6 +128,10 @@ public class PsrUser {
 
     public void setCurrentWindowTitle(String title) {
         currentWindowTitle = title;
+    }
+
+    public void setInAnvil(boolean inAnvil) {
+        this.inAnvil = inAnvil;
     }
 
     public void addCaptureType(ListenType listenType) {

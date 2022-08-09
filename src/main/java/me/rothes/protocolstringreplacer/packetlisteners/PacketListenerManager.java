@@ -1,11 +1,7 @@
 package me.rothes.protocolstringreplacer.packetlisteners;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
@@ -114,13 +110,6 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new SetCreativeSlot().packetAdapter);
         protocolManager.addPacketListener(new CloseWindow().packetAdapter);
 
-        protocolManager.addPacketListener(new PacketAdapter(ProtocolStringReplacer.getInstance(), ListenerPriority.LOWEST, PacketType.Play.Client.ITEM_NAME) {
-            @Override
-            public void onPacketReceiving(PacketEvent event) {
-                System.out.println("ITEM_NAME");
-//                event.setCancelled(true);
-            }
-        });
     }
 
     public void removeListeners() {
