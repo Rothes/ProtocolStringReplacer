@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
@@ -15,46 +16,71 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public final class Chat extends AbstractServerComponentsPacketListener {
+
+    // If server is before 1.19, or it's 1.19.1+
+    private final boolean legacy = Arrays.stream(PacketType.Play.Server.CHAT.getPacketClass().getDeclaredFields())
+            .anyMatch(it -> it.getType() == MinecraftReflection.getIChatBaseComponentClass());
 
     public Chat() {
         super(PacketType.Play.Server.CHAT, ListenType.CHAT);
     }
 
     protected void process(PacketEvent packetEvent) {
-        PacketContainer packet = packetEvent.getPacket();
-        Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
-        if (!(isFiltered.isPresent() && isFiltered.get())) {
-            PsrUser user = getEventUser(packetEvent);
-            if (user == null) {
-                return;
-            }
-
-            if (convert(packet, user)) {
-                packetEvent.setCancelled(true);
-                return;
-            }
-
-            String replaced;
-
-            StructureModifier<WrappedChatComponent> componentModifier = packet.getChatComponents();
-            WrappedChatComponent wrappedChatComponent = componentModifier.read(0);
-            if (wrappedChatComponent != null) {
-                String json = wrappedChatComponent.getJson();
-                replaced = getReplacedJson(packetEvent, user, listenType, json, filter);
-            } else {
-                StructureModifier<Object> modifier = packet.getModifier();
-                replaced = processSpigotComponent(modifier, packetEvent, user);
-                if (replaced == null) {
-                    replaced = processPaperComponent(modifier, packetEvent, user);
+        try {
+            PacketContainer packet = packetEvent.getPacket();
+            Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
+            if (!(isFiltered.isPresent() && isFiltered.get())) {
+                PsrUser user = getEventUser(packetEvent);
+                if (user == null) {
+                    return;
                 }
-            }
-            if (replaced != null) {
-                componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
-            }
 
+                if (convert(packet, user)) {
+                    packetEvent.setCancelled(true);
+                    return;
+                }
+
+                String replaced;
+                Object playerChatMessage = null;
+                StructureModifier<WrappedChatComponent> componentModifier = null;
+                WrappedChatComponent wrappedChatComponent;
+
+                if (legacy) {
+                    // Before 1.19
+                    componentModifier = packet.getChatComponents();
+                    wrappedChatComponent = componentModifier.read(0);
+                } else {
+                    // 1.19.1+
+                    playerChatMessage = packet.getModifier().withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0);
+                    wrappedChatComponent = PlayerChatHelper.getChatMessage(playerChatMessage);
+                }
+
+                if (wrappedChatComponent != null) {
+                    String json = wrappedChatComponent.getJson();
+                    replaced = getReplacedJson(packetEvent, user, listenType, json, filter);
+                } else {
+                    StructureModifier<Object> modifier = packet.getModifier();
+                    replaced = processSpigotComponent(modifier, packetEvent, user);
+                    if (replaced == null) {
+                        replaced = processPaperComponent(modifier, packetEvent, user);
+                    }
+                }
+
+                if (replaced != null) {
+                    if (legacy) {
+                        componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
+                    } else {
+                        PlayerChatHelper.setChatMessage(playerChatMessage, WrappedChatComponent.fromJson(replaced));
+                    }
+                }
+
+            }
+        } catch (Throwable w) {
+            w.printStackTrace();
         }
     }
 
@@ -64,9 +90,29 @@ public final class Chat extends AbstractServerComponentsPacketListener {
         }
         BaseComponent message;
 
-        StructureModifier<WrappedChatComponent> componentModifier = packet.getChatComponents();
+        StructureModifier<WrappedChatComponent> componentModifier;
         StructureModifier<Object> modifier = packet.getModifier();
-        WrappedChatComponent wrappedChatComponent = componentModifier.read(0);
+        WrappedChatComponent wrappedChatComponent;
+
+        Object chatMessageTypeSubOrChatSender;
+        PlayerChatHelper.ChatType chatType;
+
+        if (legacy) {
+            // 1.19
+            componentModifier = packet.getChatComponents();
+            wrappedChatComponent = componentModifier.read(0);
+
+            chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatSender(modifier);
+            chatType = PlayerChatHelper.getChatTypeFromId(packet.getIntegers().read(0));
+        } else {
+            // 1.19.1+
+            wrappedChatComponent = PlayerChatHelper.getChatMessage(packet.getModifier()
+                    .withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0));
+
+            chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatMessageTypeSub(modifier);
+            chatType = PlayerChatHelper.getChatTypeFromId(PlayerChatHelper.getChatTypeId(chatMessageTypeSubOrChatSender));
+        }
+
         if (wrappedChatComponent != null) {
             message = ComponentSerializer.parse(wrappedChatComponent.getJson())[0];
         } else {
@@ -78,51 +124,57 @@ public final class Chat extends AbstractServerComponentsPacketListener {
             }
         }
 
-        switch (packet.getIntegers().read(0)) {
-            case 1:  // System message
-            case 7:  // Command /tellraw
-                user.sendMessage(message);
-                break;
-            case 2:  // Game Info (ActionBar)
-                user.sendActionBar(message);
-                break;
-            case 0:  // Chat message
-                Object chatSender = ConvertChatHelper.getChatSender(modifier);
-                BaseComponent displayName = ConvertChatHelper.getDisplayName(chatSender);
+        switch (chatType) {
+            case PLAYER_CHAT:
+                BaseComponent displayName = PlayerChatHelper.getDisplayName(chatMessageTypeSubOrChatSender);
                 TranslatableComponent component = new TranslatableComponent("chat.type.text", displayName, message);
                 user.sendMessage(component);
                 break;
-            case 3:  // Command /say
-                chatSender = ConvertChatHelper.getChatSender(modifier);
-                displayName = ConvertChatHelper.getDisplayName(chatSender);
+            case SYSTEM_CHAT:
+            case TELLRAW:
+                user.sendMessage(message);
+                break;
+            case GAME_INFO:
+                user.sendActionBar(message);
+                break;
+            case SAY:
+                displayName = PlayerChatHelper.getDisplayName(chatMessageTypeSubOrChatSender);
                 component = new TranslatableComponent("chat.type.announcement", displayName, message);
                 user.sendMessage(component);
                 break;
-            case 4:  // Command /msg
-                chatSender = ConvertChatHelper.getChatSender(modifier);
-                displayName = ConvertChatHelper.getDisplayName(chatSender);
+            case MSG_INCOMING:
+                displayName = PlayerChatHelper.getDisplayName(chatMessageTypeSubOrChatSender);
                 component = new TranslatableComponent("commands.message.display.incoming", displayName, message);
                 component.setItalic(true);
                 component.setColor(ChatColor.GRAY);
                 user.sendMessage(component);
                 break;
-            case 6:  // Command /me
-                chatSender = ConvertChatHelper.getChatSender(modifier);
-                displayName = ConvertChatHelper.getDisplayName(chatSender);
+            case MSG_OUTGOING:
+                displayName = PlayerChatHelper.getDisplayName(chatMessageTypeSubOrChatSender);
+                component = new TranslatableComponent("commands.message.display.outgoing", displayName, message);
+                component.setItalic(true);
+                component.setColor(ChatColor.GRAY);
+                user.sendMessage(component);
+                break;
+            case EMOTE:
+                displayName = PlayerChatHelper.getDisplayName(chatMessageTypeSubOrChatSender);
                 component = new TranslatableComponent("chat.type.emote", displayName, message);
                 user.sendMessage(component);
                 break;
-            case 5:  // Command /teammsg
-                chatSender = ConvertChatHelper.getChatSender(modifier);
-                displayName = ConvertChatHelper.getDisplayName(chatSender);
-                BaseComponent teamName = ConvertChatHelper.getTeamName(chatSender);
+            case TEAM_MSG_INCOMING:
+                displayName = PlayerChatHelper.getDisplayName(chatMessageTypeSubOrChatSender);
+                BaseComponent teamName = PlayerChatHelper.getTeamName(chatMessageTypeSubOrChatSender);
                 component = new TranslatableComponent("chat.type.team.text", teamName, displayName, message);
                 user.sendMessage(component);
                 break;
-            default:
-                ProtocolStringReplacer.warn("Not supported PlayerChat type when convert: " + packet.getIntegers().read(0));
-                user.sendMessage(message);
+            case TEAM_MSG_OUTGOING:
+                displayName = PlayerChatHelper.getDisplayName(chatMessageTypeSubOrChatSender);
+                teamName = PlayerChatHelper.getTeamName(chatMessageTypeSubOrChatSender);
+                component = new TranslatableComponent("chat.type.team.sent", teamName, displayName, message);
+                user.sendMessage(component);
                 break;
+            default:
+                throw new AssertionError();
         }
         return true;
     }
