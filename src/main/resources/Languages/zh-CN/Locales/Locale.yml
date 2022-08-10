@@ -63,13 +63,13 @@ Sender:
           Capture-Added: '&a已启用 &f%0% &a的捕获.'
           Already-Capturing-Listen-Type: '&c您已经启用了 &f%0% &c的捕获了.'
         Remove:
-          Simple-Help: '&7 * &e/psr capture remove &7- &b移除监听类型的Json捕获'
-          Detailed-Help: '&7 * &e/psr capture remove <监听类型> &7- &b移除监听类型的Json捕获'
+          Simple-Help: '&7 * &e/psr capture remove &7- &b移除监听类型的文本捕获'
+          Detailed-Help: '&7 * &e/psr capture remove <监听类型> &7- &b移除监听类型的文本捕获'
           Capture-Removed: '&a已移除 &f%0% &a的捕获.'
           Already-Not-Capturing-Listen-Type: '&c您已经关闭了 &f%0% &c的捕获了.'
         List:
-          Simple-Help: '&7 * &e/psr capture list &7- &b列出捕获的Json信息'
-          Detailed-Help: '&7 * &e/psr capture list <监听类型> [页码] &7- &b列出捕获的Json信息'
+          Simple-Help: '&7 * &e/psr capture list &7- &b列出捕获的文本信息'
+          Detailed-Help: '&7 * &e/psr capture list <监听类型> [页码] &7- &b列出捕获的文本信息'
           Results-Header: '&7&m---------&7&l &7[ &c&lP&6&lS&3&lR &7- &e捕获列表&7 ]&l &7&m---------'
           Results-Footer: '&7&m---------------------------------------'
           Not-Capturing-Listen-Type: '&c您未在捕获 &f%0% &c.'
