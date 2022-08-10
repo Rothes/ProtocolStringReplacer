@@ -95,10 +95,17 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             replacerManager.replaceContainerJsons(container, replacers);
         }
         container.createDefaultChildren();
-        container.createTexts(container);
-        if (user.isCapturing(listenType)) {
-            info.setTexts(container.getTexts());
-            user.addCaptureInfo(listenType, info);
+        try {
+            container.createTexts(container);
+            if (user.isCapturing(listenType)) {
+                info.setTexts(container.getTexts());
+                user.addCaptureInfo(listenType, info);
+            }
+        } catch (Throwable t) {
+            throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+                    + "Original Json: " + json + "\n"
+                    + "Replaced Json: " + container.getJsons().get(0) + "\n"
+                    + "If you need support, please provide the stacktrace below.", t);
         }
         if (blocked || replacerManager.isTextBlocked(container, replacers)) {
             packetEvent.setCancelled(true);
