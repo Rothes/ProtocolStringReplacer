@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.api.user;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -239,7 +240,12 @@ public class PsrUser {
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
                 packet = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
                 packet.getStrings().write(0, ComponentSerializer.toString(baseComponents));
-                packet.getIntegers().write(0, (int) EnumWrappers.ChatType.SYSTEM.getId());
+                StructureModifier<Boolean> booleans = packet.getBooleans();
+                if (booleans.size() >= 1) {
+                    booleans.write(0, false);
+                } else {
+                    packet.getIntegers().write(0, (int) EnumWrappers.ChatType.SYSTEM.getId());
+                }
             } else {
                 packet = new PacketContainer(PacketType.Play.Server.CHAT);
                 packet.getChatComponents().write(0, ComponentConverter.fromBaseComponent(baseComponents));
