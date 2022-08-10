@@ -30,57 +30,53 @@ public final class Chat extends AbstractServerComponentsPacketListener {
     }
 
     protected void process(PacketEvent packetEvent) {
-        try {
-            PacketContainer packet = packetEvent.getPacket();
-            Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
-            if (!(isFiltered.isPresent() && isFiltered.get())) {
-                PsrUser user = getEventUser(packetEvent);
-                if (user == null) {
-                    return;
-                }
-
-                if (convert(packet, user)) {
-                    packetEvent.setCancelled(true);
-                    return;
-                }
-
-                String replaced;
-                Object playerChatMessage = null;
-                StructureModifier<WrappedChatComponent> componentModifier = null;
-                WrappedChatComponent wrappedChatComponent;
-
-                if (legacy) {
-                    // Before 1.19
-                    componentModifier = packet.getChatComponents();
-                    wrappedChatComponent = componentModifier.read(0);
-                } else {
-                    // 1.19.1+
-                    playerChatMessage = packet.getModifier().withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0);
-                    wrappedChatComponent = PlayerChatHelper.getChatMessage(playerChatMessage);
-                }
-
-                if (wrappedChatComponent != null) {
-                    String json = wrappedChatComponent.getJson();
-                    replaced = getReplacedJson(packetEvent, user, listenType, json, filter);
-                } else {
-                    StructureModifier<Object> modifier = packet.getModifier();
-                    replaced = processSpigotComponent(modifier, packetEvent, user);
-                    if (replaced == null) {
-                        replaced = processPaperComponent(modifier, packetEvent, user);
-                    }
-                }
-
-                if (replaced != null) {
-                    if (legacy) {
-                        componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
-                    } else {
-                        PlayerChatHelper.setChatMessage(playerChatMessage, WrappedChatComponent.fromJson(replaced));
-                    }
-                }
-
+        PacketContainer packet = packetEvent.getPacket();
+        Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
+        if (!(isFiltered.isPresent() && isFiltered.get())) {
+            PsrUser user = getEventUser(packetEvent);
+            if (user == null) {
+                return;
             }
-        } catch (Throwable w) {
-            w.printStackTrace();
+
+            if (convert(packet, user)) {
+                packetEvent.setCancelled(true);
+                return;
+            }
+
+            String replaced;
+            Object playerChatMessage = null;
+            StructureModifier<WrappedChatComponent> componentModifier = null;
+            WrappedChatComponent wrappedChatComponent;
+
+            if (legacy) {
+                // Before 1.19
+                componentModifier = packet.getChatComponents();
+                wrappedChatComponent = componentModifier.read(0);
+            } else {
+                // 1.19.1+
+                playerChatMessage = packet.getModifier().withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0);
+                wrappedChatComponent = PlayerChatHelper.getChatMessage(playerChatMessage);
+            }
+
+            if (wrappedChatComponent != null) {
+                String json = wrappedChatComponent.getJson();
+                replaced = getReplacedJson(packetEvent, user, listenType, json, filter);
+            } else {
+                StructureModifier<Object> modifier = packet.getModifier();
+                replaced = processSpigotComponent(modifier, packetEvent, user);
+                if (replaced == null) {
+                    replaced = processPaperComponent(modifier, packetEvent, user);
+                }
+            }
+
+            if (replaced != null) {
+                if (legacy) {
+                    componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
+                } else {
+                    PlayerChatHelper.setChatMessage(playerChatMessage, WrappedChatComponent.fromJson(replaced));
+                }
+            }
+
         }
     }
 
