@@ -242,8 +242,10 @@ public class PsrUser {
                 packet.getStrings().write(0, ComponentSerializer.toString(baseComponents));
                 StructureModifier<Boolean> booleans = packet.getBooleans();
                 if (booleans.size() >= 1) {
+                    // 1.19 only
                     booleans.write(0, false);
                 } else {
+                    // 1.19.1+
                     packet.getIntegers().write(0, (int) EnumWrappers.ChatType.SYSTEM.getId());
                 }
             } else {
