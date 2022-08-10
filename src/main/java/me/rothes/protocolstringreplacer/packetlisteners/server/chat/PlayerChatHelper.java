@@ -31,60 +31,54 @@ public class PlayerChatHelper {
     static {
         try {
             // 1.19.1+
-            Class<?> chatMessageTypeClass = null;
-            try {
-                chatMessageTypeClass = MinecraftReflection.getMinecraftClass("network.chat.ChatMessageType");
-            } catch (RuntimeException ignored) {
-            }
+            playerChatMessageClass = MinecraftReflection.getMinecraftClass("network.chat.PlayerChatMessage");
+            Class<?> chatMessageTypeClass = MinecraftReflection.getMinecraftClass("network.chat.ChatMessageType");
 
-            if (chatMessageTypeClass == null) {
-                // This class doesn't exist on 1.19
-                chatSenderClass = MinecraftReflection.getMinecraftClass("network.chat.ChatSender");
-                setupNameFields(chatSenderClass);
-            } else {
-                // Else it must be 1.19.1+
-                playerChatMessageClass = MinecraftReflection.getMinecraftClass("network.chat.PlayerChatMessage");
+            for (Field field : PacketType.Play.Server.CHAT.getPacketClass().getDeclaredFields()) {
+                Class<?> declaringClass = field.getType().getDeclaringClass();
+                if (declaringClass == chatMessageTypeClass) {
+                    chatMessageTypeSubClass = field.getType();
+                    setupNameFields(chatMessageTypeSubClass);
+                } else if (field.getType() == playerChatMessageClass) {
+                    chatMessageField = field;
+                    chatMessageField.setAccessible(true);
 
-                for (Field field : PacketType.Play.Server.CHAT.getPacketClass().getDeclaredFields()) {
-                    Class<?> declaringClass = field.getType().getDeclaringClass();
-                    if (declaringClass == chatMessageTypeClass) {
-                        chatMessageTypeSubClass = field.getType();
-                        setupNameFields(chatMessageTypeSubClass);
-                    } else if (field.getType() == playerChatMessageClass) {
-                        chatMessageField = field;
-                        chatMessageField.setAccessible(true);
+                    for (Field declaredField : playerChatMessageClass.getDeclaredFields()) {
+                        Class<?> messageBodyClass = MinecraftReflection.getMinecraftClass("network.chat.SignedMessageBody");
+                        if (declaredField.getType() == messageBodyClass) {
+                            messageBodyField = declaredField;
+                            messageBodyField.setAccessible(true);
 
-                        for (Field declaredField : playerChatMessageClass.getDeclaredFields()) {
-                            Class<?> messageBodyClass = MinecraftReflection.getMinecraftClass("network.chat.SignedMessageBody");
-                            if (declaredField.getType() == messageBodyClass) {
-                                messageBodyField = declaredField;
-                                messageBodyField.setAccessible(true);
+                            Class<?> messageContentClass = MinecraftReflection.getMinecraftClass("network.chat.ChatMessageContent");
+                            for (Field messageContentClassDeclaredField : messageBodyClass.getDeclaredFields()) {
+                                if (messageContentClassDeclaredField.getType() == messageContentClass) {
+                                    messageContentField = messageContentClassDeclaredField;
+                                    messageContentField.setAccessible(true);
 
-                                Class<?> messageContentClass = MinecraftReflection.getMinecraftClass("network.chat.ChatMessageContent");
-                                for (Field messageContentClassDeclaredField : messageBodyClass.getDeclaredFields()) {
-                                    if (messageContentClassDeclaredField.getType() == messageContentClass) {
-                                        messageContentField = messageContentClassDeclaredField;
-                                        messageContentField.setAccessible(true);
-
-                                        for (Field contentClassDeclaredField : messageContentClass.getDeclaredFields()) {
-                                            if (contentClassDeclaredField.getType() == String.class) {
-                                                stringField = contentClassDeclaredField;
-                                                stringField.setAccessible(true);
-                                            } else if (contentClassDeclaredField.getType() == MinecraftReflection.getIChatBaseComponentClass()) {
-                                                componentField = contentClassDeclaredField;
-                                                componentField.setAccessible(true);
-                                            }
+                                    for (Field contentClassDeclaredField : messageContentClass.getDeclaredFields()) {
+                                        if (contentClassDeclaredField.getType() == String.class) {
+                                            stringField = contentClassDeclaredField;
+                                            stringField.setAccessible(true);
+                                        } else if (contentClassDeclaredField.getType() == MinecraftReflection.getIChatBaseComponentClass()) {
+                                            componentField = contentClassDeclaredField;
+                                            componentField.setAccessible(true);
                                         }
                                     }
                                 }
                             }
                         }
-
                     }
+
                 }
             }
+
+            if (chatMessageTypeSubClass == null) {
+                // Not 1.19.1+, it's 1.19
+                chatSenderClass = MinecraftReflection.getMinecraftClass("network.chat.ChatSender");
+                setupNameFields(chatSenderClass);
+            }
         } catch (Throwable t) {
-            ProtocolStringReplacer.warn("Unable to init PlayerChatHelper. PlayerChat packets may not work.", t);
+            ProtocolStringReplacer.warn("Unable to init PlayerChatHelper. PlayerChat packet handle may not work.", t);
         }
     }
 
@@ -112,7 +106,7 @@ public class PlayerChatHelper {
     }
 
     public static boolean isLegacy() {
-        return playerChatMessageClass == null;
+        return chatSenderClass != null;
     }
 
     public static Object getChatSender(StructureModifier<Object> modifier) {
