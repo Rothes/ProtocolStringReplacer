@@ -1,11 +1,11 @@
 package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
 import me.rothes.protocolstringreplacer.PsrLocalization;
+import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
-import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.FileReplacerConfig;
@@ -153,7 +153,7 @@ public class File extends SubCommand {
                 if (FileUtils.checkFileSuffix(args[3], ".yml")) {
                     java.io.File file = new java.io.File(ProtocolStringReplacer.getInstance().getDataFolder() + "/" + args[3]);
                     if (FileUtils.createFile(file)) {
-                        DotYamlConfiguration configuration = DotYamlConfiguration.loadConfiguration(file);
+                        CommentYamlConfiguration configuration = CommentYamlConfiguration.loadConfiguration(file);
                         FileReplacerConfig replacerConfig = new FileReplacerConfig(file, configuration);
                         replacerConfig.saveConfig();
                         ProtocolStringReplacer.getInstance().getReplacerManager().addReplacerConfig(replacerConfig);
