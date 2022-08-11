@@ -2,9 +2,9 @@ package me.rothes.protocolstringreplacer.packetlisteners.server.scoreboard;
 
 import com.comphenix.protocol.PacketType;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
+import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
 import java.util.function.BiPredicate;

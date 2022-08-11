@@ -5,7 +5,7 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
-import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.replacer.FileReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -130,7 +130,7 @@ public class Replace extends SubCommand {
                 return;
             }
             int index = Integer.parseInt(args[4]);
-            ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
+            FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
             if (index < 0) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                 return;
@@ -187,7 +187,7 @@ public class Replace extends SubCommand {
             }
             if (args.length == 6) {
                 String original = ColorUtils.getColored(args[4]);
-                ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
+                FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 int i = editorReplacerConfig.checkReplaceKey(original, replacesMode);
                 if (i == -1) {
                     String replacement = ColorUtils.getColored(args[5]);
@@ -213,7 +213,7 @@ public class Replace extends SubCommand {
                     return;
                 }
                 String original = ColorUtils.getColored(args[5]);
-                ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
+                FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 int i = editorReplacerConfig.checkReplaceKey(original, replacesMode);
                 if (i == -1) {
                     String replacement = ColorUtils.getColored(args[6]);
@@ -252,7 +252,7 @@ public class Replace extends SubCommand {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                     return;
                 }
-                ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
+                FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 if (index > editorReplacerConfig.getReplaces(replacesMode).size()) {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Exceed",
                                     String.valueOf(editorReplacerConfig.getReplaces(replacesMode).size())));

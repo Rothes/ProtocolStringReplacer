@@ -1,13 +1,14 @@
 package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 
 import me.rothes.protocolstringreplacer.PsrLocalization;
+import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.replacer.FileReplacerConfig;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -22,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +62,13 @@ public class File extends SubCommand {
     private void listCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length < 5) {
             int page = 1;
-            LinkedList<ReplacerConfig> replacerConfigList = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList();
+            ArrayList<FileReplacerConfig> replacerConfigList = new ArrayList<>();
+            for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
+                if (replacerConfig instanceof FileReplacerConfig) {
+                    replacerConfigList.add((FileReplacerConfig) replacerConfig);
+                }
+            }
+
             int totalPage = (int) Math.ceil((float) replacerConfigList.size() / 10);
             if (args.length == 4) {
                 if (StringUtils.isNumeric(args[3])) {
@@ -99,7 +105,7 @@ public class File extends SubCommand {
                                 , TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage(
                                         "Sender.Commands.Edit.Children.File.Children.List.Result.Replacer-Info",
                                 replacerConfig.getRelativePath(),
-                                replacerConfig.isEnable() ?
+                                replacerConfig.isEnabled() ?
                                         PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Enabled") :
                                         PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.File.Children.List.Result.Not-Enabled"),
                                 String.valueOf(replacerConfig.getPriority()),
@@ -127,7 +133,7 @@ public class File extends SubCommand {
 
     private void selectCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length == 4) {
-            ReplacerConfig replacerConfig = getSpecifiedReplacerConfig(args[3]);
+            FileReplacerConfig replacerConfig = getSpecifiedFileReplacerConfig(args[3]);
             if (replacerConfig != null) {
                 user.setEditorReplacerConfig(replacerConfig);
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
@@ -148,7 +154,7 @@ public class File extends SubCommand {
                     java.io.File file = new java.io.File(ProtocolStringReplacer.getInstance().getDataFolder() + "/" + args[3]);
                     if (FileUtils.createFile(file)) {
                         DotYamlConfiguration configuration = DotYamlConfiguration.loadConfiguration(file);
-                        ReplacerConfig replacerConfig = new ReplacerConfig(file, configuration);
+                        FileReplacerConfig replacerConfig = new FileReplacerConfig(file, configuration);
                         replacerConfig.saveConfig();
                         ProtocolStringReplacer.getInstance().getReplacerManager().addReplacerConfig(replacerConfig);
                         user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
@@ -170,7 +176,7 @@ public class File extends SubCommand {
 
     private void deleteCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length == 4) {
-            ReplacerConfig replacerConfig = getSpecifiedReplacerConfig(args[3]);
+            ReplacerConfig replacerConfig = getSpecifiedFileReplacerConfig(args[3]);
             if (replacerConfig != null) {
                 if (user.isConfirmed(args)) {
                     //noinspection ResultOfMethodCallIgnored
@@ -205,7 +211,9 @@ public class File extends SubCommand {
                 list.add("<" + PsrLocalization.getLocaledMessage("Variables.Replacer-Config.Name") + "|"
                         + PsrLocalization.getLocaledMessage("Variables.Index.Name") + ">");
                 for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
-                    list.add(ArgUtils.formatWithQuotes(replacerConfig.getRelativePath()));
+                    if (replacerConfig instanceof FileReplacerConfig) {
+                        list.add(ArgUtils.formatWithQuotes(replacerConfig.getRelativePath()));
+                    }
                 }
             } else if (args[2].equalsIgnoreCase("create")) {
                 String arg = args[3];
@@ -245,9 +253,15 @@ public class File extends SubCommand {
     }
 
     @Nullable
-    private ReplacerConfig getSpecifiedReplacerConfig(@NotNull String string) {
-        LinkedList<ReplacerConfig> replacerConfigList = ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList();
-        for (ReplacerConfig replacerConfig : replacerConfigList) {
+    private FileReplacerConfig getSpecifiedFileReplacerConfig(@NotNull String string) {
+        ArrayList<FileReplacerConfig> replacerConfigList = new ArrayList<>();
+        for (ReplacerConfig replacerConfig : ProtocolStringReplacer.getInstance().getReplacerManager().getReplacerConfigList()) {
+            if (replacerConfig instanceof FileReplacerConfig) {
+                replacerConfigList.add((FileReplacerConfig) replacerConfig);
+            }
+        }
+
+        for (FileReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.getRelativePath().equals(string)) {
                 return replacerConfig;
             }

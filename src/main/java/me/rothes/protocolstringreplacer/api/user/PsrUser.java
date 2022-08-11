@@ -9,7 +9,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.replacer.FileReplacerConfig;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -54,7 +54,7 @@ public class PsrUser {
     private Set<ListenType> captureTypes = new HashSet<>();
     private HashMap<ListenType, ArrayList<CaptureInfo>> captures = new HashMap<>();
 
-    private ReplacerConfig editorReplacerConfig;
+    private FileReplacerConfig editorReplacerConfig;
 //TODO:    private Integer editorIndex;
 //TODO:    private String editorPattern;
 //TODO:    private String editorReplacement;
@@ -111,7 +111,7 @@ public class PsrUser {
         return commandToConfirm;
     }
 
-    public ReplacerConfig getEditorReplacerConfig() {
+    public FileReplacerConfig getEditorReplacerConfig() {
         return editorReplacerConfig;
     }
 
@@ -157,7 +157,7 @@ public class PsrUser {
         return captures.get(listenType);
     }
 
-    public void setEditorReplacerConfig(ReplacerConfig editorReplacerConfig) {
+    public void setEditorReplacerConfig(FileReplacerConfig editorReplacerConfig) {
         this.editorReplacerConfig = editorReplacerConfig;
     }
 

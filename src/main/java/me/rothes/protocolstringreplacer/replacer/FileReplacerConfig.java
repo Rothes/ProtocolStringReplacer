@@ -3,7 +3,10 @@ package me.rothes.protocolstringreplacer.replacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
+import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.neosearch.stringsearcher.SimpleStringSearcherBuilder;
 import org.neosearch.stringsearcher.StringSearcher;
 
@@ -18,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class ReplacerConfig {
+public class FileReplacerConfig implements ReplacerConfig {
 
     private File file;
     private CommentYamlConfiguration configuration;
@@ -35,7 +38,7 @@ public class ReplacerConfig {
     private HashMap<ReplacesMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
     private HashMap<ReplacesMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
 
-    public ReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
+    public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
         long startTime = System.nanoTime();
         loadData(file, configuration);
         if (ProtocolStringReplacer.getInstance().getConfigManager().printReplacer) {
@@ -44,63 +47,78 @@ public class ReplacerConfig {
         }
     }
 
+    @Override
     public boolean isEdited() {
         return edited;
     }
 
+    @Override
     public File getFile() {
         return file;
     }
 
-    public boolean isEnable() {
+    @Override
+    public boolean isEnabled() {
         return enable;
     }
 
+    @Override
     public CommentYamlConfiguration getConfiguration() {
         return configuration;
     }
 
+    @Override
     public int getPriority() {
         return priority;
     }
 
-    public List<ListenType> getListenTypeList() {
+    @Override
+    public @NotNull List<ListenType> getListenTypeList() {
         return listenTypeList;
     }
 
-    public ListOrderedMap getReplaces(@Nonnull ReplacesMode replacesMode) {
+    @Override
+    public @NotNull ListOrderedMap getReplaces(@Nonnull ReplacesMode replacesMode) {
         return replaces.get(replacesMode);
     }
 
-    public List<Object> getBlocks(@Nonnull ReplacesMode replacesMode) {
+    @Override
+    public @NotNull List<Object> getBlocks(@Nonnull ReplacesMode replacesMode) {
         return blocks.get(replacesMode);
     }
 
-    public String getAuthor() {
+    @Override
+    public @Nullable String getAuthor() {
         return author;
     }
 
-    public String getVersion() {
+    @Override
+    public @Nullable String getVersion() {
         return version;
     }
 
-    public MatchMode getMatchMode() {
+    @Override
+    public @NotNull MatchMode getMatchMode() {
         return matchMode;
     }
 
-    public String getRelativePath() {
+    @Override
+    public @NotNull String getRelativePath() {
         return file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\")
                 .length()).replace('\\', '/');
     }
 
-    public StringSearcher<String> getReplacesStringSearcher(ReplacesMode replacesMode) {
+    @Override
+    public @NotNull StringSearcher<String> getReplacesStringSearcher(ReplacesMode replacesMode) {
         return replacesStringSearcher.get(replacesMode);
     }
 
-    public StringSearcher<String> getBlocksStringSearcher(ReplacesMode replacesMode) {
+    @Override
+    public @NotNull StringSearcher<String> getBlocksStringSearcher(ReplacesMode replacesMode) {
         return blocksStringSearcher.get(replacesMode);
     }
 
+    @Override
     public void saveConfig() {
         configuration.set("Options.Enable", enable);
         configuration.set("Options.Priority", priority);

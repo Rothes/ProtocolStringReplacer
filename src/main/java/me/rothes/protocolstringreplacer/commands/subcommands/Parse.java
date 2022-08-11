@@ -2,9 +2,9 @@ package me.rothes.protocolstringreplacer.commands.subcommands;
 
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
@@ -146,7 +146,7 @@ public class Parse extends SubCommand {
 
     @NotNull
     private String containResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
-                               @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
+                                 @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
         replacerConfig.getReplacesStringSearcher(replacesMode);
         int i = 0;
 
@@ -170,7 +170,7 @@ public class Parse extends SubCommand {
 
     @NotNull
     private String equalResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
-                             @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
+                               @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
         String result = text;
         Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(text);
         if (emits.size() == 1) {
@@ -187,7 +187,7 @@ public class Parse extends SubCommand {
     @SuppressWarnings("unchecked")
     @NotNull
     private String regexResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
-                             @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
+                               @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
         String result = text;
         Set<Map.Entry<Pattern, String>> containSet = (Set<Map.Entry<Pattern, String>>) replacerConfig.getReplaces(replacesMode).entrySet();
         for (Map.Entry<Pattern, String> entry : containSet) {
@@ -205,7 +205,7 @@ public class Parse extends SubCommand {
 
     @NotNull
     private BaseComponent[] createReplaceResultInfo(@NotNull ArrayList<HoverEvent> results, @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode,
-                                                  @NotNull String original, @NotNull String replacement, @NotNull String result) {
+                                                    @NotNull String original, @NotNull String replacement, @NotNull String result) {
         return TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Replace-Result-Info",
                 String.valueOf(results.size() + 1), replacerConfig.getRelativePath(),
                 PsrLocalization.getLocaledMessage(replacesMode.getLocaleKey()), ColorUtils.showColorCodes(original),

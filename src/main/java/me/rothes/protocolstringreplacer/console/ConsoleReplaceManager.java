@@ -1,9 +1,9 @@
 package me.rothes.protocolstringreplacer.console;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +46,7 @@ import java.util.logging.SimpleFormatter;
 public final class ConsoleReplaceManager {
 
     private static final BiPredicate<ReplacerConfig, PsrUser> filter = (replacerConfig, user) ->
-            replacerConfig.isEnable() && replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
+            replacerConfig.isEnabled() && replacerConfig.getListenTypeList().contains(ListenType.CONSOLE);
     private static final List<String> patterns = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
     private PsrFilter psrFilter;

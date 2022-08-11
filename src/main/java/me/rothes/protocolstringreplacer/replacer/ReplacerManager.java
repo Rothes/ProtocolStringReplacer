@@ -2,6 +2,7 @@ package me.rothes.protocolstringreplacer.replacer;
 
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
+import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.containers.Container;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
@@ -118,7 +119,7 @@ public class ReplacerManager {
             File file = entry.getKey();
             CommentYamlConfiguration config = entry.getValue();
             try {
-                ReplacerConfig replacerConfig = new ReplacerConfig(file, config);
+                FileReplacerConfig replacerConfig = new FileReplacerConfig(file, config);
                 addReplacerConfig(replacerConfig);
             } catch (PatternSyntaxException exception) {
                 exception.printStackTrace();
@@ -153,7 +154,7 @@ public class ReplacerManager {
         }, 0L, cleanTaskInterval);
     }
 
-    public void addReplacerConfig(ReplacerConfig replacerConfig) {
+    public void addReplacerConfig(FileReplacerConfig replacerConfig) {
         int size = replacerConfigList.size();
         for (int i = 0; i <= size; i++) {
             if (i == replacerConfigList.size()) {
@@ -172,7 +173,7 @@ public class ReplacerManager {
     public int getReplacesCount() {
         int count = 0;
         for (ReplacerConfig replacerConfig : replacerConfigList) {
-            if (replacerConfig.isEnable()) {
+            if (replacerConfig.isEnabled()) {
                 count = count + replacerConfig.getReplaces(ReplacesMode.COMMON).size();
             }
         }

@@ -3,7 +3,7 @@ package me.rothes.protocolstringreplacer.commands.subcommands.editchildren;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
-import me.rothes.protocolstringreplacer.replacer.ReplacerConfig;
+import me.rothes.protocolstringreplacer.replacer.FileReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
@@ -125,7 +125,7 @@ public class Block extends SubCommand {
                 return;
             }
             int index = Integer.parseInt(args[4]);
-            ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
+            FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
             if (index < 0) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                 return;
@@ -161,7 +161,7 @@ public class Block extends SubCommand {
             }
             if (args.length == 5) {
                 String block = ColorUtils.getColored(args[4]);
-                ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
+                FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 editorReplacerConfig.addBlock(block, replacesMode);
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Add.Successfully-Added-Block",
@@ -209,7 +209,7 @@ public class Block extends SubCommand {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Low"));
                     return;
                 }
-                ReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
+                FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
                 if (index > editorReplacerConfig.getBlocks(replacesMode).size()) {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Exceed",
                             String.valueOf(editorReplacerConfig.getBlocks(replacesMode).size())));
