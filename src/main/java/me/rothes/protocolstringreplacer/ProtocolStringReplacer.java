@@ -9,7 +9,7 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
 import me.rothes.protocolstringreplacer.console.PsrMessage;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
-import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
+import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
 import me.rothes.protocolstringreplacer.api.user.PsrUserManager;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
@@ -251,7 +251,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             int replaces = 0;
             for (ReplacerConfig replacerConfig : replacerManager.getReplacerConfigList()) {
                 configs++;
-                for (ReplacesMode mode : ReplacesMode.values()) {
+                for (ReplaceMode mode : ReplaceMode.values()) {
                     replaces += replacerConfig.getReplaces(mode).size();
                 }
             }
@@ -266,7 +266,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             int blocks = 0;
             for (ReplacerConfig replacerConfig : replacerManager.getReplacerConfigList()) {
                 configs++;
-                for (ReplacesMode mode : ReplacesMode.values()) {
+                for (ReplaceMode mode : ReplaceMode.values()) {
                     blocks += replacerConfig.getBlocks(mode).size();
                 }
             }

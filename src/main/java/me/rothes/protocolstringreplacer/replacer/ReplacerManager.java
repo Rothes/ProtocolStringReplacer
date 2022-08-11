@@ -174,7 +174,7 @@ public class ReplacerManager {
         int count = 0;
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEnabled()) {
-                count = count + replacerConfig.getReplaces(ReplacesMode.COMMON).size();
+                count = count + replacerConfig.getReplaces(ReplaceMode.COMMON).size();
             }
         }
         return count;
@@ -225,7 +225,7 @@ public class ReplacerManager {
                 continue;
             }
             for (ReplacerConfig replacerConfig : replacerConfigList) {
-                blocked = getBlocked(json, replacerConfig, ReplacesMode.JSON);
+                blocked = getBlocked(json, replacerConfig, ReplaceMode.JSON);
                 if (blocked) {
                     return true;
                 }
@@ -245,7 +245,7 @@ public class ReplacerManager {
                 continue;
             }
             for (ReplacerConfig replacerConfig : replacerConfigList) {
-                blocked = getBlocked(text, replacerConfig, ReplacesMode.COMMON);
+                blocked = getBlocked(text, replacerConfig, ReplaceMode.COMMON);
                 if (blocked) {
                     return true;
                 }
@@ -264,7 +264,7 @@ public class ReplacerManager {
                 continue;
             }
             for (ReplacerConfig replacerConfig : replacerConfigList) {
-                json = getReplaced(json, replacerConfig, ReplacesMode.JSON);
+                json = getReplaced(json, replacerConfig, ReplaceMode.JSON);
             }
             replaceable.setText(json);
         }
@@ -280,7 +280,7 @@ public class ReplacerManager {
                 continue;
             }
             for (ReplacerConfig replacerConfig : replacerConfigList) {
-                text = getReplaced(text, replacerConfig, ReplacesMode.COMMON);
+                text = getReplaced(text, replacerConfig, ReplaceMode.COMMON);
             }
             replaceable.setText(text);
         }
@@ -343,10 +343,10 @@ public class ReplacerManager {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    private String getReplaced(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplacesMode replacesMode) {
+    private String getReplaced(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplaceMode replaceMode) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
-        Validate.notNull(replacesMode, "Replaces Mode cannot be null");
+        Validate.notNull(replaceMode, "Replaces Mode cannot be null");
 
         String result = string;
 
@@ -355,11 +355,11 @@ public class ReplacerManager {
             int i = 0;
 
             StringBuilder resultBuilder = new StringBuilder();
-            for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replacesMode).parseText(string)) {
+            for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replaceMode).parseText(string)) {
                 if (emit.getStart() > i) {
                     resultBuilder.append(string.subSequence(i, emit.getStart()));
                 }
-                resultBuilder.append(replacerConfig.getReplaces(replacesMode).get(emit.getSearchString()));
+                resultBuilder.append(replacerConfig.getReplaces(replaceMode).get(emit.getSearchString()));
                 i = emit.getEnd() + 1;
             }
 
@@ -369,12 +369,12 @@ public class ReplacerManager {
 
             result = resultBuilder.toString();
         } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
-            Object get = replacerConfig.getReplaces(replacesMode).get(string);
+            Object get = replacerConfig.getReplaces(replaceMode).get(string);
             if (get != null) {
                 result = (String) get;
             }
         } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
-            Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replacesMode).entrySet();
+            Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replaceMode).entrySet();
             for (Map.Entry<Pattern, String> entry : set) {
                 result = entry.getKey().matcher(result).replaceAll(entry.getValue());
             }
@@ -383,19 +383,19 @@ public class ReplacerManager {
     }
 
     @Nonnull
-    private boolean getBlocked(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplacesMode replacesMode) {
+    private boolean getBlocked(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplaceMode replaceMode) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
-        Validate.notNull(replacesMode, "Replaces Mode cannot be null");
+        Validate.notNull(replaceMode, "Replaces Mode cannot be null");
 
         if (replacerConfig.getMatchMode() == MatchMode.CONTAIN) {
-            return replacerConfig.getBlocksStringSearcher(replacesMode).parseText(string).size() > 0;
+            return replacerConfig.getBlocksStringSearcher(replaceMode).parseText(string).size() > 0;
 
         } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
-            return replacerConfig.getBlocks(replacesMode).contains(string);
+            return replacerConfig.getBlocks(replaceMode).contains(string);
 
         } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
-            List<Object> blocks = replacerConfig.getBlocks(replacesMode);
+            List<Object> blocks = replacerConfig.getBlocks(replaceMode);
             for (Object patternObject : blocks) {
                 Pattern pattern = (Pattern) patternObject;
                 if (pattern.matcher(string).find()) {

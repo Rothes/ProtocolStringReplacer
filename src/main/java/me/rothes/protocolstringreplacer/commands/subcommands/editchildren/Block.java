@@ -4,7 +4,7 @@ import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import me.rothes.protocolstringreplacer.replacer.FileReplacerConfig;
-import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
+import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import me.rothes.protocolstringreplacer.utils.ArgUtils;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
@@ -56,13 +56,13 @@ public class Block extends SubCommand {
     private void listCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length < 6 && args.length > 3) {
             int page = 1;
-            ReplacesMode replacesMode = getReplacesMode(args[3]);
-            if (replacesMode == null) {
+            ReplaceMode replaceMode = getReplacesMode(args[3]);
+            if (replaceMode == null) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
             }
-            List<Object> blocks = user.getEditorReplacerConfig().getBlocks(replacesMode);
+            List<Object> blocks = user.getEditorReplacerConfig().getBlocks(replaceMode);
             int totalPage = (int) Math.ceil((float) blocks.size() / 10);
             if (args.length == 5) {
                 if (StringUtils.isNumeric(args[4])) {
@@ -91,19 +91,19 @@ public class Block extends SubCommand {
 
                 user.sendFilteredMessage(new ComponentBuilder(PsrLocalization.getLocaledMessage("Utils.Message.Buttons.Add"))
                         .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/psr edit block add " + replacesMode.getNode() + " " + i + " <"
+                                "/psr edit block add " + replaceMode.getNode() + " " + i + " <"
                                         + PsrLocalization.getLocaledMessage("Variables.Block-Text") + ">"))
                         .append(PsrLocalization.getLocaledMessage("Utils.Message.Buttons.Edit"))
                         .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/psr edit block set " + replacesMode.getNode() + " " + i + " "
+                                "/psr edit block set " + replaceMode.getNode() + " " + i + " "
                                         + ArgUtils.formatWithQuotes(ColorUtils.restoreColored(block))))
                                 .append(PsrLocalization.getLocaledMessage("Utils.Message.Buttons.Delete"))
                         .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/psr edit block remove " + replacesMode.getNode() + " " + i))
+                                "/psr edit block remove " + replaceMode.getNode() + " " + i))
                         .append(" " + i + ". ").reset().append(ColorUtils.showColorCodes(block)).color(ChatColor.AQUA).create());
             }
 
-            MessageUtils.sendPageButtons(user, "/psr edit block list " + replacesMode.getNode() + " ", page, totalPage);
+            MessageUtils.sendPageButtons(user, "/psr edit block list " + replaceMode.getNode() + " ", page, totalPage);
 
             user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Children.List.Result.Footer"));
         } else {
@@ -113,8 +113,8 @@ public class Block extends SubCommand {
 
     private void setCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length > 4) {
-            ReplacesMode replacesMode = getReplacesMode(args[3]);
-            if (replacesMode == null) {
+            ReplaceMode replaceMode = getReplacesMode(args[3]);
+            if (replaceMode == null) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
@@ -132,15 +132,15 @@ public class Block extends SubCommand {
             }
 
             if (args.length == 6) {
-                if (index >= editorReplacerConfig.getBlocks(replacesMode).size()) {
+                if (index >= editorReplacerConfig.getBlocks(replaceMode).size()) {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                             "Sender.Error.Index-Exceed",
-                            String.valueOf(editorReplacerConfig.getBlocks(replacesMode).size())));
+                            String.valueOf(editorReplacerConfig.getBlocks(replaceMode).size())));
                     return;
                 }
 
                 String block = ColorUtils.getColored(args[5]);
-                editorReplacerConfig.setBlock(index, block, replacesMode);
+                editorReplacerConfig.setBlock(index, block, replaceMode);
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Set.Successfully-Set-Block",
                         args[4], ColorUtils.showColorCodes(block)));
@@ -153,8 +153,8 @@ public class Block extends SubCommand {
 
     private void addCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length > 3) {
-            ReplacesMode replacesMode = getReplacesMode(args[3]);
-            if (replacesMode == null) {
+            ReplaceMode replaceMode = getReplacesMode(args[3]);
+            if (replaceMode == null) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
@@ -162,10 +162,10 @@ public class Block extends SubCommand {
             if (args.length == 5) {
                 String block = ColorUtils.getColored(args[4]);
                 FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
-                editorReplacerConfig.addBlock(block, replacesMode);
+                editorReplacerConfig.addBlock(block, replaceMode);
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Add.Successfully-Added-Block",
-                        String.valueOf(editorReplacerConfig.getBlocks(replacesMode).size()),
+                        String.valueOf(editorReplacerConfig.getBlocks(replaceMode).size()),
                         ColorUtils.showColorCodes(block)));
             } else if (args.length == 6) {
                 if (!StringUtils.isNumeric(args[4])) {
@@ -179,7 +179,7 @@ public class Block extends SubCommand {
                     return;
                 }
                 String block = ColorUtils.getColored(args[5]);
-                user.getEditorReplacerConfig().addBlock(index, block, replacesMode);
+                user.getEditorReplacerConfig().addBlock(index, block, replaceMode);
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Add.Successfully-Added-Block",
                         String.valueOf(index),
@@ -192,8 +192,8 @@ public class Block extends SubCommand {
 
     private void removeCommand(@Nonnull PsrUser user, @NotNull String[] args) {
         if (args.length > 3) {
-            ReplacesMode replacesMode = getReplacesMode(args[3]);
-            if (replacesMode == null) {
+            ReplaceMode replaceMode = getReplacesMode(args[3]);
+            if (replaceMode == null) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[3]));
                 return;
@@ -210,12 +210,12 @@ public class Block extends SubCommand {
                     return;
                 }
                 FileReplacerConfig editorReplacerConfig = user.getEditorReplacerConfig();
-                if (index > editorReplacerConfig.getBlocks(replacesMode).size()) {
+                if (index > editorReplacerConfig.getBlocks(replaceMode).size()) {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Error.Index-Exceed",
-                            String.valueOf(editorReplacerConfig.getBlocks(replacesMode).size())));
+                            String.valueOf(editorReplacerConfig.getBlocks(replaceMode).size())));
                     return;
                 }
-                editorReplacerConfig.removeBlock(index, replacesMode);
+                editorReplacerConfig.removeBlock(index, replaceMode);
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Edit.Children.Block.Children.Remove.Sucessfully-Removed-Block", String.valueOf(index)));
             }
@@ -233,8 +233,8 @@ public class Block extends SubCommand {
                 && (args[2].equalsIgnoreCase("list") || args[2].equalsIgnoreCase("set")
                 || args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove"))) {
             list.add("<" + PsrLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
-            for (ReplacesMode replacesMode : ReplacesMode.values()) {
-                list.add(replacesMode.getNode());
+            for (ReplaceMode replaceMode : ReplaceMode.values()) {
+                list.add(replaceMode.getNode());
             }
         } else if (args.length == 5) {
             if (args[2].equalsIgnoreCase("list")) {
@@ -267,8 +267,8 @@ public class Block extends SubCommand {
         user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Edit.Children.Block.Help.Footer"));
     }
 
-    private ReplacesMode getReplacesMode(@NotNull String string) {
-        for (ReplacesMode type : ReplacesMode.values()) {
+    private ReplaceMode getReplacesMode(@NotNull String string) {
+        for (ReplaceMode type : ReplaceMode.values()) {
             if (type.getNode().equalsIgnoreCase(string)) {
                 return type;
             }

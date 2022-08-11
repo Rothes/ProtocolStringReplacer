@@ -3,7 +3,7 @@ package me.rothes.protocolstringreplacer.upgrades;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
-import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
+import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -62,8 +62,8 @@ public class UpgradeHandler3To4 extends AbstractUpgradeHandler {
 
     @SuppressWarnings("unchecked")
     private void updateReplacesStructure(@NotNull DotYamlConfiguration config) {
-        for (ReplacesMode replacesMode : ReplacesMode.values()) {
-            String pathString = "Replaces鰠" + replacesMode.getNode();
+        for (ReplaceMode replaceMode : ReplaceMode.values()) {
+            String pathString = "Replaces鰠" + replaceMode.getNode();
             ConfigurationSection section = config.getConfigurationSection(pathString);
             if (section != null) {
                 LinkedList<String> comments = new LinkedList<>();

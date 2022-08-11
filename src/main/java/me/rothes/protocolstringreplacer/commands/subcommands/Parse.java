@@ -5,7 +5,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
-import me.rothes.protocolstringreplacer.replacer.ReplacesMode;
+import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import net.md_5.bungee.api.ChatColor;
@@ -54,30 +54,30 @@ public class Parse extends SubCommand {
                         "Variables.Listen-Type.Messages.Invalid-Type", args[3]));
                 return;
             }
-            ReplacesMode replacesMode = null;
-            for (ReplacesMode mode : ReplacesMode.values()) {
+            ReplaceMode replaceMode = null;
+            for (ReplaceMode mode : ReplaceMode.values()) {
                 if (mode.getNode().equalsIgnoreCase(args[4])) {
-                    replacesMode = mode;
+                    replaceMode = mode;
                     break;
                 }
             }
-            if (replacesMode == null) {
+            if (replaceMode == null) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Variables.Match-Mode.Messages.Invalid-Mode", args[4]));
                 return;
             }
 
             user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Parse.Start-Parse"));
-            ReplacesMode finalReplacesMode = replacesMode;
+            ReplaceMode finalReplaceMode = replaceMode;
             Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () ->
-                    startParse(user, args[1], player, listenType, finalReplacesMode));
+                    startParse(user, args[1], player, listenType, finalReplaceMode));
             return;
         }
         sendHelp(user);
     }
 
     private void startParse(@NotNull PsrUser user, @NotNull String originalText, Player player,
-                            @NotNull ListenType listenType, @NotNull ReplacesMode replacesMode) {
+                            @NotNull ListenType listenType, @NotNull ReplaceMode replaceMode) {
         long startTime = System.nanoTime();
         String original = ColorUtils.getColored(originalText);
         String text = original;
@@ -86,13 +86,13 @@ public class Parse extends SubCommand {
             if (replacerConfig.getListenTypeList().contains(listenType)) {
                 switch (replacerConfig.getMatchMode()) {
                     case CONTAIN:
-                        text = containResult(results, text, replacerConfig, replacesMode);
+                        text = containResult(results, text, replacerConfig, replaceMode);
                         break;
                     case EQUAL:
-                        text = equalResult(results, text, replacerConfig, replacesMode);
+                        text = equalResult(results, text, replacerConfig, replaceMode);
                         break;
                     case REGEX:
-                        text = regexResult(results, text, replacerConfig, replacesMode);
+                        text = regexResult(results, text, replacerConfig, replaceMode);
                         break;
                     default:
                 }
@@ -118,7 +118,7 @@ public class Parse extends SubCommand {
         user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Duration", String.valueOf(duration)));
         user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Listen-Type", listenType.getName()));
         user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Match-Mode",
-                PsrLocalization.getLocaledMessage(replacesMode.getLocaleKey())));
+                PsrLocalization.getLocaledMessage(replaceMode.getLocaleKey())));
         user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Original-Text",
                 ColorUtils.showColorCodes(original)));
         user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.Final-Text",
@@ -146,19 +146,19 @@ public class Parse extends SubCommand {
 
     @NotNull
     private String containResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
-                                 @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
-        replacerConfig.getReplacesStringSearcher(replacesMode);
+                                 @NotNull ReplacerConfig replacerConfig, @NotNull ReplaceMode replaceMode) {
+        replacerConfig.getReplacesStringSearcher(replaceMode);
         int i = 0;
 
         StringBuilder resultBuilder = new StringBuilder();
-        for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replacesMode).parseText(text)) {
+        for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replaceMode).parseText(text)) {
             if (emit.getStart() > i) {
                 resultBuilder.append(text.subSequence(i, emit.getStart()));
             }
-            resultBuilder.append(replacerConfig.getReplaces(replacesMode).get(emit.getSearchString()));
+            resultBuilder.append(replacerConfig.getReplaces(replaceMode).get(emit.getSearchString()));
             i = emit.getEnd() + 1;
-            results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replacesMode,
-                    emit.getSearchString(), (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString()),
+            results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replaceMode,
+                    emit.getSearchString(), (String) replacerConfig.getReplaces(replaceMode).get(emit.getSearchString()),
                     resultBuilder + (i < text.length() ? text.substring(i) : ""))));
         }
 
@@ -170,14 +170,14 @@ public class Parse extends SubCommand {
 
     @NotNull
     private String equalResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
-                               @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
+                               @NotNull ReplacerConfig replacerConfig, @NotNull ReplaceMode replaceMode) {
         String result = text;
-        Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replacesMode).parseText(text);
+        Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replaceMode).parseText(text);
         if (emits.size() == 1) {
             Emit<String> emit = emits.iterator().next();
             if (emit.getStart() == 0 && emit.getEnd() + 1 == text.length()) {
-                result = (String) replacerConfig.getReplaces(replacesMode).get(emit.getSearchString());
-                results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replacesMode,
+                result = (String) replacerConfig.getReplaces(replaceMode).get(emit.getSearchString());
+                results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replaceMode,
                         emit.getSearchString(), result, result)));
             }
         }
@@ -187,16 +187,16 @@ public class Parse extends SubCommand {
     @SuppressWarnings("unchecked")
     @NotNull
     private String regexResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
-                               @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode) {
+                               @NotNull ReplacerConfig replacerConfig, @NotNull ReplaceMode replaceMode) {
         String result = text;
-        Set<Map.Entry<Pattern, String>> containSet = (Set<Map.Entry<Pattern, String>>) replacerConfig.getReplaces(replacesMode).entrySet();
+        Set<Map.Entry<Pattern, String>> containSet = (Set<Map.Entry<Pattern, String>>) replacerConfig.getReplaces(replaceMode).entrySet();
         for (Map.Entry<Pattern, String> entry : containSet) {
             Pattern key = entry.getKey();
             String value = entry.getValue();
             Matcher matcher = key.matcher(result);
             while (matcher.find()) {
                 result = matcher.replaceAll(value);
-                results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replacesMode,
+                results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replaceMode,
                         key.toString(), value, result)));
             }
         }
@@ -204,11 +204,11 @@ public class Parse extends SubCommand {
     }
 
     @NotNull
-    private BaseComponent[] createReplaceResultInfo(@NotNull ArrayList<HoverEvent> results, @NotNull ReplacerConfig replacerConfig, @NotNull ReplacesMode replacesMode,
+    private BaseComponent[] createReplaceResultInfo(@NotNull ArrayList<HoverEvent> results, @NotNull ReplacerConfig replacerConfig, @NotNull ReplaceMode replaceMode,
                                                     @NotNull String original, @NotNull String replacement, @NotNull String result) {
         return TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Replace-Result-Info",
                 String.valueOf(results.size() + 1), replacerConfig.getRelativePath(),
-                PsrLocalization.getLocaledMessage(replacesMode.getLocaleKey()), ColorUtils.showColorCodes(original),
+                PsrLocalization.getLocaledMessage(replaceMode.getLocaleKey()), ColorUtils.showColorCodes(original),
                 ColorUtils.showColorCodes(replacement), ColorUtils.showColorCodes(result)));
     }
 
@@ -230,8 +230,8 @@ public class Parse extends SubCommand {
             }
         } else if (args.length == 5) {
             list.add("<" + PsrLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
-            for (ReplacesMode replacesMode : ReplacesMode.values()) {
-                list.add(replacesMode.getNode());
+            for (ReplaceMode replaceMode : ReplaceMode.values()) {
+                list.add(replaceMode.getNode());
             }
         }
         return list;

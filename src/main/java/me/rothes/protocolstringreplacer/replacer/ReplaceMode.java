@@ -1,6 +1,6 @@
 package me.rothes.protocolstringreplacer.replacer;
 
-public enum ReplacesMode {
+public enum ReplaceMode {
 
     COMMON("Common", "Variables.Replacers-Mode.Enums.Common"),
     JSON("Json", "Variables.Replacers-Mode.Enums.Json");
@@ -8,7 +8,7 @@ public enum ReplacesMode {
     private String node;
     private String localeKey;
 
-    ReplacesMode(String node, String localeKey) {
+    ReplaceMode(String node, String localeKey) {
         this.node = node;
         this.localeKey = localeKey;
     }

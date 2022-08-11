@@ -29,14 +29,14 @@ public class FileReplacerConfig implements ReplacerConfig {
     private int priority;
     private List<ListenType> listenTypeList = new ArrayList<>();
     private MatchMode matchMode;
-    private HashMap<ReplacesMode, ListOrderedMap> replaces = new HashMap<>();
-    private HashMap<ReplacesMode, List<Object>> blocks = new HashMap<>();
+    private HashMap<ReplaceMode, ListOrderedMap> replaces = new HashMap<>();
+    private HashMap<ReplaceMode, List<Object>> blocks = new HashMap<>();
     private String author;
     private String version;
     private boolean edited;
 
-    private HashMap<ReplacesMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
-    private HashMap<ReplacesMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
+    private HashMap<ReplaceMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
+    private HashMap<ReplaceMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
         long startTime = System.nanoTime();
@@ -78,13 +78,13 @@ public class FileReplacerConfig implements ReplacerConfig {
     }
 
     @Override
-    public @NotNull ListOrderedMap getReplaces(@Nonnull ReplacesMode replacesMode) {
-        return replaces.get(replacesMode);
+    public @NotNull ListOrderedMap getReplaces(@Nonnull ReplaceMode replaceMode) {
+        return replaces.get(replaceMode);
     }
 
     @Override
-    public @NotNull List<Object> getBlocks(@Nonnull ReplacesMode replacesMode) {
-        return blocks.get(replacesMode);
+    public @NotNull List<Object> getBlocks(@Nonnull ReplaceMode replaceMode) {
+        return blocks.get(replaceMode);
     }
 
     @Override
@@ -109,13 +109,13 @@ public class FileReplacerConfig implements ReplacerConfig {
     }
 
     @Override
-    public @NotNull StringSearcher<String> getReplacesStringSearcher(ReplacesMode replacesMode) {
-        return replacesStringSearcher.get(replacesMode);
+    public @NotNull StringSearcher<String> getReplacesStringSearcher(ReplaceMode replaceMode) {
+        return replacesStringSearcher.get(replaceMode);
     }
 
     @Override
-    public @NotNull StringSearcher<String> getBlocksStringSearcher(ReplacesMode replacesMode) {
-        return blocksStringSearcher.get(replacesMode);
+    public @NotNull StringSearcher<String> getBlocksStringSearcher(ReplaceMode replaceMode) {
+        return blocksStringSearcher.get(replaceMode);
     }
 
     @Override
@@ -130,8 +130,8 @@ public class FileReplacerConfig implements ReplacerConfig {
         }
         configuration.set("Options.Filter.Listen-Types", types);
         configuration.set("Options.Match-Mode", matchMode.getName());
-        for (ReplacesMode replacesMode : ReplacesMode.values()) {
-            ListOrderedMap replaces = this.replaces.get(replacesMode);
+        for (ReplaceMode replaceMode : ReplaceMode.values()) {
+            ListOrderedMap replaces = this.replaces.get(replaceMode);
             ArrayList<ListOrderedMap> result = new ArrayList<>();
             for (short i = 0; i < replaces.size(); i++) {
                 ListOrderedMap entryMap = new ListOrderedMap();
@@ -140,9 +140,9 @@ public class FileReplacerConfig implements ReplacerConfig {
                 entryMap.put("Replacement", replaces.get(object));
                 result.add(entryMap);
             }
-            configuration.set("Replaces." + replacesMode.getNode(), result);
+            configuration.set("Replaces." + replaceMode.getNode(), result);
 
-            configuration.set("Blocks." + replacesMode.getNode(), blocks.get(replacesMode));
+            configuration.set("Blocks." + replaceMode.getNode(), blocks.get(replaceMode));
         }
         try {
             configuration.save(file);
@@ -152,84 +152,84 @@ public class FileReplacerConfig implements ReplacerConfig {
         }
     }
 
-    public void setReplace(int index, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
-        if (index < replaces.get(replacesMode).size()) {
-            replaces.get(replacesMode).setValue(index, value);
-            updateStringSearcher(replacesMode);
+    public void setReplace(int index, @Nonnull String value, @Nonnull ReplaceMode replaceMode) {
+        if (index < replaces.get(replaceMode).size()) {
+            replaces.get(replaceMode).setValue(index, value);
+            updateStringSearcher(replaceMode);
             edited = true;
             saveConfig();
         }
     }
 
-    public void setReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
-        if (index < replaces.get(replacesMode).size()) {
-            removeReplace(index, replacesMode);
+    public void setReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplaceMode replaceMode) {
+        if (index < replaces.get(replaceMode).size()) {
+            removeReplace(index, replaceMode);
         }
-        if (index <= replaces.get(replacesMode).size()) {
-            addReplace(index, key, value, replacesMode);
+        if (index <= replaces.get(replaceMode).size()) {
+            addReplace(index, key, value, replaceMode);
         }
     }
 
-    public void addReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
-        if (index <= replaces.get(replacesMode).size()) {
+    public void addReplace(int index, @Nonnull String key, @Nonnull String value, @Nonnull ReplaceMode replaceMode) {
+        if (index <= replaces.get(replaceMode).size()) {
             if (this.matchMode == MatchMode.REGEX) {
-                replaces.get(replacesMode).put(index, Pattern.compile(key), value);
+                replaces.get(replaceMode).put(index, Pattern.compile(key), value);
             } else {
-                replaces.get(replacesMode).put(index, key, value);
+                replaces.get(replaceMode).put(index, key, value);
             }
-            updateStringSearcher(replacesMode);
+            updateStringSearcher(replaceMode);
             edited = true;
             saveConfig();
         }
     }
 
-    public void addReplace(@Nonnull String key, @Nonnull String value, @Nonnull ReplacesMode replacesMode) {
-        addReplace(replaces.get(replacesMode).size(), key, value, replacesMode);
+    public void addReplace(@Nonnull String key, @Nonnull String value, @Nonnull ReplaceMode replaceMode) {
+        addReplace(replaces.get(replaceMode).size(), key, value, replaceMode);
     }
 
-    public void removeReplace(int index, @Nonnull ReplacesMode replacesMode) {
-        replaces.get(replacesMode).remove(index);
-        updateStringSearcher(replacesMode);
+    public void removeReplace(int index, @Nonnull ReplaceMode replaceMode) {
+        replaces.get(replaceMode).remove(index);
+        updateStringSearcher(replaceMode);
         edited = true;
         saveConfig();
     }
 
-    public void setBlock(int index, @Nonnull String block, @Nonnull ReplacesMode replacesMode) {
-        if (index < blocks.get(replacesMode).size()) {
-            blocks.get(replacesMode).set(index, block);
-            updateStringSearcher(replacesMode);
+    public void setBlock(int index, @Nonnull String block, @Nonnull ReplaceMode replaceMode) {
+        if (index < blocks.get(replaceMode).size()) {
+            blocks.get(replaceMode).set(index, block);
+            updateStringSearcher(replaceMode);
             edited = true;
             saveConfig();
         }
     }
 
-    public void addBlock(int index, @Nonnull String block, @Nonnull ReplacesMode replacesMode) {
-        if (index <= blocks.get(replacesMode).size()) {
+    public void addBlock(int index, @Nonnull String block, @Nonnull ReplaceMode replaceMode) {
+        if (index <= blocks.get(replaceMode).size()) {
             if (this.matchMode == MatchMode.REGEX) {
-                blocks.get(replacesMode).add(index, Pattern.compile(block));
+                blocks.get(replaceMode).add(index, Pattern.compile(block));
             } else {
-                blocks.get(replacesMode).add(index, block);
+                blocks.get(replaceMode).add(index, block);
             }
-            updateStringSearcher(replacesMode);
+            updateStringSearcher(replaceMode);
             edited = true;
             saveConfig();
         }
     }
 
-    public void addBlock(@Nonnull String block, @Nonnull ReplacesMode replacesMode) {
-        addBlock(blocks.get(replacesMode).size(), block, replacesMode);
+    public void addBlock(@Nonnull String block, @Nonnull ReplaceMode replaceMode) {
+        addBlock(blocks.get(replaceMode).size(), block, replaceMode);
     }
 
-    public void removeBlock(int index, @Nonnull ReplacesMode replacesMode) {
-        blocks.get(replacesMode).remove(index);
-        updateStringSearcher(replacesMode);
+    public void removeBlock(int index, @Nonnull ReplaceMode replaceMode) {
+        blocks.get(replaceMode).remove(index);
+        updateStringSearcher(replaceMode);
         edited = true;
         saveConfig();
     }
 
-    public int checkReplaceKey(@Nonnull String key, @Nonnull ReplacesMode replacesMode) {
-        for (int i = 0; i < replaces.get(replacesMode).size(); i++) {
-            if (replaces.get(replacesMode).get(i).equals(key)) {
+    public int checkReplaceKey(@Nonnull String key, @Nonnull ReplaceMode replaceMode) {
+        for (int i = 0; i < replaces.get(replaceMode).size(); i++) {
+            if (replaces.get(replaceMode).get(i).equals(key)) {
                 return i;
             }
         }
@@ -279,21 +279,21 @@ public class FileReplacerConfig implements ReplacerConfig {
             ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage(
                     "Console-Sender.Messages.Replacer-Config.Invalid-Match-Mode", matchMode));
         }
-        for (ReplacesMode replacesMode : ReplacesMode.values()) {
-            List<Map<?, ?>> mapList = configuration.getMapList("Replaces." + replacesMode.getNode());
-            replaces.put(replacesMode, new ListOrderedMap());
+        for (ReplaceMode replaceMode : ReplaceMode.values()) {
+            List<Map<?, ?>> mapList = configuration.getMapList("Replaces." + replaceMode.getNode());
+            replaces.put(replaceMode, new ListOrderedMap());
             if (this.matchMode == MatchMode.REGEX) {
                 for (Map<?, ?> map : mapList) {
-                    replaces.get(replacesMode).put(Pattern.compile((String) map.get("Original")),
+                    replaces.get(replaceMode).put(Pattern.compile((String) map.get("Original")),
                             map.get("Replacement"));
                 }
             } else {
                 for (Map<?, ?> map : mapList) {
-                    replaces.get(replacesMode).put(map.get("Original"), map.get("Replacement"));
+                    replaces.get(replaceMode).put(map.get("Original"), map.get("Replacement"));
                 }
             }
 
-            List<String> loadedBlockList = configuration.getStringList("Blocks." + replacesMode.getNode());
+            List<String> loadedBlockList = configuration.getStringList("Blocks." + replaceMode.getNode());
             ArrayList<Object> list;
             if (this.matchMode == MatchMode.REGEX) {
                 list = new ArrayList<>();
@@ -303,17 +303,17 @@ public class FileReplacerConfig implements ReplacerConfig {
             } else {
                 list = new ArrayList<>(loadedBlockList);
             }
-            blocks.put(replacesMode, list);
-            updateStringSearcher(replacesMode);
+            blocks.put(replaceMode, list);
+            updateStringSearcher(replaceMode);
         }
     }
 
-    private void updateStringSearcher(@Nonnull ReplacesMode replacesMode) {
+    private void updateStringSearcher(@Nonnull ReplaceMode replaceMode) {
         if (matchMode != MatchMode.CONTAIN) {
             return;
         }
         SimpleStringSearcherBuilder builder = StringSearcher.builder().ignoreOverlaps();
-        for (Object object : this.getReplaces(replacesMode).keySet()) {
+        for (Object object : this.getReplaces(replaceMode).keySet()) {
             if (object instanceof String) {
                 builder.addSearchString((String) object);
             } else {
@@ -322,12 +322,12 @@ public class FileReplacerConfig implements ReplacerConfig {
                         getRelativePath(), object.toString()));
             }
         }
-        this.replacesStringSearcher.put(replacesMode, builder.build());
-        String[] strings = new String[blocks.get(replacesMode).size()];
-        for (int i = 0; i < blocks.get(replacesMode).size(); i++) {
-            strings[i] = (String) blocks.get(replacesMode).get(i);
+        this.replacesStringSearcher.put(replaceMode, builder.build());
+        String[] strings = new String[blocks.get(replaceMode).size()];
+        for (int i = 0; i < blocks.get(replaceMode).size(); i++) {
+            strings[i] = (String) blocks.get(replaceMode).get(i);
         }
-        this.blocksStringSearcher.put(replacesMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(strings).build());
+        this.blocksStringSearcher.put(replaceMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(strings).build());
     }
 
     @Override
