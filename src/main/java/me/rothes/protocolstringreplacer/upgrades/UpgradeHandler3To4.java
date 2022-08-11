@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class UpgradeHandler3To4 extends AbstractUpgradeHandler{
+public class UpgradeHandler3To4 extends AbstractUpgradeHandler {
 
     @Override
     public void upgrade() {

@@ -34,7 +34,7 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
                 StructureModifier<String> strings = packet.getStrings();
                 String replaced = getReplacedText(packetEvent, user, listenType, strings.read(0), titleFilter);
                 if (replaced != null)
-                strings.write(0, replaced);
+                    strings.write(0, replaced);
             }
         }
     }
