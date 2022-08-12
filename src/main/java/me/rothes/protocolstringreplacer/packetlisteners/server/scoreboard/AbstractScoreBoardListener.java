@@ -19,6 +19,9 @@ public abstract class AbstractScoreBoardListener extends AbstractServerPacketLis
         titleFilter = (replacerConfig, user) -> {
             if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
                 CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
+                if (configuration == null) {
+                    return true;
+                }
                 return configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
             }
             return false;
@@ -26,6 +29,9 @@ public abstract class AbstractScoreBoardListener extends AbstractServerPacketLis
         entityNameFilter = (replacerConfig, user) -> {
             if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
                 CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
+                if (configuration == null) {
+                    return true;
+                }
                 return configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
             }
             return false;

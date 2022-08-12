@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
+import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
@@ -51,7 +52,11 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     protected final boolean checkPermission(PsrUser user, ReplacerConfig replacerConfig) {
-        String permission = replacerConfig.getConfiguration().getString("Options.Filter.User.Permission");
+        CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
+        if (configuration == null) {
+            return true;
+        }
+        String permission = configuration.getString("Options.Filter.User.Permission");
         if (permission != null) {
             return user.hasPermission(permission);
         }

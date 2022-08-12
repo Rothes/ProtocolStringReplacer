@@ -19,6 +19,9 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
             if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
                 String currentWindowTitle = user.getCurrentWindowTitle();
                 CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
+                if (configuration == null) {
+                    return true;
+                }
                 List<String> windowTitles = configuration.getStringList("Options.Filter.ItemStack.Window-Title");
                 if (windowTitles.isEmpty()) {
                     return true;
