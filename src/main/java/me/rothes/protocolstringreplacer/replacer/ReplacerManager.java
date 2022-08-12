@@ -166,8 +166,8 @@ public class ReplacerManager {
         }
     }
 
-    public LinkedList<ReplacerConfig> getReplacerConfigList() {
-        return replacerConfigList;
+    public List<ReplacerConfig> getReplacerConfigList() {
+        return new ArrayList<>(replacerConfigList);
     }
 
     public int getReplacesCount() {
