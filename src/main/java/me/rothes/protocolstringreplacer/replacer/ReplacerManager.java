@@ -154,7 +154,7 @@ public class ReplacerManager {
         }, 0L, cleanTaskInterval);
     }
 
-    public void addReplacerConfig(FileReplacerConfig replacerConfig) {
+    public void addReplacerConfig(ReplacerConfig replacerConfig) {
         int size = replacerConfigList.size();
         for (int i = 0; i <= size; i++) {
             if (i == replacerConfigList.size()) {
