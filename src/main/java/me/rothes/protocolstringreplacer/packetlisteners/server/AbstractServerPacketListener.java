@@ -99,7 +99,14 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         } else {
             replacerManager.replaceContainerJsons(container, replacers);
         }
-        container.createDefaultChildren();
+        try {
+            container.createDefaultChildren();
+        } catch (Throwable t) {
+            throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+                    + "Original Json: " + json + "\n"
+                    + "Replaced Json: " + container.getJsons().get(0) + "\n"
+                    + "If you need support, please provide the stacktrace below.", t);
+        }
         try {
             container.createTexts(container);
             if (user.isCapturing(listenType)) {
