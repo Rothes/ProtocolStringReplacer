@@ -8,6 +8,7 @@ import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
 import me.rothes.protocolstringreplacer.console.PsrMessage;
+import me.rothes.protocolstringreplacer.events.PsrReloadEvent;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
@@ -474,6 +475,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     public void reload(@Nonnull PsrUser user) {
         Validate.notNull(user, "user cannot be null");
+        Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.BEFORE, user.getSender()));
         loadConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager = new ReplacerManager();
@@ -486,6 +488,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             player.updateInventory();
         }
         user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
+        Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user.getSender()));
     }
 
 }
