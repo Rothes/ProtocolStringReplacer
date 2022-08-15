@@ -16,7 +16,7 @@ import java.util.List;
 public interface ReplacerConfig {
 
     /**
-     * Determines whether PSR should saveConfig on disable or not.
+     * Determines whether PSR should saveConfig on disable and reload or not.
      *
      * @return Edited.
      */

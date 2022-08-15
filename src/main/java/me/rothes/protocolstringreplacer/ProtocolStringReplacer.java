@@ -478,6 +478,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.BEFORE, user.getSender()));
         loadConfig();
         replacerManager.getCleanTask().cancel();
+        replacerManager.saveReplacerConfigs();
         replacerManager = new ReplacerManager();
         replacerManager.initialize();
         userManager = new PsrUserManager();
