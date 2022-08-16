@@ -2,6 +2,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
@@ -25,19 +26,24 @@ public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
         user.cleanUserMetaCache();
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
-        boolean firstReplaced = false;
-        for (ItemStack itemStack : packetEvent.getPacket().getItemListModifier().read(0)) {
+
+        StructureModifier<List<ItemStack>> itemListModifier = packetEvent.getPacket().getItemListModifier();
+        List<ItemStack> read = itemListModifier.read(0);
+        boolean saveMeta = !user.isInAnvil();
+        for (ItemStack itemStack : read) {
             if (itemStack.getType() == Material.AIR) {
+                saveMeta = true;
                 continue;
             }
             boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, replacers,
                     // Avoid too many packets kick
-                    firstReplaced && user.isInAnvil());
-            firstReplaced = true;
+                    saveMeta);
+            saveMeta = true;
             if (blocked) {
                 return;
             }
         }
+        itemListModifier.write(0, read);
     }
 
 }

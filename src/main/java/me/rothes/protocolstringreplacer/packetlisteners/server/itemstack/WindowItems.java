@@ -27,15 +27,17 @@ public class WindowItems extends AbstractServerItemPacketListener {
         Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
-        boolean firstReplaced = false;
+        boolean saveMeta = !user.isInAnvil();
         for (Object item : read) {
             ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
             if (itemStack.getType() == Material.AIR) {
+                saveMeta = true;
                 continue;
             }
             boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, replacers,
                     // Avoid too many packets kick
-                    firstReplaced && user.isInAnvil());
+                    saveMeta);
+            saveMeta = true;
             if (blocked) {
                 return;
             }
