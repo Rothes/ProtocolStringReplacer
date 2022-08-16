@@ -309,7 +309,6 @@ public class PsrUser {
                     addCacheLegacy(replacedMeta, uniqueCacheKey);
                 }
                 replacedItem.setItemMeta(replacedMeta);
-                System.out.println("PUT " + uniqueCacheKey + " META " + originalMeta);
                 this.getMetaCache().put(uniqueCacheKey, originalMeta);
             }
         }
