@@ -20,8 +20,7 @@ public class Reload extends SubCommand {
     @Override
     public void onExecute(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length == 1) {
-            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
-            Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> ProtocolStringReplacer.getInstance().reload(user));
+            ProtocolStringReplacer.getInstance().reload(user);
         } else {
             sendHelp(user);
         }

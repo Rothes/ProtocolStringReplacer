@@ -483,22 +483,27 @@ public class ProtocolStringReplacer extends JavaPlugin {
         if (event.isCancelled()) {
             return;
         }
-        loadConfig();
-        checkConfig();
-        replacerManager.getCleanTask().cancel();
-        replacerManager.saveReplacerConfigs();
-        replacerManager = new ReplacerManager();
-        replacerManager.initialize();
-        userManager = new PsrUserManager();
-        packetListenerManager.removeListeners();
-        packetListenerManager.addListeners();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            userManager.loadUser(player);
-            player.updateInventory();
-        }
-        user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
-        // Don't need to check cancelled here
-        Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
+        Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
+            loadConfig();
+            checkConfig();
+            replacerManager.getCleanTask().cancel();
+            replacerManager.saveReplacerConfigs();
+            replacerManager = new ReplacerManager();
+            replacerManager.initialize();
+            userManager = new PsrUserManager();
+            packetListenerManager.removeListeners();
+            packetListenerManager.addListeners();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                userManager.loadUser(player);
+                player.updateInventory();
+            }
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
+            Bukkit.getScheduler().runTask(instance, () -> {
+                // Don't need to check cancelled here
+                Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
+            });
+        });
     }
 
 }
