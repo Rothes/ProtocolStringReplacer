@@ -45,7 +45,7 @@ Options:
       # 注: 对于玩家, 实体名称为玩家名称; 对于非玩家则为UUID.
       Replace-Entity-Name: false
     User:
-      # 替换所需权限. 若设定, 用于必须拥有该权限
+      # 替换所需权限. 若设定, 用户必须拥有该权限
       # 才能使该替换配置为其生效.
       Permission: 'example.permission.1'
 
