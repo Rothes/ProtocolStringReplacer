@@ -7,6 +7,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -29,6 +30,9 @@ public class WindowItems extends AbstractServerItemPacketListener {
         boolean firstReplaced = false;
         for (Object item : read) {
             ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
+            if (itemStack.getType() == Material.AIR) {
+                continue;
+            }
             boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, replacers,
                     // Avoid too many packets kick
                     firstReplaced && user.isInAnvil());
