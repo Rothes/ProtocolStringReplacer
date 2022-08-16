@@ -39,7 +39,7 @@ Options:
       Purge-Access-Interval: 300
       # Remove cache NBT on items when trading with villagers/wandering traders
       # to fix some glitch.
-      Remove-Cache-When-Merchant-Trade: true
+      Remove-Cache-When-Merchant-Trade: false
 
     # Packet listener related options.
     Packet-Listener:
