@@ -475,7 +475,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     public void reload(@Nonnull PsrUser user) {
         Validate.notNull(user, "user cannot be null");
-        Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.BEFORE, user.getSender()));
+        PsrReloadEvent event = new PsrReloadEvent(PsrReloadEvent.ReloadState.BEFORE, user.getSender());
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
         loadConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager.saveReplacerConfigs();
@@ -489,6 +493,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             player.updateInventory();
         }
         user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
+        // Don't need to check cancelled here
         Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user.getSender()));
     }
 
