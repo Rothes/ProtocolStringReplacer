@@ -484,6 +484,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             return;
         }
         loadConfig();
+        checkConfig();
         replacerManager.getCleanTask().cancel();
         replacerManager.saveReplacerConfigs();
         replacerManager = new ReplacerManager();
