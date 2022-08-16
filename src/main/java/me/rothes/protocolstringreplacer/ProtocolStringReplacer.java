@@ -183,6 +183,9 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
         if (packetListenerManager != null) {
             packetListenerManager.removeListeners();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.updateInventory();
+            }
         }
         if (replacerManager != null) {
             replacerManager.saveReplacerConfigs();
