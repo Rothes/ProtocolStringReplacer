@@ -46,6 +46,10 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
             if (uniqueCacheKey != null) {
                 HashMap<Short, ItemMeta> userMetaCache = user.getMetaCache();
                 ItemMeta original = userMetaCache.get(uniqueCacheKey);
+                if (original == null) {
+                    ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key, ignoring.\n" + itemStack);
+                    return;
+                }
                 itemStack.setItemMeta(original);
             }
         }
