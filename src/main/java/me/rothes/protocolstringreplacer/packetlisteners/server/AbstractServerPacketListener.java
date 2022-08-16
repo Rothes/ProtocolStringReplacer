@@ -57,7 +57,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             return true;
         }
         String permission = configuration.getString("Options.Filter.User.Permission");
-        if (permission != null) {
+        if (permission != null && !permission.isEmpty()) {
             return user.hasPermission(permission);
         }
         return true;
