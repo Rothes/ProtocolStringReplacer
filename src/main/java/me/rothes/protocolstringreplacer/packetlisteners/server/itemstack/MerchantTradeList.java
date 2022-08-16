@@ -25,6 +25,10 @@ public class MerchantTradeList extends AbstractServerItemPacketListener {
         if (user == null) {
             return;
         }
+        user.setInMerchant(true);
+        if (ProtocolStringReplacer.getInstance().getConfigManager().removeCacheWhenMerchantTrade) {
+            user.getPlayer().updateInventory();
+        }
         PacketContainer packet = packetEvent.getPacket().deepClone();
         StructureModifier<List<MerchantRecipe>> merchantRecipeLists = packet.getMerchantRecipeLists();
 
@@ -40,7 +44,7 @@ public class MerchantTradeList extends AbstractServerItemPacketListener {
             for (ItemStack ingredient : ingredients) {
                 replaceItemStack(packetEvent, user, listenType, ingredient, replacers, false);
             }
-            replaceItemStack(packetEvent, user, listenType, recipe.getResult(), replacers, false);
+            replaceItemStack(packetEvent, user, listenType, recipe.getResult(), replacers, true);
 
             toAdd = new MerchantRecipe(recipe.getResult(), recipe.getUses(), recipe.getMaxUses(),
                     recipe.hasExperienceReward(), recipe.getVillagerExperience(), recipe.getPriceMultiplier(),

@@ -17,6 +17,7 @@ public class ConfigManager {
     public final boolean consolePlaceholder;
 
     public final boolean convertPlayerChat;
+    public final boolean removeCacheWhenMerchantTrade;
     public final int protocolLibSideStackPrintCount;
 
     public final String gitRawHost;
@@ -62,5 +63,6 @@ public class ConfigManager {
         this.gitRawHost = instance.getConfig().getString("Options.Git-Raw-Host", "raw.githubusercontent.com");
         this.protocolLibSideStackPrintCount = instance.getConfig().getInt("Options.ProtocolLib-Side-Stack-Print-Count", 3);
         this.convertPlayerChat = instance.getServerMajorVersion() >= 19 && instance.getConfig().getBoolean("Options.Features.Chat-Packet.Convert-Player-Chat", true);
+        this.removeCacheWhenMerchantTrade = instance.getConfig().getBoolean("Options.Features.ItemMetaCache.Remove-Cache-When-Merchant-Trade", true);
     }
 }

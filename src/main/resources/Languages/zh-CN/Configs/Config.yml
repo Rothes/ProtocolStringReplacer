@@ -36,6 +36,9 @@ Options:
       Purge-Task-Interval: 600
       # 只清理多少秒未读取过的缓存条目.
       Purge-Access-Interval: 300
+      # 在与村民/流浪商人交易时移除物品上的NBT缓存
+      # 以解决部分小故障.
+      Remove-Cache-When-Merchant-Trade: true
 
     # 关于网络数据包监听器的相关设定.
     Packet-Listener:

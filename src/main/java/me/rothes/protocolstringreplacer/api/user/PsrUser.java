@@ -46,6 +46,7 @@ public class PsrUser {
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private String currentWindowTitle;
     private boolean inAnvil;
+    private boolean inMerchant;
     private Short uniqueCacheKey = 0;
 
     private String[] commandToConfirm;
@@ -107,6 +108,10 @@ public class PsrUser {
         return inAnvil;
     }
 
+    public boolean isInMerchant() {
+        return inMerchant;
+    }
+
     public String[] getCommandToConfirm() {
         return commandToConfirm;
     }
@@ -133,6 +138,10 @@ public class PsrUser {
 
     public void setInAnvil(boolean inAnvil) {
         this.inAnvil = inAnvil;
+    }
+
+    public void setInMerchant(boolean inMerchant) {
+        this.inMerchant = inMerchant;
     }
 
     public void addCaptureType(ListenType listenType) {
@@ -281,10 +290,14 @@ public class PsrUser {
 
     public void cleanUserMetaCache() {
         getMetaCache().clear();
+        uniqueCacheKey = 0;
     }
 
     public void saveUserMetaCache(ItemStack originalItem, ItemStack replacedItem) {
         if (this.hasPermission("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
+            if (ProtocolStringReplacer.getInstance().getConfigManager().removeCacheWhenMerchantTrade && isInMerchant()) {
+                return;
+            }
             ItemMeta originalMeta = originalItem.getItemMeta();
             ItemMeta replacedMeta = replacedItem.getItemMeta();
             if (!originalMeta.equals(replacedMeta)) {
@@ -296,6 +309,7 @@ public class PsrUser {
                     addCacheLegacy(replacedMeta, uniqueCacheKey);
                 }
                 replacedItem.setItemMeta(replacedMeta);
+                System.out.println("PUT " + uniqueCacheKey + " META " + originalMeta);
                 this.getMetaCache().put(uniqueCacheKey, originalMeta);
             }
         }

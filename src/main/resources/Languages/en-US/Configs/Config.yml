@@ -37,6 +37,9 @@ Options:
       Purge-Task-Interval: 600
       # Only Purge the cache entries that have not been accessed in these seconds.
       Purge-Access-Interval: 300
+      # Remove cache NBT on items when trading with villagers/wandering traders
+      # to fix some glitch.
+      Remove-Cache-When-Merchant-Trade: true
 
     # Packet listener related options.
     Packet-Listener:
