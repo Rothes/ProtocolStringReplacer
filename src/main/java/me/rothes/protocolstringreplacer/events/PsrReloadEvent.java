@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.events;
 
+import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -10,20 +11,24 @@ public class PsrReloadEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
     private final ReloadState reloadState;
-    private final CommandSender caller;
+    private final PsrUser user;
     private  boolean cancelled = false;
 
-    public PsrReloadEvent(ReloadState reloadState, CommandSender caller) {
+    public PsrReloadEvent(ReloadState reloadState, PsrUser user) {
         this.reloadState = reloadState;
-        this.caller = caller;
+        this.user = user;
     }
 
     public ReloadState getReloadState() {
         return reloadState;
     }
 
-    public CommandSender getCaller() {
-        return caller;
+    public PsrUser getUser() {
+        return user;
+    }
+
+    public CommandSender getActor() {
+        return user.getSender();
     }
 
     @NotNull
