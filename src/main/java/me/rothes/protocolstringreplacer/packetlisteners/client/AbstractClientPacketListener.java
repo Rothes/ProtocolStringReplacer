@@ -18,7 +18,7 @@ public abstract class AbstractClientPacketListener extends AbstractPacketListene
                 }
                 process(packetEvent);
                 if (readOnly) {
-                    packetEvent.setReadOnly(readOnly);
+                    packetEvent.setReadOnly(true);
                 }
             }
         };
