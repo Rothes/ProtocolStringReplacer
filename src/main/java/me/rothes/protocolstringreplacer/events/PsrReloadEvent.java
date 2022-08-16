@@ -12,7 +12,7 @@ public class PsrReloadEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final ReloadState reloadState;
     private final PsrUser user;
-    private  boolean cancelled = false;
+    private boolean cancelled = false;
 
     public PsrReloadEvent(ReloadState reloadState, PsrUser user) {
         this.reloadState = reloadState;
