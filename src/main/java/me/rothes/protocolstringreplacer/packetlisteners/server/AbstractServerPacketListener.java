@@ -104,7 +104,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         } catch (Throwable t) {
             throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
                     + "Original Json: " + json + "\n"
-                    + "Replaced Json: " + container.getJsons().get(0) + "\n"
+                    + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
         }
         try {
@@ -116,7 +116,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         } catch (Throwable t) {
             throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
                     + "Original Json: " + json + "\n"
-                    + "Replaced Json: " + container.getJsons().get(0) + "\n"
+                    + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
         }
         if (blocked || replacerManager.isTextBlocked(container, replacers)) {
