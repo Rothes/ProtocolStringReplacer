@@ -127,7 +127,7 @@ public class PlayerChatHelper {
 
     public static void setChatMessage(Object playerChatMessage, WrappedChatComponent wrappedChatComponent) {
         try {
-            chatMessageField.set(playerChatMessage, wrappedChatComponent.getHandle());
+            chatMessageField.set(componentField.get(messageContentField.get(messageBodyField.get((playerChatMessage)))), wrappedChatComponent.getHandle());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
