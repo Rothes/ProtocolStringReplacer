@@ -44,8 +44,8 @@ public class TabComplete extends AbstractServerPacketListener {
                     }
                 }
             } catch (NoClassDefFoundError ignored) {
+                suggestionsField = -2;
             }
-            suggestionsField = -2;
         }
         if (suggestionsField != -2) {
             Suggestions suggestions = (Suggestions) modifier.read(suggestionsField);
