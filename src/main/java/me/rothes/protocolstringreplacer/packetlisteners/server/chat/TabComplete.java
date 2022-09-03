@@ -68,7 +68,6 @@ public class TabComplete extends AbstractServerPacketListener {
             for (int i = 0; i < read.length; i++) {
                 read[i] = getReplacedText(packetEvent, user, listenType, read[i], filter);
             }
-            ProtocolStringReplacer.info(Arrays.toString(read));
         }
 
     }
