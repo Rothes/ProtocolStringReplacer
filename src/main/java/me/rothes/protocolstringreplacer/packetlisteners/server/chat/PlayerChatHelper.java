@@ -117,6 +117,14 @@ public class PlayerChatHelper {
         return playerChatMessageClass;
     }
 
+    public static Object getComponentHolder(Object playerChatMessage) {
+        try {
+            return messageContentField.get(messageBodyField.get((playerChatMessage)));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static WrappedChatComponent getChatMessage(Object playerChatMessage) {
         try {
             return WrappedChatComponent.fromHandle(componentField.get(messageContentField.get(messageBodyField.get((playerChatMessage)))));
@@ -125,9 +133,25 @@ public class PlayerChatHelper {
         }
     }
 
+    public static WrappedChatComponent getChatMessageByHolder(Object componentHolder) {
+        try {
+            return WrappedChatComponent.fromHandle(componentField.get(componentHolder));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void setChatMessage(Object playerChatMessage, WrappedChatComponent wrappedChatComponent) {
         try {
-            chatMessageField.set(componentField.get(messageContentField.get(messageBodyField.get((playerChatMessage)))), wrappedChatComponent.getHandle());
+            componentField.set(messageContentField.get(messageBodyField.get((playerChatMessage))), wrappedChatComponent.getHandle());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setChatMessageByHolder(Object componentHolder, WrappedChatComponent wrappedChatComponent) {
+        try {
+            componentField.set(componentHolder, wrappedChatComponent.getHandle());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -146,16 +170,48 @@ public class PlayerChatHelper {
     }
 
     public static BaseComponent getDisplayName(Object object) {
+        return ComponentSerializer.parse(getDisplayNameWrapped(object).getJson())[0];
+    }
+
+    public static WrappedChatComponent getDisplayNameWrapped(Object object) {
         try {
-            return ComponentSerializer.parse(WrappedChatComponent.fromHandle(displayNameField.get(object)).getJson())[0];
+            Object o = displayNameField.get(object);
+            if (o == null) {
+                return null;
+            }
+            return WrappedChatComponent.fromHandle(o);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setDisplayName(Object object, WrappedChatComponent wrappedChatComponent) {
+        try {
+            displayNameField.set(object, wrappedChatComponent);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static BaseComponent getTeamName(Object object) {
+        return ComponentSerializer.parse(WrappedChatComponent.fromHandle(getTeamNameWrapped(object)).getJson())[0];
+    }
+
+    public static WrappedChatComponent getTeamNameWrapped(Object object) {
         try {
-            return ComponentSerializer.parse(WrappedChatComponent.fromHandle(teamNameField.get(object)).getJson())[0];
+            Object o = teamNameField.get(object);
+            if (o == null) {
+                return null;
+            }
+            return WrappedChatComponent.fromHandle(o);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setTeamName(Object object, WrappedChatComponent wrappedChatComponent) {
+        try {
+            teamNameField.set(object, wrappedChatComponent);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

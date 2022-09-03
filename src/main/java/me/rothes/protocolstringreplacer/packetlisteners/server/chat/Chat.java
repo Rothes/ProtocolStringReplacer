@@ -44,7 +44,7 @@ public final class Chat extends AbstractServerComponentsPacketListener {
             }
 
             String replaced;
-            Object playerChatMessage = null;
+            Object componentHolder = null;
             StructureModifier<WrappedChatComponent> componentModifier = null;
             WrappedChatComponent wrappedChatComponent;
 
@@ -54,8 +54,8 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 wrappedChatComponent = componentModifier.read(0);
             } else {
                 // 1.19.1+
-                playerChatMessage = packet.getModifier().withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0);
-                wrappedChatComponent = PlayerChatHelper.getChatMessage(playerChatMessage);
+                componentHolder = PlayerChatHelper.getComponentHolder(packet.getModifier().withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0));
+                wrappedChatComponent = PlayerChatHelper.getChatMessageByHolder(componentHolder);
             }
 
             if (wrappedChatComponent != null) {
@@ -73,7 +73,20 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 if (legacy) {
                     componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
                 } else {
-                    PlayerChatHelper.setChatMessage(playerChatMessage, WrappedChatComponent.fromJson(replaced));
+                    PlayerChatHelper.setChatMessageByHolder(componentHolder, WrappedChatComponent.fromJson(replaced));
+
+                    Object typeSub = PlayerChatHelper.getChatMessageTypeSub(packet.getModifier());
+
+                    WrappedChatComponent wrapped = PlayerChatHelper.getDisplayNameWrapped(typeSub);
+                    if (wrapped != null) {
+                        replaced = getReplacedJson(packetEvent, user, listenType, wrapped.getJson(), filter);
+                        PlayerChatHelper.setDisplayName(typeSub, WrappedChatComponent.fromJson(replaced));
+                    }
+                    wrapped = PlayerChatHelper.getTeamNameWrapped(typeSub);
+                    if (wrapped != null) {
+                        replaced = getReplacedJson(packetEvent, user, listenType, wrapped.getJson(), filter);
+                        PlayerChatHelper.setTeamName(typeSub, WrappedChatComponent.fromJson(replaced));
+                    }
                 }
             }
 
