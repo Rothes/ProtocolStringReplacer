@@ -1,6 +1,6 @@
 package com.sk89q.protocolstringreplacer;
 
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import io.github.rothes.protocolstringreplacer.bukkit.ProtocolStringReplacer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
