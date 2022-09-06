@@ -49,6 +49,7 @@ dependencies {
 tasks.named("shadowJar", ShadowJar::class) {
     archiveFileName.set("ProtocolStringReplacer-Bukkit-${project.version}.jar")
 
+    minimize()
     relocate("org.apache.commons.collections", "io.github.rothes.protocolstringreplacer.lib.org.apache.commons.collections")
     relocate("org.neosearch.stringsearcher", "io.github.rothes.protocolstringreplacer.lib.org.neosearch.stringsearcher")
     relocate("org.bstats", "io.github.rothes.protocolstringreplacer.lib.org.bstats")

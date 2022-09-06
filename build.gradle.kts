@@ -34,7 +34,6 @@ allprojects {
 
     tasks.named("shadowJar", com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class) {
         archiveBaseName.set("ProtocolStringReplacer")
-        minimize()
 
         relocate("kotlin", "io.github.rothes.protocolstringreplacer.lib.kotlin")
         relocate("org.jetbrains", "io.github.rothes.protocolstringreplacer.lib.org.jetbrains")
