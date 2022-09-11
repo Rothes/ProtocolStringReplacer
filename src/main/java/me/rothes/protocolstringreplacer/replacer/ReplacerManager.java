@@ -102,6 +102,30 @@ public class ReplacerManager {
         return cleanTask;
     }
 
+    public void registerTask() {
+        ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
+        long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
+        long cleanTaskInterval = instrance.getConfigManager().cleanTaskInterval;
+        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
+            List<ItemMeta> needToRemove = new ArrayList<>();
+            long currentTime = System.currentTimeMillis();
+            for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
+                if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
+                    needToRemove.add(entry.getKey());
+                }
+            }
+            if (!needToRemove.isEmpty()) {
+                Bukkit.getScheduler().runTask(instrance, () -> {
+                    ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
+                            String.valueOf(needToRemove.size())));
+                    for (ItemMeta itemMeta : needToRemove) {
+                        replacedItemCache.remove(itemMeta);
+                    }
+                });
+            }
+        }, 0L, cleanTaskInterval);
+    }
+
     public void initialize() {
         this.papiReplacer = new PAPIReplacer();
         papiHead = papiReplacer.getHead();
@@ -130,28 +154,6 @@ public class ReplacerManager {
 
         // To warm up the lambda below.
         replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new ArrayList<>()));
-
-        ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
-        long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
-        long cleanTaskInterval = instrance.getConfigManager().cleanTaskInterval;
-        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
-            List<ItemMeta> needToRemove = new ArrayList<>();
-            long currentTime = System.currentTimeMillis();
-            for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
-                if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
-                    needToRemove.add(entry.getKey());
-                }
-            }
-            if (!needToRemove.isEmpty()) {
-                Bukkit.getScheduler().runTask(instrance, () -> {
-                    ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
-                            String.valueOf(needToRemove.size())));
-                    for (ItemMeta itemMeta : needToRemove) {
-                        replacedItemCache.remove(itemMeta);
-                    }
-                });
-            }
-        }, 0L, cleanTaskInterval);
     }
 
     public void addReplacerConfig(ReplacerConfig replacerConfig) {

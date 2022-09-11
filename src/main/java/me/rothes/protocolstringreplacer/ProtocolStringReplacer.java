@@ -101,6 +101,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
         serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
         consoleReplaceManager = new ConsoleReplaceManager(this);
         consoleReplaceManager.initialize();
+
+        loadConfig();
+        PsrLocalization.initialize(instance);
+        checkConfig();
+        enableModify(ConfigManager.LifeCycle.INIT);
     }
 
     public static ProtocolStringReplacer getInstance() {
@@ -143,10 +148,12 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
-        loadConfig();
-        PsrLocalization.initialize(instance);
+    public void onLoad() {
+        enableModify(ConfigManager.LifeCycle.LOAD);
+    }
 
+    @Override
+    public void onEnable() {
         try {
             Class.forName("org.bukkit.entity.Player$Spigot");
             isSpigot = true;
@@ -225,21 +232,17 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     private void initialize() {
-        checkConfig();
-        packetListenerManager = new PacketListenerManager();
-        replacerManager = new ReplacerManager();
+        enableModify(ConfigManager.LifeCycle.ENABLE);
+        replacerManager.registerTask();
         CommandHandler commandHandler = new CommandHandler();
-        userManager = new PsrUserManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();
         commandHandler.initialize();
-        replacerManager.initialize();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();
         }
-        this.hasStarted = true;
         initMetrics();
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!checkPluginVersion()) {
@@ -295,6 +298,16 @@ public class ProtocolStringReplacer extends JavaPlugin {
             pluginManager.disablePlugin(instance);
         }
         return missingDepend;
+    }
+
+    private void enableModify(ConfigManager.LifeCycle lifeCycle) {
+        if (lifeCycle == getConfigManager().loadConfigLifeCycle) {
+            packetListenerManager = new PacketListenerManager();
+            userManager = new PsrUserManager();
+            replacerManager = new ReplacerManager();
+            replacerManager.initialize();
+            this.hasStarted = true;
+        }
     }
 
     private void loadConfig() {

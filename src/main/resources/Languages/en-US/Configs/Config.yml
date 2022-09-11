@@ -10,6 +10,10 @@ Options:
   # Set the host of update server, if you need.
   Git-Raw-Host: 'raw.githubusercontent.com'
 
+  # Set the lifecycle when PSR load the configs. Accepts INIT (Earliest), LOAD (Medium), ENABLE (Latest and default).
+  # Mainly used for Console messages modify.
+  Config-Load-LifeCycle: 'ENABLE'
+
   # How many times will PSR print stacktrace caused by ProtocolLib ? Set 0 to diable it always.
   ProtocolLib-Side-Stack-Print-Count: 3
 

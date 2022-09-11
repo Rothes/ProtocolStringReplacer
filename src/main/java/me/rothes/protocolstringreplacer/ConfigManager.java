@@ -2,6 +2,8 @@ package me.rothes.protocolstringreplacer;
 
 import com.comphenix.protocol.events.ListenerPriority;
 
+import java.util.Locale;
+
 public class ConfigManager {
 
     public final boolean printReplacer;
@@ -11,6 +13,8 @@ public class ConfigManager {
 
     public final long cleanTaskInterval;
     public final long cleanAccessInterval;
+
+    public final LifeCycle loadConfigLifeCycle;
 
     public final ListenerPriority listenerPriority;
     public final boolean forceReplace;
@@ -44,6 +48,22 @@ public class ConfigManager {
         this.cleanTaskInterval = 20L * instance.getConfig().getInt("Options.Features.ItemMetaCache.Purge-Task-Interval", 600);
         this.cleanAccessInterval = 1000L * instance.getConfig().getInt("Options.Features.ItemMetaCache.Purge-Access-Interval", 300);
 
+        switch (instance.getConfig().getString("Options.Config-Load-LifeCycle", "ENABLE").toUpperCase(Locale.ROOT)) {
+            case "INIT":
+                this.loadConfigLifeCycle = LifeCycle.INIT;
+                break;
+            case "LOAD":
+                this.loadConfigLifeCycle = LifeCycle.LOAD;
+                break;
+            case "ENABLE":
+                this.loadConfigLifeCycle = LifeCycle.ENABLE;
+                break;
+            default:
+                ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Config-Load-LifeCycle"));
+                this.loadConfigLifeCycle = LifeCycle.ENABLE;
+                break;
+        }
+
         String priority = instance.getConfig().getString("Options.Features.Packet-Listener.Listener-Priority", "HIGHEST");
         ListenerPriority listenerPriority = null;
         for (ListenerPriority value : ListenerPriority.values()) {
@@ -65,4 +85,11 @@ public class ConfigManager {
         this.convertPlayerChat = instance.getServerMajorVersion() >= 19 && instance.getConfig().getBoolean("Options.Features.Chat-Packet.Convert-Player-Chat", true);
         this.removeCacheWhenMerchantTrade = instance.getConfig().getBoolean("Options.Features.ItemMetaCache.Remove-Cache-When-Merchant-Trade", false);
     }
+
+    public enum LifeCycle {
+        INIT,
+        LOAD,
+        ENABLE
+    }
+
 }
