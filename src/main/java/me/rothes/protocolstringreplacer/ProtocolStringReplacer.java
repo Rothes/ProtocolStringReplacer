@@ -504,6 +504,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
             replacerManager.saveReplacerConfigs();
             replacerManager = new ReplacerManager();
             replacerManager.initialize();
+            replacerManager.registerTask();
             userManager = new PsrUserManager();
             packetListenerManager.removeListeners();
             packetListenerManager.addListeners();
