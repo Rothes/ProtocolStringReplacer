@@ -20,6 +20,10 @@ public class Reload extends SubCommand {
     @Override
     public void onExecute(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length == 1) {
+            if (ProtocolStringReplacer.getInstance().isReloading()) {
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Already-Reloading"));
+                return;
+            }
             ProtocolStringReplacer.getInstance().reload(user);
         } else {
             sendHelp(user);

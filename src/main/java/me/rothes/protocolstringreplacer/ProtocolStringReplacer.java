@@ -67,6 +67,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private boolean isPaper;
     private boolean hasPaperComponent;
     private boolean hasStarted;
+    private boolean reloading;
 
     public ProtocolStringReplacer() {
         super();
@@ -130,6 +131,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     public boolean hasStarted() {
         return hasStarted;
+    }
+
+    public boolean isReloading() {
+        return reloading;
     }
 
     @NotNull
@@ -490,10 +495,12 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     public void reload(@Nonnull PsrUser user) {
+        reloading = true;
         Validate.notNull(user, "user cannot be null");
         PsrReloadEvent event = new PsrReloadEvent(PsrReloadEvent.ReloadState.BEFORE, user);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
+            reloading = false;
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
@@ -517,6 +524,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 // Don't need to check cancelled here
                 Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
             });
+            reloading = false;
         });
     }
 

@@ -215,6 +215,7 @@ Sender:
         PAPI-Target: '<占位符目标玩家>'
     Reload:
       Description: '重载插件配置文件'
+      Already-Reloading: '&c插件已经在重载过程中. 请稍后再重载.'
       Async-Reloading: '&b正在异步重载插件...'
       Complete: '&a插件已重载完毕.'
       Help:
