@@ -50,6 +50,13 @@ Options:
       # Required permission. If set, user must have this permission
       # to make this replacer config take effects.
       Permission: 'example.permission.1'
+    # PSR will ignore the string (but not the whole packet) whose length exceeds the number defined here.
+    # Set -1 to disable the feature.
+    Max-Length:
+      # Text. (Or Common)
+      Text: -1
+      # Json.
+      Json: -1
 
 # List of replace strings.
 # Replace mode priority: Json > Common. This ignores priority in replacer configs.

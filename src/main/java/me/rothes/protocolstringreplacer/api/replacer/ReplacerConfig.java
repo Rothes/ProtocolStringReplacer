@@ -53,4 +53,11 @@ public interface ReplacerConfig {
     @Nullable CommentYamlConfiguration getConfiguration();
     void saveConfig();
 
+    default int getMaxTextLength() {
+        return -1;
+    }
+    default int getMaxJsonLength() {
+        return -1;
+    }
+
 }

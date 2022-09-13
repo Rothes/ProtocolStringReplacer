@@ -38,6 +38,9 @@ public class FileReplacerConfig implements ReplacerConfig {
     private HashMap<ReplaceMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
     private HashMap<ReplaceMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
 
+    private int maxTextLength = -1;
+    private int maxJsonLength = -1;
+
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
         long startTime = System.nanoTime();
         loadData(file, configuration);
@@ -306,6 +309,16 @@ public class FileReplacerConfig implements ReplacerConfig {
             blocks.put(replaceMode, list);
             updateStringSearcher(replaceMode);
         }
+
+        maxTextLength = configuration.getInt("Options.Filter.Max-Length.Text", -1);
+        if (maxTextLength <= 0) {
+            maxTextLength = -1;
+        }
+
+        maxJsonLength = configuration.getInt("Options.Filter.Max-Length.Json", -1);
+        if (maxJsonLength <= 0) {
+            maxJsonLength = -1;
+        }
     }
 
     private void updateStringSearcher(@Nonnull ReplaceMode replaceMode) {
@@ -328,6 +341,16 @@ public class FileReplacerConfig implements ReplacerConfig {
             strings[i] = (String) blocks.get(replaceMode).get(i);
         }
         this.blocksStringSearcher.put(replaceMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(strings).build());
+    }
+
+    @Override
+    public int getMaxTextLength() {
+        return maxTextLength;
+    }
+
+    @Override
+    public int getMaxJsonLength() {
+        return maxJsonLength;
     }
 
     @Override

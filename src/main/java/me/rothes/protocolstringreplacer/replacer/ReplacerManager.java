@@ -220,13 +220,20 @@ public class ReplacerManager {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
+        int length;
+        int maxLength;
         boolean blocked = false;
         for (Replaceable replaceable : container.getJsons()) {
             String json = replaceable.getText();
             if (json.isEmpty()) {
                 continue;
             }
+            length = json.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
+                maxLength = replacerConfig.getMaxJsonLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
                 blocked = getBlocked(json, replacerConfig, ReplaceMode.JSON);
                 if (blocked) {
                     return true;
@@ -240,13 +247,20 @@ public class ReplacerManager {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
+        int length;
+        int maxLength;
         boolean blocked = false;
         for (Replaceable replaceable : container.getTexts()) {
             String text = replaceable.getText();
             if (text.isEmpty()) {
                 continue;
             }
+            length = text.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
+                maxLength = replacerConfig.getMaxTextLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
                 blocked = getBlocked(text, replacerConfig, ReplaceMode.COMMON);
                 if (blocked) {
                     return true;
@@ -260,12 +274,19 @@ public class ReplacerManager {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
+        int length;
+        int maxLength;
         for (Replaceable replaceable : container.getJsons()) {
             String json = replaceable.getText();
             if (json.isEmpty()) {
                 continue;
             }
+            length = json.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
+                maxLength = replacerConfig.getMaxJsonLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
                 json = getReplaced(json, replacerConfig, ReplaceMode.JSON);
             }
             replaceable.setText(json);
@@ -276,12 +297,19 @@ public class ReplacerManager {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
+        int length;
+        int maxLength;
         for (Replaceable replaceable : container.getTexts()) {
             String text = replaceable.getText();
             if (text.isEmpty()) {
                 continue;
             }
+            length = text.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
+                maxLength = replacerConfig.getMaxTextLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
                 text = getReplaced(text, replacerConfig, ReplaceMode.COMMON);
             }
             replaceable.setText(text);
