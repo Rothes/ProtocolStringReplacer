@@ -222,9 +222,9 @@ public class ReplacerManager {
 
         int length;
         int maxLength;
-        boolean blocked = false;
+        String json;
         for (Replaceable replaceable : container.getJsons()) {
-            String json = replaceable.getText();
+            json = replaceable.getText();
             if (json.isEmpty()) {
                 continue;
             }
@@ -234,13 +234,12 @@ public class ReplacerManager {
                 if (maxLength != -1 && maxLength < length) {
                     continue;
                 }
-                blocked = getBlocked(json, replacerConfig, ReplaceMode.JSON);
-                if (blocked) {
+                if (getBlocked(json, replacerConfig, ReplaceMode.JSON)) {
                     return true;
                 }
             }
         }
-        return blocked;
+        return false;
     }
 
     public boolean isTextBlocked(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
@@ -249,9 +248,9 @@ public class ReplacerManager {
 
         int length;
         int maxLength;
-        boolean blocked = false;
+        String text;
         for (Replaceable replaceable : container.getTexts()) {
-            String text = replaceable.getText();
+            text = replaceable.getText();
             if (text.isEmpty()) {
                 continue;
             }
@@ -261,13 +260,12 @@ public class ReplacerManager {
                 if (maxLength != -1 && maxLength < length) {
                     continue;
                 }
-                blocked = getBlocked(text, replacerConfig, ReplaceMode.COMMON);
-                if (blocked) {
+                if (getBlocked(text, replacerConfig, ReplaceMode.COMMON)) {
                     return true;
                 }
             }
         }
-        return blocked;
+        return false;
     }
 
     public void replaceContainerJsons(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
@@ -276,8 +274,9 @@ public class ReplacerManager {
 
         int length;
         int maxLength;
+        String json;
         for (Replaceable replaceable : container.getJsons()) {
-            String json = replaceable.getText();
+            json = replaceable.getText();
             if (json.isEmpty()) {
                 continue;
             }
@@ -299,8 +298,9 @@ public class ReplacerManager {
 
         int length;
         int maxLength;
+        String text;
         for (Replaceable replaceable : container.getTexts()) {
-            String text = replaceable.getText();
+            text = replaceable.getText();
             if (text.isEmpty()) {
                 continue;
             }
