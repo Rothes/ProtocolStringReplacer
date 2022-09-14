@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.replacer;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
@@ -40,23 +41,23 @@ public class ReplacerManager {
 
     public static class ItemMetaCache {
 
-        private ItemMeta replacedItemMeta;
+        private NBTItem nbtItem;
         private Long lastAccessTime;
         private Boolean blocked;
         private List<Integer> placeholderIndexes;
 
-        public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime,
+        public ItemMetaCache(NBTItem nbtItem, @Nonnull Long lastAccessTime,
                              @Nonnull Boolean blocked, @Nonnull List<Integer> placeholderIndexes) {
             Validate.notNull(lastAccessTime, "Last Access Time cannot be null");
             Validate.notNull(placeholderIndexes, "List cannot be null");
-            this.replacedItemMeta = replacedItemMeta;
+            this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
             this.placeholderIndexes = placeholderIndexes;
         }
 
-        public ItemMeta getReplacedItemMeta() {
-            return replacedItemMeta;
+        public NBTItem getNbtItem() {
+            return nbtItem;
         }
 
         public Long getLastAccessTime() {
@@ -195,10 +196,11 @@ public class ReplacerManager {
         return replacedItemCache.get(itemMeta);
     }
 
-    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull ItemMeta replaced, @NotNull Boolean blocked, @NotNull List<Integer> papiIndexes) {
-        Validate.notNull(replaced, "Replaced ItemMeta cannot be null");
+    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull NBTItem nbtItem,
+                                              @NotNull Boolean blocked, @NotNull List<Integer> papiIndexes) {
+        Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
-        ItemMetaCache itemMetaCache = new ItemMetaCache(replaced, System.currentTimeMillis(), blocked, papiIndexes);
+        ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
         replacedItemCache.put(original, itemMetaCache);
         return itemMetaCache;
     }

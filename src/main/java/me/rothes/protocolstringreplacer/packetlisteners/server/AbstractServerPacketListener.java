@@ -13,7 +13,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.containers.ChatJsonContainer;
-import me.rothes.protocolstringreplacer.replacer.containers.ItemMetaContainer;
+import me.rothes.protocolstringreplacer.replacer.containers.ItemStackContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
 import org.bukkit.inventory.ItemStack;
@@ -219,7 +219,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             ItemStack original = itemStack.clone();
 
             ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-            ItemMetaContainer container = new ItemMetaContainer(itemStack.getItemMeta());
+            ItemStackContainer container = new ItemStackContainer(itemStack);
             CaptureInfoImpl info = null;
             if (user.isCapturing(listenType)) {
                 info = new CaptureInfoImpl();
@@ -269,7 +269,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 container.getMetaCache().setPlaceholderIndexes(papiIndexes);
             }
             replacerManager.setPapi(user, container.getTexts(), papiIndexes);
-            itemStack.setItemMeta(container.getResult());
+            container.getResult();
 
             if (saveCache && !original.isSimilar(itemStack)) {
                 user.saveUserMetaCache(original, itemStack);
