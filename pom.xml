@@ -27,6 +27,11 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -108,6 +113,12 @@
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api</artifactId>
+            <version>2.10.0</version>
             <scope>compile</scope>
         </dependency>
 <!--        <dependency>-->
@@ -213,6 +224,10 @@
                             <pattern>org.neosearch.stringsearcher</pattern>
                             <shadedPattern>me.rothes.protocolstringreplacer.libs.org.neosearch.stringsearcher</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                            <shadedPattern>me.rothes.protocolstringreplacer.libs.de.tr7zw.changeme.nbtapi</shadedPattern>
+                        </relocation>
                     </relocations>
 
                     <minimizeJar>true</minimizeJar>
@@ -221,6 +236,7 @@
                             <include>commons-collections:*</include>
                             <include>org.bstats:*</include>
                             <include>org.neosearch.stringsearcher:*</include>
+                            <include>de.tr7zw:*</include>
                         </includes>
                     </artifactSet>
                     <filters>
