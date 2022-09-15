@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
@@ -16,14 +17,11 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
-import org.bukkit.inventory.meta.tags.ItemTagType;
 import org.bukkit.permissions.Permission;
 
 import javax.annotation.Nonnull;
@@ -36,8 +34,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PsrUser {
-
-    private static final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getPacketListenerManager().getUserCacheKey();
 
     private UUID uuid;
     private Player player;
@@ -78,10 +74,6 @@ public class PsrUser {
             this.player = (Player) sender;
             uuid = player.getUniqueId();
         }
-    }
-
-    public static NamespacedKey getUserCacheKey() {
-        return userCacheKey;
     }
 
     public CommandSender getSender() {
@@ -299,37 +291,13 @@ public class PsrUser {
                 return;
             }
             ItemMeta originalMeta = originalItem.getItemMeta();
-            ItemMeta replacedMeta = replacedItem.getItemMeta();
-            if (!originalMeta.equals(replacedMeta)) {
-                Short uniqueCacheKey = this.nextUniqueCacheKey();
-                if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13) {
-                    CustomItemTagContainer tagContainer = replacedMeta.getCustomTagContainer();
-                    tagContainer.setCustomTag(getUserCacheKey(), ItemTagType.SHORT, uniqueCacheKey);
-                } else {
-                    addCacheLegacy(replacedMeta, uniqueCacheKey);
-                }
-                replacedItem.setItemMeta(replacedMeta);
+            if (!originalMeta.equals(replacedItem.getItemMeta())) {
+                NBTItem nbtItem = new NBTItem(replacedItem);
+                nbtItem.addCompound("ProtocolStringReplacer").setShort("UserMetaCacheKey", nextUniqueCacheKey());
+                replacedItem.setItemMeta(nbtItem.getItem().getItemMeta());
                 this.getMetaCache().put(uniqueCacheKey, originalMeta);
             }
         }
-    }
-
-    private void addCacheLegacy(ItemMeta itemMeta, short uniqueCacheKey) {
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
-        lore.add(addColorHidedString(String.valueOf(uniqueCacheKey)));
-        itemMeta.setLore(lore);
-    }
-
-    private String addColorHidedString(String text) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("§p§s§r§-§x");
-        for (char Char : text.toCharArray()) {
-            stringBuilder.append('§').append(Char);
-        }
-        return stringBuilder.toString();
     }
 
     @Override

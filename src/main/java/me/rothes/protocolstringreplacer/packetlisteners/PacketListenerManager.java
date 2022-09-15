@@ -31,17 +31,10 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.sign.UpdateSign;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.SetSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItems;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItemsUpper12;
-import org.bukkit.NamespacedKey;
 
 public class PacketListenerManager {
 
-    private final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13 ?
-            new NamespacedKey(ProtocolStringReplacer.getInstance(), "user_cache_key") : null;
     private ProtocolManager protocolManager;
-
-    public NamespacedKey getUserCacheKey() {
-        return userCacheKey;
-    }
 
     public ProtocolManager getProtocolManager() {
         return protocolManager;
