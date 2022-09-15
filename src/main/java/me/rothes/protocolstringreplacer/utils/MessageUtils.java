@@ -25,13 +25,13 @@ public class MessageUtils {
         ComponentBuilder hoverTextBuilder = new ComponentBuilder("").append("§3§l§m----------------------§3§l Captured Contents §m----------------------\n")
                 .append("§b§lCommons: \n");
         for (String text : info.getTexts()) {
-            hoverTextBuilder.append("§6§l- §r" + text + "\n");
+            hoverTextBuilder.append("§6§l- §r" + ColorUtils.showColorCodes(text) + "\n");
         }
         String json = "";
         hoverTextBuilder.append("\n§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A" : "\n"));
         for (String json1 : info.getJsons()) {
             json = json1;
-            hoverTextBuilder.append("§6§l- §r" + json + "\n");
+            hoverTextBuilder.append("§6§l- §r" + ColorUtils.showColorCodes(json) + "\n");
         }
         hoverTextBuilder.append("§aClick for clipboard");
         ComponentBuilder captureMessageBuilder = new ComponentBuilder("").append("§3 §l" + info.getListenType().getName() + "§3: §b" + time)
@@ -47,13 +47,13 @@ public class MessageUtils {
         for (String text : info.getTexts()) {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, text) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, text);
-            user.sendFilteredMessage(new ComponentBuilder("§6§l - §r" + text).event(clickEvent).create());
+            user.sendFilteredMessage(new ComponentBuilder("§6§l - §r" + ColorUtils.showColorCodes(text)).event(clickEvent).create());
         }
         user.sendFilteredText("§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A" : ""));
         for (String json : info.getJsons()) {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
-            user.sendFilteredMessage(new ComponentBuilder("§6§l - §r" + json).event(clickEvent).create());
+            user.sendFilteredMessage(new ComponentBuilder("§6§l - §r" + ColorUtils.showColorCodes(json)).event(clickEvent).create());
         }
     }
 
