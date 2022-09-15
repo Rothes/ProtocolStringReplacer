@@ -33,7 +33,6 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
                 }
                 itemStack.setItemMeta(original);
             }
-            System.out.println(nbtItem.getCompound());
         }
     }
 
