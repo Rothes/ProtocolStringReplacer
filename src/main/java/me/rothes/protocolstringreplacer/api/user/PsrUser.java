@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.google.common.collect.Lists;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
@@ -27,6 +28,7 @@ import org.bukkit.permissions.Permission;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -151,7 +153,7 @@ public class PsrUser {
     }
 
     public void addCaptureInfo(ListenType listenType, CaptureInfo info) {
-        captures.get(listenType).add(0, info);
+        captures.get(listenType).add(info);
     }
 
     public List<CaptureInfo> getCaptureInfos(ListenType listenType) {
