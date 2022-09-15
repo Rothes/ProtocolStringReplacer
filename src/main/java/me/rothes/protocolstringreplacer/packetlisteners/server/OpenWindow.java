@@ -21,6 +21,9 @@ public final class OpenWindow extends AbstractServerPacketListener {
 
         Class<?> packetClass = PacketType.Play.Server.OPEN_WINDOW.getPacketClass();
         for (Field declaredField : packetClass.getDeclaredFields()) {
+            if (declaredField.getType() == String.class) {
+                return;
+            }
             if (declaredField.getType() != int.class && declaredField.getType() != MinecraftReflection.getIChatBaseComponentClass()) {
                 windowTypeField = declaredField;
                 windowTypeField.setAccessible(true);
@@ -56,7 +59,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
                     }
                 } catch (IllegalAccessException ignored) {
                 }
-            } else if (packet.getIntegers().read(1) == 7) {
+            } else if (packet.getStrings().read(0).equals("minecraft:anvil")) {
                 user.setInAnvil(true);
             }
         }
