@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class ItemStackContainer extends AbstractContainer<ItemStack> {
 
+    private static final boolean NAME_JSON = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13;
+    private static final boolean LORE_JSON = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 14;
     private static final Material WRITABLE_BOOK;
 
     static {
@@ -70,17 +72,44 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
         NBTCompound display = nbtItem.getCompound("display");
         if (display != null) {
             if (display.hasKey("Name")) {
-                children.add(new ChatJsonContainer(display.getString("Name"), root, true) {
-                    @Override
-                    public String getResult() {
-                        String result = super.getResult();
-                        display.setString("Name", result);
-                        return result;
-                    }
-                });
+                if (NAME_JSON) {
+                    children.add(new ChatJsonContainer(display.getString("Name"), root, true) {
+                        @Override
+                        public String getResult() {
+                            String result = super.getResult();
+                            display.setString("Name", result);
+                            return result;
+                        }
+                    });
+                } else {
+                    children.add(new SimpleTextContainer(display.getString("Name"), root) {
+                        @Override
+                        public String getResult() {
+                            String result = super.getResult();
+                            display.setString("Name", result);
+                            return result;
+                        }
+                    });
+                }
             }
             if (display.hasKey("Lore")) {
-                addJsonList(display.getStringList("Lore"));
+                if (LORE_JSON) {
+                    addJsonList(display.getStringList("Lore"));
+                } else {
+                    NBTList<String> list = display.getStringList("Lore");
+                    int size = list.size();
+                    for (int line = 0; line < size; line++) {
+                        int finalLine = line;
+                        children.add(new SimpleTextContainer(list.get(finalLine), root) {
+                            @Override
+                            public String getResult() {
+                                String result = super.getResult();
+                                list.set(finalLine, result);
+                                return result;
+                            }
+                        });
+                    }
+                }
             }
         }
 
