@@ -16,7 +16,7 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
         super(packetType);
     }
 
-    protected void resotreItem(PsrUser user, ItemStack itemStack) {
+    protected void restoreItem(PsrUser user, ItemStack itemStack) {
         if (itemStack.hasItemMeta()) {
             NBTItem nbtItem = new NBTItem(itemStack);
             if (!nbtItem.hasKey("ProtocolStringReplacer")) {
