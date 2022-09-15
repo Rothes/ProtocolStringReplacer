@@ -237,10 +237,10 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         List<Integer> papiIndexes = container.getMetaCache().getPlaceholderIndexes();
         if (!papiIndexes.isEmpty()) {
+            container.cloneItem();
             container.createDefaultChildren();
             container.createTexts(container);
 
-            container.cloneItem();
             replacerManager.setPapi(user, container.getTexts(), papiIndexes);
         }
         container.getResult();
@@ -287,6 +287,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         }
         replacerManager.replaceContainerTexts(container, replacers);
         container.getMetaCache().setPlaceholderIndexes(replacerManager.getPapiIndexes(container.getTexts()));
+        container.getResult();
         return false;
     }
 
