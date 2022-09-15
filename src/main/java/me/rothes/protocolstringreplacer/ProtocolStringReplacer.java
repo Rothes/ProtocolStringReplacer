@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 public class ProtocolStringReplacer extends JavaPlugin {
 
     public static final String VERSION_CHANNEL = "Stable";
-    public static final int VERSION_NUMBER = 95;
+    public static final int VERSION_NUMBER = 96;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private final HashMap<String, Integer> msgTimes = new HashMap<>();
