@@ -20,7 +20,9 @@ public class SimpleTextContainer extends AbstractContainer<String> {
     @Override
     public void createTexts(@NotNull Container<?> container) {
         super.createTexts(container);
-        root.addText(new ReplaceableImpl());
+        if (!content.isEmpty()) {
+            root.addText(new ReplaceableImpl());
+        }
     }
 
     @Override

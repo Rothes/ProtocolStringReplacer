@@ -5,6 +5,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -68,26 +69,52 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                 });
             }
             if (display.hasKey("Lore")) {
-                NBTList<String> loreNbt = display.getStringList("Lore");
-                int size = loreNbt.size();
-                for (int line = 0; line < size; line++) {
-                    int finalLine = line;
-                    children.add(new ChatJsonContainer(loreNbt.get(finalLine), root, true) {
-                        @Override
-                        public String getResult() {
-                            String result = super.getResult();
-                            loreNbt.set(finalLine, result);
-                            return result;
-                        }
-                    });
-                }
+                addJsonList(display.getStringList("Lore"));
             }
         }
 
-        if (content instanceof BookMeta) {
-            children.add(new BookMetaContainer((BookMeta) content, root));
+        Material type = content.getType();
+        if (type == Material.WRITABLE_BOOK || type == Material.WRITTEN_BOOK) {
+            if (nbtItem.hasKey("author")) {
+                children.add(new SimpleTextContainer(nbtItem.getString("author"), root) {
+                    @Override
+                    public String getResult() {
+                        String result = super.getResult();
+                        nbtItem.setString("author", result);
+                        return result;
+                    }
+                });
+            }
+            if (nbtItem.hasKey("title")) {
+                children.add(new SimpleTextContainer(nbtItem.getString("title"), root) {
+                    @Override
+                    public String getResult() {
+                        String result = super.getResult();
+                        nbtItem.setString("title", result);
+                        return result;
+                    }
+                });
+            }
+            if (nbtItem.hasKey("pages")) {
+                addJsonList(nbtItem.getStringList("pages"));
+            }
         }
         super.createDefaultChildren();
+    }
+
+    private void addJsonList(NBTList<String> list) {
+        int size = list.size();
+        for (int line = 0; line < size; line++) {
+            int finalLine = line;
+            children.add(new ChatJsonContainer(list.get(finalLine), root, true) {
+                @Override
+                public String getResult() {
+                    String result = super.getResult();
+                    list.set(finalLine, result);
+                    return result;
+                }
+            });
+        }
     }
 
     @Override
