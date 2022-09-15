@@ -4,20 +4,20 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sk89q.protocolstringreplacer.PsrDisguisePlugin;
+import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
+import me.rothes.protocolstringreplacer.api.user.PsrUserManager;
+import me.rothes.protocolstringreplacer.commands.CommandHandler;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
 import me.rothes.protocolstringreplacer.console.PsrMessage;
 import me.rothes.protocolstringreplacer.events.PsrReloadEvent;
-import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
-import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
-import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
-import me.rothes.protocolstringreplacer.api.user.PsrUserManager;
-import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
-import me.rothes.protocolstringreplacer.commands.CommandHandler;
 import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
 import me.rothes.protocolstringreplacer.listeners.PlayerQuitListener;
 import me.rothes.protocolstringreplacer.packetlisteners.PacketListenerManager;
+import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
+import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
 import me.rothes.protocolstringreplacer.upgrades.UpgradeEnum;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
@@ -429,13 +429,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 JsonObject channel = root.getAsJsonObject("Version_Channels").getAsJsonObject(VERSION_CHANNEL);
                 if (channel == null) {
                     warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel"));
-                } else if (channel.has("Message")){
-                    if (Integer.parseInt(channel.getAsJsonPrimitive("Latest_Version_Number").getAsString())
+                } else if (channel.has("Message")
+                        && Integer.parseInt(channel.getAsJsonPrimitive("Latest_Version_Number").getAsString())
                         > VERSION_NUMBER) {
-
-                        for (String s : getLocaledJsonMessage(channel.getAsJsonObject("Message")).split("\n")) {
-                            warn(s);
-                        }
+                    for (String s : getLocaledJsonMessage(channel.getAsJsonObject("Message")).split("\n")) {
+                        warn(s);
                     }
                 }
 
