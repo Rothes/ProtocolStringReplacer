@@ -28,12 +28,16 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- §r" + text + "\n");
         }
         String json = "";
-        hoverTextBuilder.append("\n§b§lJsons: \n");
-        for (String json1 : info.getJsons()) {
-            json = json1;
-            hoverTextBuilder.append("§6§l- §r" + json + "\n");
+        hoverTextBuilder.append("\n§b§lJsons: ");
+        if (info.getJsons().isEmpty()) {
+            hoverTextBuilder.append("§fN/A");
+        } else {
+            for (String json1 : info.getJsons()) {
+                json = json1;
+                hoverTextBuilder.append("§6§l- §r" + json + "\n");
+            }
+            hoverTextBuilder.append("§aClick to copy Json");
         }
-        hoverTextBuilder.append("§aClick to copy Json");
         ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                 new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
         ComponentBuilder captureMessageBuilder = new ComponentBuilder("").append("§3 §l" + info.getListenType().getName() + "§3: §b" + time)
