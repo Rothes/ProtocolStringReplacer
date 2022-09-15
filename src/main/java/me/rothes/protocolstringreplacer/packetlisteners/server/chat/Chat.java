@@ -130,7 +130,7 @@ public final class Chat extends AbstractServerComponentsPacketListener {
             if (spigotComponent != null) {
                 message = spigotComponent[0];
             } else {
-                message = ComponentSerializer.parse(PaperUtils.getPaperGsonComponentSerializer().serialize(getPaperComponent(modifier)))[0];
+                message = ComponentSerializer.parse(PaperUtils.serializeComponent(getPaperComponent(modifier)))[0];
             }
         }
 

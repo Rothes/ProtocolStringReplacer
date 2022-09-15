@@ -66,7 +66,7 @@ public abstract class AbstractServerComponentsPacketListener extends AbstractSer
             return null;
         }
 
-        String result = getReplacedJson(packetEvent, user, listenType, PaperUtils.getPaperGsonComponentSerializer().serialize(read), filter);
+        String result = getReplacedJson(packetEvent, user, listenType, PaperUtils.serializeComponent(read), filter);
         componentModifier.write(0, null);
         return result == null ? BLOCKED_JSON : result;
     }
