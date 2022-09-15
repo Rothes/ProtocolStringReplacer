@@ -186,7 +186,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
             return true;
         } else {
             nbtItem = new NBTItem(content);
-            metaCache = replacerManager.addReplacedItemCache(original, nbtItem, false, new ArrayList<>());
+            metaCache = replacerManager.addReplacedItemCache(original, nbtItem, false, new int[0]);
             return false;
         }
     }

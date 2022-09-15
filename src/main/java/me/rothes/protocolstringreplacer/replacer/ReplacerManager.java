@@ -42,14 +42,11 @@ public class ReplacerManager {
     public static class ItemMetaCache {
 
         private NBTItem nbtItem;
-        private Long lastAccessTime;
-        private Boolean blocked;
-        private List<Integer> placeholderIndexes;
+        private long lastAccessTime;
+        private boolean blocked;
+        private int[] placeholderIndexes;
 
-        public ItemMetaCache(NBTItem nbtItem, @Nonnull Long lastAccessTime,
-                             @Nonnull Boolean blocked, @Nonnull List<Integer> placeholderIndexes) {
-            Validate.notNull(lastAccessTime, "Last Access Time cannot be null");
-            Validate.notNull(placeholderIndexes, "List cannot be null");
+        public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
             this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
@@ -60,20 +57,19 @@ public class ReplacerManager {
             return nbtItem;
         }
 
-        public Long getLastAccessTime() {
+        public long getLastAccessTime() {
             return lastAccessTime;
         }
 
-        public Boolean isBlocked() {
+        public boolean isBlocked() {
             return blocked;
         }
 
-        public List<Integer> getPlaceholderIndexes() {
+        public int[] getPlaceholderIndexes() {
             return placeholderIndexes;
         }
 
-        public void setPlaceholderIndexes(@Nonnull List<Integer> placeholderIndexes) {
-            Validate.notNull(placeholderIndexes, "List cannot be null");
+        public void setPlaceholderIndexes(int[] placeholderIndexes) {
             this.placeholderIndexes = placeholderIndexes;
         }
 
@@ -81,8 +77,7 @@ public class ReplacerManager {
             this.lastAccessTime = lastAccessTime;
         }
 
-        public void setBlocked(@Nonnull Boolean blocked) {
-            Validate.notNull(blocked, "Boolean cannot be null");
+        public void setBlocked(boolean blocked) {
             this.blocked = blocked;
         }
 
@@ -154,7 +149,7 @@ public class ReplacerManager {
         }
 
         // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new ArrayList<>()));
+        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new int[0]));
     }
 
     public void addReplacerConfig(ReplacerConfig replacerConfig) {
@@ -197,7 +192,7 @@ public class ReplacerManager {
     }
 
     public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull NBTItem nbtItem,
-                                              @NotNull Boolean blocked, @NotNull List<Integer> papiIndexes) {
+                                              boolean blocked, int[] papiIndexes) {
         Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
         ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
@@ -330,6 +325,17 @@ public class ReplacerManager {
         if (indexes.isEmpty()) {
             return;
         }
+        for (int i : indexes) {
+            Replaceable replaceable = replaceables.get(i);
+            replaceable.setText(setPlaceholder(user, replaceable.getText()));
+        }
+    }
+
+    public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables, int[] indexes) {
+        Validate.notNull(user, "PsrUser cannot be null");
+        Validate.notNull(replaceables, "List cannot be null");
+        Validate.notNull(indexes, "List cannot be null");
+
         for (int i : indexes) {
             Replaceable replaceable = replaceables.get(i);
             replaceable.setText(setPlaceholder(user, replaceable.getText()));

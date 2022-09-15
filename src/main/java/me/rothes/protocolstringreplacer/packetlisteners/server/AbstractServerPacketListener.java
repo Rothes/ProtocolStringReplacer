@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+import static com.google.common.base.Preconditions.*;
+
 public abstract class AbstractServerPacketListener extends AbstractPacketListener {
 
     protected final BiPredicate<ReplacerConfig, PsrUser> filter;
@@ -234,8 +236,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             return true;
         }
 
-        List<Integer> papiIndexes = container.getMetaCache().getPlaceholderIndexes();
-        if (!papiIndexes.isEmpty()) {
+        int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
+        if (papiIndexes.length != 0) {
             container.cloneItem();
             container.createDefaultChildren();
             container.createTexts(container);
@@ -285,7 +287,12 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             return true;
         }
         replacerManager.replaceContainerTexts(container, replacers);
-        container.getMetaCache().setPlaceholderIndexes(replacerManager.getPapiIndexes(container.getTexts()));
+        Integer[] ints = replacerManager.getPapiIndexes(container.getTexts()).toArray(new Integer[0]);
+        int[] indexes = new int[ints.length];
+        for (int i = 0; i < ints.length; i++) {
+            indexes[i] = ints[i];
+        }
+        container.getMetaCache().setPlaceholderIndexes(indexes);
         container.getResult();
         return false;
     }
