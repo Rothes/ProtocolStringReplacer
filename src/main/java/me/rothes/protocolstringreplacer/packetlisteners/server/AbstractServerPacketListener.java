@@ -18,7 +18,6 @@ import me.rothes.protocolstringreplacer.replacer.containers.ItemStackContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
