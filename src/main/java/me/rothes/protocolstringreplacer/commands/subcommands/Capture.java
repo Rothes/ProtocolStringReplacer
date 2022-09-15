@@ -162,7 +162,7 @@ public class Capture extends SubCommand {
                     return;
                 }
                 MessageUtils.sendCaptureInfoClipboard(user, captureInfos.get(index));
-                user.sendFilteredMessage("§aClick any entry to copy");
+                user.sendFilteredText("§aClick any entry to copy");
             });
         }
     }
