@@ -7,6 +7,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
 import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.KickDisconnect;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.ChatPreview;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.SystemChat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBar;
@@ -97,6 +98,7 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
         protocolManager.addPacketListener(new UpdateScore().packetAdapter);
         protocolManager.addPacketListener(new ScoreBoardObjective().packetAdapter);
+        protocolManager.addPacketListener(new KickDisconnect().packetAdapter);
 
 
         protocolManager.addPacketListener(new WindowClick().packetAdapter);
