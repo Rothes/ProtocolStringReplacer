@@ -8,8 +8,8 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 public class PaperUtils {
 
-    private static GsonComponentSerializer paperGsonComponentSerializer = PaperComponents.gsonSerializer();
-    private static Gson psrSerializer = paperGsonComponentSerializer.populator().apply(new GsonBuilder().disableHtmlEscaping()).create();
+    private static final GsonComponentSerializer paperGsonComponentSerializer = PaperComponents.gsonSerializer();
+    private static final Gson psrSerializer = paperGsonComponentSerializer.populator().apply(new GsonBuilder().disableHtmlEscaping()).create();
 
     public static GsonComponentSerializer getPaperGsonComponentSerializer() {
         return paperGsonComponentSerializer;
