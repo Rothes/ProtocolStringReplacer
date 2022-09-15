@@ -1,7 +1,7 @@
 package me.rothes.protocolstringreplacer.replacer;
 
-import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -40,6 +40,12 @@ public class FileReplacerConfig implements ReplacerConfig {
 
     private int maxTextLength = -1;
     private int maxJsonLength = -1;
+
+    private String permissionLimit;
+    private List<String> windowTitleLimit;
+    private boolean windowTitleLimitIgnoreInventory;
+    private boolean handleScoreboardTitle;
+    private boolean handleScoreboardEntityName;
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
         long startTime = System.nanoTime();
@@ -309,7 +315,10 @@ public class FileReplacerConfig implements ReplacerConfig {
             blocks.put(replaceMode, list);
             updateStringSearcher(replaceMode);
         }
+        loadOptionalFilters();
+    }
 
+    private void loadOptionalFilters() {
         maxTextLength = configuration.getInt("Options.Filter.Max-Length.Text", -1);
         if (maxTextLength <= 0) {
             maxTextLength = -1;
@@ -319,6 +328,11 @@ public class FileReplacerConfig implements ReplacerConfig {
         if (maxJsonLength <= 0) {
             maxJsonLength = -1;
         }
+        permissionLimit = configuration.getString("Options.Filter.User.Permission", "");
+        windowTitleLimit = configuration.getStringList("Options.Filter.ItemStack.Window-Title");
+        windowTitleLimitIgnoreInventory = configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
+        handleScoreboardTitle = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
+        handleScoreboardEntityName = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
     }
 
     private void updateStringSearcher(@Nonnull ReplaceMode replaceMode) {
@@ -351,6 +365,31 @@ public class FileReplacerConfig implements ReplacerConfig {
     @Override
     public int getMaxJsonLength() {
         return maxJsonLength;
+    }
+
+    @Override
+    public @NotNull String getPermissionLimit() {
+        return permissionLimit;
+    }
+
+    @Override
+    public @NotNull List<String> getWindowTitleLimit() {
+        return windowTitleLimit;
+    }
+
+    @Override
+    public boolean windowTitleLimitIgnoreInventory() {
+        return windowTitleLimitIgnoreInventory;
+    }
+
+    @Override
+    public boolean handleScoreboardTitle() {
+        return handleScoreboardTitle;
+    }
+
+    @Override
+    public boolean handleScoreboardEntityName() {
+        return handleScoreboardEntityName;
     }
 
     @Override

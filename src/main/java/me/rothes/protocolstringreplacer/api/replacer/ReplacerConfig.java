@@ -11,6 +11,7 @@ import org.neosearch.stringsearcher.StringSearcher;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 public interface ReplacerConfig {
@@ -58,6 +59,21 @@ public interface ReplacerConfig {
     }
     default int getMaxJsonLength() {
         return -1;
+    }
+    default @NotNull String getPermissionLimit() {
+        return "";
+    }
+    default @NotNull List<String> getWindowTitleLimit() {
+        return Collections.emptyList();
+    }
+    default boolean windowTitleLimitIgnoreInventory() {
+        return false;
+    }
+    default boolean handleScoreboardTitle() {
+        return false;
+    }
+    default boolean handleScoreboardEntityName() {
+        return false;
     }
 
 }

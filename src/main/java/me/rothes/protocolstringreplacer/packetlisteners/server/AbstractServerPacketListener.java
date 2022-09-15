@@ -7,7 +7,6 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
-import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
@@ -24,8 +23,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
-
-import static com.google.common.base.Preconditions.*;
 
 public abstract class AbstractServerPacketListener extends AbstractPacketListener {
 
@@ -55,15 +52,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     protected final boolean checkPermission(PsrUser user, ReplacerConfig replacerConfig) {
-        CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
-        if (configuration == null) {
-            return true;
-        }
-        String permission = configuration.getString("Options.Filter.User.Permission");
-        if (permission != null && !permission.isEmpty()) {
-            return user.hasPermission(permission);
-        }
-        return true;
+        String permission = replacerConfig.getPermissionLimit();
+        return permission.isEmpty() || user.hasPermission(permission);
     }
 
     protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,

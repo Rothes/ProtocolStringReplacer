@@ -1,11 +1,11 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
-import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+
 import java.util.List;
 import java.util.function.BiPredicate;
 
@@ -18,16 +18,12 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
         itemFilter = (replacerConfig, user) -> {
             if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
                 String currentWindowTitle = user.getCurrentWindowTitle();
-                CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
-                if (configuration == null) {
-                    return true;
-                }
-                List<String> windowTitles = configuration.getStringList("Options.Filter.ItemStack.Window-Title");
+                List<String> windowTitles = replacerConfig.getWindowTitleLimit();
                 if (windowTitles.isEmpty()) {
                     return true;
                 }
                 if (currentWindowTitle == null) {
-                    return configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
+                    return replacerConfig.windowTitleLimitIgnoreInventory();
                 } else {
                     return windowTitles.contains(currentWindowTitle);
                 }
