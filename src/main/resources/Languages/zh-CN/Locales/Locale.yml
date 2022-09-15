@@ -217,6 +217,7 @@ Sender:
       Description: '重载插件配置文件'
       Already-Reloading: '&c插件已经在重载过程中. 请稍后再重载.'
       Async-Reloading: '&b正在异步重载插件...'
+      Exception: '§c重载插件时发生错误. 请检查控制台.'
       Complete: '&a插件已重载完毕.'
       Help:
         Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &e重载&7 ]&l &7&m------------'

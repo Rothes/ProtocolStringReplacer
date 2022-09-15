@@ -504,27 +504,33 @@ public class ProtocolStringReplacer extends JavaPlugin {
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
-            loadConfig();
-            checkConfig();
-            replacerManager.getCleanTask().cancel();
-            replacerManager.saveReplacerConfigs();
-            replacerManager = new ReplacerManager();
-            replacerManager.initialize();
-            replacerManager.registerTask();
-            userManager = new PsrUserManager();
-            packetListenerManager.removeListeners();
-            packetListenerManager.addListeners();
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                userManager.loadUser(player);
-                player.updateInventory();
+            try {
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
+                loadConfig();
+                checkConfig();
+                replacerManager.getCleanTask().cancel();
+                replacerManager.saveReplacerConfigs();
+                replacerManager = new ReplacerManager();
+                replacerManager.initialize();
+                replacerManager.registerTask();
+                userManager = new PsrUserManager();
+                packetListenerManager.removeListeners();
+                packetListenerManager.addListeners();
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    userManager.loadUser(player);
+                    player.updateInventory();
+                }
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
+                Bukkit.getScheduler().runTask(instance, () -> {
+                    // Don't need to check cancelled here
+                    Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
+                });
+            } catch (Throwable t) {
+                t.printStackTrace();
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Error-Occurred"));
+            } finally {
+                reloading = false;
             }
-            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
-            Bukkit.getScheduler().runTask(instance, () -> {
-                // Don't need to check cancelled here
-                Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
-            });
-            reloading = false;
         });
     }
 

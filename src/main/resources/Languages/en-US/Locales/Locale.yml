@@ -217,6 +217,7 @@ Sender:
       Description: 'Reload configs'
       Already-Reloading: '&cPlugin is already reloading. Please reload later.'
       Async-Reloading: '&bReloading plugin in async...'
+      Error-Occurred: '§cAn error occurred while reloading the plugin. Please check the console.'
       Complete: '&aConfigs has been reloaded.'
       Help:
         Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eReload&7 ]&l &7&m------------'
