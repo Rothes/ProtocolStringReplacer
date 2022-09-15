@@ -27,7 +27,7 @@ public class ColorUtils {
         for(int i = string.length() - 2; i >= 0; i--) {
             char Char = string.charAt(i);
             char nextChar = string.charAt(i + 1);
-            if (Char == '§' && "0123456789abcdefklmnOoxr".indexOf(nextChar) != -1) {
+            if (Char == '§' && "0123456789abcdefklmnoxr".indexOf(nextChar) != -1) {
                 stringBuilder.insert(i + 2, nextChar).insert(i + 2, '&');
             }
         }
