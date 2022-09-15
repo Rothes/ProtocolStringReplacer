@@ -7,13 +7,24 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class ItemStackContainer extends AbstractContainer<ItemStack> {
+
+    private static final Material WRITABLE_BOOK;
+
+    static {
+        Material writableBook;
+        try {
+            writableBook = Material.valueOf("BOOK_AND_QUILL");
+        } catch (IllegalArgumentException e) {
+            writableBook = Material.WRITABLE_BOOK;
+        }
+        WRITABLE_BOOK = writableBook;
+    }
 
     protected final boolean cache;
     protected final boolean fromCache;
@@ -74,7 +85,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
         }
 
         Material type = content.getType();
-        if (type == Material.WRITABLE_BOOK || type == Material.WRITTEN_BOOK) {
+        if (type == WRITABLE_BOOK || type == Material.WRITTEN_BOOK) {
             if (nbtItem.hasKey("author")) {
                 children.add(new SimpleTextContainer(nbtItem.getString("author"), root) {
                     @Override
