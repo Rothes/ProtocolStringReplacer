@@ -19,7 +19,7 @@ public class HoverEventContainer extends AbstractContainer<HoverEvent> {
 
     @Override
     public void createDefaultChildren() {
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 15 && ! content.isLegacy()) {
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 15 && !content.isLegacy()) {
             List<Content> contents = content.getContents();
             for (int i = 0; i < contents.size(); i++) {
                 int finalI = i;

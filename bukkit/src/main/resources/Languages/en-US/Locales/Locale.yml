@@ -22,6 +22,7 @@ Console-Sender:
       Invalid-Placeholder-Head: '&cInvalid Placeholder-Head value! Please define one character. Using defaults ''｛'''
       Invalid-Placeholder-Tail: '&cInvalid Placeholder-Tail value! Please define one character. Using defaults ''｝'''
       Invalid-Listener-Priority: '&cInvalid Listener-Priority value! Using defaults ''HIGHEST'''
+      Invalid-Config-Load-LifeCycle: '&cInvalid Config-Load-LifeCycle value! Using defaults ''ENABLE'''
     Updater:
       Invalid-Channel: '§cPSR is in a invalid channel ("%0%"). Please update your plugin to the latest version.'
       Error-Checking-Version: '§cFailed to check version informations via server, Please try updating your plugin: %0%'
@@ -214,7 +215,9 @@ Sender:
         PAPI-Target: '<PAPI target>'
     Reload:
       Description: 'Reload configs'
+      Already-Reloading: '&cPlugin is already reloading. Please reload later.'
       Async-Reloading: '&bReloading plugin in async...'
+      Error-Occurred: '§cAn error occurred while reloading the plugin. Please check the console.'
       Complete: '&aConfigs has been reloaded.'
       Help:
         Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eReload&7 ]&l &7&m------------'

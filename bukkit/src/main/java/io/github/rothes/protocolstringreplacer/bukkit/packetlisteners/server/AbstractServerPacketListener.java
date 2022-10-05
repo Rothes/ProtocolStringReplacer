@@ -4,18 +4,18 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.ItemMetaContainer;
-import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.Replaceable;
-import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.SimpleTextContainer;
 import io.github.rothes.protocolstringreplacer.bukkit.ProtocolStringReplacer;
+import io.github.rothes.protocolstringreplacer.bukkit.api.capture.CaptureInfo;
 import io.github.rothes.protocolstringreplacer.bukkit.api.capture.CaptureInfoImpl;
-import io.github.rothes.protocolstringreplacer.bukkit.api.configuration.CommentYamlConfiguration;
 import io.github.rothes.protocolstringreplacer.bukkit.api.replacer.ReplacerConfig;
 import io.github.rothes.protocolstringreplacer.bukkit.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.AbstractPacketListener;
 import io.github.rothes.protocolstringreplacer.bukkit.replacer.ListenType;
 import io.github.rothes.protocolstringreplacer.bukkit.replacer.ReplacerManager;
 import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.ChatJsonContainer;
+import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.ItemStackContainer;
+import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.Replaceable;
+import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.SimpleTextContainer;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -52,15 +52,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     protected final boolean checkPermission(PsrUser user, ReplacerConfig replacerConfig) {
-        CommentYamlConfiguration configuration = replacerConfig.getConfiguration();
-        if (configuration == null) {
-            return true;
-        }
-        String permission = configuration.getString("Options.Filter.User.Permission");
-        if (permission != null && !permission.isEmpty()) {
-            return user.hasPermission(permission);
-        }
-        return true;
+        String permission = replacerConfig.getPermissionLimit();
+        return permission.isEmpty() || user.hasPermission(permission);
     }
 
     protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
@@ -215,66 +208,82 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                               @Nonnull ItemStack itemStack, List<ReplacerConfig> replacers, boolean saveCache) {
-        if (itemStack.hasItemMeta()) {
-            ItemStack original = itemStack.clone();
+        if (!itemStack.hasItemMeta()) {
+            return false;
+        }
+        ItemStack original = itemStack.clone();
 
-            ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-            ItemMetaContainer container = new ItemMetaContainer(itemStack.getItemMeta());
-            CaptureInfoImpl info = null;
-            if (user.isCapturing(listenType)) {
-                info = new CaptureInfoImpl();
-                info.setTime(System.currentTimeMillis());
-                info.setUser(user);
-                info.setListenType(listenType);
-            }
+        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+        ItemStackContainer container = new ItemStackContainer(itemStack);
 
-            container.createDefaultChildren();
-            boolean fromCache = container.isFromCache();
-            if (fromCache && container.getMetaCache().isBlocked()) {
-                packetEvent.setCancelled(true);
+        if (!container.isFromCache()) {
+            if (cacheItemStack(container, replacers)) {
                 return true;
-            }
-
-            container.createJsons(container);
-            if (!fromCache && replacerManager.isJsonBlocked(container, replacers)) {
-                packetEvent.setCancelled(true);
-                container.getMetaCache().setBlocked(true);
-                return true;
-            }
-            if (!fromCache) {
-                if (user.isCapturing(listenType)) {
-                    info.setJsons(container.getJsons());
-                }
-                replacerManager.replaceContainerJsons(container, replacers);
-            }
-            container.createTexts(container);
-            if (!fromCache && replacerManager.isTextBlocked(container, replacers)) {
-                packetEvent.setCancelled(true);
-                container.getMetaCache().setBlocked(true);
-                return true;
-            }
-            if (!fromCache) {
-                if (user.isCapturing(listenType)) {
-                    info.setTexts(container.getTexts());
-                    user.addCaptureInfo(listenType, info);
-                }
-                replacerManager.replaceContainerTexts(container, replacers);
-            }
-
-            List<Integer> papiIndexes;
-            if (fromCache) {
-                papiIndexes = container.getMetaCache().getPlaceholderIndexes();
-            } else {
-                papiIndexes = replacerManager.getPapiIndexes(container.getTexts());
-                container.getMetaCache().setPlaceholderIndexes(papiIndexes);
-            }
-            replacerManager.setPapi(user, container.getTexts(), papiIndexes);
-            itemStack.setItemMeta(container.getResult());
-
-            if (saveCache && !original.isSimilar(itemStack)) {
-                user.saveUserMetaCache(original, itemStack);
             }
         }
+        if (container.getMetaCache().isBlocked()) {
+            packetEvent.setCancelled(true);
+            return true;
+        }
+
+        int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
+        if (papiIndexes.length != 0) {
+            container.cloneItem();
+            container.createDefaultChildren();
+            container.createTexts(container);
+
+            replacerManager.setPapi(user, container.getTexts(), papiIndexes);
+        }
+        container.getResult();
+
+        if (saveCache && !original.isSimilar(itemStack)) {
+            user.saveUserMetaCache(original, itemStack);
+        }
+        if (user.isCapturing(listenType)) {
+            captureItemStackInfo(user, original, listenType);
+        }
+        return false;
+    }
+
+    private static void captureItemStackInfo(@Nonnull PsrUser user, @Nonnull ItemStack itemStack, @Nonnull ListenType listenType) {
+        ItemStackContainer container = new ItemStackContainer(itemStack, false);
+        CaptureInfo info = new CaptureInfoImpl();
+        info.setTime(System.currentTimeMillis());
+        info.setUser(user);
+        info.setListenType(listenType);
+
+        container.createDefaultChildren();
+        container.createJsons(container);
+
+        info.setJsons(container.getJsons());
+        container.createTexts(container);
+        info.setTexts(container.getTexts());
+        user.addCaptureInfo(listenType, info);
+    }
+
+    private static boolean cacheItemStack(@Nonnull ItemStackContainer container, List<ReplacerConfig> replacers) {
+        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+
+        container.createDefaultChildren();
+        container.createJsons(container);
+        if (replacerManager.isJsonBlocked(container, replacers)) {
+            container.getMetaCache().setBlocked(true);
+            return true;
+        }
+        replacerManager.replaceContainerJsons(container, replacers);
+        container.createTexts(container);
+        if (replacerManager.isTextBlocked(container, replacers)) {
+            container.getMetaCache().setBlocked(true);
+            return true;
+        }
+        replacerManager.replaceContainerTexts(container, replacers);
+        Integer[] ints = replacerManager.getPapiIndexes(container.getTexts()).toArray(new Integer[0]);
+        int[] indexes = new int[ints.length];
+        for (int i = 0; i < ints.length; i++) {
+            indexes[i] = ints[i];
+        }
+        container.getMetaCache().setPlaceholderIndexes(indexes);
+        container.getResult();
         return false;
     }
 

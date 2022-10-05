@@ -25,11 +25,16 @@ repositories {
         name = "jitpack.io"
         url = uri("https://jitpack.io/")
     }
+    maven {
+        name = "CodeMC"
+        url = uri("https://repo.codemc.org/repository/maven-public/")
+    }
 }
 
 dependencies {
     implementation("commons-collections:commons-collections:3.2.2")
     implementation("org.neosearch.stringsearcher:multiple-string-searcher:0.1.1")
+    implementation("de.tr7zw:item-nbt-api:2.10.0")
     implementation("org.bstats:bstats-bukkit:3.0.0")
 
     compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
@@ -53,6 +58,7 @@ tasks.named("shadowJar", ShadowJar::class) {
     relocate("org.apache.commons.collections", "io.github.rothes.protocolstringreplacer.lib.org.apache.commons.collections")
     relocate("org.neosearch.stringsearcher", "io.github.rothes.protocolstringreplacer.lib.org.neosearch.stringsearcher")
     relocate("org.bstats", "io.github.rothes.protocolstringreplacer.lib.org.bstats")
+    relocate("de.tr7zw", "io.github.rothes.protocolstringreplacer.lib.de.tr7zw")
 }
 
 tasks.named("processResources", ProcessResources::class) {

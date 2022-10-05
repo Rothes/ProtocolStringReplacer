@@ -1,9 +1,9 @@
 package io.github.rothes.protocolstringreplacer.bukkit.replacer;
 
+import io.github.rothes.protocolstringreplacer.bukkit.ProtocolStringReplacer;
+import io.github.rothes.protocolstringreplacer.bukkit.PsrLocalization;
 import io.github.rothes.protocolstringreplacer.bukkit.api.configuration.CommentYamlConfiguration;
 import io.github.rothes.protocolstringreplacer.bukkit.api.replacer.ReplacerConfig;
-import io.github.rothes.protocolstringreplacer.bukkit.PsrLocalization;
-import io.github.rothes.protocolstringreplacer.bukkit.ProtocolStringReplacer;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +37,15 @@ public class FileReplacerConfig implements ReplacerConfig {
 
     private HashMap<ReplaceMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
     private HashMap<ReplaceMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
+
+    private int maxTextLength = -1;
+    private int maxJsonLength = -1;
+
+    private String permissionLimit;
+    private List<String> windowTitleLimit;
+    private boolean windowTitleLimitIgnoreInventory;
+    private boolean handleScoreboardTitle;
+    private boolean handleScoreboardEntityName;
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
         long startTime = System.nanoTime();
@@ -306,6 +315,24 @@ public class FileReplacerConfig implements ReplacerConfig {
             blocks.put(replaceMode, list);
             updateStringSearcher(replaceMode);
         }
+        loadOptionalFilters();
+    }
+
+    private void loadOptionalFilters() {
+        maxTextLength = configuration.getInt("Options.Filter.Max-Length.Text", -1);
+        if (maxTextLength <= 0) {
+            maxTextLength = -1;
+        }
+
+        maxJsonLength = configuration.getInt("Options.Filter.Max-Length.Json", -1);
+        if (maxJsonLength <= 0) {
+            maxJsonLength = -1;
+        }
+        permissionLimit = configuration.getString("Options.Filter.User.Permission", "");
+        windowTitleLimit = configuration.getStringList("Options.Filter.ItemStack.Window-Title");
+        windowTitleLimitIgnoreInventory = configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
+        handleScoreboardTitle = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
+        handleScoreboardEntityName = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
     }
 
     private void updateStringSearcher(@Nonnull ReplaceMode replaceMode) {
@@ -328,6 +355,41 @@ public class FileReplacerConfig implements ReplacerConfig {
             strings[i] = (String) blocks.get(replaceMode).get(i);
         }
         this.blocksStringSearcher.put(replaceMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(strings).build());
+    }
+
+    @Override
+    public int getMaxTextLength() {
+        return maxTextLength;
+    }
+
+    @Override
+    public int getMaxJsonLength() {
+        return maxJsonLength;
+    }
+
+    @Override
+    public @NotNull String getPermissionLimit() {
+        return permissionLimit;
+    }
+
+    @Override
+    public @NotNull List<String> getWindowTitleLimit() {
+        return windowTitleLimit;
+    }
+
+    @Override
+    public boolean windowTitleLimitIgnoreInventory() {
+        return windowTitleLimitIgnoreInventory;
+    }
+
+    @Override
+    public boolean handleScoreboardTitle() {
+        return handleScoreboardTitle;
+    }
+
+    @Override
+    public boolean handleScoreboardEntityName() {
+        return handleScoreboardEntityName;
     }
 
     @Override

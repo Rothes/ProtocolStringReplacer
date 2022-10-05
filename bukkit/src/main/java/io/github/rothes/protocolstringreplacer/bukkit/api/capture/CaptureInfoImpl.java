@@ -1,9 +1,8 @@
 package io.github.rothes.protocolstringreplacer.bukkit.api.capture;
 
 import io.github.rothes.protocolstringreplacer.bukkit.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.Replaceable;
 import io.github.rothes.protocolstringreplacer.bukkit.replacer.ListenType;
-import io.github.rothes.protocolstringreplacer.bukkit.utils.ColorUtils;
+import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.Replaceable;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -95,7 +94,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
         }
         List<String> jsons = new ArrayList<>();
         for (Replaceable replaceable : replaceables) {
-            jsons.add(ColorUtils.showColorCodes(replaceable.getText()));
+            jsons.add(replaceable.getText());
         }
         this.jsons = jsons;
     }
@@ -114,7 +113,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
         }
         List<String> texts = new ArrayList<>();
         for (Replaceable replaceable : replaceables) {
-            texts.add(ColorUtils.showColorCodes(replaceable.getText()));
+            texts.add(replaceable.getText());
         }
         this.texts = texts;
     }

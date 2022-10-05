@@ -39,6 +39,9 @@ public class Capture extends SubCommand {
             } else if ("list".equalsIgnoreCase(args[1])) {
                 listCommand(user, args);
                 return;
+            } else if ("clipboard".equalsIgnoreCase(args[1])) {
+                clipboardCommand(user, args);
+                return;
             }
         }
         sendHelp(user);
@@ -124,9 +127,15 @@ public class Capture extends SubCommand {
                 user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Results-Header"));
 
                 List<CaptureInfo> captureMessages = user.getCaptureInfos(listenType);
-                int totalPage = (int) Math.ceil((float) captureMessages.size() / 10);
-                for (int i = (page - 1) * 10; i < captureMessages.size() && i < page * 10; i++) {
-                    MessageUtils.sendCaptureInfo(user, captureMessages.get(i));
+                int size = captureMessages.size();
+                int totalPage = (int) Math.ceil((float) size / 10);
+                int sent = 0;
+                for (int i = size - 1 - (page - 1) * 10; i >= 0; i--) {
+                    sent++;
+                    if (sent > 10) {
+                        break;
+                    }
+                    MessageUtils.sendCaptureInfo(user, captureMessages.get(i), i);
                 }
 
                 MessageUtils.sendPageButtons(user, "/psr capture list " + args[2] + " ", page, totalPage);
@@ -134,6 +143,27 @@ public class Capture extends SubCommand {
             });
         } else {
             user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.List.Detailed-Help"));
+        }
+    }
+
+    private void clipboardCommand(@Nonnull PsrUser user, @Nonnull String[] args) {
+        if (args.length == 4) {
+            Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
+                ListenType listenType = ListenType.getType(args[2]);
+                if (!user.isCapturing(listenType)) {
+                    user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
+                            "Sender.Commands.Capture.Children.List.Not-Capturing-Listen-Type", listenType.getName()));
+                    return;
+                }
+
+                List<CaptureInfo> captureInfos = user.getCaptureInfos(listenType);
+                int index = Integer.parseInt(args[3]);
+                if (captureInfos.size() <= index) {
+                    return;
+                }
+                MessageUtils.sendCaptureInfoClipboard(user, captureInfos.get(index));
+                user.sendFilteredText("§aClick any entry to copy");
+            });
         }
     }
 

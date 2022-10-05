@@ -1,12 +1,13 @@
 package io.github.rothes.protocolstringreplacer.bukkit.replacer;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import io.github.rothes.protocolstringreplacer.bukkit.PsrLocalization;
 import io.github.rothes.protocolstringreplacer.bukkit.api.configuration.CommentYamlConfiguration;
 import io.github.rothes.protocolstringreplacer.bukkit.api.replacer.ReplacerConfig;
-import io.github.rothes.protocolstringreplacer.bukkit.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.Container;
-import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.Replaceable;
-import io.github.rothes.protocolstringreplacer.bukkit.PsrLocalization;
 import io.github.rothes.protocolstringreplacer.bukkit.ProtocolStringReplacer;
+import io.github.rothes.protocolstringreplacer.bukkit.replacer.containers.Replaceable;
+import io.github.rothes.protocolstringreplacer.bukkit.api.user.PsrUser;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import io.github.rothes.protocolstringreplacer.bukkit.utils.FileUtils;
 import org.apache.commons.lang.Validate;
@@ -40,39 +41,35 @@ public class ReplacerManager {
 
     public static class ItemMetaCache {
 
-        private ItemMeta replacedItemMeta;
-        private Long lastAccessTime;
-        private Boolean blocked;
-        private List<Integer> placeholderIndexes;
+        private NBTItem nbtItem;
+        private long lastAccessTime;
+        private boolean blocked;
+        private int[] placeholderIndexes;
 
-        public ItemMetaCache(ItemMeta replacedItemMeta, @Nonnull Long lastAccessTime,
-                             @Nonnull Boolean blocked, @Nonnull List<Integer> placeholderIndexes) {
-            Validate.notNull(lastAccessTime, "Last Access Time cannot be null");
-            Validate.notNull(placeholderIndexes, "List cannot be null");
-            this.replacedItemMeta = replacedItemMeta;
+        public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
+            this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
             this.placeholderIndexes = placeholderIndexes;
         }
 
-        public ItemMeta getReplacedItemMeta() {
-            return replacedItemMeta;
+        public NBTItem getNbtItem() {
+            return nbtItem;
         }
 
-        public Long getLastAccessTime() {
+        public long getLastAccessTime() {
             return lastAccessTime;
         }
 
-        public Boolean isBlocked() {
+        public boolean isBlocked() {
             return blocked;
         }
 
-        public List<Integer> getPlaceholderIndexes() {
+        public int[] getPlaceholderIndexes() {
             return placeholderIndexes;
         }
 
-        public void setPlaceholderIndexes(@Nonnull List<Integer> placeholderIndexes) {
-            Validate.notNull(placeholderIndexes, "List cannot be null");
+        public void setPlaceholderIndexes(int[] placeholderIndexes) {
             this.placeholderIndexes = placeholderIndexes;
         }
 
@@ -80,8 +77,7 @@ public class ReplacerManager {
             this.lastAccessTime = lastAccessTime;
         }
 
-        public void setBlocked(@Nonnull Boolean blocked) {
-            Validate.notNull(blocked, "Boolean cannot be null");
+        public void setBlocked(boolean blocked) {
             this.blocked = blocked;
         }
 
@@ -100,6 +96,30 @@ public class ReplacerManager {
 
     public BukkitTask getCleanTask() {
         return cleanTask;
+    }
+
+    public void registerTask() {
+        ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
+        long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
+        long cleanTaskInterval = instrance.getConfigManager().cleanTaskInterval;
+        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
+            List<ItemMeta> needToRemove = new ArrayList<>();
+            long currentTime = System.currentTimeMillis();
+            for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
+                if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
+                    needToRemove.add(entry.getKey());
+                }
+            }
+            if (!needToRemove.isEmpty()) {
+                Bukkit.getScheduler().runTask(instrance, () -> {
+                    ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
+                            String.valueOf(needToRemove.size())));
+                    for (ItemMeta itemMeta : needToRemove) {
+                        replacedItemCache.remove(itemMeta);
+                    }
+                });
+            }
+        }, 0L, cleanTaskInterval);
     }
 
     public void initialize() {
@@ -129,29 +149,7 @@ public class ReplacerManager {
         }
 
         // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new ArrayList<>()));
-
-        ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
-        long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
-        long cleanTaskInterval = instrance.getConfigManager().cleanTaskInterval;
-        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
-            List<ItemMeta> needToRemove = new ArrayList<>();
-            long currentTime = System.currentTimeMillis();
-            for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
-                if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
-                    needToRemove.add(entry.getKey());
-                }
-            }
-            if (!needToRemove.isEmpty()) {
-                Bukkit.getScheduler().runTask(instrance, () -> {
-                    ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
-                            String.valueOf(needToRemove.size())));
-                    for (ItemMeta itemMeta : needToRemove) {
-                        replacedItemCache.remove(itemMeta);
-                    }
-                });
-            }
-        }, 0L, cleanTaskInterval);
+        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new int[0]));
     }
 
     public void addReplacerConfig(ReplacerConfig replacerConfig) {
@@ -193,10 +191,11 @@ public class ReplacerManager {
         return replacedItemCache.get(itemMeta);
     }
 
-    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull ItemMeta replaced, @NotNull Boolean blocked, @NotNull List<Integer> papiIndexes) {
-        Validate.notNull(replaced, "Replaced ItemMeta cannot be null");
+    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull NBTItem nbtItem,
+                                              boolean blocked, int[] papiIndexes) {
+        Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
-        ItemMetaCache itemMetaCache = new ItemMetaCache(replaced, System.currentTimeMillis(), blocked, papiIndexes);
+        ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
         replacedItemCache.put(original, itemMetaCache);
         return itemMetaCache;
     }
@@ -218,52 +217,72 @@ public class ReplacerManager {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
-        boolean blocked = false;
+        int length;
+        int maxLength;
+        String json;
         for (Replaceable replaceable : container.getJsons()) {
-            String json = replaceable.getText();
+            json = replaceable.getText();
             if (json.isEmpty()) {
                 continue;
             }
+            length = json.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
-                blocked = getBlocked(json, replacerConfig, ReplaceMode.JSON);
-                if (blocked) {
+                maxLength = replacerConfig.getMaxJsonLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
+                if (getBlocked(json, replacerConfig, ReplaceMode.JSON)) {
                     return true;
                 }
             }
         }
-        return blocked;
+        return false;
     }
 
     public boolean isTextBlocked(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
-        boolean blocked = false;
+        int length;
+        int maxLength;
+        String text;
         for (Replaceable replaceable : container.getTexts()) {
-            String text = replaceable.getText();
+            text = replaceable.getText();
             if (text.isEmpty()) {
                 continue;
             }
+            length = text.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
-                blocked = getBlocked(text, replacerConfig, ReplaceMode.COMMON);
-                if (blocked) {
+                maxLength = replacerConfig.getMaxTextLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
+                if (getBlocked(text, replacerConfig, ReplaceMode.COMMON)) {
                     return true;
                 }
             }
         }
-        return blocked;
+        return false;
     }
 
     public void replaceContainerJsons(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
+        int length;
+        int maxLength;
+        String json;
         for (Replaceable replaceable : container.getJsons()) {
-            String json = replaceable.getText();
+            json = replaceable.getText();
             if (json.isEmpty()) {
                 continue;
             }
+            length = json.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
+                maxLength = replacerConfig.getMaxJsonLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
                 json = getReplaced(json, replacerConfig, ReplaceMode.JSON);
             }
             replaceable.setText(json);
@@ -274,12 +293,20 @@ public class ReplacerManager {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
 
+        int length;
+        int maxLength;
+        String text;
         for (Replaceable replaceable : container.getTexts()) {
-            String text = replaceable.getText();
+            text = replaceable.getText();
             if (text.isEmpty()) {
                 continue;
             }
+            length = text.length();
             for (ReplacerConfig replacerConfig : replacerConfigList) {
+                maxLength = replacerConfig.getMaxTextLength();
+                if (maxLength != -1 && maxLength < length) {
+                    continue;
+                }
                 text = getReplaced(text, replacerConfig, ReplaceMode.COMMON);
             }
             replaceable.setText(text);
@@ -298,6 +325,17 @@ public class ReplacerManager {
         if (indexes.isEmpty()) {
             return;
         }
+        for (int i : indexes) {
+            Replaceable replaceable = replaceables.get(i);
+            replaceable.setText(setPlaceholder(user, replaceable.getText()));
+        }
+    }
+
+    public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables, int[] indexes) {
+        Validate.notNull(user, "PsrUser cannot be null");
+        Validate.notNull(replaceables, "List cannot be null");
+        Validate.notNull(indexes, "List cannot be null");
+
         for (int i : indexes) {
             Replaceable replaceable = replaceables.get(i);
             replaceable.setText(setPlaceholder(user, replaceable.getText()));

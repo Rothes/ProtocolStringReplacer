@@ -22,6 +22,7 @@ Console-Sender:
       Invalid-Placeholder-Head: '&cPlaceholder-Head 值无效! 请定义一个字符. 使用默认值 ''｛'''
       Invalid-Placeholder-Tail: '&cPlaceholder-Tail 值无效! 请定义一个字符. 使用默认值 ''｝'''
       Invalid-Listener-Priority: '&c数据包监听优先度值无效! 使用默认值 ''HIGHEST'''
+      Invalid-Config-Load-LifeCycle: '&c配置加载时期值无效! 使用默认值 ''ENABLE'''
     Updater:
       Invalid-Channel: '§c您使用的插件处于一个未知的版本通道("%0%"). 请尝试更新您的插件到最新版本.'
       Error-Checking-Version: '§c无法通过远程服务器检查版本信息, 请尝试更新您的插件: %0%'
@@ -214,7 +215,9 @@ Sender:
         PAPI-Target: '<占位符目标玩家>'
     Reload:
       Description: '重载插件配置文件'
+      Already-Reloading: '&c插件已经在重载过程中. 请稍后再重载.'
       Async-Reloading: '&b正在异步重载插件...'
+      Exception: '§c重载插件时发生错误. 请检查控制台.'
       Complete: '&a插件已重载完毕.'
       Help:
         Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &e重载&7 ]&l &7&m------------'

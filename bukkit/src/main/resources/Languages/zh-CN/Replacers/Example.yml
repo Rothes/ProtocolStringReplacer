@@ -48,6 +48,13 @@ Options:
       # 替换所需权限. 若设定, 用户必须拥有该权限
       # 才能使该替换配置为其生效.
       Permission: 'example.permission.1'
+    # PSR 将忽略长度超过此处定义值的字符串(但不是整个数据包)处理.
+    # 设为 -1 以禁用此功能.
+    Max-Length:
+      # 常规文本. (或者 Common)
+      Text: -1
+      # Json.
+      Json: -1
 
 # 替换的字符串列表.
 # 替换模式优先度: Json > Common, 忽略文件优先度.

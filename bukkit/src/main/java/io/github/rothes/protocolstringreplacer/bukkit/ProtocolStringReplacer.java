@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 public class ProtocolStringReplacer extends JavaPlugin {
 
     public static final String VERSION_CHANNEL = "Stable";
-    public static final int VERSION_NUMBER = 95;
+    public static final int VERSION_NUMBER = 98;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private final HashMap<String, Integer> msgTimes = new HashMap<>();
@@ -67,6 +67,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private boolean isPaper;
     private boolean hasPaperComponent;
     private boolean hasStarted;
+    private boolean reloading;
 
     public ProtocolStringReplacer() {
         super();
@@ -101,6 +102,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
         serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
         consoleReplaceManager = new ConsoleReplaceManager(this);
         consoleReplaceManager.initialize();
+
+        loadConfig();
+        PsrLocalization.initialize(instance);
+        checkConfig();
+        enableModify(ConfigManager.LifeCycle.INIT);
     }
 
     public static ProtocolStringReplacer getInstance() {
@@ -127,6 +133,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
         return hasStarted;
     }
 
+    public boolean isReloading() {
+        return reloading;
+    }
+
     @NotNull
     @Override
     public CommentYamlConfiguration getConfig() {
@@ -143,10 +153,12 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
-        loadConfig();
-        PsrLocalization.initialize(instance);
+    public void onLoad() {
+        enableModify(ConfigManager.LifeCycle.LOAD);
+    }
 
+    @Override
+    public void onEnable() {
         try {
             Class.forName("org.bukkit.entity.Player$Spigot");
             isSpigot = true;
@@ -225,21 +237,17 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     private void initialize() {
-        checkConfig();
-        packetListenerManager = new PacketListenerManager();
-        replacerManager = new ReplacerManager();
+        enableModify(ConfigManager.LifeCycle.ENABLE);
+        replacerManager.registerTask();
         CommandHandler commandHandler = new CommandHandler();
-        userManager = new PsrUserManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
         packetListenerManager.initialize();
         commandHandler.initialize();
-        replacerManager.initialize();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();
         }
-        this.hasStarted = true;
         initMetrics();
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!checkPluginVersion()) {
@@ -295,6 +303,16 @@ public class ProtocolStringReplacer extends JavaPlugin {
             pluginManager.disablePlugin(instance);
         }
         return missingDepend;
+    }
+
+    private void enableModify(ConfigManager.LifeCycle lifeCycle) {
+        if (lifeCycle == getConfigManager().loadConfigLifeCycle) {
+            packetListenerManager = new PacketListenerManager();
+            userManager = new PsrUserManager();
+            replacerManager = new ReplacerManager();
+            replacerManager.initialize();
+            this.hasStarted = true;
+        }
     }
 
     private void loadConfig() {
@@ -411,13 +429,11 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 JsonObject channel = root.getAsJsonObject("Version_Channels").getAsJsonObject(VERSION_CHANNEL);
                 if (channel == null) {
                     warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel"));
-                } else if (channel.has("Message")){
-                    if (Integer.parseInt(channel.getAsJsonPrimitive("Latest_Version_Number").getAsString())
+                } else if (channel.has("Message")
+                        && Integer.parseInt(channel.getAsJsonPrimitive("Latest_Version_Number").getAsString())
                         > VERSION_NUMBER) {
-
-                        for (String s : getLocaledJsonMessage(channel.getAsJsonObject("Message")).split("\n")) {
-                            warn(s);
-                        }
+                    for (String s : getLocaledJsonMessage(channel.getAsJsonObject("Message")).split("\n")) {
+                        warn(s);
                     }
                 }
 
@@ -477,32 +493,42 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     public void reload(@Nonnull PsrUser user) {
+        reloading = true;
         Validate.notNull(user, "user cannot be null");
         PsrReloadEvent event = new PsrReloadEvent(PsrReloadEvent.ReloadState.BEFORE, user);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
+            reloading = false;
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
-            loadConfig();
-            checkConfig();
-            replacerManager.getCleanTask().cancel();
-            replacerManager.saveReplacerConfigs();
-            replacerManager = new ReplacerManager();
-            replacerManager.initialize();
-            userManager = new PsrUserManager();
-            packetListenerManager.removeListeners();
-            packetListenerManager.addListeners();
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                userManager.loadUser(player);
-                player.updateInventory();
+            try {
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
+                loadConfig();
+                checkConfig();
+                replacerManager.getCleanTask().cancel();
+                replacerManager.saveReplacerConfigs();
+                replacerManager = new ReplacerManager();
+                replacerManager.initialize();
+                replacerManager.registerTask();
+                userManager = new PsrUserManager();
+                packetListenerManager.removeListeners();
+                packetListenerManager.addListeners();
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    userManager.loadUser(player);
+                    player.updateInventory();
+                }
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
+                Bukkit.getScheduler().runTask(instance, () -> {
+                    // Don't need to check cancelled here
+                    Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
+                });
+            } catch (Throwable t) {
+                t.printStackTrace();
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Error-Occurred"));
+            } finally {
+                reloading = false;
             }
-            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
-            Bukkit.getScheduler().runTask(instance, () -> {
-                // Don't need to check cancelled here
-                Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
-            });
         });
     }
 

@@ -334,7 +334,7 @@ public final class ConsoleReplaceManager {
     @SuppressWarnings("unchecked")
     private Map<String, Class<?>> getConverters(Configuration config) {
         try {
-            config.getPluginPackages().add("me.rothes.protocolstringreplacer.console");
+            config.getPluginPackages().add("io.github.rothes.protocolstringreplacer.bukkit.console");
         } catch (NoSuchMethodError ignored) {}
 
         try {

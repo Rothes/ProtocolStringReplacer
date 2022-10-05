@@ -10,6 +10,10 @@ Options:
   # 若连接不上此加速线路, 应自行选择其它加速线路.
   Git-Raw-Host: 'raw.fastgit.org'
 
+  # 设置 PSR 加载配置的时期. 可选 INIT (最早), LOAD (中), ENABLE (最晚, 默认值).
+  # 主要用于控制台消息的修改.
+  Config-Load-LifeCycle: 'ENABLE'
+
   # PSR 会显示多少次由 ProtocolLib 导致的报错? 设置为 0 为永久禁止.
   ProtocolLib-Side-Stack-Print-Count: 3
 

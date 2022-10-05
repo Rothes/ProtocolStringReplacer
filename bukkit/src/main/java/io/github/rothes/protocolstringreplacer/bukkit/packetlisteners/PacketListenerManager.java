@@ -2,46 +2,40 @@ package io.github.rothes.protocolstringreplacer.bukkit.packetlisteners;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import io.github.rothes.protocolstringreplacer.bukkit.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.client.CloseWindow;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.client.itemstack.SetCreativeSlot;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.client.itemstack.WindowClick;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.ActionBar;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.EntityMetadata;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.OpenWindow;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.bossbar.BossBar;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.bossbar.BossBarUpper17;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.chat.Chat;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.KickDisconnect;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.chat.ChatPreview;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.chat.SystemChat;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.bossbar.BossBar;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.chat.Chat;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.EntityMetadata;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.OpenWindow;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.bossbar.BossBarUpper17;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.chat.TabComplete;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.combat.CombatEvent;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.combat.PlayerCombatKill;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.itemstack.MerchantTradeList;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.itemstack.SetSlot;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.itemstack.WindowItems;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.itemstack.WindowItemsUpper12;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.scoreboard.ScoreBoardObjective;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.scoreboard.UpdateScore;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.MapChunk;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.MapChunkUpper18;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.TileEntityData;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.TileEntityDataUpper18;
-import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.UpdateSign;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.title.SetSubtitleText;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.title.SetTitleText;
 import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.title.Title;
-import io.github.rothes.protocolstringreplacer.bukkit.ProtocolStringReplacer;
-import org.bukkit.NamespacedKey;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.scoreboard.ScoreBoardObjective;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.scoreboard.UpdateScore;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.MapChunk;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.TileEntityData;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.sign.UpdateSign;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.itemstack.SetSlot;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.itemstack.WindowItems;
+import io.github.rothes.protocolstringreplacer.bukkit.packetlisteners.server.itemstack.WindowItemsUpper12;
 
 public class PacketListenerManager {
 
-    private final NamespacedKey userCacheKey = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13 ?
-            new NamespacedKey(ProtocolStringReplacer.getInstance(), "user_cache_key") : null;
     private ProtocolManager protocolManager;
-
-    public NamespacedKey getUserCacheKey() {
-        return userCacheKey;
-    }
 
     public ProtocolManager getProtocolManager() {
         return protocolManager;
@@ -104,6 +98,7 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
         protocolManager.addPacketListener(new UpdateScore().packetAdapter);
         protocolManager.addPacketListener(new ScoreBoardObjective().packetAdapter);
+        protocolManager.addPacketListener(new KickDisconnect().packetAdapter);
 
 
         protocolManager.addPacketListener(new WindowClick().packetAdapter);
