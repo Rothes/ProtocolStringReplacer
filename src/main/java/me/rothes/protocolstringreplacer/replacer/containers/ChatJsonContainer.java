@@ -29,7 +29,11 @@ public class ChatJsonContainer extends AbstractContainer<String> {
     @Override
     public void createDefaultChildren() {
         if (createComponents) {
-            componentsContainer = new ComponentsContainer(ComponentSerializer.parse(content), root);
+            try {
+                componentsContainer = new ComponentsContainer(ComponentSerializer.parse(content), root);
+            } catch (Throwable t) {
+                throw new RuntimeException("Serializer can't parse Json: " + content);
+            }
             children.add(componentsContainer);
         }
         super.createDefaultChildren();
