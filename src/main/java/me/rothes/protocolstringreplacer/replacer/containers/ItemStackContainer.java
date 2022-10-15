@@ -96,19 +96,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                 if (LORE_JSON) {
                     addJsonList(display.getStringList("Lore"));
                 } else {
-                    NBTList<String> list = display.getStringList("Lore");
-                    int size = list.size();
-                    for (int line = 0; line < size; line++) {
-                        int finalLine = line;
-                        children.add(new SimpleTextContainer(list.get(finalLine), root) {
-                            @Override
-                            public String getResult() {
-                                String result = super.getResult();
-                                list.set(finalLine, result);
-                                return result;
-                            }
-                        });
-                    }
+                    addTextList(display.getStringList("Lore"));
                 }
             }
         }
@@ -136,7 +124,11 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                 });
             }
             if (nbtItem.hasKey("pages")) {
-                addJsonList(nbtItem.getStringList("pages"));
+                if (type == WRITABLE_BOOK) {
+                    addTextList(nbtItem.getStringList("pages"));
+                } else {
+                    addJsonList(nbtItem.getStringList("pages"));
+                }
             }
         }
         super.createDefaultChildren();
@@ -147,6 +139,21 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
         for (int line = 0; line < size; line++) {
             int finalLine = line;
             children.add(new ChatJsonContainer(list.get(finalLine), root, true) {
+                @Override
+                public String getResult() {
+                    String result = super.getResult();
+                    list.set(finalLine, result);
+                    return result;
+                }
+            });
+        }
+    }
+
+    private void addTextList(NBTList<String> list) {
+        int size = list.size();
+        for (int line = 0; line < size; line++) {
+            int finalLine = line;
+            children.add(new SimpleTextContainer(list.get(finalLine), root) {
                 @Override
                 public String getResult() {
                     String result = super.getResult();
