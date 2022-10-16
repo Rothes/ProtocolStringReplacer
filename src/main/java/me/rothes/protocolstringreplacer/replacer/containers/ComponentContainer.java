@@ -29,7 +29,7 @@ public class ComponentContainer extends AbstractContainer<BaseComponent> {
                 public String getResult() {
                     String result = super.getResult();
                     int length = color.length();
-                    if (result.substring(0, length).equals(color)) {
+                    if (result.length() >= length && result.substring(0, length).equals(color)) {
                         textComponent.setText(result.substring(length));
                     } else {
                         textComponent.setText(result);
