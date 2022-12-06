@@ -2,7 +2,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.server.sign;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.nbt.NbtCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
@@ -20,14 +20,14 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
         super(packetType, ListenType.SIGN);
     }
 
-    protected void setSignText(@NotNull PacketEvent packetEvent, @NotNull NbtCompound nbtCompound, @NotNull PsrUser user, @NotNull BiPredicate<ReplacerConfig, PsrUser> filter) {
+    protected void setSignText(@NotNull PacketEvent packetEvent, @NotNull NBTContainer nbtContainer, @NotNull PsrUser user, @NotNull BiPredicate<ReplacerConfig, PsrUser> filter) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
 
         String key;
         for (int i = 1; i <= 4; i++) {
             key = "Text" + i;
-            String original = nbtCompound.getString(key);
+            String original = nbtContainer.getString(key);
             if (original == null || original.equals("null")) {
                 continue;
             }
@@ -35,8 +35,10 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
             if (replacedJson == null) {
                 return;
             }
-            nbtCompound.put(key, replacedJson);
-
+            if (replacedJson.equals(original)) {
+                continue;
+            }
+            nbtContainer.setString(key, replacedJson);
         }
     }
 

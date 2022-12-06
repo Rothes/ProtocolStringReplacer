@@ -3,10 +3,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.server.sign;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.EquivalentConverter;
-import com.comphenix.protocol.wrappers.BukkitConverters;
-import com.comphenix.protocol.wrappers.nbt.NbtBase;
-import com.comphenix.protocol.wrappers.nbt.NbtCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
@@ -15,7 +12,6 @@ import java.util.List;
 
 public class MapChunkUpper18 extends AbstractServerSignPacketListener {
 
-    private final Class<?> packetClass = PacketType.Play.Server.MAP_CHUNK.getPacketClass();
     private final Field dataField;
     private final Field listField;
     private final Object signType;
@@ -27,6 +23,7 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
         super(PacketType.Play.Server.MAP_CHUNK);
         boolean hooked = true;
         Field field;
+        Class<?> packetClass = PacketType.Play.Server.MAP_CHUNK.getPacketClass();
         try {
             field = packetClass.getDeclaredField("c");
             field.setAccessible(true);
@@ -142,21 +139,16 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
     }
 
     private void processPacket(PacketEvent packetEvent, PsrUser user, Object packet) {
-        if (!packet.getClass().equals(packetClass)) {
-            return;
-        }
         try {
             Object data = dataField.get(packet);
-            EquivalentConverter<NbtBase<?>> converter = BukkitConverters.getNbtConverter();
-            NbtCompound nbtCompound;
             for (Object obj : (List<?>) listField.get(data)) {
                 if (subTypeField.get(obj).equals(signType)) {
                     Object nbt = subNbtField.get(obj);
                     if (nbt == null) {
                         continue;
                     }
-                    nbtCompound = (NbtCompound) converter.getSpecific(nbt);
-                    setSignText(packetEvent, nbtCompound, user, filter);
+                    NBTContainer nbtContainer = new NBTContainer(nbt);
+                    setSignText(packetEvent, nbtContainer, user, filter);
                 }
             }
         } catch (IllegalAccessException e) {
