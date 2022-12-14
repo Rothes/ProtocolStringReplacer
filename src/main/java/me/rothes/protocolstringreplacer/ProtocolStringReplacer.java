@@ -63,6 +63,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private PsrUserManager userManager;
     private ConfigManager configManager;
     private byte serverMajorVersion;
+    private byte serverMinorVersion;
     private boolean isSpigot;
     private boolean isPaper;
     private boolean hasPaperComponent;
@@ -99,7 +100,9 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
         // Start Console Replacer first to remove the Ansi in log files.
         PsrMessage.initialize(instance);
-        serverMajorVersion = Byte.parseByte(Bukkit.getServer().getBukkitVersion().split("\\.")[1].split("-")[0]);
+        String[] split = Bukkit.getServer().getBukkitVersion().split("-")[0].split("\\.");
+        serverMajorVersion = Byte.parseByte(split[1]);
+        serverMinorVersion = split.length > 2 ? Byte.parseByte(split[2]) : 0;
         consoleReplaceManager = new ConsoleReplaceManager(this);
         consoleReplaceManager.initialize();
 
@@ -207,6 +210,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     public byte getServerMajorVersion() {
         return serverMajorVersion;
+    }
+
+    public byte getServerMinorVersion() {
+        return serverMinorVersion;
     }
 
     public boolean isSpigot() {

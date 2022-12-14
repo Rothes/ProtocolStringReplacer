@@ -121,16 +121,10 @@
             <version>2.10.0</version>
             <scope>compile</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.comphenix.protocol</groupId>-->
-<!--            <artifactId>ProtocolLib</artifactId>-->
-<!--            <version>4.8.0</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
         <dependency>
-            <groupId>com.github.dmulloy2</groupId>
+            <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>master-SNAPSHOT</version>
+            <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -231,14 +225,6 @@
                     </relocations>
 
                     <minimizeJar>true</minimizeJar>
-                    <artifactSet>
-                        <includes>
-                            <include>commons-collections:*</include>
-                            <include>org.bstats:*</include>
-                            <include>org.neosearch.stringsearcher:*</include>
-                            <include>de.tr7zw:*</include>
-                        </includes>
-                    </artifactSet>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>

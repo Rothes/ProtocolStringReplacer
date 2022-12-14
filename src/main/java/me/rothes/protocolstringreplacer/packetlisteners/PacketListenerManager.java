@@ -88,6 +88,9 @@ public class PacketListenerManager {
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
             protocolManager.addPacketListener(new SystemChat().packetAdapter);
+        }
+
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() == 19 && ProtocolStringReplacer.getInstance().getServerMinorVersion() <= 2) {
             protocolManager.addPacketListener(new ChatPreview().packetAdapter);
         }
 
