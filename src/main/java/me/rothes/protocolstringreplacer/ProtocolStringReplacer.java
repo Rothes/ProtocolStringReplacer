@@ -513,7 +513,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
                 loadConfig();
                 checkConfig();
-                replacerManager.getCleanTask().cancel();
+                replacerManager.cancelCleanTask();
                 replacerManager.saveReplacerConfigs();
                 replacerManager = new ReplacerManager();
                 replacerManager.initialize();

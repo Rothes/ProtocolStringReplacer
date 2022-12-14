@@ -108,6 +108,12 @@ public class ReplacerManager {
         return cleanTask;
     }
 
+    public void cancelCleanTask() {
+        if (getCleanTask() != null) {
+            getCleanTask().cancel();
+        }
+    }
+
     public void registerTask() {
         ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
         long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
