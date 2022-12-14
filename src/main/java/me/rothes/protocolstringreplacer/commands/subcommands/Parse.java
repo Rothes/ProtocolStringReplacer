@@ -153,17 +153,17 @@ public class Parse extends SubCommand {
         StringBuilder resultBuilder = new StringBuilder();
         for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replaceMode).parseText(text)) {
             if (emit.getStart() > i) {
-                resultBuilder.append(text.subSequence(i, emit.getStart()));
+                resultBuilder.append(text, i, emit.getStart());
             }
-            resultBuilder.append(replacerConfig.getReplaces(replaceMode).get(emit.getSearchString()));
+            resultBuilder.append(emit.getPayload());
             i = emit.getEnd() + 1;
             results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replaceMode,
-                    emit.getSearchString(), (String) replacerConfig.getReplaces(replaceMode).get(emit.getSearchString()),
+                    emit.getSearchString(), emit.getPayload(),
                     resultBuilder + (i < text.length() ? text.substring(i) : ""))));
         }
 
         if (i < text.length()) {
-            resultBuilder.append(text.subSequence(i, text.length()));
+            resultBuilder.append(text.substring(i));
         }
         return resultBuilder.toString();
     }
