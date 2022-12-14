@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
-import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
@@ -16,17 +15,29 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public final class Chat extends AbstractServerComponentsPacketListener {
 
-    // If server is before 1.19, or it's 1.19.1+
-    private final boolean legacy = Arrays.stream(PacketType.Play.Server.CHAT.getPacketClass().getDeclaredFields())
-            .anyMatch(it -> it.getType() == MinecraftReflection.getIChatBaseComponentClass());
+    private final Version version;
 
     public Chat() {
         super(PacketType.Play.Server.CHAT, ListenType.CHAT);
+        byte serverMajorVersion = ProtocolStringReplacer.getInstance().getServerMajorVersion();
+        byte serverMinorVersion = ProtocolStringReplacer.getInstance().getServerMinorVersion();
+        if (serverMajorVersion <= 18) {
+            version = Version.R8_0_TO_R18_2;
+        } else if (serverMajorVersion == 19){
+            if (serverMinorVersion == 0) {
+                version = Version.R19_0;
+            } else if (serverMinorVersion <= 2) {
+                version = Version.R19_1_TO_R19_2;
+            } else {
+                version = Version.R19_3;
+            }
+        } else {
+            version = Version.R19_3;
+        }
     }
 
     protected void process(PacketEvent packetEvent) {
@@ -43,21 +54,14 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 return;
             }
 
-            String replaced;
-//            Object componentHolder = null;
-            StructureModifier<WrappedChatComponent> componentModifier = null;
-            WrappedChatComponent wrappedChatComponent;
-
-            if (legacy) {
-                // Before 1.19
-                componentModifier = packet.getChatComponents();
-                wrappedChatComponent = componentModifier.read(0);
-            } else {
-                // 1.19.1+
+            if (version != Version.R8_0_TO_R18_2) {
+                // on 1.19+ we can no longer modify the message, they have added the final modifier.
                 return;
-//                componentHolder = PlayerChatHelper.getComponentHolder(packet.getModifier().withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0));
-//                wrappedChatComponent = PlayerChatHelper.getChatMessageByHolder(componentHolder);
             }
+
+            StructureModifier<WrappedChatComponent> componentModifier = packet.getChatComponents();
+            WrappedChatComponent wrappedChatComponent = componentModifier.read(0);
+            String replaced;
 
             if (wrappedChatComponent != null) {
                 String json = wrappedChatComponent.getJson();
@@ -71,24 +75,7 @@ public final class Chat extends AbstractServerComponentsPacketListener {
             }
 
             if (replaced != null) {
-//                if (legacy) {
-                    componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
-//                } else {
-//                    PlayerChatHelper.setChatMessageByHolder(componentHolder, WrappedChatComponent.fromJson(replaced));
-//
-//                    Object typeSub = PlayerChatHelper.getChatMessageTypeSub(packet.getModifier());
-//
-//                    WrappedChatComponent wrapped = PlayerChatHelper.getDisplayNameWrapped(typeSub);
-//                    if (wrapped != null) {
-//                        replaced = getReplacedJson(packetEvent, user, listenType, wrapped.getJson(), filter);
-//                        PlayerChatHelper.setDisplayName(typeSub, WrappedChatComponent.fromJson(replaced));
-//                    }
-//                    wrapped = PlayerChatHelper.getTeamNameWrapped(typeSub);
-//                    if (wrapped != null) {
-//                        replaced = getReplacedJson(packetEvent, user, listenType, wrapped.getJson(), filter);
-//                        PlayerChatHelper.setTeamName(typeSub, WrappedChatComponent.fromJson(replaced));
-//                    }
-//                }
+                componentModifier.write(0, WrappedChatComponent.fromJson(replaced));
             }
 
         }
@@ -107,25 +94,42 @@ public final class Chat extends AbstractServerComponentsPacketListener {
         Object chatMessageTypeSubOrChatSender;
         PlayerChatHelper.ChatType chatType;
 
-        if (legacy) {
-            // 1.19
-            componentModifier = packet.getChatComponents();
-            wrappedChatComponent = componentModifier.read(0);
+        switch (version) {
+            case R19_0:
+                componentModifier = packet.getChatComponents();
+                wrappedChatComponent = componentModifier.read(0);
 
-            chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatSender(modifier);
-            chatType = PlayerChatHelper.getChatTypeFromId(packet.getIntegers().read(0));
-        } else {
-            // 1.19.1+
-            wrappedChatComponent = PlayerChatHelper.getChatMessage(packet.getModifier()
-                    .withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0));
+                chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatSender(modifier);
+                chatType = PlayerChatHelper.getChatTypeFromId(packet.getIntegers().read(0));
+                break;
+            case R19_1_TO_R19_2:
+                wrappedChatComponent = PlayerChatHelper.getChatMessage(packet.getModifier()
+                        .withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0));
 
-            chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatMessageTypeSub(modifier);
-            chatType = PlayerChatHelper.getChatTypeFromId(PlayerChatHelper.getChatTypeId(chatMessageTypeSubOrChatSender));
+                chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatMessageTypeSub(modifier);
+                chatType = PlayerChatHelper.getChatTypeFromId(PlayerChatHelper.getChatTypeId(chatMessageTypeSubOrChatSender));
+                break;
+            case R19_3:
+                componentModifier = packet.getChatComponents();
+                wrappedChatComponent = componentModifier.read(0);
+                if (wrappedChatComponent == null) {
+
+                    wrappedChatComponent = PlayerChatHelper.getChatMessageR3(packet.getModifier()
+                            .withType(PlayerChatHelper.getMessageBodySubClass()).read(0));
+                }
+
+                chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatMessageTypeSub(modifier);
+                chatType = PlayerChatHelper.getChatTypeFromId(PlayerChatHelper.getChatTypeId(chatMessageTypeSubOrChatSender));
+                break;
+            default:
+                return false;
         }
 
         if (wrappedChatComponent != null) {
+            // 1.19.1+
             message = ComponentSerializer.parse(wrappedChatComponent.getJson())[0];
         } else {
+            // 1.19
             BaseComponent[] spigotComponent = getSpigotComponent(modifier);
             if (spigotComponent != null) {
                 message = spigotComponent[0];
@@ -187,6 +191,13 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 throw new AssertionError();
         }
         return true;
+    }
+
+    private enum Version {
+        R8_0_TO_R18_2,
+        R19_0,
+        R19_1_TO_R19_2,
+        R19_3
     }
 
 }

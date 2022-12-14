@@ -17,10 +17,13 @@ public class PlayerChatHelper {
 
     // 1.19.1
     private static Class<?> playerChatMessageClass;
+    private static Class<?> messageBodyClass;
+    private static Class<?> messageBodySubClass;
     private static Class<?> chatMessageTypeSubClass;
     private static Field chatMessageField;
     private static Field messageBodyField;
     private static Field messageContentField;
+    private static Field messageStringField; // 1.19.3
     private static Field stringField;
     private static Field componentField;
 
@@ -29,6 +32,10 @@ public class PlayerChatHelper {
     private static Field chatTypeField;
 
     static {
+        try {
+            messageBodyClass = MinecraftReflection.getMinecraftClass("network.chat.SignedMessageBody");
+        } catch (Throwable ignored) {}
+
         try {
             // 1.19.1+
             playerChatMessageClass = MinecraftReflection.getMinecraftClass("network.chat.PlayerChatMessage");
@@ -39,12 +46,22 @@ public class PlayerChatHelper {
                 if (declaringClass == chatMessageTypeClass) {
                     chatMessageTypeSubClass = field.getType();
                     setupNameFields(chatMessageTypeSubClass);
+                } else if (messageBodyClass != null && declaringClass == messageBodyClass) {
+                    // 1.19.3 only
+                    messageBodySubClass = field.getType();
+                    for (Field declaredField : messageBodySubClass.getDeclaredFields()) {
+                        if (declaredField.getType() == String.class) {
+                            messageStringField = declaredField;
+                            messageStringField.setAccessible(true);
+                            break;
+                        }
+                    }
+
                 } else if (field.getType() == playerChatMessageClass) {
                     chatMessageField = field;
                     chatMessageField.setAccessible(true);
 
                     for (Field declaredField : playerChatMessageClass.getDeclaredFields()) {
-                        Class<?> messageBodyClass = MinecraftReflection.getMinecraftClass("network.chat.SignedMessageBody");
                         if (declaredField.getType() == messageBodyClass) {
                             messageBodyField = declaredField;
                             messageBodyField.setAccessible(true);
@@ -117,6 +134,10 @@ public class PlayerChatHelper {
         return playerChatMessageClass;
     }
 
+    public static Class<?> getMessageBodySubClass() {
+        return messageBodySubClass;
+    }
+
     public static Object getComponentHolder(Object playerChatMessage) {
         try {
             return messageContentField.get(messageBodyField.get((playerChatMessage)));
@@ -128,6 +149,14 @@ public class PlayerChatHelper {
     public static WrappedChatComponent getChatMessage(Object playerChatMessage) {
         try {
             return WrappedChatComponent.fromHandle(componentField.get(messageContentField.get(messageBodyField.get((playerChatMessage)))));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static WrappedChatComponent getChatMessageR3(Object messageBody) {
+        try {
+            return WrappedChatComponent.fromLegacyText((String) messageStringField.get(messageBody));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
