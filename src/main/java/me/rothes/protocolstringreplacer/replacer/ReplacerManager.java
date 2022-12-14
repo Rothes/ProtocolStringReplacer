@@ -12,6 +12,7 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,8 @@ import org.neosearch.stringsearcher.Emit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -89,7 +92,14 @@ public class ReplacerManager {
         HashMap<File, CommentYamlConfiguration> loaded = new HashMap<>();
         List<File> files = FileUtils.getFolderFiles(path, true, ".yml");
         for (File file : files) {
-            loaded.put(file, CommentYamlConfiguration.loadConfiguration(file));
+            try {
+                CommentYamlConfiguration config = new CommentYamlConfiguration();
+                config.load(file);
+                loaded.put(file, config);
+            } catch (IOException | InvalidConfigurationException e) {
+                ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Failed-To-Load",
+                        file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/')), e);
+            }
         }
         return loaded;
     }

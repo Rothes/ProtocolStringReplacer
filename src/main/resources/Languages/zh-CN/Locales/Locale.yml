@@ -12,6 +12,7 @@ Console-Sender:
     Replacer-Config:
       Pre-Loaded-Replacers: '&a预加载 %0% 个替换配置文件. &8耗时 %1%ms'
       Replacer-Load-Complete: '&a成功载入替换配置: %0%. &8耗时 %1%ms'
+      Replacer-Failed-To-Load: '&c无法载入配置文件 %0% , 请通过下面的报错堆栈检查错误.'
       Replacer-Regex-Exception: '&c无法载入配置文件 %0% , 因为正则表达式有问题.'
       Invalid-Listen-Type: '&c未知或不支持的监听类型: %0%'
       Invalid-Match-Mode: '&c未知的文本匹配方式: %0%. 使用默认值"Contain"'

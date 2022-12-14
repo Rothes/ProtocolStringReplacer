@@ -12,6 +12,7 @@ Console-Sender:
     Replacer-Config:
       Pre-Loaded-Replacers: '&aPre-loaded %0% replacer config(s). &8Took %1%ms'
       Replacer-Load-Complete: '&aSuccessfully loaded replacer config: %0%. &8Took %1%ms'
+      Replacer-Failed-To-Load: '&cFailed to load replacer config %0% . Please fix the problem with the trace stack.'
       Replacer-Regex-Exception: '&cFailed to load replacer config %0% , because there''s a regex syntax error in it.'
       Invalid-Listen-Type: '&cInvalid listen type: %0%'
       Invalid-Match-Mode: '&cInvalid match mode: %0%. Using defaults "Contain"'
