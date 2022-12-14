@@ -1,10 +1,10 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 98,
+      "Latest_Version_Number": 99,
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.12.2\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.12.2\") 了!\n§b请更新您的插件: https://beta.mcbbs.net/resource/servermod/xmkw2tv1"
+        "en-US": "§bA new version of PSR (\"2.13.0\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.13.0\") 了!\n§b请更新您的插件: https://beta.mcbbs.net/resource/servermod/xmkw2tv1"
       }
     }
   },
@@ -15,7 +15,7 @@
       "Message_Times": 2,
       "Message": {
         "en-US": "§bEnjoy PSR? Join our Discord: https://discord.gg/zwzzkmYCBb",
-        "zh-CN": "§b欢迎加入我们的 QQ群: 422532220 !"
+        "zh-CN": "§b喜欢PSR吗? 欢迎加入我们的 QQ群: 422532220 !"
       }
     },
     "0-45": {
