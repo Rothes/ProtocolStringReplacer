@@ -24,6 +24,7 @@ public abstract class AbstractPacketListener {
     protected final PsrUser getEventUser(@Nonnull PacketEvent packetEvent) {
         Validate.notNull(packetEvent, "Packet Event cannot be null");
         Player player = packetEvent.getPlayer();
+        //noinspection DataFlowIssue // For ProtocolLib v4 compatibility
         return player instanceof Player? ProtocolStringReplacer.getInstance().getUserManager().getUser(player): null;
     }
 
