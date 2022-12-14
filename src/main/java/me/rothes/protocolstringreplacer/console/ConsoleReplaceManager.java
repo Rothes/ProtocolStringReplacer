@@ -404,7 +404,9 @@ public final class ConsoleReplaceManager {
             field.setAccessible(true);
             Map<String, StrLookup> pluginsMap = (Map<String, StrLookup>) field.get(interpolator);
             if (restore) {
-                pluginsMap.put("jndi", (oriJndiLkup instanceof StrLookup) ? (StrLookup) oriJndiLkup : null);
+                if (oriJndiLkup instanceof StrLookup) {
+                    pluginsMap.put("jndi", (StrLookup) oriJndiLkup);
+                }
             } else {
                 oriJndiLkup = pluginsMap.get("jndi");
                 pluginsMap.put("jndi", new PsrJndiLookup());
