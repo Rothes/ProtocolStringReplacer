@@ -390,7 +390,12 @@ public final class ConsoleReplaceManager {
     @SuppressWarnings("unchecked")
     private void fixJndi(Configuration config, boolean restore) {
         try {
-            Field field = config.getClass().getSuperclass().getDeclaredField("subst");
+            Field field;
+            try {
+                field = config.getClass().getSuperclass().getDeclaredField("subst");
+            } catch (NoSuchFieldException e) {
+                field = config.getClass().getSuperclass().getDeclaredField("runtimeStrSubstitutor");
+            }
             field.setAccessible(true);
             StrSubstitutor substitutor = (StrSubstitutor) field.get(config);
             Interpolator interpolator = (Interpolator) substitutor.getVariableResolver();
