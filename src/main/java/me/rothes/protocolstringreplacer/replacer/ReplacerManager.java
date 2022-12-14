@@ -379,14 +379,11 @@ public class ReplacerManager {
                 PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
     }
 
-    @SuppressWarnings("unchecked")
     @Nonnull
     private String getReplaced(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplaceMode replaceMode) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
         Validate.notNull(replaceMode, "Replaces Mode cannot be null");
-
-        String result = string;
 
         if (replacerConfig.getMatchMode() == MatchMode.CONTAIN) {
             // Using Aho-Corasick algorithm.
@@ -395,39 +392,44 @@ public class ReplacerManager {
             StringBuilder resultBuilder = new StringBuilder();
             for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replaceMode).parseText(string)) {
                 if (emit.getStart() > i) {
-                    resultBuilder.append(string.subSequence(i, emit.getStart()));
+                    resultBuilder.append(string, i, emit.getStart());
                 }
-                resultBuilder.append(replacerConfig.getReplaces(replaceMode).get(emit.getSearchString()));
+                resultBuilder.append(emit.getPayload());
                 i = emit.getEnd() + 1;
             }
 
             if (i < string.length()) {
-                resultBuilder.append(string.subSequence(i, string.length()));
+                resultBuilder.append(string.substring(i));
             }
 
-            result = resultBuilder.toString();
+            return resultBuilder.toString();
+
         } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
             Object get = replacerConfig.getReplaces(replaceMode).get(string);
             if (get != null) {
-                result = (String) get;
+                return (String) get;
             }
+            return string;
         } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
+            String result = string;
+
+            @SuppressWarnings("unchecked")
             Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replaceMode).entrySet();
             for (Map.Entry<Pattern, String> entry : set) {
                 result = entry.getKey().matcher(result).replaceAll(entry.getValue());
             }
+            return result;
         }
-        return result;
+        throw new AssertionError();
     }
 
-    @Nonnull
     private boolean getBlocked(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplaceMode replaceMode) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
         Validate.notNull(replaceMode, "Replaces Mode cannot be null");
 
         if (replacerConfig.getMatchMode() == MatchMode.CONTAIN) {
-            return replacerConfig.getBlocksStringSearcher(replaceMode).parseText(string).size() > 0;
+            return replacerConfig.getBlocksStringSearcher(replaceMode).containsMatch(string);
 
         } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
             return replacerConfig.getBlocks(replaceMode).contains(string);

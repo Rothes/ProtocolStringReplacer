@@ -7,8 +7,8 @@ import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.neosearch.stringsearcher.SimpleStringSearcherBuilder;
 import org.neosearch.stringsearcher.StringSearcher;
+import org.neosearch.stringsearcher.StringSearcherBuilder;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class FileReplacerConfig implements ReplacerConfig {
@@ -293,12 +294,12 @@ public class FileReplacerConfig implements ReplacerConfig {
             replaces.put(replaceMode, new ListOrderedMap());
             if (this.matchMode == MatchMode.REGEX) {
                 for (Map<?, ?> map : mapList) {
-                    replaces.get(replaceMode).put(Pattern.compile((String) map.get("Original")),
-                            map.get("Replacement"));
+                    replaces.get(replaceMode).put(Pattern.compile(map.get("Original").toString()),
+                            map.get("Replacement").toString());
                 }
             } else {
                 for (Map<?, ?> map : mapList) {
-                    replaces.get(replaceMode).put(map.get("Original"), map.get("Replacement"));
+                    replaces.get(replaceMode).put(map.get("Original").toString(), map.get("Replacement").toString());
                 }
             }
 
@@ -339,22 +340,16 @@ public class FileReplacerConfig implements ReplacerConfig {
         if (matchMode != MatchMode.CONTAIN) {
             return;
         }
-        SimpleStringSearcherBuilder builder = StringSearcher.builder().ignoreOverlaps();
-        for (Object object : this.getReplaces(replaceMode).keySet()) {
-            if (object instanceof String) {
-                builder.addSearchString((String) object);
-            } else {
-                ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage(
-                        "Console-Sender.Messages.Replacer-Config.Invalid-Original-Format",
-                        getRelativePath(), object.toString()));
-            }
+        StringSearcherBuilder<String> builder = new StringSearcherBuilder<String>().ignoreOverlaps();
+        //noinspection unchecked
+        for (Map.Entry<Object, Object> entry : (Set<Map.Entry<Object, Object>>)this.getReplaces(replaceMode).entrySet()) {
+            builder.addSearchString(entry.getKey().toString(), entry.getValue().toString());
         }
         this.replacesStringSearcher.put(replaceMode, builder.build());
-        String[] strings = new String[blocks.get(replaceMode).size()];
-        for (int i = 0; i < blocks.get(replaceMode).size(); i++) {
-            strings[i] = (String) blocks.get(replaceMode).get(i);
-        }
-        this.blocksStringSearcher.put(replaceMode, StringSearcher.builder().ignoreOverlaps().addSearchStrings(strings).build());
+
+        //noinspection SuspiciousToArrayCall
+        this.blocksStringSearcher.put(replaceMode,
+                StringSearcher.builder().ignoreOverlaps().addSearchStrings(blocks.get(replaceMode).toArray(new String[0])).build());
     }
 
     @Override
