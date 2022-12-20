@@ -52,7 +52,9 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             for (WrappedDataValue wrappedDataValue : dataValueList) {
                 Object getValue = wrappedDataValue.getValue();
                 Object o = processObject(packetEvent, user, getValue);
-                if (o != null) {
+                if (o == this) {
+                    return;
+                } else if (o != null) {
                     wrappedDataValue.setValue(o);
                 }
             }
@@ -64,7 +66,9 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 for (WrappedWatchableObject watchableObject : metadataList) {
                     Object getValue = watchableObject.getValue();
                     Object o = processObject(packetEvent, user, getValue);
-                    if (o != null) {
+                    if (o == this) {
+                        return;
+                    } else if (o != null) {
                         watchableObject.setValue(o);
                     }
                 }
@@ -95,7 +99,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     wrappedChatComponent.setJson(replacedJson);
                     return Optional.of(wrappedChatComponent.getHandle());
                 } else {
-                    return null;
+                    return this;
                 }
             }
 
@@ -107,12 +111,13 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 wrappedChatComponent.setJson(replacedJson);
                 return Optional.of(wrappedChatComponent.getHandle());
             } else {
-                return null;
+                return this;
             }
 
         } else if (object instanceof String) {
             // Name of the entity CONFIRMED ON SPIGOT 1.12.2
-            return getReplacedText(packetEvent, user, listenType, (String) object, filter);
+            String replacedText = getReplacedText(packetEvent, user, listenType, (String) object, filter);
+            return replacedText == null ? this : replacedText;
 
         } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(object)) {
             // Item in Item Frame
