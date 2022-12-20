@@ -35,9 +35,9 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         PacketContainer ognPacket = packetEvent.getPacket();
         PacketContainer packet;
         try {
-            if (ognPacket.getEntityModifier(packetEvent).read(0) == null) {
-                return;
-            }
+//            if (ognPacket.getEntityModifier(packetEvent).read(0) == null) {
+//                return;
+//            }
             packet = ognPacket.deepClone();
         } catch (RuntimeException e) {
             if (exceptionTimes < ProtocolStringReplacer.getInstance().getConfigManager().protocolLibSideStackPrintCount) {
@@ -58,7 +58,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             }
 
         } else {
-                List<WrappedWatchableObject> metadataList = packet.getWatchableCollectionModifier().read(0);
+            List<WrappedWatchableObject> metadataList = packet.getWatchableCollectionModifier().read(0);
 
             if (metadataList != null) {
                 for (WrappedWatchableObject watchableObject : metadataList) {
@@ -98,6 +98,21 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     return null;
                 }
             }
+
+        } else if (MinecraftReflection.getIChatBaseComponentClass().isInstance(object)) {
+            // Name of the entity
+            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(object);
+            String replacedJson = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), filter);
+            if (replacedJson != null) {
+                wrappedChatComponent.setJson(replacedJson);
+                return Optional.of(wrappedChatComponent.getHandle());
+            } else {
+                return null;
+            }
+
+        } else if (object instanceof String) {
+            // Name of the entity CONFIRMED ON SPIGOT 1.12.2
+            return getReplacedText(packetEvent, user, listenType, (String) object, filter);
 
         } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(object)) {
             // Item in Item Frame
