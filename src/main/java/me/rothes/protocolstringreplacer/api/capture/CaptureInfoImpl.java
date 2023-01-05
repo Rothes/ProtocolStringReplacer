@@ -15,7 +15,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
     private List<String> jsons;
     private List<String> texts;
     private ListenType listenType;
-    private Long time;
+    private long time = -1;
     private PsrUser user;
     private String description;
     private int count = 1;
@@ -56,7 +56,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
      * @return Time.
      */
     @Override
-    public @NotNull Long getTime() {
+    public long getTime() {
         return time;
     }
 
@@ -141,9 +141,8 @@ public final class CaptureInfoImpl implements CaptureInfo {
      * @throws IllegalStateException if capture time is already been set.
      */
     @Override
-    public void setTime(@NotNull Long time) {
-        Validate.notNull(time, "Time cannot be null");
-        if (this.listenType != null) {
+    public void setTime(long time) {
+        if (this.time != -1) {
             throw new IllegalStateException("Capture time has already been set");
         }
         this.time = time;

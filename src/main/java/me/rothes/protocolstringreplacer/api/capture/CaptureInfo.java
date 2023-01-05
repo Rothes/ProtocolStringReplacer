@@ -37,7 +37,7 @@ public interface CaptureInfo {
      *
      * @return Time.
      */
-    @NotNull Long getTime();
+    long getTime();
 
     /**
      * Get the PsrUser that capture the packet.
@@ -84,7 +84,7 @@ public interface CaptureInfo {
      * @param time The time to set.
      * @throws IllegalStateException if capture time is already been set.
      */
-    void setTime(@NotNull Long time);
+    void setTime(long time);
 
     /**
      * Set the user that capture the packet.

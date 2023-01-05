@@ -47,7 +47,7 @@ public class PsrUser {
     private Short uniqueCacheKey = 0;
 
     private String[] commandToConfirm;
-    private Long confirmTime;
+    private long confirmTime;
 
     private Set<ListenType> captureTypes = new HashSet<>();
     private HashMap<ListenType, ArrayList<CaptureInfo>> captures = new HashMap<>();
@@ -194,11 +194,11 @@ public class PsrUser {
 
     public void clearCommandToConfirm() {
         commandToConfirm = null;
-        confirmTime = null;
+        confirmTime = -1;
     }
 
     public boolean isConfirmExpired() {
-        return confirmTime != null && System.currentTimeMillis() - confirmTime > 15000;
+        return confirmTime != -1 && System.currentTimeMillis() - confirmTime > 15000;
     }
     /*
     public void setCapturePacket(PacketType packetType, boolean capture) {
