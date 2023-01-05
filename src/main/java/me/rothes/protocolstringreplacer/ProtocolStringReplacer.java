@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sk89q.protocolstringreplacer.PsrDisguisePlugin;
+import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
@@ -252,6 +254,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
         packetListenerManager = new PacketListenerManager();
         packetListenerManager.initialize();
         commandHandler.initialize();
+        // init NBT-API
+        MinecraftVersion.getVersion();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();
