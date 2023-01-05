@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class Replace extends SubCommand {
 
@@ -277,7 +278,7 @@ public class Replace extends SubCommand {
                 || args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove"))) {
             list.add("<" + PsrLocalization.getLocaledMessage("Variables.Match-Mode.Name") + ">");
             for (ReplaceMode replaceMode : ReplaceMode.values()) {
-                list.add(replaceMode.getNode());
+                list.add(replaceMode.getNode().toLowerCase(Locale.ENGLISH));
             }
         } else if (args.length == 5) {
             if (args[2].equalsIgnoreCase("list")) {

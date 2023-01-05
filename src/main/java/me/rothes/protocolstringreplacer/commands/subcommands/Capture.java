@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class Capture extends SubCommand {
 
@@ -179,7 +180,7 @@ public class Capture extends SubCommand {
             list.add("<" + PsrLocalization.getLocaledMessage("Variables.Listen-Type.Name") + ">");
             for (ListenType listenType : ListenType.values()) {
                 if (listenType.isCapturable()) {
-                    list.add(listenType.getName());
+                    list.add(listenType.getName().toLowerCase(Locale.ENGLISH));
                 }
             }
         } else if (args.length == 4
