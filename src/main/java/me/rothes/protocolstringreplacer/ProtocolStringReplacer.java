@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sk89q.protocolstringreplacer.PsrDisguisePlugin;
-import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
@@ -53,7 +52,7 @@ import java.util.regex.Pattern;
 public class ProtocolStringReplacer extends JavaPlugin {
 
     public static final String VERSION_CHANNEL = "Stable";
-    public static final int VERSION_NUMBER = 99;
+    public static final int VERSION_NUMBER = 100;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
     private final HashMap<String, Integer> msgTimes = new HashMap<>();
