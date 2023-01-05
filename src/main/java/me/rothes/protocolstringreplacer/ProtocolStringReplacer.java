@@ -520,7 +520,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 replacerManager.registerTask();
                 userManager = new PsrUserManager();
                 packetListenerManager.removeListeners();
-                packetListenerManager.addListeners();
+                packetListenerManager.initialize();
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     userManager.loadUser(player);
                     player.updateInventory();

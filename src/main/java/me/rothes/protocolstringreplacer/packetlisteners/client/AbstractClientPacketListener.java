@@ -10,7 +10,7 @@ public abstract class AbstractClientPacketListener extends AbstractPacketListene
 
     protected AbstractClientPacketListener(PacketType packetType) {
         super(packetType);
-        packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
+        packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getPacketListenerManager().getListenerPriority(), packetType) {
             public void onPacketReceiving(PacketEvent packetEvent) {
                 boolean readOnly = packetEvent.isReadOnly();
                 if (!canWrite(packetEvent)) {

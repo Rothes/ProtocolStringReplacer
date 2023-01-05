@@ -33,7 +33,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         super(packetType);
         this.listenType = listenType;
         filter = (replacerConfig, user) -> containType(replacerConfig) && checkPermission(user, replacerConfig);
-        packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority, packetType) {
+        packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getPacketListenerManager().getListenerPriority(), packetType) {
             public void onPacketSending(PacketEvent packetEvent) {
                 boolean readOnly = packetEvent.isReadOnly();
                 if (!canWrite(packetEvent)) {

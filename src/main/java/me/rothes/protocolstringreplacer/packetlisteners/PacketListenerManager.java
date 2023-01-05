@@ -2,7 +2,9 @@ package me.rothes.protocolstringreplacer.packetlisteners;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
@@ -37,11 +39,29 @@ public class PacketListenerManager {
 
     private ProtocolManager protocolManager;
 
+    private ListenerPriority listenerPriority;
+
     public ProtocolManager getProtocolManager() {
         return protocolManager;
     }
 
+    public ListenerPriority getListenerPriority() {
+        return listenerPriority;
+    }
+
     public void initialize() {
+        listenerPriority = null;
+        for (ListenerPriority value : ListenerPriority.values()) {
+            if (value.name().equalsIgnoreCase(ProtocolStringReplacer.getInstance().getConfigManager().listenerPriority)) {
+                listenerPriority = value;
+                break;
+            }
+        }
+        if (listenerPriority == null) {
+            ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Listener-Priority"));
+            listenerPriority = ListenerPriority.HIGHEST;
+        }
+
         protocolManager = ProtocolLibrary.getProtocolManager();
         addListeners();
     }

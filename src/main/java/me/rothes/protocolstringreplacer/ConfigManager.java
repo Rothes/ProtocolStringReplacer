@@ -1,7 +1,5 @@
 package me.rothes.protocolstringreplacer;
 
-import com.comphenix.protocol.events.ListenerPriority;
-
 import java.util.Locale;
 
 public class ConfigManager {
@@ -16,7 +14,7 @@ public class ConfigManager {
 
     public final LifeCycle loadConfigLifeCycle;
 
-    public final ListenerPriority listenerPriority;
+    public final String listenerPriority;
     public final boolean forceReplace;
     public final boolean consolePlaceholder;
 
@@ -64,19 +62,7 @@ public class ConfigManager {
                 break;
         }
 
-        String priority = instance.getConfig().getString("Options.Features.Packet-Listener.Listener-Priority", "HIGHEST");
-        ListenerPriority listenerPriority = null;
-        for (ListenerPriority value : ListenerPriority.values()) {
-            if (value.name().equalsIgnoreCase(priority)) {
-                listenerPriority = value;
-                break;
-            }
-        }
-        if (listenerPriority == null) {
-            ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Listener-Priority"));
-            listenerPriority = ListenerPriority.HIGHEST;
-        }
-        this.listenerPriority = listenerPriority;
+        this.listenerPriority = instance.getConfig().getString("Options.Features.Packet-Listener.Listener-Priority", "HIGHEST");
 
         this.forceReplace = instance.getConfig().getBoolean("Options.Features.Packet-Listener.Force-Replace", false);
         this.consolePlaceholder = instance.getConfig().getBoolean("Options.Features.Placeholder.Parse-For-Console", true);
