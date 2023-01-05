@@ -34,7 +34,10 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- §r" + ColorUtils.showColorCodes(json) + "\n");
         }
         hoverTextBuilder.append("§aClick for clipboard");
-        ComponentBuilder captureMessageBuilder = new ComponentBuilder("").append("§3 §l" + info.getListenType().getName() + "§3: §b" + time)
+
+        ComponentBuilder captureMessageBuilder = new ComponentBuilder("")
+                .append("§3 §l" + info.getListenType().getName() + "§3: §b" + time
+                        + (info.getCount() > 1 ? " §7x" + info.getCount() : ""))
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverTextBuilder.create()))
                 .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr capture clipboard " + info.getListenType() + " " + index));
         user.sendFilteredMessage(captureMessageBuilder.create());

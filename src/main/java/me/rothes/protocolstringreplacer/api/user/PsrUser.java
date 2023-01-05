@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -138,7 +139,7 @@ public class PsrUser {
 
     public void addCaptureType(ListenType listenType) {
         captureTypes.add(listenType);
-        captures.put(listenType, new ArrayList<>());
+        captures.put(listenType, new ArrayList<>(100));
     }
 
     public void removeCaptureType(ListenType listenType) {
@@ -151,6 +152,21 @@ public class PsrUser {
     }
 
     public void addCaptureInfo(ListenType listenType, CaptureInfo info) {
+        ArrayList<CaptureInfo> captureInfos = captures.get(listenType);
+        Iterator<CaptureInfo> iterator = captureInfos.iterator();
+        while (iterator.hasNext()) {
+            CaptureInfo next = iterator.next();
+            if (next.isSimilar(info)) {
+                iterator.remove();
+                next.setCount(next.getCount() + 1);
+                captureInfos.add(next);
+                return;
+            }
+        }
+
+        if (captureInfos.size() == 100) {
+            captureInfos.remove(99);
+        }
         captures.get(listenType).add(info);
     }
 

@@ -18,6 +18,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
     private Long time;
     private PsrUser user;
     private String description;
+    private int count = 1;
 
     /**
      * Get the Json replaceables in container.
@@ -176,6 +177,24 @@ public final class CaptureInfoImpl implements CaptureInfo {
             throw new IllegalStateException("Description has already been set");
         }
         this.description = description;
+    }
+
+    /**
+     * Get the capture count.
+     */
+    @Override
+    public int getCount() {
+        return count;
+    }
+
+    /**
+     * Set the capture count.
+     *
+     * @param count The count to set.
+     */
+    @Override
+    public void setCount(int count) {
+        this.count = count;
     }
 
 }

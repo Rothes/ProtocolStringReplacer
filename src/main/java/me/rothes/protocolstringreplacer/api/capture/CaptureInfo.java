@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public interface CaptureInfo {
 
@@ -100,5 +101,23 @@ public interface CaptureInfo {
      * @throws IllegalStateException if description is already been set.
      */
     void setDescription(@NotNull String description);
+
+    /**
+     * Get the capture count.
+     */
+    int getCount();
+
+    /**
+     * Set the capture count.
+     *
+     * @param count The count to set.
+     */
+    void setCount(int count);
+
+    default boolean isSimilar(CaptureInfo captureInfo) {
+        return Objects.equals(captureInfo.getDescription(), getDescription())
+                && Objects.equals(captureInfo.getJsons(), getJsons())
+                && Objects.equals(captureInfo.getTexts(), getTexts());
+    }
 
 }
