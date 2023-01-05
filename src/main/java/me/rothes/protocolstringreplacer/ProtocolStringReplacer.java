@@ -249,6 +249,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         CommandHandler commandHandler = new CommandHandler();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
+        packetListenerManager = new PacketListenerManager();
         packetListenerManager.initialize();
         commandHandler.initialize();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -314,7 +315,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     private void enableModify(ConfigManager.LifeCycle lifeCycle) {
         if (lifeCycle == getConfigManager().loadConfigLifeCycle) {
-            packetListenerManager = new PacketListenerManager();
             userManager = new PsrUserManager();
             replacerManager = new ReplacerManager();
             replacerManager.initialize();
