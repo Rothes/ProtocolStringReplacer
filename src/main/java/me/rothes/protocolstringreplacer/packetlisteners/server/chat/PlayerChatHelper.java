@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 public class PlayerChatHelper {
 
@@ -24,6 +25,7 @@ public class PlayerChatHelper {
     private static Field messageBodyField;
     private static Field messageContentField;
     private static Field messageStringField; // 1.19.3
+    private static Field playerChatMessageComponentField;
     private static Field stringField;
     private static Field componentField;
 
@@ -39,6 +41,14 @@ public class PlayerChatHelper {
         try {
             // 1.19.1+
             playerChatMessageClass = MinecraftReflection.getMinecraftClass("network.chat.PlayerChatMessage");
+            for (Field declaredField : playerChatMessageClass.getDeclaredFields()) {
+                if (declaredField.getType() == Optional.class) {
+                    declaredField.setAccessible(true);
+                    playerChatMessageComponentField = declaredField;
+                    break;
+                }
+            }
+
             Class<?> chatMessageTypeClass = MinecraftReflection.getMinecraftClass("network.chat.ChatMessageType");
 
             for (Field field : PacketType.Play.Server.CHAT.getPacketClass().getDeclaredFields()) {
@@ -141,6 +151,14 @@ public class PlayerChatHelper {
     public static Object getComponentHolder(Object playerChatMessage) {
         try {
             return messageContentField.get(messageBodyField.get((playerChatMessage)));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static WrappedChatComponent getOptionalChatMessage(Object playerChatMessage) {
+        try {
+            return WrappedChatComponent.fromHandle(((Optional<Object>)playerChatMessageComponentField.get((playerChatMessage))).get());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

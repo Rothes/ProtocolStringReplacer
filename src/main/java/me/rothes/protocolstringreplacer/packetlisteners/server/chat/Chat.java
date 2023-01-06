@@ -145,8 +145,12 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 user.sendMessage(component);
                 break;
             case SYSTEM_CHAT:
-            case TELLRAW:
                 user.sendMessage(message);
+                break;
+            case TELLRAW:
+                // The Format is modified in AsyncPlayerChatEvent or PlayerChatEvent
+                user.sendMessage(ComponentSerializer.parse(PlayerChatHelper.getOptionalChatMessage(packet.getModifier()
+                        .withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0)).getJson()));
                 break;
             case GAME_INFO:
                 user.sendActionBar(message);
