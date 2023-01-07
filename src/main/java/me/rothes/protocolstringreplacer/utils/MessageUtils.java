@@ -29,12 +29,12 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(ColorUtils.showColorCodes(text) + "\n").color(ChatColor.RESET);
         }
-        hoverTextBuilder.append("\n§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A" : "\n"));
+        hoverTextBuilder.append("\n§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A\n" : "\n"));
         for (String json : info.getJsons()) {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(ColorUtils.showColorCodes(json) + "\n").color(ChatColor.RESET);
         }
-        hoverTextBuilder.append("\n§b§lDirects: " + (info.getJsons().isEmpty() ? "§fN/A" : "\n"));
+        hoverTextBuilder.append("\n§b§lDirects: " + (info.getJsons().isEmpty() ? "§fN/A\n" : "\n"));
         for (String direct : info.getDirects()) {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true) + "\n"));
