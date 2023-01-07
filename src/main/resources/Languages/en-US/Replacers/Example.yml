@@ -57,6 +57,8 @@ Options:
       Text: -1
       # Json.
       Json: -1
+      # Direct.
+      Direct: -1
 
 # List of replace strings.
 # Replace mode priority: Json > Common. This ignores priority in replacer configs.
@@ -79,6 +81,15 @@ Replaces:
     # This can modify the furnace title on players' client.
     - Original: '{"translate":"container.furnace"}'
       Replacement: '{"text":"Congratulations for opening a furnace! Nice job!"}'
+  # Direct replace mode. Suitable for users who are not familiar with Json replacement.
+  # If any content is replaced here, Json and Common replace modes will no longer take effect for this packet.
+  # In addition to Json, this also supports 1.16+ HEX.
+  # Note: If direct replace mod replaced the string, it will break non-text component display in Json.
+  # ^ This means that after the replacement the message will cause the side effects that the message being
+  # ^ not clickable, remove mouseover display and translation effects, etc. (if it originally has)
+  Direct:
+    - Original: '§f<§f§4Rothes§f> §fim chatting'
+      Replacement: '§7* Rothes is chatting'
 
 # The string list to block. If any string in a packet is matched by these,
 # PSR will block the entire packet sending to the player.
