@@ -100,3 +100,5 @@ Blocks:
     - 'Also this message!'
   Json:
     - '{"text":"This Json will be blocked"}'
+  # Empty list.
+  Direct: []

@@ -98,3 +98,5 @@ Blocks:
     - '这条同样也会'
   Json:
     - '{"text":"这条json会被屏蔽"}'
+  # 空列表.
+  Direct: []
