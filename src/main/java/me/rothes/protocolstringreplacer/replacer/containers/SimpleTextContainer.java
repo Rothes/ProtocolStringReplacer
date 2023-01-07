@@ -42,6 +42,11 @@ public class SimpleTextContainer extends AbstractContainer<String> {
             content = newText;
         }
 
+        @Override
+        public String toString() {
+            return content;
+        }
+
     }
 
 }

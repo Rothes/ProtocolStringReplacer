@@ -70,6 +70,11 @@ public class ChatJsonContainer extends AbstractContainer<String> {
             content = text;
         }
 
+        @Override
+        public String toString() {
+            return content;
+        }
+
     }
 
 }
