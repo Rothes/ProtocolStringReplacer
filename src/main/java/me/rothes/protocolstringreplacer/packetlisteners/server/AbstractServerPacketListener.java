@@ -16,18 +16,26 @@ import me.rothes.protocolstringreplacer.replacer.containers.ChatJsonContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.ItemStackContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 public abstract class AbstractServerPacketListener extends AbstractPacketListener {
 
     protected final BiPredicate<ReplacerConfig, PsrUser> filter;
     protected final ListenType listenType;
+    private static final String DIRECT_NOT_REPLACED = "PSR Direct Not Replaced - 蔐魬鴯鋆颽漚铼";
 
     protected AbstractServerPacketListener(PacketType packetType, ListenType listenType) {
         super(packetType);
@@ -57,35 +65,13 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
-                                                       @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter, boolean saveTitle) {
-        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
-
-        return deployContainer(packetEvent, user, listenType, json, replacers, saveTitle);
-    }
-
-    protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                                        @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
         boolean blocked = false;
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
 
         ChatJsonContainer container = new ChatJsonContainer(json, true);
-        CaptureInfoImpl info = null;
-        if (user.isCapturing(listenType)) {
-            info = new CaptureInfoImpl();
-            info.setTime(System.currentTimeMillis());
-            info.setUser(user);
-            info.setListenType(listenType);
-        }
 
         container.createJsons(container);
-        if (saveTitle) {
-            List<Replaceable> jsons = container.getJsons();
-            user.setCurrentWindowTitle(jsons.get(jsons.size() - 1).getText());
-        }
-        if (user.isCapturing(listenType)) {
-            info.setJsons(container.getJsons());
-        }
         if (replacerManager.isJsonBlocked(container, replacers)) {
             packetEvent.setCancelled(true);
             blocked = true;
@@ -102,10 +88,6 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         }
         try {
             container.createTexts(container);
-            if (user.isCapturing(listenType)) {
-                info.setTexts(container.getTexts());
-                user.addCaptureInfo(listenType, info);
-            }
         } catch (Throwable t) {
             throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
                     + "Original Json: " + json + "\n"
@@ -126,18 +108,23 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     @Nullable
     protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                             @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter) {
-        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter, false);
-
-        if (container != null) {
-            return container.getResult();
-        } else {
-            return null;
-        }
+        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
+        return getReplacedJson(packetEvent, user, listenType, json, replacers);
     }
 
     @Nullable
     protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                             @Nonnull String json, List<ReplacerConfig> replacers) {
+        String replacedDirect = getReplacedDirect(packetEvent, user, listenType, json, replacers, false);
+        if (replacedDirect == null) {
+            return null;
+        }
+        //noinspection StringEquality
+        if (replacedDirect != DIRECT_NOT_REPLACED) {
+            return ComponentSerializer.toString(TextComponent.fromLegacyText(replacedDirect));
+        }
+
         ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, replacers, false);
 
         if (container != null) {
@@ -148,9 +135,69 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     @Nullable
+    protected static String getReplacedDirect(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                            @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
+        if (saveTitle) {
+            user.setCurrentWindowTitle(json);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
+            sb.append(baseComponent.toLegacyText());
+        }
+
+        String directString = sb.toString();
+
+        if (user.isCapturing(listenType)) {
+            CaptureInfo info = new CaptureInfoImpl();
+            info.setTime(System.currentTimeMillis());
+            info.setUser(user);
+            info.setListenType(listenType);
+
+            ArrayList<String> directs = new ArrayList<>();
+            directs.add(directString);
+            info.setDirects(directs);
+
+            ChatJsonContainer container = new ChatJsonContainer(json, true);
+            container.createJsons(container);
+            info.setJsons(container.getJsons());
+            ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, replacers);
+            try {
+                container.createDefaultChildren();
+            } catch (Throwable t) {
+                throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+                        + "Original Json: " + json + "\n"
+                        + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
+                        + "If you need support, please provide the stacktrace below.", t);
+            }
+            try {
+                container.createTexts(container);
+            } catch (Throwable t) {
+                throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+                        + "Original Json: " + json + "\n"
+                        + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
+                        + "If you need support, please provide the stacktrace below.", t);
+            }
+
+            info.setTexts(container.getTexts());
+
+            user.addCaptureInfo(listenType, info);
+        }
+
+        if (ProtocolStringReplacer.getInstance().getReplacerManager().isDirectBlocked(directString, replacers)) {
+            packetEvent.setCancelled(true);
+            return null;
+        }
+        String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, replacers);
+        return replaceDirect.equals(directString) ? DIRECT_NOT_REPLACED : replaceDirect;
+    }
+
+    @Nullable
     protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                                                           @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter, boolean saveTitle) {
-        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, filter, saveTitle);
+        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
+        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, replacers, saveTitle);
 
         if (container != null) {
             return WrappedChatComponent.fromJson(container.getResult());
@@ -183,6 +230,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         container.createTexts(container);
         if (user.isCapturing(listenType)) {
             info.setTexts(container.getTexts());
+            info.setDirects(Collections.emptyList());
             user.addCaptureInfo(listenType, info);
         }
         if (replacerManager.isTextBlocked(container, replacers)) {
@@ -216,7 +264,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         ItemStackContainer container = new ItemStackContainer(itemStack);
 
-        if (!container.isFromCache()) {
+        boolean fromCache = container.isFromCache();
+        if (!fromCache) {
             if (cacheItemStack(container, replacers)) {
                 return true;
             }
@@ -229,8 +278,11 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
         if (papiIndexes.length != 0) {
             container.cloneItem();
-            container.createDefaultChildren();
-            container.createTexts(container);
+            if (fromCache) {
+                container.createDefaultChildren();
+                container.createDefaultChildrenDeep();
+                container.createTexts(container);
+            }
 
             replacerManager.setPapi(user, container.getTexts(), papiIndexes);
         }
@@ -240,12 +292,13 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             user.saveUserMetaCache(original, itemStack);
         }
         if (user.isCapturing(listenType)) {
-            captureItemStackInfo(user, original, listenType);
+            captureItemStackInfo(user, original, listenType, replacers);
         }
         return false;
     }
 
-    private static void captureItemStackInfo(@Nonnull PsrUser user, @Nonnull ItemStack itemStack, @Nonnull ListenType listenType) {
+    private static void captureItemStackInfo(@Nonnull PsrUser user, @Nonnull ItemStack itemStack,
+                                             @Nonnull ListenType listenType, List<ReplacerConfig> replacers) {
         ItemStackContainer container = new ItemStackContainer(itemStack, false);
         CaptureInfo info = new CaptureInfoImpl();
         info.setTime(System.currentTimeMillis());
@@ -254,9 +307,37 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         container.createDefaultChildren();
         container.createJsons(container);
+        List<String> originalJsons = container.getJsons().stream().map(Replaceable::getText).collect(Collectors.toList());
+
+        List<String> directs = new ArrayList<>(originalJsons.size());
+        for (String json : originalJsons) {
+            StringBuilder sb = new StringBuilder();
+            for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
+                sb.append(baseComponent.toLegacyText());
+            }
+
+            directs.add(sb.toString());
+        }
+        info.setDirects(directs);
 
         info.setJsons(container.getJsons());
-        container.createTexts(container);
+        ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, replacers);
+        try {
+            container.createDefaultChildrenDeep();
+        } catch (Throwable t) {
+            throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+                    + "Original Json: " + originalJsons + "\n"
+                    + "Replaced Json: " + container.getJsons() + "\n"
+                    + "If you need support, please provide the stacktrace below.", t);
+        }
+        try {
+            container.createTexts(container);
+        } catch (Throwable t) {
+            throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+                    + "Original Json: " + originalJsons + "\n"
+                    + "Replaced Json: " + container.getJsons() + "\n"
+                    + "If you need support, please provide the stacktrace below.", t);
+        }
         info.setTexts(container.getTexts());
         user.addCaptureInfo(listenType, info);
     }
@@ -266,17 +347,43 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         container.createDefaultChildren();
         container.createJsons(container);
-        if (replacerManager.isJsonBlocked(container, replacers)) {
-            container.getMetaCache().setBlocked(true);
-            return true;
+
+        for (Replaceable json : container.getJsons()) {
+            StringBuilder sb = new StringBuilder();
+            for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
+                sb.append(baseComponent.toLegacyText());
+            }
+
+            String directString = sb.toString();
+
+            if (ProtocolStringReplacer.getInstance().getReplacerManager().isDirectBlocked(directString, replacers)) {
+                container.getMetaCache().setBlocked(true);
+                return true;
+            }
+            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, replacers);
+            if (!replaceDirect.equals(directString)) {
+                json.setText(ComponentSerializer.toString(TextComponent.fromLegacyText(replaceDirect)));
+                container.getMetaCache().setDirect(true);
+            }
+
         }
-        replacerManager.replaceContainerJsons(container, replacers);
-        container.createTexts(container);
-        if (replacerManager.isTextBlocked(container, replacers)) {
-            container.getMetaCache().setBlocked(true);
-            return true;
+        if (!container.getMetaCache().isDirect()) {
+            if (replacerManager.isJsonBlocked(container, replacers)) {
+                container.getMetaCache().setBlocked(true);
+                return true;
+            }
+            replacerManager.replaceContainerJsons(container, replacers);
+            container.createDefaultChildrenDeep();
+            container.createTexts(container);
+            if (replacerManager.isTextBlocked(container, replacers)) {
+                container.getMetaCache().setBlocked(true);
+                return true;
+            }
+            replacerManager.replaceContainerTexts(container, replacers);
+        } else {
+            container.createDefaultChildrenDeep();
+            container.createTexts(container);
         }
-        replacerManager.replaceContainerTexts(container, replacers);
         Integer[] ints = replacerManager.getPapiIndexes(container.getTexts()).toArray(new Integer[0]);
         int[] indexes = new int[ints.length];
         for (int i = 0; i < ints.length; i++) {

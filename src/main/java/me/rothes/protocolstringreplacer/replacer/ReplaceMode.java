@@ -3,7 +3,8 @@ package me.rothes.protocolstringreplacer.replacer;
 public enum ReplaceMode {
 
     COMMON("Common", "Variables.Replacers-Mode.Enums.Common"),
-    JSON("Json", "Variables.Replacers-Mode.Enums.Json");
+    JSON("Json", "Variables.Replacers-Mode.Enums.Json"),
+    DIRECT("Direct", "Variables.Replacers-Mode.Enums.Direct");
 
     private String node;
     private String localeKey;

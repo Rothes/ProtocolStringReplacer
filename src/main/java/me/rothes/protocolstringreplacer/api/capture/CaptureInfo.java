@@ -26,6 +26,13 @@ public interface CaptureInfo {
     @NotNull List<String> getTexts();
 
     /**
+     * Get the direct string in container.
+     *
+     * @return Direct string list.
+     */
+    @NotNull List<String> getDirects();
+
+    /**
      * Get the Listen-Type of this capture.
      *
      * @return Listen-Type.
@@ -69,6 +76,14 @@ public interface CaptureInfo {
      * @throws IllegalStateException if text replaceables are already been set.
      */
     void setTexts(@NotNull List<Replaceable> replaceables);
+
+    /**
+     * Set the direct strings.
+     *
+     * @param strings The direct strings to set.
+     * @throws IllegalStateException if direct strings are already been set.
+     */
+    void setDirects(@NotNull List<String> strings);
 
     /**
      * Set the Listen-Type of this capture.

@@ -244,6 +244,7 @@ Variables:
   Replacers-Mode:
     Enums:
       Common: 常规
+      Direct: 整句
       Json: Json
   Listen-Type:
     Name: '监听类型'

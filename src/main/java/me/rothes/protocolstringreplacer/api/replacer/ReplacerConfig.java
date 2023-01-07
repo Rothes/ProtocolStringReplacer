@@ -60,6 +60,9 @@ public interface ReplacerConfig {
     default int getMaxJsonLength() {
         return -1;
     }
+    default int getMaxDirectLength() {
+        return -1;
+    }
     default @NotNull String getPermissionLimit() {
         return "";
     }

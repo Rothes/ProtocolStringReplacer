@@ -131,6 +131,8 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                 }
             }
         }
+    }
+    public void createDefaultChildrenDeep() {
         super.createDefaultChildren();
     }
 
@@ -193,7 +195,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
             return true;
         } else {
             nbtItem = new NBTItem(content);
-            metaCache = replacerManager.addReplacedItemCache(original, nbtItem, false, new int[0]);
+            metaCache = replacerManager.addReplacedItemCache(original, nbtItem, false, false, new int[0]);
             return false;
         }
     }

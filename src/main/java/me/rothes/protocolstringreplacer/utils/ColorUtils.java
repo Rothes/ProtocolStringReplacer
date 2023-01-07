@@ -23,13 +23,31 @@ public class ColorUtils {
     @Nonnull
     public static String showColorCodes(@Nonnull String string) {
         Validate.notNull(string, "String cannot be null");
+        return showColorCodes(string, false);
+    }
+
+    @Nonnull
+    public static String showColorCodes(@Nonnull String string, boolean correctHex) {
+        Validate.notNull(string, "String cannot be null");
 
         StringBuilder stringBuilder = new StringBuilder(string);
         for(int i = string.length() - 2; i >= 0; i--) {
             char Char = string.charAt(i);
             char nextChar = string.charAt(i + 1);
-            if (Char == '§' && "0123456789abcdefklmnoxr".indexOf(nextChar) != -1) {
-                stringBuilder.insert(i + 2, nextChar).insert(i + 2, '&');
+            if (Char == '§') {
+                int indexOf = "x0123456789abcdefklmnor".indexOf(nextChar);
+                if (indexOf != -1) {
+                    stringBuilder.insert(i + 2, nextChar).insert(i + 2, '&');
+                    if (correctHex && indexOf == 0 && stringBuilder.length() >= i + 28) {
+                        String part = stringBuilder.substring(i, i + 28);
+                        StringBuilder correct = new StringBuilder(28);
+                        for (int j = 1, k = 0; j < 28; j += 4) {
+                            char c = part.charAt(j);
+                            correct.insert(k++, '§').insert(k++, c).append('&').append(c);
+                        }
+                        stringBuilder.replace(i, i + 28, correct.toString());
+                    }
+                }
             }
         }
         return stringBuilder.toString();

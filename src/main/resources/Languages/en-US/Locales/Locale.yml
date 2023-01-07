@@ -245,6 +245,7 @@ Variables:
     Enums:
       Common: 'Common'
       Json: 'Json'
+      Direct: 'Direct'
   Listen-Type:
     Name: 'Listen type'
     Messages:

@@ -47,12 +47,14 @@ public class ReplacerManager {
         private NBTItem nbtItem;
         private long lastAccessTime;
         private boolean blocked;
+        private boolean direct;
         private int[] placeholderIndexes;
 
-        public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
+        public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, boolean direct, int[] placeholderIndexes) {
             this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
+            this.direct = direct;
             this.placeholderIndexes = placeholderIndexes;
         }
 
@@ -66,6 +68,10 @@ public class ReplacerManager {
 
         public boolean isBlocked() {
             return blocked;
+        }
+
+        public boolean isDirect() {
+            return direct;
         }
 
         public int[] getPlaceholderIndexes() {
@@ -82,6 +88,10 @@ public class ReplacerManager {
 
         public void setBlocked(boolean blocked) {
             this.blocked = blocked;
+        }
+
+        public void setDirect(boolean direct) {
+            this.direct = direct;
         }
 
     }
@@ -165,7 +175,7 @@ public class ReplacerManager {
         }
 
         // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new int[0]));
+        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, false, new int[0]));
     }
 
     public void addReplacerConfig(ReplacerConfig replacerConfig) {
@@ -208,10 +218,10 @@ public class ReplacerManager {
     }
 
     public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull NBTItem nbtItem,
-                                              boolean blocked, int[] papiIndexes) {
+                                              boolean blocked, boolean direct, int[] papiIndexes) {
         Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
-        ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
+        ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, direct, papiIndexes);
         replacedItemCache.put(original, itemMetaCache);
         return itemMetaCache;
     }
@@ -281,6 +291,28 @@ public class ReplacerManager {
         return false;
     }
 
+    public boolean isDirectBlocked(@Nonnull String string, @Nonnull List<ReplacerConfig> replacerConfigList) {
+        Validate.notNull(string, "String cannot be null");
+        Validate.notNull(replacerConfigList, "List cannot be null");
+
+        if (string.isEmpty()) {
+            return false;
+        }
+        int length = string.length();
+        int maxLength;
+
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            maxLength = replacerConfig.getMaxDirectLength();
+            if (maxLength != -1 && maxLength < length) {
+                continue;
+            }
+            if (getBlocked(string, replacerConfig, ReplaceMode.DIRECT)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void replaceContainerJsons(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
@@ -327,6 +359,27 @@ public class ReplacerManager {
             }
             replaceable.setText(text);
         }
+    }
+
+    public String replaceDirect(@Nonnull String string, @Nonnull List<ReplacerConfig> replacerConfigList) {
+        Validate.notNull(string, "String cannot be null");
+        Validate.notNull(replacerConfigList, "List cannot be null");
+
+        if (string.isEmpty()) {
+            return string;
+        }
+        int length = string.length();
+        int maxLength;
+
+        String result = string;
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            maxLength = replacerConfig.getMaxDirectLength();
+            if (maxLength != -1 && maxLength < length) {
+                continue;
+            }
+            result = getReplaced(result, replacerConfig, ReplaceMode.DIRECT);
+        }
+        return result;
     }
 
     public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables) {

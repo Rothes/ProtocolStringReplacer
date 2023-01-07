@@ -14,6 +14,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
 
     private List<String> jsons;
     private List<String> texts;
+    private List<String> directs;
     private ListenType listenType;
     private long time = -1;
     private PsrUser user;
@@ -38,6 +39,16 @@ public final class CaptureInfoImpl implements CaptureInfo {
     @Override
     public @NotNull List<String> getTexts() {
         return texts;
+    }
+
+    /**
+     * Get the direct string in container.
+     *
+     * @return Direct string list.
+     */
+    @Override
+    public @NotNull List<String> getDirects() {
+        return directs;
     }
 
     /**
@@ -117,6 +128,21 @@ public final class CaptureInfoImpl implements CaptureInfo {
             texts.add(replaceable.getText());
         }
         this.texts = texts;
+    }
+
+    /**
+     * Set the direct strings.
+     *
+     * @param strings The direct strings to set.
+     * @throws IllegalStateException if direct strings are already been set.
+     */
+    @Override
+    public void setDirects(@NotNull List<String> strings) {
+        Validate.notNull(strings, "Direct strings cannot be null");
+        if (this.directs != null) {
+            throw new IllegalStateException("Direct strings have already been set");
+        }
+        this.directs = new ArrayList<>(strings);
     }
 
     /**

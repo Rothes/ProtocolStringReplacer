@@ -8,6 +8,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
 
 import javax.annotation.Nonnull;
@@ -33,6 +34,11 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(ColorUtils.showColorCodes(json) + "\n").color(ChatColor.RESET);
         }
+        hoverTextBuilder.append("\n§b§lDirects: " + (info.getJsons().isEmpty() ? "§fN/A" : "\n"));
+        for (String direct : info.getDirects()) {
+            hoverTextBuilder.append("§6§l- ");
+            hoverTextBuilder.append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true) + "\n"));
+        }
         hoverTextBuilder.append("§aClick for clipboard");
 
         ComponentBuilder captureMessageBuilder = new ComponentBuilder("")
@@ -57,6 +63,12 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
             user.sendFilteredMessage(new ComponentBuilder("§6§l - ").event(clickEvent).append(ColorUtils.showColorCodes(json)).color(ChatColor.RESET).create());
+        }
+        user.sendFilteredText("§b§lDirects: " + (info.getJsons().isEmpty() ? "§fN/A" : ""));
+        for (String direct : info.getDirects()) {
+            ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
+                    new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, direct) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, direct);
+            user.sendFilteredMessage(new ComponentBuilder("§6§l - ").event(clickEvent).append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true))).create());
         }
     }
 

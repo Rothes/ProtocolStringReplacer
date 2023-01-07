@@ -41,6 +41,7 @@ public class FileReplacerConfig implements ReplacerConfig {
 
     private int maxTextLength = -1;
     private int maxJsonLength = -1;
+    private int maxDirectLength = -1;
 
     private String permissionLimit;
     private List<String> windowTitleLimit;
@@ -329,6 +330,11 @@ public class FileReplacerConfig implements ReplacerConfig {
         if (maxJsonLength <= 0) {
             maxJsonLength = -1;
         }
+
+        maxDirectLength = configuration.getInt("Options.Filter.Max-Length.Direct", -1);
+        if (maxDirectLength <= 0) {
+            maxDirectLength = -1;
+        }
         permissionLimit = configuration.getString("Options.Filter.User.Permission", "");
         windowTitleLimit = configuration.getStringList("Options.Filter.ItemStack.Window-Title");
         windowTitleLimitIgnoreInventory = configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
@@ -360,6 +366,11 @@ public class FileReplacerConfig implements ReplacerConfig {
     @Override
     public int getMaxJsonLength() {
         return maxJsonLength;
+    }
+
+    @Override
+    public int getMaxDirectLength() {
+        return maxDirectLength;
     }
 
     @Override
