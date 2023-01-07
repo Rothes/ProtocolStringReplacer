@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.utils;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -48,23 +49,23 @@ public class ColorUtils {
     }
 
     @Nonnull
-    public static String getTextColor(@Nonnull TextComponent textComponent) {
-        Validate.notNull(textComponent, "TextComponent cannot be null");
+    public static String getTextColor(@Nonnull BaseComponent component) {
+        Validate.notNull(component, "TextComponent cannot be null");
 
         StringBuilder colorBuilder = new StringBuilder();
-        if (textComponent.getColorRaw() != null) {
-            colorBuilder.append(textComponent.getColorRaw());
+        if (component.getColorRaw() != null) {
+            colorBuilder.append(component.getColorRaw());
         }
-        if (textComponent.isBoldRaw() != null && textComponent.isBoldRaw()) {
+        if (component.isBoldRaw() != null && component.isBoldRaw()) {
             colorBuilder.append("§l");
         }
-        if (textComponent.isItalicRaw() != null && textComponent.isItalicRaw()) {
+        if (component.isItalicRaw() != null && component.isItalicRaw()) {
             colorBuilder.append("§o");
         }
-        if (textComponent.isObfuscatedRaw() != null && textComponent.isObfuscatedRaw()) {
+        if (component.isObfuscatedRaw() != null && component.isObfuscatedRaw()) {
             colorBuilder.append("§m");
         }
-        if (textComponent.isUnderlinedRaw() != null && textComponent.isUnderlinedRaw()) {
+        if (component.isUnderlinedRaw() != null && component.isUnderlinedRaw()) {
             colorBuilder.append("§n");
         }
         return colorBuilder.toString();
