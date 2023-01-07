@@ -326,16 +326,16 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             container.createDefaultChildrenDeep();
         } catch (Throwable t) {
             throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
-                    + "Original Json: " + originalJsons + "\n"
-                    + "Replaced Json: " + container.getJsons() + "\n"
+                    + "Original Jsons: " + originalJsons + "\n"
+                    + "Replaced Jsons: " + container.getJsons() + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
         }
         try {
             container.createTexts(container);
         } catch (Throwable t) {
             throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
-                    + "Original Json: " + originalJsons + "\n"
-                    + "Replaced Json: " + container.getJsons() + "\n"
+                    + "Original Jsons: " + originalJsons + "\n"
+                    + "Replaced Jsons: " + container.getJsons() + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
         }
         info.setTexts(container.getTexts());
@@ -372,9 +372,24 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 container.getMetaCache().setBlocked(true);
                 return true;
             }
+            List<String> originalJsons = container.getJsons().stream().map(Replaceable::getText).collect(Collectors.toList());
             replacerManager.replaceContainerJsons(container, replacers);
-            container.createDefaultChildrenDeep();
-            container.createTexts(container);
+            try {
+                container.createDefaultChildrenDeep();
+            } catch (Throwable t) {
+                throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+                        + "Original Jsons: " + originalJsons + "\n"
+                        + "Replaced Jsons: " + container.getJsons() + "\n"
+                        + "If you need support, please provide the stacktrace below.", t);
+            }
+            try {
+                container.createTexts(container);
+            } catch (Throwable t) {
+                throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+                        + "Original Jsons: " + originalJsons + "\n"
+                        + "Replaced Jsons: " + container.getJsons() + "\n"
+                        + "If you need support, please provide the stacktrace below.", t);
+            }
             if (replacerManager.isTextBlocked(container, replacers)) {
                 container.getMetaCache().setBlocked(true);
                 return true;
