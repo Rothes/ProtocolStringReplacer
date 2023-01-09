@@ -28,6 +28,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
 
     protected final static Pattern startedSpacePattern = Pattern.compile("^( +)");
     protected final static Pattern endedSpacePattern = Pattern.compile("( +)$");
+    protected final static String EMPTY_LINE = "#㩵遌㚳 - This is empty line";
 
     private static class Comment {
         private int passedLines;
@@ -87,7 +88,7 @@ public class CommentYamlConfiguration extends YamlConfiguration {
             boolean isList = false;
             boolean foundComment = false;
             if (cursor == line.length()) {
-                line = line + "#";
+                line = line + EMPTY_LINE;
             } else if (line.charAt(cursor) == '-') {
                 isList = true;
             }
@@ -165,7 +166,8 @@ public class CommentYamlConfiguration extends YamlConfiguration {
                 stringBuilder.append(line).append("\n");
             }
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString()
+                .replace(EMPTY_LINE, "");
     }
 
     @Nonnull
