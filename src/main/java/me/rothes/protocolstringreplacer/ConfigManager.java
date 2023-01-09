@@ -22,6 +22,8 @@ public class ConfigManager {
     public final boolean removeCacheWhenMerchantTrade;
     public final int protocolLibSideStackPrintCount;
 
+    public final boolean directSkips;
+
     public final String gitRawHost;
 
     public ConfigManager(ProtocolStringReplacer instance) {
@@ -70,6 +72,8 @@ public class ConfigManager {
         this.protocolLibSideStackPrintCount = instance.getConfig().getInt("Options.ProtocolLib-Side-Stack-Print-Count", 3);
         this.convertPlayerChat = instance.getServerMajorVersion() >= 19 && instance.getConfig().getBoolean("Options.Features.Chat-Packet.Convert-Player-Chat", true);
         this.removeCacheWhenMerchantTrade = instance.getConfig().getBoolean("Options.Features.ItemMetaCache.Remove-Cache-When-Merchant-Trade", false);
+
+        directSkips = instance.getConfig().getBoolean("Options.Features.Replace-Mode.Skip-When-Direct-Replaced", true);
     }
 
     public enum LifeCycle {

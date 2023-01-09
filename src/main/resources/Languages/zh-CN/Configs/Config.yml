@@ -58,3 +58,8 @@ Options:
       # 以解决服务端/客户端开启“仅显示安全的聊天”后消息无法显示的问题.
       # 注意: 这会影响到客户端对玩家聊天的检测. 例如, 您将无法通过聊天来举报其他玩家.
       Convert-Player-Chat: true
+
+    # 有关替换模式优化的相关设定.
+    Replace-Mode:
+      # 在 Direct 模式成功替换后, 跳过对这个数据包所有的处理.
+      Skip-When-Direct-Replaced: true

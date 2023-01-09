@@ -61,3 +61,8 @@ Options:
       # if server/client enabled "Only Show Secure Chat".
       # NOTE: This affects detection of player chat on clients. E.g, you will not able to report other players via chat.
       Convert-Player-Chat: true
+
+    # Options about Optimization of replace modes.
+    Replace-Mode:
+      # After replacement in Direct mode, skip all processing for this packet.
+      Skip-When-Direct-Replaced: true

@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractServerPacketListener extends AbstractPacketListener {
 
+    protected static final ProtocolStringReplacer plugin = ProtocolStringReplacer.getInstance();
     protected final BiPredicate<ReplacerConfig, PsrUser> filter;
     protected final ListenType listenType;
     private static final String DIRECT_NOT_REPLACED = "PSR Direct Not Replaced - 蔐魬鴯鋆颽漚铼";
@@ -125,11 +126,13 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             return null;
         }
         //noinspection StringEquality
-        if (replacedDirect != DIRECT_NOT_REPLACED) {
+        if (replacedDirect != DIRECT_NOT_REPLACED && plugin.getConfigManager().directSkips) {
             return ComponentSerializer.toString(TextComponent.fromLegacyText(replacedDirect));
         }
 
-        ChatJsonContainer container = deployContainer(packetEvent, user, json, replacers);
+        //noinspection StringEquality
+        ChatJsonContainer container = deployContainer(packetEvent, user,
+                (replacedDirect != DIRECT_NOT_REPLACED) ? replacedDirect : json, replacers);
 
         if (container != null) {
             return container.getResult();
@@ -371,7 +374,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             }
 
         }
-        if (!container.getMetaCache().isDirect()) {
+        if (!(container.getMetaCache().isDirect() && plugin.getConfigManager().directSkips)) {
             if (replacerManager.isJsonBlocked(container, replacers)) {
                 container.getMetaCache().setBlocked(true);
                 return true;
