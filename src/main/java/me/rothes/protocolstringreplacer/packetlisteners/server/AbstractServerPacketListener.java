@@ -24,9 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
@@ -64,8 +62,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         return permission.isEmpty() || user.hasPermission(permission);
     }
 
-    protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
-                                                       @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
+    protected static ChatJsonContainer deployContainer(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user,
+                                                       @Nonnull String json, List<ReplacerConfig> replacers) {
         boolean blocked = false;
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
 
@@ -116,7 +114,13 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     @Nullable
     protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                             @Nonnull String json, List<ReplacerConfig> replacers) {
-        String replacedDirect = getReplacedDirect(packetEvent, user, listenType, json, replacers, false);
+        return getReplacedJson(packetEvent, user, listenType, json, replacers, false);
+    }
+
+    @Nullable
+    protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+                                            @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
+        String replacedDirect = getReplacedDirect(packetEvent, user, listenType, json, replacers, saveTitle);
         if (replacedDirect == null) {
             return null;
         }
@@ -125,7 +129,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             return ComponentSerializer.toString(TextComponent.fromLegacyText(replacedDirect));
         }
 
-        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, replacers, false);
+        ChatJsonContainer container = deployContainer(packetEvent, user, json, replacers);
 
         if (container != null) {
             return container.getResult();
@@ -197,10 +201,10 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                                                                           @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter, boolean saveTitle) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
-        ChatJsonContainer container = deployContainer(packetEvent, user, listenType, json, replacers, saveTitle);
+        String replacedJson = getReplacedJson(packetEvent, user, listenType, json, replacers, saveTitle);
 
-        if (container != null) {
-            return WrappedChatComponent.fromJson(container.getResult());
+        if (replacedJson != null) {
+            return WrappedChatComponent.fromJson(replacedJson);
         } else {
             return null;
         }
