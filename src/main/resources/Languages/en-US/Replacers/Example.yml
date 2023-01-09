@@ -82,7 +82,8 @@ Replaces:
     - Original: '{"translate":"container.furnace"}'
       Replacement: '{"text":"Congratulations for opening a furnace! Nice job!"}'
   # Direct replace mode. Suitable for users who are not familiar with Json replacement.
-  # If any content is replaced here, Json and Common replace modes will no longer take effect for this packet.
+  # By default, If any content is replaced here, Json and Common replace modes
+  # will no longer take effect for this packet. You can disable it in Config.yml.
   # In addition to Json, this also supports 1.16+ HEX.
   # Note: If direct replace mod replaced the string, it will break non-text component display in Json.
   # ^ This means that after the replacement the message will cause the side effects that the message being
