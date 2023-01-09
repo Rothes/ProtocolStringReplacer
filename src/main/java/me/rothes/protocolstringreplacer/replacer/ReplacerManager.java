@@ -47,14 +47,12 @@ public class ReplacerManager {
         private NBTItem nbtItem;
         private long lastAccessTime;
         private boolean blocked;
-        private boolean direct;
         private int[] placeholderIndexes;
 
         public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, boolean direct, int[] placeholderIndexes) {
             this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
-            this.direct = direct;
             this.placeholderIndexes = placeholderIndexes;
         }
 
@@ -68,10 +66,6 @@ public class ReplacerManager {
 
         public boolean isBlocked() {
             return blocked;
-        }
-
-        public boolean isDirect() {
-            return direct;
         }
 
         public int[] getPlaceholderIndexes() {
@@ -88,10 +82,6 @@ public class ReplacerManager {
 
         public void setBlocked(boolean blocked) {
             this.blocked = blocked;
-        }
-
-        public void setDirect(boolean direct) {
-            this.direct = direct;
         }
 
     }

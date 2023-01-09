@@ -355,6 +355,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         container.createDefaultChildren();
         container.createJsons(container);
 
+        boolean direct = false;
+
         for (Replaceable json : container.getJsons()) {
             StringBuilder sb = new StringBuilder();
             for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
@@ -370,11 +372,14 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, replacers);
             if (!replaceDirect.equals(directString)) {
                 json.setText(ComponentSerializer.toString(TextComponent.fromLegacyText(replaceDirect)));
-                container.getMetaCache().setDirect(true);
+                direct = true;
             }
 
         }
-        if (!(container.getMetaCache().isDirect() && plugin.getConfigManager().directSkips)) {
+        if (direct && plugin.getConfigManager().directSkips) {
+            container.createDefaultChildrenDeep();
+            container.createTexts(container);
+        } else {
             if (replacerManager.isJsonBlocked(container, replacers)) {
                 container.getMetaCache().setBlocked(true);
                 return true;
@@ -402,10 +407,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 return true;
             }
             replacerManager.replaceContainerTexts(container, replacers);
-        } else {
-            container.createDefaultChildrenDeep();
-            container.createTexts(container);
         }
+
         Integer[] ints = replacerManager.getPapiIndexes(container.getTexts()).toArray(new Integer[0]);
         int[] indexes = new int[ints.length];
         for (int i = 0; i < ints.length; i++) {
