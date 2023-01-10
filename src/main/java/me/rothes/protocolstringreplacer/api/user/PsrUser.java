@@ -25,6 +25,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,6 +38,15 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PsrUser {
+
+    private static Method getLocaleLegacy = getLegacyMethod();
+
+    private static Method getLegacyMethod() {
+        try {
+            return Player.Spigot.class.getDeclaredMethod("getLocale");
+        } catch (NoSuchMethodException ignored) {}
+        return null;
+    }
 
     private UUID uuid;
     private Player player;
@@ -65,7 +77,10 @@ public class PsrUser {
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
             setClientLocale(getPlayer().getLocale());
         } else {
-            setClientLocale(((Player) getPlayer().spigot()).getLocale());
+            Player.Spigot spigot = getPlayer().spigot();
+            try {
+                setClientLocale((String) getLocaleLegacy.invoke(spigot));
+            } catch (IllegalAccessException | InvocationTargetException ignored) {}
         }
     }
 
@@ -76,7 +91,10 @@ public class PsrUser {
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
             setClientLocale(getPlayer().getLocale());
         } else {
-            setClientLocale(((Player) getPlayer().spigot()).getLocale());
+            Player.Spigot spigot = getPlayer().spigot();
+            try {
+                setClientLocale((String) getLocaleLegacy.invoke(spigot));
+            } catch (IllegalAccessException | InvocationTargetException ignored) {}
         }
     }
 
