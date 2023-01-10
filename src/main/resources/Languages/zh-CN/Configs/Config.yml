@@ -61,5 +61,5 @@ Options:
 
     # 有关替换模式优化的相关设定.
     Replace-Mode:
-      # 在 Direct 模式成功替换后, 跳过对这个数据包所有的处理.
+      # 在直观(Direct)替换模式成功替换后, 跳过对这个数据包所有的处理.
       Skip-When-Direct-Replaced: true
