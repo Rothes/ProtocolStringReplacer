@@ -16,7 +16,7 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
     protected AbstractServerItemPacketListener(PacketType packetType) {
         super(packetType, ListenType.ITEMSTACK);
         itemFilter = (replacerConfig, user) -> {
-            if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
+            if (containType(replacerConfig) && checkFilter(user, replacerConfig)) {
                 String currentWindowTitle = user.getCurrentWindowTitle();
                 List<String> windowTitles = replacerConfig.getWindowTitleLimit();
                 if (windowTitles.isEmpty()) {

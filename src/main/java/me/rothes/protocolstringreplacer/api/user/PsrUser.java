@@ -42,6 +42,7 @@ public class PsrUser {
 
     private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private String currentWindowTitle;
+    private String clientLocale;
     private boolean inAnvil;
     private boolean inMerchant;
     private Short uniqueCacheKey = 0;
@@ -61,12 +62,22 @@ public class PsrUser {
         this.player = player;
         uuid = player.getUniqueId();
         sender = player;
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
+            setClientLocale(getPlayer().getLocale());
+        } else {
+            setClientLocale(((Player) getPlayer().spigot()).getLocale());
+        }
     }
 
     public PsrUser(UUID uuid) {
         this.uuid = uuid;
         player = Bukkit.getPlayer(uuid);
         sender = player;
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
+            setClientLocale(getPlayer().getLocale());
+        } else {
+            setClientLocale(((Player) getPlayer().spigot()).getLocale());
+        }
     }
 
     public PsrUser(CommandSender sender) {
@@ -95,6 +106,14 @@ public class PsrUser {
 
     public String getCurrentWindowTitle() {
         return currentWindowTitle;
+    }
+
+    public String getClientLocale() {
+        return clientLocale;
+    }
+
+    public void setClientLocale(String clientLocale) {
+        this.clientLocale = clientLocale;
     }
 
     public boolean isInAnvil() {

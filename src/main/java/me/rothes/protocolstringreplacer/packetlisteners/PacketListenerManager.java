@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
+import me.rothes.protocolstringreplacer.packetlisteners.client.SettingsLocale;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
 import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
@@ -127,6 +128,7 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new WindowClick().packetAdapter);
         protocolManager.addPacketListener(new SetCreativeSlot().packetAdapter);
         protocolManager.addPacketListener(new CloseWindow().packetAdapter);
+        protocolManager.addPacketListener(new SettingsLocale().packetAdapter);
 
     }
 

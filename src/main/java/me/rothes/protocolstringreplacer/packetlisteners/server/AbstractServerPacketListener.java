@@ -39,7 +39,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     protected AbstractServerPacketListener(PacketType packetType, ListenType listenType) {
         super(packetType);
         this.listenType = listenType;
-        filter = (replacerConfig, user) -> containType(replacerConfig) && checkPermission(user, replacerConfig);
+        filter = (replacerConfig, user) -> containType(replacerConfig) && checkFilter(user, replacerConfig);
         packetAdapter = new PacketAdapter(ProtocolStringReplacer.getInstance(), ProtocolStringReplacer.getInstance().getPacketListenerManager().getListenerPriority(), packetType) {
             public void onPacketSending(PacketEvent packetEvent) {
                 boolean readOnly = packetEvent.isReadOnly();
@@ -56,6 +56,10 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     protected final boolean containType(ReplacerConfig replacerConfig) {
         return replacerConfig.getListenTypeList().contains(listenType);
+    }
+
+    protected final boolean checkFilter(PsrUser user, ReplacerConfig replacerConfig) {
+        return checkPermission(user, replacerConfig) && replacerConfig.acceptsLocale(user.getClientLocale());
     }
 
     protected final boolean checkPermission(PsrUser user, ReplacerConfig replacerConfig) {

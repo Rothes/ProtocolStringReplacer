@@ -50,6 +50,12 @@ Options:
       # Required permission. If set, user must have this permission
       # to make this replacer config take effects.
       Permission: 'example.permission.1'
+      # Required client locales. Will only handle for the listed locales here.
+      # Set it to an empty list or null to skip the check.
+      # Locale list: https://minecraft.fandom.com/wiki/Language#Languages
+      Locales:
+        - en_us  # English (US)
+        - en_gb  # English (UK)
     # PSR will ignore the string (but not the whole packet) whose length exceeds the number defined here.
     # Set -1 to disable the feature.
     Max-Length:

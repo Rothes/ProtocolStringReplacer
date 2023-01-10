@@ -16,13 +16,13 @@ public abstract class AbstractScoreBoardListener extends AbstractServerPacketLis
     protected AbstractScoreBoardListener(PacketType packetType, ListenType listenType) {
         super(packetType, listenType);
         titleFilter = (replacerConfig, user) -> {
-            if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
+            if (containType(replacerConfig) && checkFilter(user, replacerConfig)) {
                 return replacerConfig.handleScoreboardTitle();
             }
             return false;
         };
         entityNameFilter = (replacerConfig, user) -> {
-            if (containType(replacerConfig) && checkPermission(user, replacerConfig)) {
+            if (containType(replacerConfig) && checkFilter(user, replacerConfig)) {
                 return replacerConfig.handleScoreboardEntityName();
             }
             return false;

@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -48,6 +50,7 @@ public class FileReplacerConfig implements ReplacerConfig {
     private boolean windowTitleLimitIgnoreInventory;
     private boolean handleScoreboardTitle;
     private boolean handleScoreboardEntityName;
+    private HashSet<String> locales;
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
         long startTime = System.nanoTime();
@@ -340,6 +343,12 @@ public class FileReplacerConfig implements ReplacerConfig {
         windowTitleLimitIgnoreInventory = configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
         handleScoreboardTitle = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
         handleScoreboardEntityName = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
+
+        locales = new HashSet<>();
+        for (String s : configuration.getStringList("Options.Filter.User.Locales")) {
+            locales.add(s.toLowerCase(Locale.ROOT).replace('-', '_'));
+        }
+
     }
 
     private void updateStringSearcher(@Nonnull ReplaceMode replaceMode) {
@@ -399,8 +408,13 @@ public class FileReplacerConfig implements ReplacerConfig {
     }
 
     @Override
+    public boolean acceptsLocale(String locale) {
+        return locale == null || locales.isEmpty() || locales.contains(locale);
+    }
+
+    @Override
     public String toString() {
-        return "ReplacerConfig{" +
+        return "FileReplacerConfig{" +
                 "file=" + file +
                 ", configuration=" + configuration +
                 ", enable=" + enable +
@@ -414,6 +428,15 @@ public class FileReplacerConfig implements ReplacerConfig {
                 ", edited=" + edited +
                 ", replacesStringSearcher=" + replacesStringSearcher +
                 ", blocksStringSearcher=" + blocksStringSearcher +
+                ", maxTextLength=" + maxTextLength +
+                ", maxJsonLength=" + maxJsonLength +
+                ", maxDirectLength=" + maxDirectLength +
+                ", permissionLimit='" + permissionLimit + '\'' +
+                ", windowTitleLimit=" + windowTitleLimit +
+                ", windowTitleLimitIgnoreInventory=" + windowTitleLimitIgnoreInventory +
+                ", handleScoreboardTitle=" + handleScoreboardTitle +
+                ", handleScoreboardEntityName=" + handleScoreboardEntityName +
+                ", locales=" + locales +
                 '}';
     }
 
