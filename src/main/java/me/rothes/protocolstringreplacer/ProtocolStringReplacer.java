@@ -521,11 +521,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 replacerManager = new ReplacerManager();
                 replacerManager.initialize();
                 replacerManager.registerTask();
-                userManager = new PsrUserManager();
                 packetListenerManager.removeListeners();
                 packetListenerManager.initialize();
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    userManager.loadUser(player);
+                    userManager.getUser(player).cleanUserMetaCache();
                     player.updateInventory();
                 }
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
