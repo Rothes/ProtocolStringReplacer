@@ -167,14 +167,29 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
             ChatJsonContainer container = new ChatJsonContainer(json, true);
             container.createJsons(container);
-            info.setJsons(container.getJsons());
+
+            List<Replaceable> jsons = container.getJsons();
+            for (Replaceable j : jsons) {
+                StringBuilder sb1 = new StringBuilder();
+                for (BaseComponent baseComponent : ComponentSerializer.parse(j.getText())) {
+                    sb1.append(baseComponent.toLegacyText());
+                }
+
+                String ds = sb1.toString();
+                String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(ds, replacers);
+                if (!replaceDirect.equals(ds)) {
+                    j.setText(ComponentSerializer.toString(TextComponent.fromLegacyText(replaceDirect)));
+                }
+            }
+
+            info.setJsons(jsons);
             ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, replacers);
             try {
                 container.createDefaultChildren();
             } catch (Throwable t) {
                 throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
                         + "Original Json: " + json + "\n"
-                        + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
+                        + "Replaced Json: " + jsons.get(0).getText() + "\n"
                         + "If you need support, please provide the stacktrace below.", t);
             }
             try {
@@ -182,7 +197,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             } catch (Throwable t) {
                 throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
                         + "Original Json: " + json + "\n"
-                        + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
+                        + "Replaced Json: " + jsons.get(0).getText() + "\n"
                         + "If you need support, please provide the stacktrace below.", t);
             }
 
@@ -314,7 +329,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         container.createDefaultChildren();
         container.createJsons(container);
-        List<String> originalJsons = container.getJsons().stream().map(Replaceable::getText).collect(Collectors.toList());
+        List<Replaceable> jsons = container.getJsons();
+        List<String> originalJsons = jsons.stream().map(Replaceable::getText).collect(Collectors.toList());
 
         List<String> directs = new ArrayList<>(originalJsons.size());
         for (String json : originalJsons) {
@@ -327,14 +343,27 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         }
         info.setDirects(directs);
 
-        info.setJsons(container.getJsons());
+        for (Replaceable json : jsons) {
+            StringBuilder sb = new StringBuilder();
+            for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
+                sb.append(baseComponent.toLegacyText());
+            }
+
+            String directString = sb.toString();
+            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, replacers);
+            if (!replaceDirect.equals(directString)) {
+                json.setText(ComponentSerializer.toString(TextComponent.fromLegacyText(replaceDirect)));
+            }
+        }
+
+        info.setJsons(jsons);
         ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, replacers);
         try {
             container.createDefaultChildrenDeep();
         } catch (Throwable t) {
             throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
                     + "Original Jsons: " + originalJsons + "\n"
-                    + "Replaced Jsons: " + container.getJsons() + "\n"
+                    + "Replaced Jsons: " + jsons + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
         }
         try {
@@ -342,7 +371,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         } catch (Throwable t) {
             throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
                     + "Original Jsons: " + originalJsons + "\n"
-                    + "Replaced Jsons: " + container.getJsons() + "\n"
+                    + "Replaced Jsons: " + jsons + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
         }
         info.setTexts(container.getTexts());
