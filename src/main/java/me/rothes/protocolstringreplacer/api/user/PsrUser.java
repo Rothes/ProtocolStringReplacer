@@ -315,7 +315,7 @@ public class PsrUser {
     }
 
 
-    public void cleanUserMetaCache() {
+    public void clearUserMetaCache() {
         getMetaCache().clear();
         uniqueCacheKey = 0;
     }

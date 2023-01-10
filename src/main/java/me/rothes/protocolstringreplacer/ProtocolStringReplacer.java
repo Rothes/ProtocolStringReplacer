@@ -524,7 +524,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 packetListenerManager.removeListeners();
                 packetListenerManager.initialize();
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    userManager.getUser(player).cleanUserMetaCache();
+                    userManager.getUser(player).clearUserMetaCache();
                     player.updateInventory();
                 }
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));

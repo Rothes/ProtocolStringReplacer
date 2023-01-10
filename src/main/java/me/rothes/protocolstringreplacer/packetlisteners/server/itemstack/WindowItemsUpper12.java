@@ -23,7 +23,7 @@ public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
         if (user == null) {
             return;
         }
-        user.cleanUserMetaCache();
+        user.clearUserMetaCache();
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
 
