@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -290,11 +291,11 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         ItemStackContainer container = new ItemStackContainer(itemStack);
 
-        boolean fromCache = container.isFromCache();
-        if (!fromCache) {
+        if (!container.isFromCache()) {
             if (cacheItemStack(container, replacers)) {
                 return true;
             }
+            container.reset();
         }
         if (container.getMetaCache().isBlocked()) {
             packetEvent.setCancelled(true);
@@ -304,11 +305,9 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
         if (papiIndexes.length != 0) {
             container.cloneItem();
-            if (fromCache) {
-                container.createDefaultChildren();
-                container.createDefaultChildrenDeep();
-                container.createTexts(container);
-            }
+            container.createDefaultChildren();
+            container.createDefaultChildrenDeep();
+            container.createTexts(container);
 
             replacerManager.setPapi(user, container.getTexts(), papiIndexes);
         }

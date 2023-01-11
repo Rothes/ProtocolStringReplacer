@@ -99,6 +99,13 @@ public abstract class AbstractContainer<T> implements Container<T> {
     }
 
     @Override
+    public void reset() {
+        children = new ArrayList<>();
+        jsonReplaceables = null;
+        textReplaceables = null;
+    }
+
+    @Override
     public Container<?> getRoot() {
         return root;
     }

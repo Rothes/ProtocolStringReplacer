@@ -20,6 +20,8 @@ public interface Container<T> {
 
     void addText(@NotNull Replaceable replaceable);
 
+    void reset();
+
     @NotNull
     Container<?> getRoot();
 
