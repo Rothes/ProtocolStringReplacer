@@ -105,10 +105,11 @@ public class Parse extends SubCommand {
             PsrUser placeholderTarget = player == null ? ProtocolStringReplacer.getInstance().getUserManager().getConsoleUser() :
                     ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
             text = ProtocolStringReplacer.getInstance().getReplacerManager().setPlaceholder(placeholderTarget, text);
-            placeholderMessage.append(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Replaced")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(
-                    PsrLocalization.getLocaledMessage("Sender.Commands.Parse.PAPI-Replace-Info",
-                            placeholderTarget.getPlayer() == null ? "§7§onull" : placeholderTarget.getPlayer().getName(),
-                            ColorUtils.showColorCodes(original1), ColorUtils.showColorCodes(text)))));
+            placeholderMessage.append(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Replaced"))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(
+                            PsrLocalization.getLocaledMessage("Sender.Commands.Parse.PAPI-Replace-Info",
+                                    placeholderTarget.getPlayer() == null ? "§7§onull" : placeholderTarget.getPlayer().getName(),
+                                    ColorUtils.showColorCodes(original1), ColorUtils.showColorCodes(text)))));
         } else {
             placeholderMessage.append(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Not-Replaced"));
         }
