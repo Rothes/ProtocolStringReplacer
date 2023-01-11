@@ -49,7 +49,7 @@ public abstract class AbstractServerComponentsPacketListener extends AbstractSer
     }
 
     protected Component getPaperComponent(StructureModifier<Object> modifier) {
-        if (!ProtocolStringReplacer.getInstance().isPaper()) {
+        if (!ProtocolStringReplacer.getInstance().hasPaperComponent()) {
             return null;
         }
         StructureModifier<Component> componentModifier = modifier.withType(Component.class);
@@ -57,7 +57,7 @@ public abstract class AbstractServerComponentsPacketListener extends AbstractSer
     }
 
     protected String processPaperComponent(StructureModifier<Object> modifier, PacketEvent packetEvent, PsrUser user) {
-        if (!ProtocolStringReplacer.getInstance().isPaper()) {
+        if (!ProtocolStringReplacer.getInstance().hasPaperComponent()) {
             return null;
         }
         StructureModifier<Component> componentModifier = modifier.withType(Component.class);
