@@ -17,6 +17,7 @@ import me.rothes.protocolstringreplacer.replacer.containers.ItemStackContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.inventory.ItemStack;
@@ -403,7 +404,29 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             }
             String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, replacers);
             if (!replaceDirect.equals(directString)) {
-                json.setText(ComponentSerializer.toString(TextComponent.fromLegacyText(replaceDirect)));
+                BaseComponent[] baseComponents = TextComponent.fromLegacyText(replaceDirect);
+                BaseComponent head = baseComponents[0];
+                // Consistent with Vanilla.
+                if (head.isBoldRaw() == null) {
+                    head.setBold(false);
+                }
+                if (head.isUnderlinedRaw() == null) {
+                    head.setUnderlined(false);
+                }
+                if (head.isStrikethroughRaw() == null) {
+                    head.setStrikethrough(false);
+                }
+                if (head.isObfuscatedRaw() == null) {
+                    head.setObfuscated(false);
+                }
+                // Must set false.
+                for (BaseComponent baseComponent : baseComponents) {
+                    if (baseComponent.isItalicRaw() == null) {
+                        baseComponent.setItalic(false);
+                    }
+                }
+
+                json.setText(ComponentSerializer.toString(baseComponents));
                 direct = true;
             }
 
