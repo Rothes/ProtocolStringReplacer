@@ -35,17 +35,19 @@ public class ColorUtils {
             char Char = string.charAt(i);
             char nextChar = string.charAt(i + 1);
             if (Char == '§') {
-                int indexOf = "x0123456789abcdefklmnor".indexOf(nextChar);
+                int indexOf = "x0123456789abcdefABCDEFklmnor".indexOf(nextChar);
                 if (indexOf != -1) {
                     stringBuilder.insert(i + 2, nextChar).insert(i + 2, '&');
                     if (correctHex && indexOf == 0 && stringBuilder.length() >= i + 28) {
                         String part = stringBuilder.substring(i, i + 28);
-                        StringBuilder correct = new StringBuilder(28);
-                        for (int j = 1, k = 0; j < 28; j += 4) {
+                        StringBuilder correct1 = new StringBuilder(14);
+                        StringBuilder correct2 = new StringBuilder(14);
+                        for (int j = 1; j < 28; j += 4) {
                             char c = part.charAt(j);
-                            correct.insert(k++, '§').insert(k++, c).append('&').append(c);
+                            correct1.append('§').append((c >= 65 && c <= 90) ? (char) (c + 32) : c);  // toLowercase
+                            correct2.append('&').append(c);
                         }
-                        stringBuilder.replace(i, i + 28, correct.toString());
+                        stringBuilder.replace(i, i + 28, correct1 + correct2.toString());
                     }
                 }
             }
