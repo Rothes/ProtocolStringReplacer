@@ -172,17 +172,14 @@ public class Parse extends SubCommand {
     @NotNull
     private String equalResult(@NotNull ArrayList<HoverEvent> results, @NotNull String text,
                                @NotNull ReplacerConfig replacerConfig, @NotNull ReplaceMode replaceMode) {
-        String result = text;
-        Collection<Emit<String>> emits = replacerConfig.getReplacesStringSearcher(replaceMode).parseText(text);
-        if (emits.size() == 1) {
-            Emit<String> emit = emits.iterator().next();
-            if (emit.getStart() == 0 && emit.getEnd() + 1 == text.length()) {
-                result = (String) replacerConfig.getReplaces(replaceMode).get(emit.getSearchString());
-                results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replaceMode,
-                        emit.getSearchString(), result, result)));
-            }
+        Object result = replacerConfig.getReplaces(replaceMode).get(text);
+        if (result != null) {
+            String resultString = (String) result;
+            results.add(new HoverEvent(HoverEvent.Action.SHOW_TEXT, createReplaceResultInfo(results, replacerConfig, replaceMode,
+                    text, resultString, resultString)));
+            return resultString;
         }
-        return result;
+        return text;
     }
 
     @SuppressWarnings("unchecked")
