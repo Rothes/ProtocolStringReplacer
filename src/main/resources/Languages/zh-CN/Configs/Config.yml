@@ -54,7 +54,8 @@ Options:
 
     # 聊天数据包的相关设定.
     Chat-Packet:
-      # 仅适用于 1.19+. 启用后, PSR 会转换所有 PLAYER_CHAT 数据包为 SYSTEM_CHAT,
+      # 仅适用于 1.19+ . 必须启用此功能 PSR 才能处理玩家发送的消息.
+      # 启用后, PSR 会转换所有 PLAYER_CHAT 数据包为 SYSTEM_CHAT,
       # 以解决服务端/客户端开启“仅显示安全的聊天”后消息无法显示的问题.
       # 注意: 这会影响到客户端对玩家聊天的检测. 例如, 您将无法通过聊天来举报其他玩家.
       Convert-Player-Chat: true
