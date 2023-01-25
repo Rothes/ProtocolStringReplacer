@@ -152,7 +152,7 @@ public class Updater implements Listener {
         String msg = getLocaledJsonMessage(msgJson);
 
         int msgTimes = json.has("Message_Times") ? json.get("Message_Times").getAsInt() : -1;
-        int curTimes = msgTimesMap.get(id) == null? 0 : msgTimesMap.get(id);
+        int curTimes = msgTimesMap.get(id) == null ? 0 : msgTimesMap.get(id);
 
         if (msgTimes == -1 || curTimes < msgTimes) {
 
@@ -176,7 +176,10 @@ public class Updater implements Listener {
             msgTimesMap.put(id, ++curTimes);
         }
 
-        JsonArray actions = json.getAsJsonArray("Actions");
+        checkActions(json.getAsJsonArray("Actions"));
+    }
+
+    private void checkActions(JsonArray actions) {
         if (actions == null) {
             return;
         }
@@ -186,10 +189,9 @@ public class Updater implements Listener {
                 return;
             }
         }
-
     }
 
-    public static String getLocaledJsonMessage(@NotNull JsonObject messageJson) {
+    private String getLocaledJsonMessage(@NotNull JsonObject messageJson) {
         String msg;
         if (messageJson.has(PsrLocalization.getLocale())) {
             msg = messageJson.get(PsrLocalization.getLocale()).getAsString();
