@@ -28,7 +28,7 @@ import java.util.Map;
 public class Updater implements Listener {
 
     private final String VERSION_CHANNCEL = "Stable";
-    private final int VERSION_NUMBER = 103;
+    private final int VERSION_NUMBER = 104;
     private final HashMap<String, Integer> msgTimesMap = new HashMap<>();
     private final List<String> messages = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
