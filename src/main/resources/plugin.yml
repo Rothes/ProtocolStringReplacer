@@ -26,3 +26,6 @@ permissions:
   protocolstringreplacer.feature.usermetacache.noncreative:
     description: with protocolstringreplacer.feature.usermetacache, allow to restore the original one when the player in other gamemodes interacts it.
     default: false
+  protocolstringreplacer.updater.notify:
+    description: allow you to receive updater info.
+    default: op

@@ -1,12 +1,8 @@
 package me.rothes.protocolstringreplacer;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.sk89q.protocolstringreplacer.PsrDisguisePlugin;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
-import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.api.user.PsrUserManager;
 import me.rothes.protocolstringreplacer.commands.CommandHandler;
@@ -16,14 +12,11 @@ import me.rothes.protocolstringreplacer.events.PsrReloadEvent;
 import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
 import me.rothes.protocolstringreplacer.listeners.PlayerQuitListener;
 import me.rothes.protocolstringreplacer.packetlisteners.PacketListenerManager;
-import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
 import me.rothes.protocolstringreplacer.upgrades.UpgradeEnum;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.DrilldownPie;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -33,29 +26,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class ProtocolStringReplacer extends JavaPlugin {
-
-    public static final String VERSION_CHANNEL = "Stable";
-    public static final int VERSION_NUMBER = 103;
     private static ProtocolStringReplacer instance;
     private static Logger logger;
-    private final HashMap<String, Integer> msgTimes = new HashMap<>();
     private CommentYamlConfiguration config;
     private File configFile;
     private ReplacerManager replacerManager;
@@ -190,6 +173,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         if (!checkDepends("PlaceholderAPI", "ProtocolLib")) {
             initialize();
         }
+        new Updater(this).start();
     }
 
     @Override
@@ -259,46 +243,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
             userManager.loadUser(player);
             player.updateInventory();
         }
-        initMetrics();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-            if (!checkPluginVersion()) {
-                Bukkit.getPluginManager().disablePlugin(instance);
-            }
-        }, 0L, 72000L);
-    }
-
-    private void initMetrics() {
-        Metrics metrics = new Metrics(this, 11740);
-        metrics.addCustomChart(new DrilldownPie("Replaces_Count", () -> {
-            int configs = 0;
-            int replaces = 0;
-            for (ReplacerConfig replacerConfig : replacerManager.getReplacerConfigList()) {
-                configs++;
-                for (ReplaceMode mode : ReplaceMode.values()) {
-                    replaces += replacerConfig.getReplaces(mode).size();
-                }
-            }
-            Map<String, Map<String, Integer>> map = new HashMap<>();
-            Map<String, Integer> entry = new HashMap<>();
-            entry.put(replaces + (replaces >= 1 ? " Replaces" : " Replace"), 1);
-            map.put(configs + (configs >= 1 ? " Configs" : " Config"), entry);
-            return map;
-        }));
-        metrics.addCustomChart(new DrilldownPie("Blocks_Count", () -> {
-            int configs = 0;
-            int blocks = 0;
-            for (ReplacerConfig replacerConfig : replacerManager.getReplacerConfigList()) {
-                configs++;
-                for (ReplaceMode mode : ReplaceMode.values()) {
-                    blocks += replacerConfig.getBlocks(mode).size();
-                }
-            }
-            Map<String, Map<String, Integer>> map = new HashMap<>();
-            Map<String, Integer> entry = new HashMap<>();
-            entry.put(blocks + (blocks >= 1 ? " Blocks" : " Block"), 1);
-            map.put(configs + (configs >= 1 ? " Configs" : " Config"), entry);
-            return map;
-        }));
     }
 
     private boolean checkDepends(String... depends) {
@@ -416,90 +360,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
             info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Upgrading-Configs", String.valueOf(i), String.valueOf(i + 1)));
             upgrades.get(i).upgrade();
         }
-    }
-
-    /**
-     * @return false if plugin doesn't pass the check.
-     * @since 2.0.0
-     */
-    public boolean checkPluginVersion() {
-        try {
-            final URL url = new URL("https://" + getConfigManager().gitRawHost + "/Rothes/ProtocolStringReplacer/master/Version%20Infos.json");
-            final InputStream stream = url.openStream();
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-            final StringBuilder jsonBuilder = new StringBuilder();
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                jsonBuilder.append(line).append("\n");
-            }
-            stream.close();
-            reader.close();
-            try {
-                final JsonElement element = new JsonParser().parse(jsonBuilder.toString());
-                final JsonObject root = element.getAsJsonObject();
-                JsonObject channel = root.getAsJsonObject("Version_Channels").getAsJsonObject(VERSION_CHANNEL);
-                if (channel == null) {
-                    warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel"));
-                } else if (channel.has("Message")
-                        && Integer.parseInt(channel.getAsJsonPrimitive("Latest_Version_Number").getAsString())
-                        > VERSION_NUMBER) {
-                    for (String s : getLocaledJsonMessage(channel.getAsJsonObject("Message")).split("\n")) {
-                        warn(s);
-                    }
-                }
-
-                boolean prohibit = false;
-                for (Map.Entry<String, JsonElement> entry : root.getAsJsonObject("Version_Actions").entrySet()) {
-                    String[] split = entry.getKey().split("-");
-                    if (Integer.parseInt(split[1]) > VERSION_NUMBER
-                            && VERSION_NUMBER > Integer.parseInt(split[0])) {
-                        JsonObject json = (JsonObject) entry.getValue();
-                        if (json.has("Message")) {
-                            JsonElement temp = json.get("Message_Times");
-                            final int msgTimes = temp == null ? -1 : temp.getAsInt();
-                            final int curTimes = this.msgTimes.get(entry.getKey()) == null ? 0 : this.msgTimes.get(entry.getKey());
-                            if (msgTimes == -1 || curTimes < msgTimes) {
-                                temp = json.get("Log_Level");
-                                for (String s : getLocaledJsonMessage(json.getAsJsonObject("Message")).split("\n")) {
-                                    switch (temp == null ? "default maybe" : temp.getAsString()) {
-                                        case "Error":
-                                            error(s);
-                                            break;
-                                        case "Warn":
-                                            warn(s);
-                                            break;
-                                        case "Info":
-                                        default:
-                                            info(s);
-                                            break;
-                                    }
-                                }
-                                this.msgTimes.put(entry.getKey(), curTimes + 1);
-                            }
-                        }
-                        for (JsonElement action : json.getAsJsonArray("Actions")) {
-                            prohibit = prohibit || action.getAsString().equals("Prohibit");
-                        }
-                    }
-                }
-                return !prohibit;
-            } catch (IllegalStateException | NullPointerException e) {
-                error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Parsing-Json", e.toString()));
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            // error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Checking-Version", e.toString()));
-        }
-        return true;
-    }
-
-    public static String getLocaledJsonMessage(@NotNull JsonObject messageJson) {
-        String msg;
-        if (messageJson.has(PsrLocalization.getLocale())) {
-            msg = messageJson.get(PsrLocalization.getLocale()).getAsString();
-        } else {
-            msg = messageJson.get("en-US").getAsString();
-        }
-        return msg;
     }
 
     public void reload(@Nonnull PsrUser user) {
