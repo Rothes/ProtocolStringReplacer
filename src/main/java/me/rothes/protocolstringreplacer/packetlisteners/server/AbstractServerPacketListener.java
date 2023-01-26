@@ -136,7 +136,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         //noinspection StringEquality
         ChatJsonContainer container = deployContainer(packetEvent, user,
-                (replacedDirect != DIRECT_NOT_REPLACED) ? replacedDirect : json, replacers);
+                (replacedDirect != DIRECT_NOT_REPLACED) ?
+                        ComponentSerializer.toString(TextComponent.fromLegacyText(replacedDirect)) : json, replacers);
 
         if (container != null) {
             return container.getResult();
