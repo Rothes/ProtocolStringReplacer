@@ -25,7 +25,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -154,8 +153,12 @@ public class PsrUser {
         return player != null && player.isOnline();
     }
 
+    public boolean hasPermissionOrOp(String permission) {
+        return sender.isOp() || hasPermission(permission);
+    }
+
     public boolean hasPermission(String permission) {
-        return sender.isOp() || sender.hasPermission(permission);
+        return sender.hasPermission(permission);
     }
 
     public boolean hasPermission(Permission permission) {
@@ -339,7 +342,7 @@ public class PsrUser {
     }
 
     public void saveUserMetaCache(ItemStack originalItem, ItemStack replacedItem) {
-        if (this.hasPermission("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
+        if (this.hasPermissionOrOp("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
             if (ProtocolStringReplacer.getInstance().getConfigManager().removeCacheWhenMerchantTrade && isInMerchant()) {
                 return;
             }

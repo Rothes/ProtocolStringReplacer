@@ -62,7 +62,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
 
                 for (SubCommand subCommand : subCommands) {
                     if (mergedArgs[0].equalsIgnoreCase(subCommand.getName())) {
-                        if (user.hasPermission(subCommand.getPermission())) {
+                        if (user.hasPermissionOrOp(subCommand.getPermission())) {
                             subCommand.onExecute(user, mergedArgs);
                         } else {
                             user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.No-Permission"));
@@ -94,7 +94,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
                 list.add("confirm");
             }
             for (SubCommand subCommand : subCommands) {
-                if (user.hasPermission(subCommand.getPermission())) {
+                if (user.hasPermissionOrOp(subCommand.getPermission())) {
                     list.add(subCommand.getName());
                 }
             }

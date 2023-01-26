@@ -32,7 +32,7 @@ public class Edit extends SubCommand {
         if (args.length > 1) {
             for (SubCommand childCommand : childCommands) {
                 if (childCommand.getName().equalsIgnoreCase(args[1])) {
-                    if (user.hasPermission(childCommand.getPermission())) {
+                    if (user.hasPermissionOrOp(childCommand.getPermission())) {
                         childCommand.onExecute(user, args);
                     } else {
                         user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.No-Permission"));
@@ -50,7 +50,7 @@ public class Edit extends SubCommand {
         if (args.length == 2) {
             list.add("help");
             for (SubCommand childCommand : childCommands) {
-                if (user.hasPermission(childCommand.getPermission())) {
+                if (user.hasPermissionOrOp(childCommand.getPermission())) {
                     list.add(childCommand.getName());
                 }
             }
