@@ -21,6 +21,7 @@ import org.apache.logging.log4j.core.pattern.PatternFormatter;
 import org.apache.logging.log4j.core.pattern.PatternParser;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 import org.jline.reader.LineReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -63,8 +64,7 @@ public final class ConsoleReplaceManager {
         return filter;
     }
 
-    @Nullable
-    public static List<String> getPatterns() {
+    public static @NotNull List<String> getPatterns() {
         return patterns;
     }
 
@@ -77,6 +77,7 @@ public final class ConsoleReplaceManager {
             canReplacePatterns = true;
         } catch (Throwable e) {
             e.printStackTrace();
+            PsrMessage.initialize(plugin);
             // This is for plugin Logger and server things.
             Bukkit.getServer().getLogger().getParent().getHandlers()[0].setFormatter(new SimpleFormatter(){
                 @Override

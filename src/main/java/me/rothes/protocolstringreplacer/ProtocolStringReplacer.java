@@ -83,7 +83,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
         logger = this.getLogger();
 
         // Start Console Replacer first to remove the Ansi in log files.
-        PsrMessage.initialize(instance);
         String[] split = Bukkit.getServer().getBukkitVersion().split("-")[0].split("\\.");
         serverMajorVersion = Byte.parseByte(split[1]);
         serverMinorVersion = split.length > 2 ? Byte.parseByte(split[2]) : 0;
