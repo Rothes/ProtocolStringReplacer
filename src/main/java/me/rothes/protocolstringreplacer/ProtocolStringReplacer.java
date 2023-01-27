@@ -177,8 +177,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
         if (!checkDepends("PlaceholderAPI", "ProtocolLib")) {
             initialize();
+            new Updater(this).start();
         }
-        new Updater(this).start();
     }
 
     @Override
