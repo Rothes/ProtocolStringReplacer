@@ -16,7 +16,7 @@ public final class WindowClick extends AbstractClientItemPacketListener {
         if (user == null) {
             return;
         }
-        if (user.hasPermissionOrOp("protocolstringreplacer.feature.usermetacache.noncreative")) {
+        if (user.hasPermission("protocolstringreplacer.feature.usermetacache.noncreative")) {
             ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
             restoreItem(user, itemStack);
         }

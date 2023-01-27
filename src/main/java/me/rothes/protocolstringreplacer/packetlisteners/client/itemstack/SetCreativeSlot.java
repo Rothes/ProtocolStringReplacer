@@ -16,7 +16,7 @@ public final class SetCreativeSlot extends AbstractClientItemPacketListener {
         if (user == null) {
             return;
         }
-        if (user.hasPermissionOrOp("protocolstringreplacer.feature.usermetacache")) {
+        if (user.hasPermission("protocolstringreplacer.feature.usermetacache")) {
             ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
             restoreItem(user, itemStack);
         }
