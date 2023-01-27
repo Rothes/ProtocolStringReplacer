@@ -7,7 +7,6 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.api.user.PsrUserManager;
 import me.rothes.protocolstringreplacer.commands.CommandHandler;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
-import me.rothes.protocolstringreplacer.console.PsrMessage;
 import me.rothes.protocolstringreplacer.events.PsrReloadEvent;
 import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
 import me.rothes.protocolstringreplacer.listeners.PlayerQuitListener;
@@ -28,8 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -283,20 +285,29 @@ public class ProtocolStringReplacer extends JavaPlugin {
             }
             config = CommentYamlConfiguration.loadConfiguration(configFile);
             checkConfigsVersion();
-            if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
-
-                File exampleFile = new File(instance.getDataFolder() + "/Replacers/Example.yml");
-                FileUtils.createFile(exampleFile);
-                PsrLocalization.getDefaultLocaledExample()
-                        .save(exampleFile);
-                warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Created-Example-Replacer"));
-            }
-            configManager = new ConfigManager(instance);
+            saveExampleReplacers();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        configManager = new ConfigManager(instance);
         checkConfigKeys();
+    }
+
+    private void saveExampleReplacers() throws IOException {
+        if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
+            saveResource("/Replacers/Example.yml");
+            saveResource("/Replacers/ConsoleColor.yml");
+            warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Created-Example-Replacers"));
+        }
+    }
+
+    private void saveResource(String path) throws IOException {
+        File file = new File(instance.getDataFolder() + path);
+        FileUtils.createFile(file);
+        try (InputStream inputStream = PsrLocalization.getLocaledResource(path)) {
+            Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     public void checkConfigKeys() {

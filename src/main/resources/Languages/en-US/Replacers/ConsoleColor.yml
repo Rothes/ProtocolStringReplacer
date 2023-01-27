@@ -1,0 +1,112 @@
+# This is an example config for console color setting.
+# If your server doesn't convert color in console,
+# you can use this instead.
+# If you are legacy Paper/ Purpur, you may not need this.
+Options:
+  Enable: true
+  Priority: 1
+  Version: '2.15.0'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+      - console
+  Match-Mode: Contain
+
+### These are rgb colors - if compatible with your terminal.
+Replaces:
+  Common:
+    - Original: '§0'
+      Replacement: "\u001B[38;2;0;0;0m" # ANSI escape code colors
+    - Original: '§1'
+      Replacement: "\u001B[38;2;0;0;170m"
+    - Original: '§2'
+      Replacement: "\u001B[38;2;0;170;0m"
+    - Original: '§3'
+      Replacement: "\u001B[38;2;0;170;170m"
+    - Original: '§4'
+      Replacement: "\u001B[38;2;170;0;0m"
+    - Original: '§5'
+      Replacement: "\u001B[38;2;170;0;170m"
+    - Original: '§6'
+      Replacement: "\u001B[38;2;255;170;0m"
+    - Original: '§7'
+      Replacement: "\u001B[38;2;170;170;170m"
+    - Original: '§8'
+      Replacement: "\u001B[38;2;85;85;85m"
+    - Original: '§9'
+      Replacement: "\u001B[38;2;85;85;255m"
+    - Original: '§a'
+      Replacement: "\u001B[38;2;85;255;85m"
+    - Original: '§b'
+      Replacement: "\u001B[38;2;85;255;255m"
+    - Original: '§c'
+      Replacement: "\u001B[38;2;255;85;85m"
+    - Original: '§d'
+      Replacement: "\u001B[38;2;255;85;255m"
+    - Original: '§e'
+      Replacement: "\u001B[38;2;255;255;85m"
+    - Original: '§f'
+      Replacement: "\u001B[38;2;255;255;255m"
+    - Original: '§k'
+      Replacement: "\u001B[5m"
+    - Original: '§l'
+      Replacement: "\u001B[1m"
+      # Replacement: "\u001B[21m" # vanilla
+    - Original: '§m'
+      Replacement: "\u001B[9m"
+    - Original: '§n'
+      Replacement: "\u001B[4m"
+    - Original: '§o'
+      Replacement: "\u001B[3m"
+    - Original: '§r'
+      Replacement: "\u001B[m"
+
+
+### Below are vanilla colors.
+
+# Replaces:
+#   Common:
+#   - Original: '§0'
+#     Replacement: "\u001B[0;30m" # ANSI escape code colors
+#   - Original: '§1'
+#     Replacement: "\u001B[0;34m"
+#   - Original: '§2'
+#     Replacement: "\u001B[0;32m"
+#   - Original: '§3'
+#     Replacement: "\u001B[0;36m"
+#   - Original: '§4'
+#     Replacement: "\u001B[0;31m"
+#   - Original: '§5'
+#     Replacement: "\u001B[0;35m"
+#   - Original: '§6'
+#     Replacement: "\u001B[0;33m"
+#   - Original: '§7'
+#     Replacement: "\u001B[0;37m"
+#   - Original: '§8'
+#     Replacement: "\u001B[0;30;1m"
+#   - Original: '§9'
+#     Replacement: "\u001B[0;34;1m"
+#   - Original: '§a'
+#     Replacement: "\u001B[0;32;1m"
+#   - Original: '§b'
+#     Replacement: "\u001B[0;36;1m"
+#   - Original: '§c'
+#     Replacement: "\u001B[0;31;1m"
+#   - Original: '§d'
+#     Replacement: "\u001B[0;35;1m"
+#   - Original: '§e'
+#     Replacement: "\u001B[0;33;1m"
+#   - Original: '§f'
+#     Replacement: "\u001B[0;37;1m"
+#   - Original: '§k'
+#     Replacement: "\u001B[5m"
+#   - Original: '§l'
+#     Replacement: "\u001B[21m"
+#   - Original: '§m'
+#     Replacement: "\u001B[9m"
+#   - Original: '§n'
+#     Replacement: "\u001B[4m"
+#   - Original: '§o'
+#     Replacement: "\u001B[3m"
+#   - Original: '§r'
+#     Replacement: "\u001B[m"

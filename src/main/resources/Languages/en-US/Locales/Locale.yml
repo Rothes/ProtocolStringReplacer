@@ -6,7 +6,7 @@ Console-Sender:
       Recommend-Paper: 'You are not running Paper server or its fork. It''s recommended to switch to Paper for full supports.'
       Out-Dated-Server: 'Your server version is too outdated, and may not enjoy some features normally...'
       Missing-Dependency: '&cDependency plugin ''%0%'' is not detected，please install it before using this plugin.'
-      Created-Example-Replacer: '&aGenerated example replacer configs in plugins/ProtocolStringReplacer/Replacers.'
+      Created-Example-Replacers: '&aGenerated example replacer configs in plugins/ProtocolStringReplacer/Replacers.'
       Added-Missing-Config-Key: '&cAutomatically added missing configuration key in Config.yml %0%'
       Upgrading-Configs: '&aUpgrading configurations version: %0% -> %1%'
     Replacer-Config:

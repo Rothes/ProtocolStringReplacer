@@ -1,0 +1,111 @@
+# 这是一个设定控制台色彩的示例配置文件.
+# 如果您的服务端不在控制台内转换色彩, 您可以使用此配置作为替代.
+# 如果使用旧版 Paper/ Purpur 服务端, 可能不需要此配置.
+Options:
+  Enable: true
+  Priority: 1
+  Version: '2.15.0'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+      - console
+  Match-Mode: Contain
+
+### 使用 RGB 色彩 - 如果与您的控制台/终端兼容.
+Replaces:
+  Common:
+    - Original: '§0'
+      Replacement: "\u001B[38;2;0;0;0m" # ANSI 转义码色彩
+    - Original: '§1'
+      Replacement: "\u001B[38;2;0;0;170m"
+    - Original: '§2'
+      Replacement: "\u001B[38;2;0;170;0m"
+    - Original: '§3'
+      Replacement: "\u001B[38;2;0;170;170m"
+    - Original: '§4'
+      Replacement: "\u001B[38;2;170;0;0m"
+    - Original: '§5'
+      Replacement: "\u001B[38;2;170;0;170m"
+    - Original: '§6'
+      Replacement: "\u001B[38;2;255;170;0m"
+    - Original: '§7'
+      Replacement: "\u001B[38;2;170;170;170m"
+    - Original: '§8'
+      Replacement: "\u001B[38;2;85;85;85m"
+    - Original: '§9'
+      Replacement: "\u001B[38;2;85;85;255m"
+    - Original: '§a'
+      Replacement: "\u001B[38;2;85;255;85m"
+    - Original: '§b'
+      Replacement: "\u001B[38;2;85;255;255m"
+    - Original: '§c'
+      Replacement: "\u001B[38;2;255;85;85m"
+    - Original: '§d'
+      Replacement: "\u001B[38;2;255;85;255m"
+    - Original: '§e'
+      Replacement: "\u001B[38;2;255;255;85m"
+    - Original: '§f'
+      Replacement: "\u001B[38;2;255;255;255m"
+    - Original: '§k'
+      Replacement: "\u001B[5m"
+    - Original: '§l'
+      Replacement: "\u001B[1m"
+      # Replacement: "\u001B[21m" # 原版定义的样式
+    - Original: '§m'
+      Replacement: "\u001B[9m"
+    - Original: '§n'
+      Replacement: "\u001B[4m"
+    - Original: '§o'
+      Replacement: "\u001B[3m"
+    - Original: '§r'
+      Replacement: "\u001B[m"
+
+
+### 下面是原版定义的色彩.
+
+# Replaces:
+#   Common:
+#   - Original: '§0'
+#     Replacement: "\u001B[0;30m" # # ANSI 转义码色彩
+#   - Original: '§1'
+#     Replacement: "\u001B[0;34m"
+#   - Original: '§2'
+#     Replacement: "\u001B[0;32m"
+#   - Original: '§3'
+#     Replacement: "\u001B[0;36m"
+#   - Original: '§4'
+#     Replacement: "\u001B[0;31m"
+#   - Original: '§5'
+#     Replacement: "\u001B[0;35m"
+#   - Original: '§6'
+#     Replacement: "\u001B[0;33m"
+#   - Original: '§7'
+#     Replacement: "\u001B[0;37m"
+#   - Original: '§8'
+#     Replacement: "\u001B[0;30;1m"
+#   - Original: '§9'
+#     Replacement: "\u001B[0;34;1m"
+#   - Original: '§a'
+#     Replacement: "\u001B[0;32;1m"
+#   - Original: '§b'
+#     Replacement: "\u001B[0;36;1m"
+#   - Original: '§c'
+#     Replacement: "\u001B[0;31;1m"
+#   - Original: '§d'
+#     Replacement: "\u001B[0;35;1m"
+#   - Original: '§e'
+#     Replacement: "\u001B[0;33;1m"
+#   - Original: '§f'
+#     Replacement: "\u001B[0;37;1m"
+#   - Original: '§k'
+#     Replacement: "\u001B[5m"
+#   - Original: '§l'
+#     Replacement: "\u001B[21m"
+#   - Original: '§m'
+#     Replacement: "\u001B[9m"
+#   - Original: '§n'
+#     Replacement: "\u001B[4m"
+#   - Original: '§o'
+#     Replacement: "\u001B[3m"
+#   - Original: '§r'
+#     Replacement: "\u001B[m"

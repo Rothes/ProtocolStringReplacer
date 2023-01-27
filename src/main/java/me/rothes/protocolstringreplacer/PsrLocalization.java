@@ -80,9 +80,18 @@ public class PsrLocalization {
     }
 
     @NotNull
-    public static CommentYamlConfiguration getDefaultLocaledExample() {
-        InputStream resource = getLocaledResource("/Replacers/Example.yml");
-        return CommentYamlConfiguration.loadConfiguration(new InputStreamReader(resource, StandardCharsets.UTF_8));
+    public static InputStream getLocaledResource(@NotNull String file) {
+        InputStream resource = plugin.getResource("Languages/" + locale + file);
+        if (resource == null) {
+            resource = plugin.getResource("Languages/" + systemLocale + file);
+            if (resource == null) {
+                resource = plugin.getResource("Languages/" + "en-US" + file);
+                if (resource == null) {
+                    throw new MissingInitialResourceException("Languages/" + "en-US" + file);
+                }
+            }
+        }
+        return resource;
     }
 
     private static void loadLocale() {
@@ -127,21 +136,6 @@ public class PsrLocalization {
                 e.printStackTrace();
             }
         }
-    }
-
-    @NotNull
-    private static InputStream getLocaledResource(@NotNull String file) {
-        InputStream resource = plugin.getResource("Languages/" + locale + file);
-        if (resource == null) {
-            resource = plugin.getResource("Languages/" + systemLocale + file);
-            if (resource == null) {
-                resource = plugin.getResource("Languages/" + "en-US" + file);
-                if (resource == null) {
-                    throw new MissingInitialResourceException("Languages/" + "en-US" + file);
-                }
-            }
-        }
-        return resource;
     }
 
 }
