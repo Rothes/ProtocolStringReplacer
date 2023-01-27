@@ -119,13 +119,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     @Nullable
     protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                             @Nonnull String json, List<ReplacerConfig> replacers) {
-        return getReplacedJson(packetEvent, user, listenType, json, replacers, false);
-    }
-
-    @Nullable
-    protected static String getReplacedJson(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
-                                            @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
-        String replacedDirect = getReplacedDirect(packetEvent, user, listenType, json, replacers, saveTitle);
+        String replacedDirect = getReplacedDirect(packetEvent, user, listenType, json, replacers);
         if (replacedDirect == null) {
             return null;
         }
@@ -148,11 +142,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     @Nullable
     protected static String getReplacedDirect(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
-                                            @Nonnull String json, List<ReplacerConfig> replacers, boolean saveTitle) {
-        if (saveTitle) {
-            user.setCurrentWindowTitle(json);
-        }
-
+                                            @Nonnull String json, List<ReplacerConfig> replacers) {
         StringBuilder sb = new StringBuilder();
         for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
             sb.append(baseComponent.toLegacyText());
@@ -221,22 +211,16 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     @Nullable
     protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
-                                                                          @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter, boolean saveTitle) {
+                                                                          @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, filter);
-        String replacedJson = getReplacedJson(packetEvent, user, listenType, json, replacers, saveTitle);
+        String replacedJson = getReplacedJson(packetEvent, user, listenType, json, replacers);
 
         if (replacedJson != null) {
             return WrappedChatComponent.fromJson(replacedJson);
         } else {
             return null;
         }
-    }
-
-    @Nullable
-    protected static WrappedChatComponent getReplacedJsonWrappedComponent(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
-                                                                          @Nonnull String json, BiPredicate<ReplacerConfig, PsrUser> filter) {
-        return getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter, false);
     }
 
     @Nullable

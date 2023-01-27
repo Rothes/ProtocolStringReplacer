@@ -8,6 +8,7 @@ import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 
@@ -37,7 +38,7 @@ public final class OpenWindow extends AbstractServerPacketListener {
 
     }
 
-    protected void process(PacketEvent packetEvent) {
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;
@@ -47,8 +48,9 @@ public final class OpenWindow extends AbstractServerPacketListener {
         WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
         String json = wrappedChatComponent.getJson();
 
-        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter, true);
+        WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, filter);
         if (replaced != null) {
+            user.setCurrentWindowTitle(json);
             wrappedChatComponentStructureModifier.write(0, replaced);
 
             if (windowTypeField != null) {
