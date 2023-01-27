@@ -19,7 +19,7 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
     protected void restoreItem(PsrUser user, ItemStack itemStack) {
         if (itemStack.hasItemMeta()) {
             NBTItem nbtItem = new NBTItem(itemStack);
-            if (!nbtItem.hasKey("ProtocolStringReplacer")) {
+            if (!nbtItem.hasTag("ProtocolStringReplacer")) {
                 return;
             }
             Short uniqueCacheKey = nbtItem.getCompound("ProtocolStringReplacer").getShort("UserMetaCacheKey");

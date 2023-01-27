@@ -41,10 +41,10 @@ public class ItemHelper {
             helper.nbt = new NBTContainer(tag.getNbt());
             helper.display = helper.nbt.getCompound("display");
             if (helper.display != null) {
-                if (helper.display.hasKey("Name")) {
+                if (helper.display.hasTag("Name")) {
                     helper.name = ComponentSerializer.parse(helper.display.getString("Name"));
                 }
-                if (helper.display.hasKey("Lore")) {
+                if (helper.display.hasTag("Lore")) {
                     helper.loreNbt = helper.display.getStringList("Lore");
                     helper.lore = new ArrayList<>(helper.loreNbt.size());
                     for (String line : helper.loreNbt) {

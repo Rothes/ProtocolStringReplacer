@@ -24,7 +24,7 @@ public final class MapChunk extends AbstractServerSignPacketListener {
         List<?> read = (List<?>) packet.getStructures().withType(Collection.class).read(0);
         for (Object nbt : read) {
             NBTContainer nbtContainer = new NBTContainer(nbt);
-            if (!nbtContainer.hasKey("id")) {
+            if (!nbtContainer.hasTag("id")) {
                 continue;
             }
             if ("minecraft:sign".equals(nbtContainer.getString("id"))) {

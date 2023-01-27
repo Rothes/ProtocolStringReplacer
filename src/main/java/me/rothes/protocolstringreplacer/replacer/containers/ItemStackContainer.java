@@ -69,11 +69,11 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
     public void createDefaultChildren() {
         NBTCompound display = nbtItem.getCompound("display");
         if (display != null) {
-            if (display.hasKey("Name")) {
+            if (display.hasTag("Name")) {
                 if (NAME_JSON) {
                     children.add(new ChatJsonContainer(display.getString("Name"), root, true) {
                         @Override
-                        public String getResult() {
+                        public @NotNull String getResult() {
                             String result = super.getResult();
                             display.setString("Name", result);
                             return result;
@@ -90,7 +90,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                     });
                 }
             }
-            if (display.hasKey("Lore")) {
+            if (display.hasTag("Lore")) {
                 if (LORE_JSON) {
                     addJsonList(display.getStringList("Lore"));
                 } else {
@@ -101,17 +101,17 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
 
         Material type = content.getType();
         if (type == WRITABLE_BOOK || type == Material.WRITTEN_BOOK) {
-            if (nbtItem.hasKey("author")) {
+            if (nbtItem.hasTag("author")) {
                 children.add(new SimpleTextContainer(nbtItem.getString("author"), root) {
                     @Override
-                    public String getResult() {
+                    public @NotNull String getResult() {
                         String result = super.getResult();
                         nbtItem.setString("author", result);
                         return result;
                     }
                 });
             }
-            if (nbtItem.hasKey("title")) {
+            if (nbtItem.hasTag("title")) {
                 children.add(new SimpleTextContainer(nbtItem.getString("title"), root) {
                     @Override
                     public String getResult() {
@@ -121,7 +121,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                     }
                 });
             }
-            if (nbtItem.hasKey("pages")) {
+            if (nbtItem.hasTag("pages")) {
                 if (type == WRITABLE_BOOK) {
                     addTextList(nbtItem.getStringList("pages"));
                 } else {
