@@ -30,16 +30,16 @@ public class FileReplacerConfig implements ReplacerConfig {
     private CommentYamlConfiguration configuration;
     private boolean enable;
     private int priority;
-    private List<ListenType> listenTypeList = new ArrayList<>();
+    private final List<ListenType> listenTypeList = new ArrayList<>();
     private MatchMode matchMode;
-    private HashMap<ReplaceMode, ListOrderedMap> replaces = new HashMap<>();
-    private HashMap<ReplaceMode, List<Object>> blocks = new HashMap<>();
+    private final HashMap<ReplaceMode, ListOrderedMap> replaces = new HashMap<>();
+    private final HashMap<ReplaceMode, List<Object>> blocks = new HashMap<>();
     private String author;
     private String version;
     private boolean edited;
 
-    private HashMap<ReplaceMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
-    private HashMap<ReplaceMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
+    private final HashMap<ReplaceMode, StringSearcher<String>> replacesStringSearcher = new HashMap<>();
+    private final HashMap<ReplaceMode, StringSearcher<String>> blocksStringSearcher = new HashMap<>();
 
     private int maxTextLength = -1;
     private int maxJsonLength = -1;
@@ -298,16 +298,17 @@ public class FileReplacerConfig implements ReplacerConfig {
         }
         for (ReplaceMode replaceMode : ReplaceMode.values()) {
             List<Map<?, ?>> mapList = configuration.getMapList("Replaces." + replaceMode.getNode());
-            replaces.put(replaceMode, new ListOrderedMap());
-            if (this.matchMode == MatchMode.REGEX) {
-                for (Map<?, ?> map : mapList) {
-                    replaces.get(replaceMode).put(Pattern.compile(map.get("Original").toString()),
-                            map.get("Replacement").toString());
+            ListOrderedMap orderedMap = new ListOrderedMap();
+            replaces.put(replaceMode, orderedMap);
+            for (Map<?, ?> map : mapList) {
+                Object original = map.get("Original");
+                Object replacement = map.get("Replacement");
+                if (original == null || replacement == null) {
+                    continue;
                 }
-            } else {
-                for (Map<?, ?> map : mapList) {
-                    replaces.get(replaceMode).put(map.get("Original").toString(), map.get("Replacement").toString());
-                }
+
+                orderedMap.put(this.matchMode == MatchMode.REGEX ?
+                        Pattern.compile(original.toString()) : original.toString(), replacement.toString());
             }
 
             List<String> loadedBlockList = configuration.getStringList("Blocks." + replaceMode.getNode());
