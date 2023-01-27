@@ -22,6 +22,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.chat.TabComplete;
 import me.rothes.protocolstringreplacer.packetlisteners.server.combat.CombatEvent;
 import me.rothes.protocolstringreplacer.packetlisteners.server.combat.PlayerCombatKill;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.MerchantTradeList;
+import me.rothes.protocolstringreplacer.packetlisteners.server.scoreboard.UpdateTeam;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunkUpper18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityDataUpper18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.title.SetSubtitleText;
@@ -121,6 +122,7 @@ public class PacketListenerManager {
         protocolManager.addPacketListener(new OpenWindow().packetAdapter);
         protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
         protocolManager.addPacketListener(new UpdateScore().packetAdapter);
+        protocolManager.addPacketListener(new UpdateTeam().packetAdapter);
         protocolManager.addPacketListener(new ScoreBoardObjective().packetAdapter);
         protocolManager.addPacketListener(new KickDisconnect().packetAdapter);
 

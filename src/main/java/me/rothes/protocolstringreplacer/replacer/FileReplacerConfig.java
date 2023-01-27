@@ -50,6 +50,9 @@ public class FileReplacerConfig implements ReplacerConfig {
     private boolean windowTitleLimitIgnoreInventory;
     private boolean handleScoreboardTitle;
     private boolean handleScoreboardEntityName;
+    private boolean handleScoreboardTeamDisplayName;
+    private boolean handleScoreboardTeamPrefix;
+    private boolean handleScoreboardTeamSuffix;
     private HashSet<String> locales;
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
@@ -343,6 +346,9 @@ public class FileReplacerConfig implements ReplacerConfig {
         windowTitleLimitIgnoreInventory = configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
         handleScoreboardTitle = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
         handleScoreboardEntityName = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
+        handleScoreboardTeamDisplayName = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Team-Display-Name", false);
+        handleScoreboardTeamPrefix = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Team-Prefix", false);
+        handleScoreboardTeamSuffix = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Team-Suffix", false);
 
         locales = new HashSet<>();
         for (String s : configuration.getStringList("Options.Filter.User.Locales")) {
@@ -405,6 +411,21 @@ public class FileReplacerConfig implements ReplacerConfig {
     @Override
     public boolean handleScoreboardEntityName() {
         return handleScoreboardEntityName;
+    }
+
+    @Override
+    public boolean handleScoreboardTeamDisplayName() {
+        return handleScoreboardTeamDisplayName;
+    }
+
+    @Override
+    public boolean handleScoreboardTeamPrefix() {
+        return handleScoreboardTeamPrefix;
+    }
+
+    @Override
+    public boolean handleScoreboardTeamSuffix() {
+        return handleScoreboardTeamSuffix;
     }
 
     @Override

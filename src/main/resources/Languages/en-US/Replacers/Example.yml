@@ -46,6 +46,12 @@ Options:
       # Whether replace for entities' name in scoreboard. Default is false.
       # Note: For players, entity name is player's name, else is entity UUID.
       Replace-Entity-Name: false
+      # Whether replace for teams' display name in scoreboard. Default is false.
+      Replace-Team-Display-Name: false
+      # Whether replace for teams' prefix in scoreboard. Default is false.
+      Replace-Team-Prefix: false
+      # Whether replace for teams' suffix in scoreboard. Default is false.
+      Replace-Team-Suffix: false
     User:
       # Required permission. If set, user must have this permission
       # to make this replacer config take effects.

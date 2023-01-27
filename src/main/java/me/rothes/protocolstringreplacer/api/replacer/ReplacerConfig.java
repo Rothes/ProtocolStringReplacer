@@ -78,6 +78,15 @@ public interface ReplacerConfig {
     default boolean handleScoreboardEntityName() {
         return false;
     }
+    default boolean handleScoreboardTeamDisplayName() {
+        return false;
+    }
+    default boolean handleScoreboardTeamPrefix() {
+        return false;
+    }
+    default boolean handleScoreboardTeamSuffix() {
+        return false;
+    }
     default boolean acceptsLocale(String locale) {
         return true;
     }

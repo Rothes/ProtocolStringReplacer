@@ -44,6 +44,12 @@ Options:
       # 是否替换计分板中的实体名称. 默认为false.
       # 注: 对于玩家, 实体名称为玩家名称; 对于非玩家则为UUID.
       Replace-Entity-Name: false
+      # 是否替换计分板中的团队显示名称. 默认为false.
+      Replace-Team-Display-Name: false
+      # 是否替换计分板中的团队显示前缀. 默认为false.
+      Replace-Team-Prefix: false
+      # 是否替换计分板中的团队显示后缀. 默认为false.
+      Replace-Team-Suffix: false
     User:
       # 处理所需权限. 若设定, 用户必须拥有该权限
       # 才能使该替换配置为其生效.
