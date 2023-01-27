@@ -167,7 +167,6 @@ public final class ConsoleReplaceManager {
             if (reader == null) {
                 return;
             }
-            //noinspection JavaReflectionInvocation
             terminalconsole.getDeclaredMethod("setReader", LineReader.class).invoke(null,
                     restore ? ((PsrWrappedLineReader) reader).getOriReader() : new PsrWrappedLineReader(reader));
         } catch (Throwable e) {
@@ -212,6 +211,8 @@ public final class ConsoleReplaceManager {
                     if (nameAttr != null && nameAttr.getNodeValue().equals("ServerGuiConsole")) {
                         removeAnsi = true;
                     }
+                default:
+                    break;
             }
             Node appenderNode = getChild(item, "PatternLayout");
             if (appenderNode != null) {

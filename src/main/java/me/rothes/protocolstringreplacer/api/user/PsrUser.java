@@ -38,20 +38,13 @@ import java.util.UUID;
 
 public class PsrUser {
 
-    private static Method getLocaleLegacy = getLegacyMethod();
-
-    private static Method getLegacyMethod() {
-        try {
-            return Player.Spigot.class.getDeclaredMethod("getLocale");
-        } catch (NoSuchMethodException ignored) {}
-        return null;
-    }
+    private static Method getLocaleLegacy = getLegacyLocaleMethod();
 
     private UUID uuid;
     private Player player;
     private CommandSender sender;
 
-    private HashMap<Short, ItemMeta> metaCache = new HashMap<>();
+    private final HashMap<Short, ItemMeta> metaCache = new HashMap<>();
     private String currentWindowTitle;
     private String clientLocale;
     private boolean inAnvil;
@@ -61,8 +54,8 @@ public class PsrUser {
     private String[] commandToConfirm;
     private long confirmTime;
 
-    private Set<ListenType> captureTypes = new HashSet<>();
-    private HashMap<ListenType, ArrayList<CaptureInfo>> captures = new HashMap<>();
+    private final Set<ListenType> captureTypes = new HashSet<>();
+    private final HashMap<ListenType, ArrayList<CaptureInfo>> captures = new HashMap<>();
 
     private FileReplacerConfig editorReplacerConfig;
 //TODO:    private Integer editorIndex;
@@ -103,6 +96,13 @@ public class PsrUser {
             this.player = (Player) sender;
             uuid = player.getUniqueId();
         }
+    }
+
+    private static Method getLegacyLocaleMethod() {
+        try {
+            return Player.Spigot.class.getDeclaredMethod("getLocale");
+        } catch (NoSuchMethodException ignored) {}
+        return null;
     }
 
     public CommandSender getSender() {

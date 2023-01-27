@@ -12,7 +12,6 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPac
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class TabComplete extends AbstractServerPacketListener {

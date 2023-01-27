@@ -4,7 +4,6 @@ import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;

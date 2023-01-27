@@ -21,7 +21,6 @@ import org.neosearch.stringsearcher.Emit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +37,8 @@ public class ReplacerManager {
     private PAPIReplacer papiReplacer;
     private char papiHead;
     private char papiTail;
-    private LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
-    private HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
+    private final LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
+    private final HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
     private BukkitTask cleanTask;
 
     public static class ItemMetaCache {
@@ -49,7 +48,7 @@ public class ReplacerManager {
         private boolean blocked;
         private int[] placeholderIndexes;
 
-        public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, boolean direct, int[] placeholderIndexes) {
+        public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
             this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
@@ -165,7 +164,7 @@ public class ReplacerManager {
         }
 
         // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, false, new int[0]));
+        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new int[0]));
     }
 
     public void addReplacerConfig(ReplacerConfig replacerConfig) {
@@ -208,10 +207,10 @@ public class ReplacerManager {
     }
 
     public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull NBTItem nbtItem,
-                                              boolean blocked, boolean direct, int[] papiIndexes) {
+                                              boolean blocked, int[] papiIndexes) {
         Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
-        ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, direct, papiIndexes);
+        ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
         replacedItemCache.put(original, itemMetaCache);
         return itemMetaCache;
     }
