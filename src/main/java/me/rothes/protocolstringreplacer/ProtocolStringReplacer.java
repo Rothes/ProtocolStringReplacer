@@ -117,6 +117,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
         logger.severe(message);
     }
 
+    public static void error(String message, Throwable throwable) {
+        logger.log(Level.SEVERE, message, throwable);
+    }
+
     public boolean hasStarted() {
         return hasStarted;
     }

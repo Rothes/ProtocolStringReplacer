@@ -156,10 +156,14 @@ public class ReplacerManager {
             try {
                 FileReplacerConfig replacerConfig = new FileReplacerConfig(file, config);
                 addReplacerConfig(replacerConfig);
-            } catch (PatternSyntaxException exception) {
-                exception.printStackTrace();
+            } catch (PatternSyntaxException ex) {
                 ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Regex-Exception",
-                        file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/')));
+                        file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length())
+                                .replace('\\', '/')), ex);
+            } catch (Throwable throwable) {
+                ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Throw-Exception",
+                        file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length())
+                                .replace('\\', '/')), throwable);
             }
         }
 
