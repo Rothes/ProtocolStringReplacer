@@ -154,7 +154,7 @@ public class PsrUser {
     }
 
     public boolean hasPermissionOrOp(String permission) {
-        return sender.isOp() || hasPermission(permission);
+        return hasPermission(permission) || (sender.isOp() && !getSender().isPermissionSet(permission));
     }
 
     public boolean hasPermission(String permission) {
@@ -342,7 +342,7 @@ public class PsrUser {
     }
 
     public void saveUserMetaCache(ItemStack originalItem, ItemStack replacedItem) {
-        if (this.hasPermissionOrOp("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
+        if (this.hasPermission("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
             if (ProtocolStringReplacer.getInstance().getConfigManager().removeCacheWhenMerchantTrade && isInMerchant()) {
                 return;
             }
