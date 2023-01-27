@@ -8,6 +8,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
+import org.jetbrains.annotations.NotNull;
 
 public class ScoreBoardObjective extends AbstractScoreBoardListener {
 
@@ -15,7 +16,7 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
         super(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, ListenType.SCOREBOARD);
     }
 
-    protected void process(PacketEvent packetEvent) {
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;
@@ -23,7 +24,7 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
         PacketContainer packet = packetEvent.getPacket();
 
         if (packet.getIntegers().read(0) != 1) {
-            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() > 12) {
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13) {
                 StructureModifier<WrappedChatComponent> wrappedChatComponentStructureModifier = packet.getChatComponents();
                 WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
                 String replaced = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), titleFilter);
@@ -32,9 +33,9 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
                 }
             } else {
                 StructureModifier<String> strings = packet.getStrings();
-                String replaced = getReplacedText(packetEvent, user, listenType, strings.read(0), titleFilter);
+                String replaced = getReplacedText(packetEvent, user, listenType, strings.read(1), titleFilter);
                 if (replaced != null)
-                    strings.write(0, replaced);
+                    strings.write(1, replaced);
             }
         }
     }
