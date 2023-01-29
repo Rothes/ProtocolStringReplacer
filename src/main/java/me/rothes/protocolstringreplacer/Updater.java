@@ -27,8 +27,8 @@ import java.util.Map;
 
 public class Updater implements Listener {
 
-    private final String VERSION_CHANNCEL = "Stable";
-    private final int VERSION_NUMBER = 104;
+    private static final String VERSION_CHANCEL = "Stable";
+    private static final int VERSION_NUMBER = 105;
     private final HashMap<String, Integer> msgTimesMap = new HashMap<>();
     private final List<String> messages = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
@@ -123,15 +123,15 @@ public class Updater implements Listener {
         JsonObject channels = root.getAsJsonObject("Version_Channels");
 
         messages.clear();
-        if (channels.has(VERSION_CHANNCEL)) {
-            JsonObject channel = channels.getAsJsonObject(VERSION_CHANNCEL);
+        if (channels.has(VERSION_CHANCEL)) {
+            JsonObject channel = channels.getAsJsonObject(VERSION_CHANCEL);
             if (channel.has("Message")
                     && channel.getAsJsonPrimitive("Latest_Version_Number").getAsInt() > VERSION_NUMBER) {
                 sendJsonMessage(channel, "updater");
             }
         } else {
-            ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel", VERSION_CHANNCEL));
-            messages.add(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel", VERSION_CHANNCEL));
+            ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel", VERSION_CHANCEL));
+            messages.add(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Invalid-Channel", VERSION_CHANCEL));
             return;
         }
 
