@@ -53,6 +53,21 @@ Options:
       # Should PSR forcibly edit the data in packets that are not allowed to be written?
       # It's ok to set it to true.
       Force-Replace: false
+      # Set which listen types are enabled. If you don't need PSR to handle the strings in
+      # the listen type, set it to false can help with performance.
+      Enabled-Listen-Types:
+        Boss-Bar: true
+        Chat: true
+        Chat-Preview: true
+        Combat-Kill: true
+        Entity: true
+        ItemStack: true
+        Kick-Disconnect: true
+        ScoreBoard: true
+        Sign: true
+        Tab-Complete: true
+        Title: true
+        Window-Title: true
 
     # Chat packets options
     Chat-Packet:

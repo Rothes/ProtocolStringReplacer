@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.packetlisteners;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
@@ -25,8 +24,8 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.Merchan
 import me.rothes.protocolstringreplacer.packetlisteners.server.scoreboard.UpdateTeam;
 import me.rothes.protocolstringreplacer.packetlisteners.server.scoreboard.UpdateTeamPost13;
 import me.rothes.protocolstringreplacer.packetlisteners.server.scoreboard.UpdateTeamPost17;
-import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunkUpper18;
-import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityDataUpper18;
+import me.rothes.protocolstringreplacer.packetlisteners.server.sign.MapChunkPost18;
+import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityDataPost18;
 import me.rothes.protocolstringreplacer.packetlisteners.server.title.SetSubtitleText;
 import me.rothes.protocolstringreplacer.packetlisteners.server.title.SetTitleText;
 import me.rothes.protocolstringreplacer.packetlisteners.server.title.Title;
@@ -37,17 +36,14 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.sign.TileEntityDa
 import me.rothes.protocolstringreplacer.packetlisteners.server.sign.UpdateSign;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.SetSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItems;
-import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItemsUpper12;
+import me.rothes.protocolstringreplacer.packetlisteners.server.itemstack.WindowItemsPost11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PacketListenerManager {
 
-    private ProtocolManager protocolManager;
-
     private ListenerPriority listenerPriority;
-
-    public ProtocolManager getProtocolManager() {
-        return protocolManager;
-    }
 
     public ListenerPriority getListenerPriority() {
         return listenerPriority;
@@ -66,84 +62,91 @@ public class PacketListenerManager {
             listenerPriority = ListenerPriority.HIGHEST;
         }
 
-        protocolManager = ProtocolLibrary.getProtocolManager();
         addListeners();
     }
 
     public void addListeners() {
+        List<AbstractPacketListener> listeners = new ArrayList<>();
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            protocolManager.addPacketListener(new SetTitleText().packetAdapter);
-            protocolManager.addPacketListener(new SetSubtitleText().packetAdapter);
-            protocolManager.addPacketListener(new ActionBar().packetAdapter);
-        } else {
-            protocolManager.addPacketListener(new Title().packetAdapter);
-        }
+            listeners.add(new SetTitleText());
+            listeners.add(new SetSubtitleText());
+            listeners.add(new ActionBar());
 
-        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            protocolManager.addPacketListener(new PlayerCombatKill().packetAdapter);
+            listeners.add(new PlayerCombatKill());
         } else {
-            protocolManager.addPacketListener(new CombatEvent().packetAdapter);
+            listeners.add(new Title());
+
+            listeners.add(new CombatEvent());
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 11) {
-            protocolManager.addPacketListener(new WindowItemsUpper12().packetAdapter);
+            listeners.add(new WindowItemsPost11());
         } else {
-            protocolManager.addPacketListener(new WindowItems().packetAdapter);
+            listeners.add(new WindowItems());
         }
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 14) {
-            protocolManager.addPacketListener(new MerchantTradeList().packetAdapter);
+            listeners.add(new MerchantTradeList());
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 18) {
-            protocolManager.addPacketListener(new MapChunkUpper18().packetAdapter);
-            protocolManager.addPacketListener(new TileEntityDataUpper18().packetAdapter);
+            listeners.add(new MapChunkPost18());
+            listeners.add(new TileEntityDataPost18());
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 10) {
-            protocolManager.addPacketListener(new MapChunk().packetAdapter);
-            protocolManager.addPacketListener(new TileEntityData().packetAdapter);
+            listeners.add(new MapChunk());
+            listeners.add(new TileEntityData());
         } else {
-            protocolManager.addPacketListener(new UpdateSign().packetAdapter);
+            listeners.add(new UpdateSign());
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            protocolManager.addPacketListener(new BossBarUpper17().packetAdapter);
+            listeners.add(new BossBarUpper17());
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
-            protocolManager.addPacketListener(new BossBar().packetAdapter);
+            listeners.add(new BossBar());
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
-            protocolManager.addPacketListener(new SystemChat().packetAdapter);
+            listeners.add(new SystemChat());
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() == 19 && ProtocolStringReplacer.getInstance().getServerMinorVersion() <= 2) {
-            protocolManager.addPacketListener(new ChatPreview().packetAdapter);
+            listeners.add(new ChatPreview());
         }
 
-        protocolManager.addPacketListener(new TabComplete().packetAdapter);
-        protocolManager.addPacketListener(new Chat().packetAdapter);
-        protocolManager.addPacketListener(new SetSlot().packetAdapter);
-        protocolManager.addPacketListener(new OpenWindow().packetAdapter);
-        protocolManager.addPacketListener(new EntityMetadata().packetAdapter);
-        protocolManager.addPacketListener(new UpdateScore().packetAdapter);
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            protocolManager.addPacketListener(new UpdateTeamPost17().packetAdapter);
+            listeners.add(new UpdateTeamPost17());
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13) {
-            protocolManager.addPacketListener(new UpdateTeamPost13().packetAdapter);
+            listeners.add(new UpdateTeamPost13());
         } else {
-            protocolManager.addPacketListener(new UpdateTeam().packetAdapter);
+            listeners.add(new UpdateTeam());
         }
-        protocolManager.addPacketListener(new ScoreBoardObjective().packetAdapter);
-        protocolManager.addPacketListener(new KickDisconnect().packetAdapter);
+        listeners.add(new UpdateScore());
+        listeners.add(new ScoreBoardObjective());
+
+        listeners.add(new KickDisconnect());
+        listeners.add(new TabComplete());
+        listeners.add(new Chat());
+        listeners.add(new SetSlot());
+        listeners.add(new OpenWindow());
+        listeners.add(new EntityMetadata());
 
 
-        protocolManager.addPacketListener(new WindowClick().packetAdapter);
-        protocolManager.addPacketListener(new SetCreativeSlot().packetAdapter);
-        protocolManager.addPacketListener(new CloseWindow().packetAdapter);
-        protocolManager.addPacketListener(new SettingsLocale().packetAdapter);
+        listeners.add(new WindowClick());
+        listeners.add(new SetCreativeSlot());
+        listeners.add(new CloseWindow());
+        listeners.add(new SettingsLocale());
+
+        for (AbstractPacketListener listener : listeners) {
+            try {
+                listener.register();
+            } catch (Throwable throwable) {
+                ProtocolStringReplacer.error("Unable to register listener " + listener.getClass().getSimpleName() + ":", throwable);
+            }
+        }
 
     }
 
     public void removeListeners() {
-        protocolManager.removePacketListeners(ProtocolStringReplacer.getInstance());
+        ProtocolLibrary.getProtocolManager().removePacketListeners(ProtocolStringReplacer.getInstance());
     }
 
 }

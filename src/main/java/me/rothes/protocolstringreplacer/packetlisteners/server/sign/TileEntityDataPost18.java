@@ -8,11 +8,11 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 
-public class TileEntityDataUpper18 extends AbstractServerSignPacketListener {
+public class TileEntityDataPost18 extends AbstractServerSignPacketListener {
 
     private final Object signType;
 
-    public TileEntityDataUpper18() {
+    public TileEntityDataPost18() {
         super(PacketType.Play.Server.TILE_ENTITY_DATA);
 
         Object temp;

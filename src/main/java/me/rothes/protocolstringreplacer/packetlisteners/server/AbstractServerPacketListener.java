@@ -1,15 +1,18 @@
 package me.rothes.protocolstringreplacer.packetlisteners.server;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import me.rothes.protocolstringreplacer.ConfigManager;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
+import me.rothes.protocolstringreplacer.packetlisteners.server.chat.TabComplete;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import me.rothes.protocolstringreplacer.replacer.containers.ChatJsonContainer;
@@ -52,6 +55,15 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 }
             }
         };
+    }
+
+    @Override
+    protected void register() {
+        boolean enabled = ProtocolStringReplacer.getInstance().getConfig()
+                .getBoolean("Options.Features.Packet-Listener.Enabled-Listen-Types." + listenType.getName(), false);
+        if (enabled) {
+            ProtocolLibrary.getProtocolManager().addPacketListener(packetAdapter);
+        }
     }
 
     protected final boolean containType(ReplacerConfig replacerConfig) {

@@ -1,6 +1,7 @@
 package me.rothes.protocolstringreplacer.packetlisteners;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -18,6 +19,10 @@ public abstract class AbstractPacketListener {
 
     protected AbstractPacketListener(@Nonnull PacketType packetType) {
         this.packetType = packetType;
+    }
+
+    protected void register() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(packetAdapter);
     }
 
     @Nullable

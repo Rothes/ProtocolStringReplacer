@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public final class WindowItemsUpper12 extends AbstractServerItemPacketListener {
+public final class WindowItemsPost11 extends AbstractServerItemPacketListener {
 
-    public WindowItemsUpper12() {
+    public WindowItemsPost11() {
         super(PacketType.Play.Server.WINDOW_ITEMS);
     }
 

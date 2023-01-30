@@ -51,6 +51,20 @@ Options:
       Listener-Priority: HIGHEST
       # 是否强行修改不允许修改的数据包.
       Force-Replace: false
+      # 设定启用哪些类型的监听. 若某种类型中的文本不需要修改, 可设为 false 以优化性能.
+      Enabled-Listen-Types:
+        Boss-Bar: true
+        Chat: true
+        Chat-Preview: true
+        Combat-Kill: true
+        Entity: true
+        ItemStack: true
+        Kick-Disconnect: true
+        ScoreBoard: true
+        Sign: true
+        Tab-Complete: true
+        Title: true
+        Window-Title: true
 
     # 聊天数据包的相关设定.
     Chat-Packet:

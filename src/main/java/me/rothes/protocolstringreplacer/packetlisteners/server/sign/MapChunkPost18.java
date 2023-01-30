@@ -10,7 +10,7 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class MapChunkUpper18 extends AbstractServerSignPacketListener {
+public class MapChunkPost18 extends AbstractServerSignPacketListener {
 
     private final Field dataField;
     private final Field listField;
@@ -19,7 +19,7 @@ public class MapChunkUpper18 extends AbstractServerSignPacketListener {
     private final Field subNbtField;
     private final boolean hooked;
 
-    public MapChunkUpper18() {
+    public MapChunkPost18() {
         super(PacketType.Play.Server.MAP_CHUNK);
         boolean hooked = true;
         Field field;
