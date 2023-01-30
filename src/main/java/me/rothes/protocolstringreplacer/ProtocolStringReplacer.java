@@ -106,19 +106,19 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     public static void warn(String message) {
-        logger.warning(message);
+        logger.warning("\u001b[0;93m" + message + "\u001b[m");
     }
 
     public static void warn(String message, Throwable throwable) {
-        logger.log(Level.WARNING, message, throwable);
+        logger.log(Level.WARNING, "\u001b[0;93m" + message + "\u001b[m", throwable);
     }
 
     public static void error(String message) {
-        logger.severe(message);
+        logger.severe("\u001b[0;91m" + message + "\u001b[m");
     }
 
     public static void error(String message, Throwable throwable) {
-        logger.log(Level.SEVERE, message, throwable);
+        logger.log(Level.SEVERE, "\u001b[0;91m" + message + "\u001b[m", throwable);
     }
 
     public boolean hasStarted() {
