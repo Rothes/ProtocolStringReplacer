@@ -4,34 +4,33 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class MapChunkPost18 extends AbstractServerSignPacketListener {
+public final class MapChunkPost18 extends AbstractServerSignPacketListener {
 
-    private final Field dataField;
-    private final Field listField;
-    private final Object signType;
-    private final Field subTypeField;
-    private final Field subNbtField;
-    private final boolean hooked;
+    private Field dataField;
+    private Field listField;
+    private Object signType;
+    private Field subTypeField;
+    private Field subNbtField;
 
     public MapChunkPost18() {
         super(PacketType.Play.Server.MAP_CHUNK);
-        boolean hooked = true;
+    }
+
+    @Override
+    protected void register() {
         Field field;
         Class<?> packetClass = PacketType.Play.Server.MAP_CHUNK.getPacketClass();
         try {
             field = packetClass.getDeclaredField("c");
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 0");
-            field = null;
-            hooked = false;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
         dataField = field;
 
@@ -40,25 +39,14 @@ public class MapChunkPost18 extends AbstractServerSignPacketListener {
             dataClass = Class.forName(packetClass.getCanonicalName()
                     .replaceAll("WithLightPacket$", "PacketData"));
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 1");
-            hooked = false;
-            listField = null;
-            signType = null;
-            subTypeField = null;
-            subNbtField = null;
-            this.hooked = hooked;
-            return;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
 
         try {
             field = dataClass.getDeclaredField("d");
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 2");
-            field = null;
-            hooked = false;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
         listField = field;
 
@@ -70,10 +58,7 @@ public class MapChunkPost18 extends AbstractServerSignPacketListener {
             field = dataClass.getDeclaredField("extraPackets");
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 3");
-            field = null;
-            hooked = false;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
         extraField = field;
         */
@@ -82,10 +67,7 @@ public class MapChunkPost18 extends AbstractServerSignPacketListener {
         try {
             type = Class.forName("net.minecraft.world.level.block.entity.TileEntityTypes").getField("h").get(null);
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 4");
-            type = null;
-            hooked = false;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
         signType = type;
 
@@ -93,23 +75,14 @@ public class MapChunkPost18 extends AbstractServerSignPacketListener {
         try {
             subClass = Class.forName(dataClass.getCanonicalName() + "$a");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 5");
-            hooked = false;
-            subTypeField = null;
-            subNbtField = null;
-            this.hooked = hooked;
-            return;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
 
         try {
             field = subClass.getDeclaredField("c");
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 6");
-            field = null;
-            hooked = false;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
         subTypeField = field;
 
@@ -117,19 +90,13 @@ public class MapChunkPost18 extends AbstractServerSignPacketListener {
             field = subClass.getDeclaredField("d");
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            ProtocolStringReplacer.error("§4Error when hooking into MAP_CHUNK packet: 7");
-            field = null;
-            hooked = false;
+            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
         }
         subNbtField = field;
-        this.hooked = hooked;
+        super.register();
     }
 
-    protected void process(PacketEvent packetEvent) {
-        if (!hooked) {
-            return;
-        }
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;

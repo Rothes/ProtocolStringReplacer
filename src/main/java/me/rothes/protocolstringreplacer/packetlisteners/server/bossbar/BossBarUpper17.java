@@ -4,22 +4,25 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-public class BossBarUpper17 extends AbstractServerPacketListener {
+public final class BossBarUpper17 extends AbstractServerPacketListener {
 
     private Field actionField;
-    private HashMap<Class<?>, Field> actionComponentField = new HashMap<>();
-    private final boolean hooked;
+    private final HashMap<Class<?>, Field> actionComponentField = new HashMap<>();
 
     public BossBarUpper17() {
         super(PacketType.Play.Server.BOSS, ListenType.BOSS_BAR);
+    }
+
+    @Override
+    protected void register() {
         Class<?> packetClass = PacketType.Play.Server.BOSS.getPacketClass();
         Class<?> actionInterface = null;
         for (Class<?> declaredClass : packetClass.getDeclaredClasses()) {
@@ -29,9 +32,7 @@ public class BossBarUpper17 extends AbstractServerPacketListener {
             }
         }
         if (actionInterface == null) {
-            ProtocolStringReplacer.error("§4Error when hooking into BOSS packet: 0");
-            hooked = false;
-            return;
+            throw new UnsupportedOperationException("Error when hooking into BOSS packet");
         }
 
         for (Field declaredField : packetClass.getDeclaredFields()) {
@@ -42,9 +43,7 @@ public class BossBarUpper17 extends AbstractServerPacketListener {
             }
         }
         if (actionField == null) {
-            ProtocolStringReplacer.error("§4Error when hooking into BOSS packet: 1");
-            hooked = false;
-            return;
+            throw new UnsupportedOperationException("Error when hooking into BOSS packet");
         }
 
         for (Class<?> declaredClass : packetClass.getDeclaredClasses()) {
@@ -57,19 +56,14 @@ public class BossBarUpper17 extends AbstractServerPacketListener {
                 }
             }
         }
-        if (actionComponentField.size() != 0) {
-            hooked = true;
-        } else {
-            ProtocolStringReplacer.error("§4Error when hooking into BOSS packet: 2");
-            hooked = false;
+        if (actionComponentField.size() == 0) {
+            throw new UnsupportedOperationException("Error when hooking into BOSS packet");
         }
-
+        super.register();
+        throw new UnsupportedOperationException("Error when hooking into BOSS packet");
     }
 
-    protected void process(PacketEvent packetEvent) {
-        if (!hooked) {
-            return;
-        }
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;
