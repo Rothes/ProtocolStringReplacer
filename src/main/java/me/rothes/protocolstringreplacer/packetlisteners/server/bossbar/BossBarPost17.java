@@ -12,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-public final class BossBarUpper17 extends AbstractServerPacketListener {
+public final class BossBarPost17 extends AbstractServerPacketListener {
 
     private Field actionField;
     private final HashMap<Class<?>, Field> actionComponentField = new HashMap<>();
 
-    public BossBarUpper17() {
+    public BossBarPost17() {
         super(PacketType.Play.Server.BOSS, ListenType.BOSS_BAR);
     }
 
@@ -60,7 +60,6 @@ public final class BossBarUpper17 extends AbstractServerPacketListener {
             throw new UnsupportedOperationException("Error when hooking into BOSS packet");
         }
         super.register();
-        throw new UnsupportedOperationException("Error when hooking into BOSS packet");
     }
 
     protected void process(@NotNull PacketEvent packetEvent) {

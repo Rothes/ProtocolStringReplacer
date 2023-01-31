@@ -16,7 +16,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.Chat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.EntityMetadata;
 import me.rothes.protocolstringreplacer.packetlisteners.server.OpenWindow;
-import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBarUpper17;
+import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBarPost17;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.TabComplete;
 import me.rothes.protocolstringreplacer.packetlisteners.server.combat.CombatEvent;
 import me.rothes.protocolstringreplacer.packetlisteners.server.combat.PlayerCombatKill;
@@ -99,7 +99,7 @@ public class PacketListenerManager {
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            listeners.add(new BossBarUpper17());
+            listeners.add(new BossBarPost17());
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
             listeners.add(new BossBar());
         }
