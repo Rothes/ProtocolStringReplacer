@@ -76,6 +76,8 @@ Options:
 # Replace mode priority: Json > Common. This ignores priority in replacer configs.
 Replaces:
   # Common string replace mode.
+  # Each entry in a common replace mode is split according to a different format in Json.
+  # One of the great benefits of using common mode is that it doesn't break formatting of components.
   Common:
     - Original: 'My name'
       Replacement: '｛player_name｝'

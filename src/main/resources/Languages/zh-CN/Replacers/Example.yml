@@ -78,6 +78,8 @@ Options:
 # 替换模式优先度: Json > Common, 忽略文件优先度.
 Replaces:
   # 常规文本替换模式.
+  # 常规替换模式中的每个条目根据 Json 中的不同格式分割.
+  # 使用常规模式的一大好处就是它不会破坏组件中的格式.
   Common:
     - Original: '我的名字'
       Replacement: '｛player_name｝'
