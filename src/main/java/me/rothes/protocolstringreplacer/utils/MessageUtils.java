@@ -32,7 +32,7 @@ public class MessageUtils {
         hoverTextBuilder.append("\n§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A\n" : "\n"));
         for (String json : info.getJsons()) {
             hoverTextBuilder.append("§6§l- ");
-            hoverTextBuilder.append(ColorUtils.showColorCodes(json) + "\n").color(ChatColor.RESET);
+            hoverTextBuilder.append(json + "\n").color(ChatColor.RESET);
         }
         hoverTextBuilder.append("\n§b§lDirects: " + (info.getDirects().isEmpty() ? "§fN/A\n" : "\n"));
         for (String direct : info.getDirects()) {
@@ -65,8 +65,8 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
-                    .append("").bold(false).color(ChatColor.RESET)
-                    .append(ColorUtils.showColorCodes(json)).create());
+                    .append("").color(ChatColor.RESET).bold(false)
+                    .append(json).create());
         }
         user.sendFilteredText("§b§lDirects: " + (info.getDirects().isEmpty() ? "§fN/A" : ""));
         for (String direct : info.getDirects()) {
