@@ -43,7 +43,7 @@ public final class UpdateTeamPost17 extends BaseUpdateTeamListener {
         PacketContainer packet = packetEvent.getPacket();
 
         Optional<?> read = (Optional<?>) packet.getModifier().withType(Optional.class).read(0);
-        if (!read.isPresent()) {
+        if (read == null || !read.isPresent()) {
             return;
         }
 

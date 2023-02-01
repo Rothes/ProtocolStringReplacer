@@ -18,6 +18,9 @@ public final class UpdateTeamPost13 extends BaseUpdateTeamListener {
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<WrappedChatComponent> chatComponents = packet.getChatComponents();
         WrappedChatComponent wrappedChatComponent = chatComponents.read(0);
+        if (wrappedChatComponent == null) {
+            return;
+        }
         String json = wrappedChatComponent.getJson();
         WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, json, teamDNameFilter);
         if (replaced == null) {

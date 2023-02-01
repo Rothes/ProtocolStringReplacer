@@ -16,7 +16,11 @@ public final class UpdateTeam extends BaseUpdateTeamListener {
         }
         PacketContainer packet = packetEvent.getPacket();
         StructureModifier<String> strings = packet.getStrings();
-        String replacedText = getReplacedText(packetEvent, user, listenType, strings.read(1), teamDNameFilter);
+        String read = strings.read(1);
+        if (read == null) {
+            return;
+        }
+        String replacedText = getReplacedText(packetEvent, user, listenType, read, teamDNameFilter);
         if (replacedText == null) {
             return;
         }
