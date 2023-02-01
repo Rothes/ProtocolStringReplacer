@@ -56,19 +56,25 @@ public class MessageUtils {
         for (String text : info.getTexts()) {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, text) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, text);
-            user.sendFilteredMessage(new ComponentBuilder("§6§l - ").event(clickEvent).append(ColorUtils.showColorCodes(text)).color(ChatColor.RESET).create());
+            user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
+                    .append("").color(ChatColor.RESET).bold(false)
+                    .append(ColorUtils.showColorCodes(text)).create());
         }
         user.sendFilteredText("§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A" : ""));
         for (String json : info.getJsons()) {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
-            user.sendFilteredMessage(new ComponentBuilder("§6§l - ").event(clickEvent).append(ColorUtils.showColorCodes(json)).color(ChatColor.RESET).create());
+            user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
+                    .append("").bold(false).color(ChatColor.RESET)
+                    .append(ColorUtils.showColorCodes(json)).create());
         }
         user.sendFilteredText("§b§lDirects: " + (info.getDirects().isEmpty() ? "§fN/A" : ""));
         for (String direct : info.getDirects()) {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, direct) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, direct);
-            user.sendFilteredMessage(new ComponentBuilder("§6§l - ").event(clickEvent).append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true))).create());
+            user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
+                    .append("").color(ChatColor.RESET).bold(false)
+                    .append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true))).create());
         }
     }
 
