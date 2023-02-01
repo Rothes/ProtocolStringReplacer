@@ -307,7 +307,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     private void saveResource(String path) throws IOException {
-        File file = new File(instance.getDataFolder() + path);
+        File file = new File(instance.getDataFolder(), path);
         FileUtils.createFile(file);
         try (InputStream inputStream = PsrLocalization.getLocaledResource(path)) {
             Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -370,9 +370,28 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+        boolean backup = true;
         for (short i = (short) config.getInt("Configs-Version", 1); i <= upgrades.size(); i++) {
+            if (backup) {
+                String path = "/backups/" + System.currentTimeMillis();
+                info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Backing-Up-Configs", path.substring(1)));
+                backupConfigs(path);
+                backup = false;
+            }
             info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Upgrading-Configs", String.valueOf(i), String.valueOf(i + 1)));
             upgrades.get(i).upgrade();
+        }
+    }
+
+    public void backupConfigs(String path) {
+        File bkp = new File(instance.getDataFolder(), path);
+        bkp.mkdirs();
+        try {
+            FileUtils.copyDirectoryOrFile(new File(instance.getDataFolder(), "/Locale"), new File(bkp, "/Locale"));
+            FileUtils.copyDirectoryOrFile(new File(instance.getDataFolder(), "/Replacers"), new File(bkp, "/Replacers"));
+            FileUtils.copyDirectoryOrFile(new File(instance.getDataFolder(), "Config.yml"), new File(bkp, "Config.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

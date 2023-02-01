@@ -8,6 +8,7 @@ Console-Sender:
       Missing-Dependency: '&c未检测到前置插件 %0%，请安装后再使用本插件.'
       Created-Example-Replacers: '&a已生成示例配置于 plugins/ProtocolStringReplacer/Replacers.'
       Added-Missing-Config-Key: '&c自动补充了 Config.yml 缺失的配置键 %0%'
+      Backing-Up-Configs: '&a正在备份配置文件到文件夹: %0%'
       Upgrading-Configs: '&a正在升级配置文件版本 %0% -> %1%'
     Replacer-Config:
       Pre-Loaded-Replacers: '&a预加载 %0% 个替换配置文件. &8耗时 %1%ms'
