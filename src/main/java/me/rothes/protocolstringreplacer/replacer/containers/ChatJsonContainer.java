@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.replacer.containers;
 
+import me.rothes.protocolstringreplacer.utils.SpigotUtils;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +49,7 @@ public class ChatJsonContainer extends AbstractContainer<String> {
     @Override
     public String getResult() {
         if (componentsContainer != null) {
-            return ComponentSerializer.toString(componentsContainer.getResult());
+            return SpigotUtils.serializeComponents(componentsContainer.getResult());
         } else {
             return super.getResult();
         }

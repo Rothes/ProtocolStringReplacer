@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
@@ -19,6 +18,7 @@ import me.rothes.protocolstringreplacer.replacer.containers.ChatJsonContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.ItemStackContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
+import me.rothes.protocolstringreplacer.utils.SpigotUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -151,13 +151,13 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         }
         //noinspection StringEquality
         if (replacedDirect != DIRECT_NOT_REPLACED && plugin.getConfigManager().directSkips) {
-            return ComponentSerializer.toString(TextComponent.fromLegacyText(replacedDirect));
+            return SpigotUtils.serializeComponents(TextComponent.fromLegacyText(replacedDirect));
         }
 
         //noinspection StringEquality
         ChatJsonContainer container = deployContainer(packetEvent, user,
                 (replacedDirect != DIRECT_NOT_REPLACED) ?
-                        ComponentSerializer.toString(TextComponent.fromLegacyText(replacedDirect)) : json, replacers);
+                        SpigotUtils.serializeComponents(TextComponent.fromLegacyText(replacedDirect)) : json, replacers);
 
         if (container != null) {
             return container.getResult();
@@ -199,7 +199,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 String ds = sb1.toString();
                 String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(ds, replacers);
                 if (!replaceDirect.equals(ds)) {
-                    j.setText(ComponentSerializer.toString(TextComponent.fromLegacyText(replaceDirect)));
+                    j.setText(SpigotUtils.serializeComponents(TextComponent.fromLegacyText(replaceDirect)));
                 }
             }
 
@@ -379,7 +379,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             String directString = sb.toString();
             String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, entries);
             if (!replaceDirect.equals(directString)) {
-                json.setText(ComponentSerializer.toString(TextComponent.fromLegacyText(replaceDirect)));
+                json.setText(SpigotUtils.serializeComponents(TextComponent.fromLegacyText(replaceDirect)));
             }
         }
 
@@ -480,7 +480,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                     }
                 }
 
-                json.setText(ComponentSerializer.toString(baseComponents));
+                json.setText(SpigotUtils.serializeComponents(baseComponents));
                 direct = true;
             }
 

@@ -7,9 +7,9 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.utils.PaperUtils;
+import me.rothes.protocolstringreplacer.utils.SpigotUtils;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 
 public abstract class AbstractServerComponentsPacketListener extends AbstractServerPacketListener {
 
@@ -43,7 +43,7 @@ public abstract class AbstractServerComponentsPacketListener extends AbstractSer
             return null;
         }
 
-        String result = getReplacedJson(packetEvent, user, listenType, ComponentSerializer.toString(read), filter);
+        String result = getReplacedJson(packetEvent, user, listenType, SpigotUtils.serializeComponents(read), filter);
         componentModifier.write(0, null);
         return result == null ? BLOCKED_JSON : result;
     }

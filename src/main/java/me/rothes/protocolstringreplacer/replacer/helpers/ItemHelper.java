@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.replacer.helpers;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import me.rothes.protocolstringreplacer.utils.SpigotUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ItemTag;
 import net.md_5.bungee.api.chat.hover.content.Item;
@@ -68,7 +69,7 @@ public class ItemHelper {
     public void setName(BaseComponent[] name) {
         this.name = name;
         if (name != null) {
-            String result = ComponentSerializer.toString(name);
+            String result = SpigotUtils.serializeComponents(name);
             display.setString("Name", result);
         } else {
             display.removeKey("Name");
@@ -89,7 +90,7 @@ public class ItemHelper {
 
     public void setLore(int line, BaseComponent[] loreLine) {
         this.lore.set(line, loreLine);
-        String result = ComponentSerializer.toString(loreLine);
+        String result = SpigotUtils.serializeComponents(loreLine);
         loreNbt.set(line, result);
     }
 

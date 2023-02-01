@@ -11,6 +11,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.FileReplacerConfig;
+import me.rothes.protocolstringreplacer.utils.SpigotUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -296,7 +297,7 @@ public class PsrUser {
             PacketContainer packet;
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
                 packet = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-                packet.getStrings().write(0, ComponentSerializer.toString(baseComponents));
+                packet.getStrings().write(0, SpigotUtils.serializeComponents(baseComponents));
                 StructureModifier<Boolean> booleans = packet.getBooleans();
                 if (booleans.size() >= 1) {
                     // 1.19 only
