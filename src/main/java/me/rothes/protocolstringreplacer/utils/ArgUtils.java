@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ArgUtils {
 
-    private static Pattern lastQuotes = Pattern.compile("\"+$");
+    private static final Pattern lastQuotes = Pattern.compile("\"+$");
 
     @Nonnull
     public static String formatWithQuotes(@Nonnull String string) {

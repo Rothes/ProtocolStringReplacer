@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CommandHandler implements TabCompleter, CommandExecutor {
 
-    private LinkedList<SubCommand> subCommands = new LinkedList<>();
+    private final LinkedList<SubCommand> subCommands = new LinkedList<>();
 
     public void initialize() {
         ProtocolStringReplacer.getInstance().getCommand("ProtocolStringReplacer").setExecutor(this);

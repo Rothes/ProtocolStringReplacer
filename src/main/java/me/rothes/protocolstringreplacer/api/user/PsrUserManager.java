@@ -11,8 +11,8 @@ import java.util.UUID;
 
 public class PsrUserManager {
 
-    private HashMap<UUID, PsrUser> users = new HashMap<>();
-    private PsrUser console = new PsrUser(Bukkit.getConsoleSender());
+    private final HashMap<UUID, PsrUser> users = new HashMap<>();
+    private final PsrUser console = new PsrUser(Bukkit.getConsoleSender());
 
     public PsrUser getUser(@NotNull UUID uuid) {
         return users.getOrDefault(uuid, loadUser(uuid));

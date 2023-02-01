@@ -7,9 +7,9 @@ import java.util.List;
 
 public abstract class SubCommand {
 
-    private String name;
-    private String permission;
-    private String description;
+    private final String name;
+    private final String permission;
+    private final String description;
 
     public SubCommand(@Nonnull String name, @Nonnull String permission, @Nonnull String description) {
         this.name = name;

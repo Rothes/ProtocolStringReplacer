@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Edit extends SubCommand {
 
-    private LinkedList<SubCommand> childCommands = new LinkedList<>();
+    private final LinkedList<SubCommand> childCommands = new LinkedList<>();
 
     public Edit() {
         super("edit", "protocolstringreplacer.command.edit",

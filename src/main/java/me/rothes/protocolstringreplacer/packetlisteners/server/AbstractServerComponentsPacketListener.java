@@ -19,7 +19,7 @@ public abstract class AbstractServerComponentsPacketListener extends AbstractSer
         super(packetType, listenType);
     }
 
-    protected BaseComponent[] getSpigotComponent(StructureModifier<Object> modifier) {
+    protected static BaseComponent[] getSpigotComponent(StructureModifier<Object> modifier) {
         if (!ProtocolStringReplacer.getInstance().isSpigot()) {
             return null;
         }
@@ -48,7 +48,7 @@ public abstract class AbstractServerComponentsPacketListener extends AbstractSer
         return result == null ? BLOCKED_JSON : result;
     }
 
-    protected Component getPaperComponent(StructureModifier<Object> modifier) {
+    protected static Component getPaperComponent(StructureModifier<Object> modifier) {
         if (!ProtocolStringReplacer.getInstance().hasPaperComponent()) {
             return null;
         }

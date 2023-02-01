@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PsrFilter implements Filter {
 
-    private ProtocolStringReplacer plugin;
+    private final ProtocolStringReplacer plugin;
     private boolean started = false;
 
     public PsrFilter(@NotNull ProtocolStringReplacer plugin) {

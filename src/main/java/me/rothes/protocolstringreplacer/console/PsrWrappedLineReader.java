@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class PsrWrappedLineReader implements LineReader{
 
-    private LineReader reader;
+    private final LineReader reader;
 
     public PsrWrappedLineReader(LineReader reader) {
         this.reader = reader;
