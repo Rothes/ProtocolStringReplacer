@@ -24,7 +24,7 @@ public class MessageUtils {
 
         String time = dateFormat.format(new Date(info.getTime()));
         ComponentBuilder hoverTextBuilder = new ComponentBuilder("").append("§3§l§m----------------------§3§l Captured Contents §m----------------------\n")
-                .append("§b§lCommons: \n");
+                .append("§b§lCommons: " + (info.getTexts().isEmpty() ? "§fN/A\n" : "\n"));
         for (String text : info.getTexts()) {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(ColorUtils.showColorCodes(text) + "\n").color(ChatColor.RESET);
@@ -34,7 +34,7 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(ColorUtils.showColorCodes(json) + "\n").color(ChatColor.RESET);
         }
-        hoverTextBuilder.append("\n§b§lDirects: " + (info.getJsons().isEmpty() ? "§fN/A\n" : "\n"));
+        hoverTextBuilder.append("\n§b§lDirects: " + (info.getDirects().isEmpty() ? "§fN/A\n" : "\n"));
         for (String direct : info.getDirects()) {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true) + "\n"));
@@ -52,7 +52,7 @@ public class MessageUtils {
     public static void sendCaptureInfoClipboard(@Nonnull PsrUser user, @Nonnull CaptureInfo info) {
         Validate.notNull(info, "CaptureInfo cannot be null");
 
-        user.sendFilteredText("§b§lCommons: ");
+        user.sendFilteredText("§b§lCommons: " + (info.getTexts().isEmpty() ? "§fN/A" : ""));
         for (String text : info.getTexts()) {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, text) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, text);
@@ -64,7 +64,7 @@ public class MessageUtils {
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
             user.sendFilteredMessage(new ComponentBuilder("§6§l - ").event(clickEvent).append(ColorUtils.showColorCodes(json)).color(ChatColor.RESET).create());
         }
-        user.sendFilteredText("§b§lDirects: " + (info.getJsons().isEmpty() ? "§fN/A" : ""));
+        user.sendFilteredText("§b§lDirects: " + (info.getDirects().isEmpty() ? "§fN/A" : ""));
         for (String direct : info.getDirects()) {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, direct) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, direct);
