@@ -66,7 +66,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     @Override
     protected void register() {
         boolean enabled = ProtocolStringReplacer.getInstance().getConfig()
-                .getBoolean("Options.Features.Packet-Listener.Enabled-Listen-Types." + listenType.getName(), false);
+                .getBoolean("Options.Features.Packet-Listener.Listen-Type-Enabled." + listenType.getName(), false);
         if (enabled) {
             ProtocolLibrary.getProtocolManager().addPacketListener(packetAdapter);
         }

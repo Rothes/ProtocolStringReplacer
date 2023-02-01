@@ -52,7 +52,7 @@ Options:
       # 是否强行修改不允许修改的数据包.
       Force-Replace: false
       # 设定启用哪些类型的监听. 若某种类型中的文本不需要修改, 可设为 false 以优化性能.
-      Enabled-Listen-Types:
+      Listen-Type-Enabled:
         Boss-Bar: true
         Chat: true
         Chat-Preview: true

@@ -55,7 +55,7 @@ Options:
       Force-Replace: false
       # Set which listen types are enabled. If you don't need PSR to handle the strings in
       # the listen type, set it to false can help with performance.
-      Enabled-Listen-Types:
+      Listen-Type-Enabled:
         Boss-Bar: true
         Chat: true
         Chat-Preview: true
