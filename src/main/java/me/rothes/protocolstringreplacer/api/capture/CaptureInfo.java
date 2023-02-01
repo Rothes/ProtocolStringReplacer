@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.api.capture;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -62,6 +63,14 @@ public interface CaptureInfo {
     String getDescription();
 
     /**
+     * Get the extra info added by container.
+     *
+     * @return extra info.
+     */
+    @Nullable
+    BaseComponent[] getExtra();
+
+    /**
      * Set the Json replaceables.
      *
      * @param replaceables The Json replaceables to set.
@@ -116,6 +125,13 @@ public interface CaptureInfo {
      * @throws IllegalStateException if description is already been set.
      */
     void setDescription(@NotNull String description);
+
+    /**
+     * Set the extra info.
+     *
+     * @param extra The extra info to set.
+     */
+    void setExtra(@NotNull BaseComponent[] extra);
 
     /**
      * Get the capture count.

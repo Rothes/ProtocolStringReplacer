@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.api.capture;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +20,7 @@ public final class CaptureInfoImpl implements CaptureInfo {
     private long time = -1;
     private PsrUser user;
     private String description;
+    private BaseComponent[] extra;
     private int count = 1;
 
     /**
@@ -90,6 +92,17 @@ public final class CaptureInfoImpl implements CaptureInfo {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Get the extra info added by container.
+     *
+     * @return extra info.
+     */
+    @Nullable
+    @Override
+    public BaseComponent[] getExtra() {
+        return extra;
     }
 
     /**
@@ -202,6 +215,16 @@ public final class CaptureInfoImpl implements CaptureInfo {
             throw new IllegalStateException("Description has already been set");
         }
         this.description = description;
+    }
+
+    /**
+     * Set the extra info.
+     *
+     * @param extra The extra info to set.
+     */
+    @Override
+    public void setExtra(@NotNull BaseComponent[] extra) {
+        this.extra = extra;
     }
 
     /**

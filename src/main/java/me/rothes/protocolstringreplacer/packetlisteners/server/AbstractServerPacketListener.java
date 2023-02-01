@@ -19,11 +19,16 @@ import me.rothes.protocolstringreplacer.replacer.containers.ItemStackContainer;
 import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.replacer.containers.SimpleTextContainer;
 import me.rothes.protocolstringreplacer.utils.SpigotUtils;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -338,18 +343,25 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         info.setUser(user);
         info.setListenType(listenType);
 
-        List<String> nbtADisplay = new ArrayList<>();
+        ComponentBuilder extraBuilder = new ComponentBuilder("Extra: ").color(ChatColor.BLUE).bold(true).append("").reset();
         container.createDefaultChildren();
         container.createJsons(container);
         List<Replaceable> jsons = container.getJsons();
-        nbtADisplay.add(jsons.get(0).getText());
+        extraBuilder.append("[Nbt Json] ").color(ChatColor.GOLD)
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n§aClick to copy")))
+                .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
+                        ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
         ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), nbt);
         container.getResult();
 
         container.displayPeriod();
         container.createJsons(container);
         jsons = container.getJsons();
-        nbtADisplay.add(jsons.get(0).getText());
+        extraBuilder.append("  ").reset().append("[Display Json] ").color(ChatColor.GOLD)
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n§aClick to copy")))
+                .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
+                        ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
+        info.setExtra(extraBuilder.create());
         ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), display);
         container.getResult();
 
@@ -385,8 +397,6 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         info.setJsons(jsons);
         List<String> infoJsons = info.getJsons();
-        infoJsons.add(0, nbtADisplay.get(0));
-        infoJsons.add(1, nbtADisplay.get(1));
         ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, entries);
         try {
             container.createDefaultChildrenDeep();

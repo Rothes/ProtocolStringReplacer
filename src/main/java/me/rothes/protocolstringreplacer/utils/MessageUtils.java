@@ -5,10 +5,13 @@ import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.Validate;
 
 import javax.annotation.Nonnull;
@@ -39,6 +42,14 @@ public class MessageUtils {
             hoverTextBuilder.append("§6§l- ");
             hoverTextBuilder.append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true) + "\n"));
         }
+        if (info.getExtra() != null) {
+            hoverTextBuilder.append("\n");
+            StringBuilder sb = new StringBuilder();
+            for (BaseComponent baseComponent : info.getExtra()) {
+                sb.append(baseComponent.toLegacyText());
+            }
+            hoverTextBuilder.append(sb.append("\n").toString());
+        }
         hoverTextBuilder.append("§aClick for clipboard");
 
         ComponentBuilder captureMessageBuilder = new ComponentBuilder("")
@@ -57,6 +68,7 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, text) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, text);
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§aClick to copy")))
                     .append("").color(ChatColor.RESET).bold(false)
                     .append(ColorUtils.showColorCodes(text)).create());
         }
@@ -65,6 +77,7 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§aClick to copy")))
                     .append("").color(ChatColor.RESET).bold(false)
                     .append(json).create());
         }
@@ -73,8 +86,12 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, direct) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, direct);
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§aClick to copy")))
                     .append("").color(ChatColor.RESET).bold(false)
                     .append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true))).create());
+        }
+        if (info.getExtra() != null) {
+            user.sendFilteredMessage(info.getExtra());
         }
     }
 
