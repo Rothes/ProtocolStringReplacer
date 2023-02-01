@@ -43,15 +43,23 @@ Options:
     ScoreBoard:
       # Whether handle scoreboard title. Default is false.
       Handle-Title: false
-      # Whether handle entities' name in scoreboard. Default is false.
+      # Whether handle the name of the entities in scoreboard. Default is false.
       # Note: For players, entity name is player's name, else is entity UUID.
       Handle-Entity-Name: false
-      # Whether handle teams' display name in scoreboard. Default is false.
+      # Whether handle the display name of the teams in scoreboard. Default is false.
       Handle-Team-Display-Name: false
-      # Whether handle teams' prefix in scoreboard. Default is false.
+      # Whether handle the prefix of the teams in scoreboard. Default is false.
       Handle-Team-Prefix: false
-      # Whether handle teams' suffix in scoreboard. Default is false.
+      # Whether handle the suffix of the teams in scoreboard. Default is false.
       Handle-Team-Suffix: false
+    # Specific filtering for item-stack handling.
+    ItemStack:
+      # Json only. Whether handle the whole nbt of the item. Default is false.
+      Handle-Nbt-Compound: false
+      # Json only. Whether handle the display nbt of the item. Default is false.
+      Handle-Nbt-Display-Compound: false
+      # Whether handle each entry of the display nbt of the item. Default is true.
+      Handle-Nbt-Display-Entries: true
     User:
       # Required permission. If set, user must have this permission
       # to make this replacer config take effects.

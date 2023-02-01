@@ -1,6 +1,7 @@
 package me.rothes.protocolstringreplacer.replacer.containers;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -67,6 +68,43 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
 
     @Override
     public void createDefaultChildren() {
+        nbtPeriod();
+    }
+
+    public void nbtPeriod() {
+        children.add(new ChatJsonContainer(nbtItem.toString(), root, false) {
+            @Override
+            public @NotNull String getResult() {
+                String result = super.getResult();
+                nbtItem.clearNBT();
+                nbtItem.mergeCompound(new NBTContainer(result));
+                return result;
+            }
+        });
+    }
+    public void displayPeriod() {
+        children.clear();
+        jsonReplaceables.clear();
+        NBTCompound display = nbtItem.getCompound("display");
+        children.add(new ChatJsonContainer(display == null ? "{}" : display.toString(), root, false) {
+            @Override
+            public @NotNull String getResult() {
+                String result = super.getResult();
+                if (display != null) {
+                    display.clearNBT();
+                    display.mergeCompound(new NBTContainer(result));
+                } else if (!result.equals("{}")) {
+                    nbtItem.addCompound("display");
+                    nbtItem.getCompound("display").mergeCompound(new NBTContainer(result));
+                }
+                return result;
+            }
+        });
+    }
+
+    public void entriesPeriod() {
+        children.clear();
+        jsonReplaceables.clear();
         NBTCompound display = nbtItem.getCompound("display");
         if (display != null) {
             if (display.hasTag("Name")) {
@@ -130,6 +168,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
             }
         }
     }
+
     public void createDefaultChildrenDeep() {
         super.createDefaultChildren();
     }

@@ -17,22 +17,22 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
     }
 
     protected void restoreItem(PsrUser user, ItemStack itemStack) {
-        if (itemStack.hasItemMeta()) {
-            NBTItem nbtItem = new NBTItem(itemStack);
-            if (!nbtItem.hasTag("ProtocolStringReplacer")) {
+        // We don't check hasItemMeta since nbt/display compound modify was added.
+        // If something got modified wrongly, #hasItemMeta may return false and break the item.
+        NBTItem nbtItem = new NBTItem(itemStack);
+        if (!nbtItem.hasTag("ProtocolStringReplacer")) {
+            return;
+        }
+        Short uniqueCacheKey = nbtItem.getCompound("ProtocolStringReplacer").getShort("UserMetaCacheKey");
+
+        if (uniqueCacheKey != null) {
+            HashMap<Short, ItemMeta> userMetaCache = user.getMetaCache();
+            ItemMeta original = userMetaCache.get(uniqueCacheKey);
+            if (original == null) {
+                ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key, ignoring.\n" + itemStack);
                 return;
             }
-            Short uniqueCacheKey = nbtItem.getCompound("ProtocolStringReplacer").getShort("UserMetaCacheKey");
-
-            if (uniqueCacheKey != null) {
-                HashMap<Short, ItemMeta> userMetaCache = user.getMetaCache();
-                ItemMeta original = userMetaCache.get(uniqueCacheKey);
-                if (original == null) {
-                    ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key, ignoring.\n" + itemStack);
-                    return;
-                }
-                itemStack.setItemMeta(original);
-            }
+            itemStack.setItemMeta(original);
         }
     }
 

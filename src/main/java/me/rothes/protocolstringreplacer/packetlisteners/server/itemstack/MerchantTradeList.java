@@ -16,12 +16,13 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MerchantTradeList extends AbstractServerItemPacketListener {
+public final class MerchantTradeList extends AbstractServerItemPacketListener {
 
     private static final Converter CONVERTER = new Converter();
 
@@ -29,7 +30,7 @@ public class MerchantTradeList extends AbstractServerItemPacketListener {
         super(PacketType.Play.Server.OPEN_WINDOW_MERCHANT);
     }
 
-    protected void process(PacketEvent packetEvent) {
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;
@@ -43,7 +44,9 @@ public class MerchantTradeList extends AbstractServerItemPacketListener {
                 MinecraftReflection.getMerchantRecipeList(), CONVERTER);
 
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
+        List<ReplacerConfig> nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter);
+        List<ReplacerConfig> display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter);
+        List<ReplacerConfig> entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter);
 
         List<MerchantRecipe> replaced = new ArrayList<>();
 
@@ -52,9 +55,9 @@ public class MerchantTradeList extends AbstractServerItemPacketListener {
         for (MerchantRecipe recipe : read) {
             List<ItemStack> ingredients = recipe.getIngredients();
             for (ItemStack ingredient : ingredients) {
-                replaceItemStack(packetEvent, user, listenType, ingredient, replacers, false);
+                replaceItemStack(packetEvent, user, listenType, ingredient, nbt, display, entries, false);
             }
-            replaceItemStack(packetEvent, user, listenType, recipe.getResult(), replacers, true);
+            replaceItemStack(packetEvent, user, listenType, recipe.getResult(), nbt, display, entries, true);
 
             toAdd = new MerchantRecipe(recipe.getResult(), recipe.getUses(), recipe.getMaxUses(),
                     recipe.hasExperienceReward(), recipe.getVillagerExperience(), recipe.getPriceMultiplier(),
@@ -90,12 +93,12 @@ public class MerchantTradeList extends AbstractServerItemPacketListener {
         @Override
         public Object getGeneric(List<MerchantRecipe> specific) {
             return specific.stream().map(recipe -> craftMerchantRecipeToNMS.invoke(bukkitToCraft(recipe)))
-                    .collect(() -> (List<Object>)merchantRecipeListConstructor.invoke(), List::add, List::addAll);
+                    .collect(() -> (List<Object>) merchantRecipeListConstructor.invoke(), List::add, List::addAll);
         }
 
         @Override
         public List<MerchantRecipe> getSpecific(Object generic) {
-            return ((List<Object>)generic).stream().map(o -> (MerchantRecipe)nmsMerchantRecipeToBukkit.invoke(o)).collect(Collectors.toList());
+            return ((List<Object>) generic).stream().map(o -> (MerchantRecipe)nmsMerchantRecipeToBukkit.invoke(o)).collect(Collectors.toList());
         }
 
         public Object bukkitToCraft(MerchantRecipe bukkit) {

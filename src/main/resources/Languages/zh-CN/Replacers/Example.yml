@@ -50,6 +50,14 @@ Options:
       Handle-Team-Prefix: false
       # 是否处理计分板中的团队显示后缀. 默认为false.
       Handle-Team-Suffix: false
+    # 针对物品监听的特定过滤
+    ItemStack:
+      # 仅 Json. 是否处理物品的完整 nbt. 默认为false.
+      Handle-Nbt-Compound: false
+      # 仅 Json. 是否处理物品的 Display nbt 组件. 默认为false.
+      Handle-Nbt-Display-Compound: false
+      # 是否处理物品的 Display nbt 组件中的各个元素. 默认为true.
+      Handle-Nbt-Display-Entries: true
     User:
       # 处理所需权限. 若设定, 用户必须拥有该权限
       # 才能使该替换配置为其生效.

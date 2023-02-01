@@ -330,6 +330,26 @@ public class ReplacerManager {
         }
     }
 
+    public void replaceJsonReplaceable(@Nonnull Replaceable replaceable, @Nonnull List<ReplacerConfig> replacerConfigList) {
+        Validate.notNull(replaceable, "Replaceable cannot be null");
+        Validate.notNull(replacerConfigList, "List cannot be null");
+
+        String json = replaceable.getText();
+        if (json.isEmpty()) {
+            return;
+        }
+        int length = json.length();
+        int maxLength;
+        for (ReplacerConfig replacerConfig : replacerConfigList) {
+            maxLength = replacerConfig.getMaxJsonLength();
+            if (maxLength != -1 && maxLength < length) {
+                continue;
+            }
+            json = getReplaced(json, replacerConfig, ReplaceMode.JSON);
+        }
+        replaceable.setText(json);
+    }
+
     public void replaceContainerTexts(@Nonnull Container<?> container, @Nonnull List<ReplacerConfig> replacerConfigList) {
         Validate.notNull(container, "Container cannot be null");
         Validate.notNull(replacerConfigList, "List cannot be null");
@@ -485,7 +505,7 @@ public class ReplacerManager {
         throw new AssertionError();
     }
 
-    private boolean getBlocked(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplaceMode replaceMode) {
+    public boolean getBlocked(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplaceMode replaceMode) {
         Validate.notNull(string, "String cannot be null");
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
         Validate.notNull(replaceMode, "Replaces Mode cannot be null");

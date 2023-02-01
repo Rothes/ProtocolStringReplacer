@@ -6,30 +6,21 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 
-import java.util.List;
 import java.util.function.BiPredicate;
 
 public abstract class AbstractServerItemPacketListener extends AbstractServerPacketListener {
 
-    protected final BiPredicate<ReplacerConfig, PsrUser> itemFilter;
+    protected final BiPredicate<ReplacerConfig, PsrUser> itemNbtFilter =
+            (replacerConfig, user) -> containType(replacerConfig)
+                    && replacerConfig.handleItemStackNbt() && checkFilter(user, replacerConfig) && checkWindowTitle(user, replacerConfig);
+    protected final BiPredicate<ReplacerConfig, PsrUser> itemDisplayFilter =
+            (replacerConfig, user) -> containType(replacerConfig)
+                    && replacerConfig.handleItemStackDisplay() && checkFilter(user, replacerConfig) && checkWindowTitle(user, replacerConfig);
+    protected final BiPredicate<ReplacerConfig, PsrUser> itemEntriesFilter = (replacerConfig, user) -> containType(replacerConfig)
+            && replacerConfig.handleItemStackDisplayEntries() && checkFilter(user, replacerConfig) && checkWindowTitle(user, replacerConfig);
 
     protected AbstractServerItemPacketListener(PacketType packetType) {
         super(packetType, ListenType.ITEMSTACK);
-        itemFilter = (replacerConfig, user) -> {
-            if (containType(replacerConfig) && checkFilter(user, replacerConfig)) {
-                String currentWindowTitle = user.getCurrentWindowTitle();
-                List<String> windowTitles = replacerConfig.getWindowTitleLimit();
-                if (windowTitles.isEmpty()) {
-                    return true;
-                }
-                if (currentWindowTitle == null) {
-                    return replacerConfig.windowTitleLimitIgnoreInventory();
-                } else {
-                    return windowTitles.contains(currentWindowTitle);
-                }
-            }
-            return false;
-        };
     }
 
 }

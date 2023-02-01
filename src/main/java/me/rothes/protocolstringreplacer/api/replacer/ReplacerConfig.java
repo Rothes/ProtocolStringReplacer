@@ -87,6 +87,15 @@ public interface ReplacerConfig {
     default boolean handleScoreboardTeamSuffix() {
         return false;
     }
+    default boolean handleItemStackNbt() {
+        return false;
+    }
+    default boolean handleItemStackDisplay() {
+        return false;
+    }
+    default boolean handleItemStackDisplayEntries() {
+        return true;
+    }
     default boolean acceptsLocale(String locale) {
         return true;
     }

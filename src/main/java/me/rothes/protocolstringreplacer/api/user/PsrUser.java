@@ -342,7 +342,7 @@ public class PsrUser {
     }
 
     public void saveUserMetaCache(ItemStack originalItem, ItemStack replacedItem) {
-        if (this.hasPermission("protocolstringreplacer.feature.usermetacache") && originalItem.hasItemMeta()) {
+        if (this.hasPermission("protocolstringreplacer.feature.usermetacache")) {
             if (ProtocolStringReplacer.getInstance().getConfigManager().removeCacheWhenMerchantTrade && isInMerchant()) {
                 return;
             }

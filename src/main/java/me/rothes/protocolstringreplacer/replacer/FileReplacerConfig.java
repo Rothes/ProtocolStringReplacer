@@ -53,6 +53,10 @@ public class FileReplacerConfig implements ReplacerConfig {
     private boolean handleScoreboardTeamDisplayName;
     private boolean handleScoreboardTeamPrefix;
     private boolean handleScoreboardTeamSuffix;
+
+    private boolean handleItemStackNbt;
+    private boolean handleItemStackDisplay;
+    private boolean handleItemStackDisplayEntries;
     private HashSet<String> locales;
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
@@ -351,6 +355,10 @@ public class FileReplacerConfig implements ReplacerConfig {
         handleScoreboardTeamPrefix = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Team-Prefix", false);
         handleScoreboardTeamSuffix = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Team-Suffix", false);
 
+        handleItemStackNbt = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Compound", false);
+        handleItemStackDisplay = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Display-Compound", false);
+        handleItemStackDisplayEntries = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Display-Entries", true);
+
         locales = new HashSet<>();
         for (String s : configuration.getStringList("Options.Filter.User.Locales")) {
             locales.add(s.toLowerCase(Locale.ROOT).replace('-', '_'));
@@ -427,6 +435,21 @@ public class FileReplacerConfig implements ReplacerConfig {
     @Override
     public boolean handleScoreboardTeamSuffix() {
         return handleScoreboardTeamSuffix;
+    }
+
+    @Override
+    public boolean handleItemStackNbt() {
+        return handleItemStackNbt;
+    }
+
+    @Override
+    public boolean handleItemStackDisplay() {
+        return handleItemStackDisplay;
+    }
+
+    @Override
+    public boolean handleItemStackDisplayEntries() {
+        return handleItemStackDisplayEntries;
     }
 
     @Override

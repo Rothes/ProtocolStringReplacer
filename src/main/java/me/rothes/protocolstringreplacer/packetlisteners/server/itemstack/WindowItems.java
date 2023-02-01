@@ -9,16 +9,17 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class WindowItems extends AbstractServerItemPacketListener {
+public final class WindowItems extends AbstractServerItemPacketListener {
 
     public WindowItems() {
         super(PacketType.Play.Server.WINDOW_ITEMS);
     }
 
-    protected void process(PacketEvent packetEvent) {
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;
@@ -26,7 +27,10 @@ public class WindowItems extends AbstractServerItemPacketListener {
         user.clearUserMetaCache();
         Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        List<ReplacerConfig> replacers = replacerManager.getAcceptedReplacers(user, itemFilter);
+        List<ReplacerConfig> nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter);
+        List<ReplacerConfig> display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter);
+        List<ReplacerConfig> entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter);
+
         boolean saveMeta = !user.isInAnvil();
         for (Object item : read) {
             ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
@@ -34,7 +38,7 @@ public class WindowItems extends AbstractServerItemPacketListener {
                 saveMeta = true;
                 continue;
             }
-            boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, replacers,
+            boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries,
                     // Avoid too many packets kick
                     saveMeta);
             saveMeta = true;

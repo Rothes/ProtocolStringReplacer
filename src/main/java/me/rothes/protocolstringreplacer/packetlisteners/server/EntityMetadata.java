@@ -9,9 +9,11 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +29,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         super(PacketType.Play.Server.ENTITY_METADATA, ListenType.ENTITY);
     }
 
-    protected void process(PacketEvent packetEvent) {
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;
@@ -122,7 +124,8 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(object)) {
             // Item in Item Frame
             ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(object);
-            replaceItemStack(packetEvent, user, listenType, itemStack, filter);
+            List<ReplacerConfig> replacerConfigs = ProtocolStringReplacer.getInstance().getReplacerManager().getAcceptedReplacers(user, filter);
+            replaceItemStack(packetEvent, user, listenType, itemStack, replacerConfigs, replacerConfigs, replacerConfigs, false);
         }
         return null;
     }
