@@ -26,8 +26,8 @@ Console-Sender:
       Invalid-Config-Load-LifeCycle: '&cInvalid Config-Load-LifeCycle value! Using defaults ''ENABLE'''
     Updater:
       Invalid-Channel: '§cPSR is in a invalid channel ("%0%"). Please update your plugin to the latest version.'
-      Error-Checking-Version: '§cFailed to check version informations via server, Please try updating your plugin: %0%'
-      Error-Parsing-Json: '§cFailed to parse version informations Json, Please try updating your plugin: %0%'
+      Error-Checking-Version: '§cFailed to check version information via server, Please try updating your plugin: %0%'
+      Error-Parsing-Json: '§cFailed to parse version information Json, Please try updating your plugin: %0%'
 
 Command-Block-Sender:
   Messages:
