@@ -31,6 +31,7 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
     protected final boolean fromCache;
     protected ReplacerManager.ItemMetaCache metaCache;
     protected NBTItem nbtItem;
+    private final ItemMeta original = content.getItemMeta();
 
     public ItemStackContainer(@NotNull ItemStack itemStack) {
         this(itemStack, true);
@@ -218,13 +219,22 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
         return fromCache;
     }
 
+    public String getNbtString() {
+        return nbtItem.toString();
+    }
+
+    public void restoreItem() {
+        content.setItemMeta(original);
+        nbtItem.clearNBT();
+        nbtItem.mergeCompound(new NBTItem(content));
+    }
+
     public ReplacerManager.ItemMetaCache getMetaCache() {
         return metaCache;
     }
 
     private boolean loadCache() {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        ItemMeta original = content.getItemMeta();
         metaCache = replacerManager.getReplacedItemCache(original);
         if (metaCache != null) {
             nbtItem = metaCache.getNbtItem();

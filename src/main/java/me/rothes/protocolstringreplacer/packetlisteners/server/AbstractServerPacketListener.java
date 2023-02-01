@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
@@ -282,44 +283,48 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                               @Nonnull ItemStack itemStack, List<ReplacerConfig> nbt,
                                               List<ReplacerConfig> display, List<ReplacerConfig> entries, boolean saveCache) {
+        try {
 //        if (!itemStack.hasItemMeta()) {
 //            return false;
 //        }
-        if (itemStack.getType() == Material.AIR) {
-            return false;
-        }
-        ItemStack original = itemStack.clone();
+            if (itemStack.getType() == Material.AIR) {
+                return false;
+            }
+            ItemStack original = itemStack.clone();
 
-        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        ItemStackContainer container = new ItemStackContainer(itemStack);
+            ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+            ItemStackContainer container = new ItemStackContainer(itemStack);
 
-        if (!container.isFromCache()) {
-            if (cacheItemStack(container, nbt, display, entries)) {
+            if (!container.isFromCache()) {
+                if (cacheItemStack(container, nbt, display, entries)) {
+                    return true;
+                }
+                container.reset();
+            }
+            if (container.getMetaCache().isBlocked()) {
+                packetEvent.setCancelled(true);
                 return true;
             }
-            container.reset();
-        }
-        if (container.getMetaCache().isBlocked()) {
-            packetEvent.setCancelled(true);
-            return true;
-        }
 
-        int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
-        if (papiIndexes.length != 0) {
-            container.cloneItem();
-            container.createDefaultChildren();
-            container.createDefaultChildrenDeep();
-            container.createTexts(container);
+            int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
+            if (papiIndexes.length != 0) {
+                container.cloneItem();
+                container.createDefaultChildren();
+                container.createDefaultChildrenDeep();
+                container.createTexts(container);
 
-            replacerManager.setPapi(user, container.getTexts(), papiIndexes);
-        }
-        container.getResult();
+                replacerManager.setPapi(user, container.getTexts(), papiIndexes);
+            }
+            container.getResult();
 
-        if (saveCache && !original.isSimilar(itemStack)) {
-            user.saveUserMetaCache(original, itemStack);
-        }
-        if (user.isCapturing(listenType)) {
-            captureItemStackInfo(user, original, listenType, nbt, display, entries);
+            if (saveCache && !original.isSimilar(itemStack)) {
+                user.saveUserMetaCache(original, itemStack);
+            }
+            if (user.isCapturing(listenType)) {
+                captureItemStackInfo(user, original, listenType, nbt, display, entries);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
         return false;
     }
@@ -432,8 +437,17 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         for (Replaceable json : container.getJsons()) {
             StringBuilder sb = new StringBuilder();
-            for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
-                sb.append(baseComponent.toLegacyText());
+            try {
+                for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
+                    sb.append(baseComponent.toLegacyText());
+                }
+            } catch (Throwable t) {
+                String replaced = container.getNbtString();
+                container.restoreItem();
+                throw new RuntimeException("Unable to parse ItemStack Nbt Jsons. Please check your Json format.\n"
+                        + "Original Nbt Json: " + container.getNbtString() + "\n"
+                        + "Replaced Nbt Json: " + replaced + "\n"
+                        + "If you need support, please provide the stacktrace below.", t);
             }
 
             String directString = sb.toString();

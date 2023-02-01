@@ -17,8 +17,9 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
     }
 
     protected void restoreItem(PsrUser user, ItemStack itemStack) {
-        // We don't check hasItemMeta since nbt/display compound modify was added.
-        // If something got modified wrongly, #hasItemMeta may return false and break the item.
+        if (!itemStack.hasItemMeta()) {
+            return;
+        }
         NBTItem nbtItem = new NBTItem(itemStack);
         if (!nbtItem.hasTag("ProtocolStringReplacer")) {
             return;
@@ -33,6 +34,8 @@ public abstract class AbstractClientItemPacketListener extends AbstractClientPac
                 return;
             }
             itemStack.setItemMeta(original);
+        } else {
+            ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key due to null, ignoring.\n" + itemStack);
         }
     }
 
