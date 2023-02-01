@@ -5,7 +5,8 @@ public enum UpgradeEnum {
     FROM_1_TO_2((short) 1, UpgradeHandler1To2.class),
     FROM_2_TO_3((short) 2, UpgradeHandler2To3.class),
     FROM_3_TO_4((short) 3, UpgradeHandler3To4.class),
-    FROM_4_TO_5((short) 4, UpgradeHandler4To5.class);
+    FROM_4_TO_5((short) 4, UpgradeHandler4To5.class),
+    FROM_5_TO_6((short) 5, UpgradeHandler5To6.class);
 
     private short currentVersion;
     private Class<? extends AbstractUpgradeHandler> upgradeHandler;

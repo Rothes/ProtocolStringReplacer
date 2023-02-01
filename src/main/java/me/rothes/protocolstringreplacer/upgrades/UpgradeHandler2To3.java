@@ -2,9 +2,9 @@ package me.rothes.protocolstringreplacer.upgrades;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
-import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class UpgradeHandler2To3 extends AbstractUpgradeHandler{
+public final class UpgradeHandler2To3 extends DotConfigUpgradeHandler {
 
     @Override
     public void upgrade() {
@@ -30,10 +30,10 @@ public class UpgradeHandler2To3 extends AbstractUpgradeHandler{
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void upgradeReplacerConfig(@NotNull File file, @NotNull DotYamlConfiguration config) {
+    protected void upgradeReplacerConfig(@NotNull File file, @NotNull YamlConfiguration config) {
         ConfigurationSection section = config.getConfigurationSection("Replaces");
         if (section != null) {
-            final ListOrderedMap keyVauleHashMap = new ListOrderedMap();
+            final ListOrderedMap keyValueHashMap = new ListOrderedMap();
             final Pattern commentKeyPattern = CommentYamlConfiguration.getCommentKeyPattern();
             final Pattern splitPattern = Pattern.compile("\\| ");
             for (String key : section.getKeys(false)) {
@@ -44,12 +44,12 @@ public class UpgradeHandler2To3 extends AbstractUpgradeHandler{
                         String[] split = splitPattern.split(valueString);
                         value = split[0] + "|   " + split[1];
                     }
-                    keyVauleHashMap.put(key, value);
+                    keyValueHashMap.put(key, value);
                     section.set(key, null);
                 }
             }
             section.set("23307㩵遌㚳这是注释是", "0|   # 常规文本替换模式.");
-            Set<Map.Entry<String, String>> set = (Set<Map.Entry<String, String>>) keyVauleHashMap.entrySet();
+            Set<Map.Entry<String, String>> set = (Set<Map.Entry<String, String>>) keyValueHashMap.entrySet();
             for (Map.Entry<String, String> entry : set) {
                 section.set("Common鰠" + entry.getKey(), entry.getValue());
             }

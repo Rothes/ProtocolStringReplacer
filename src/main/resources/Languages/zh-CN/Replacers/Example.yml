@@ -1,11 +1,11 @@
 # 此替换配置文件的相关设定.
 Options:
   # 是否开启本替换配置. 若为false则不会为这个文件处理. 若未定义, 默认为false.
-  Enable: true
+  Enabled: true
   # 本文件的优先级. 若有多个替换配置, 优先级高的最早替换. 默认为5.
   Priority: 5
   # 可选参数
-  Version: '1.210805'
+  Version: '1.230201'
   # 可选参数
   Author: 'Rothes'
   # 匹配字符串的方式. 可选值:
@@ -39,17 +39,17 @@ Options:
       - Sign
     # 针对计分板监听的特定过滤
     ScoreBoard:
-      # 是否替换计分板标题. 默认为false.
-      Replace-Title: false
-      # 是否替换计分板中的实体名称. 默认为false.
+      # 是否处理计分板标题. 默认为false.
+      Handle-Title: false
+      # 是否处理计分板中的实体名称. 默认为false.
       # 注: 对于玩家, 实体名称为玩家名称; 对于非玩家则为UUID.
-      Replace-Entity-Name: false
-      # 是否替换计分板中的团队显示名称. 默认为false.
-      Replace-Team-Display-Name: false
-      # 是否替换计分板中的团队显示前缀. 默认为false.
-      Replace-Team-Prefix: false
-      # 是否替换计分板中的团队显示后缀. 默认为false.
-      Replace-Team-Suffix: false
+      Handle-Entity-Name: false
+      # 是否处理计分板中的团队显示名称. 默认为false.
+      Handle-Team-Display-Name: false
+      # 是否处理计分板中的团队显示前缀. 默认为false.
+      Handle-Team-Prefix: false
+      # 是否处理计分板中的团队显示后缀. 默认为false.
+      Handle-Team-Suffix: false
     User:
       # 处理所需权限. 若设定, 用户必须拥有该权限
       # 才能使该替换配置为其生效.

@@ -2,10 +2,10 @@ package me.rothes.protocolstringreplacer.upgrades;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
-import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -16,24 +16,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class UpgradeHandler3To4 extends AbstractUpgradeHandler {
+public final class UpgradeHandler3To4 extends DotConfigUpgradeHandler {
 
     @Override
     public void upgrade() {
         CommentYamlConfiguration config = ProtocolStringReplacer.getInstance().getConfig();
         Pattern commentPattern = CommentYamlConfiguration.getCommentKeyPattern();
-        ArrayList<String> coments = new ArrayList<>();
+        ArrayList<String> comments = new ArrayList<>();
         for (String key : config.getKeys(true)) {
             if (commentPattern.matcher(key).find()) {
-                coments.add(key);
+                comments.add(key);
             } else {
                 if (key.equals("Options.Features.Packet-Listener.Listen-Dropped-Item-Entity")) {
-                    for (String comment : coments) {
+                    for (String comment : comments) {
                         config.set(comment, null);
                     }
                     config.set("Options.Features.Packet-Listener.Listen-Dropped-Item-Entity", null);
                 }
-                coments.clear();
+                comments.clear();
             }
         }
         config.set("Configs-Version", 4);
@@ -50,7 +50,7 @@ public class UpgradeHandler3To4 extends AbstractUpgradeHandler {
     }
 
     @Override
-    protected void upgradeReplacerConfig(@NotNull File file, @NotNull DotYamlConfiguration config) {
+    protected void upgradeReplacerConfig(@NotNull File file, @NotNull YamlConfiguration config) {
         typeToMode(config);
         updateReplacesStructure(config);
         try {
@@ -61,7 +61,7 @@ public class UpgradeHandler3To4 extends AbstractUpgradeHandler {
     }
 
     @SuppressWarnings("unchecked")
-    private void updateReplacesStructure(@NotNull DotYamlConfiguration config) {
+    private void updateReplacesStructure(@NotNull YamlConfiguration config) {
         for (ReplaceMode replaceMode : ReplaceMode.values()) {
             String pathString = "Replaces鰠" + replaceMode.getNode();
             ConfigurationSection section = config.getConfigurationSection(pathString);
@@ -103,7 +103,7 @@ public class UpgradeHandler3To4 extends AbstractUpgradeHandler {
     }
 
     @SuppressWarnings("unchecked")
-    private void typeToMode(@NotNull DotYamlConfiguration config) {
+    private void typeToMode(@NotNull YamlConfiguration config) {
         ConfigurationSection section = config.getConfigurationSection("Options");
         if (section != null) {
             final ListOrderedMap comments = new ListOrderedMap();

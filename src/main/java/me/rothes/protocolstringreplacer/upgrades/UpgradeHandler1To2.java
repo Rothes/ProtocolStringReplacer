@@ -2,10 +2,10 @@ package me.rothes.protocolstringreplacer.upgrades;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
-import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
+public final class UpgradeHandler1To2 extends DotConfigUpgradeHandler {
 
     private enum PacketType {
         CHAT("CHAT", "chat"),
@@ -68,7 +68,7 @@ public class UpgradeHandler1To2 extends AbstractUpgradeHandler{
     }
 
     @Override
-    protected void upgradeReplacerConfig(@Nonnull File file, @Nonnull DotYamlConfiguration config) {
+    protected void upgradeReplacerConfig(@Nonnull File file, @Nonnull YamlConfiguration config) {
         Validate.notNull(file, "configuration File cannot be null");
         Validate.notNull(config, "configuration cannot be null");
 

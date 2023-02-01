@@ -137,7 +137,7 @@ public class FileReplacerConfig implements ReplacerConfig {
 
     @Override
     public void saveConfig() {
-        configuration.set("Options.Enable", enable);
+        configuration.set("Options.Enabled", enable);
         configuration.set("Options.Priority", priority);
         configuration.set("Options.Author", author);
         configuration.set("Options.Version", version);
@@ -256,7 +256,7 @@ public class FileReplacerConfig implements ReplacerConfig {
     private void loadData(File file, CommentYamlConfiguration configuration) {
         this.configuration = configuration;
         this.file = file;
-        enable = configuration.getBoolean("Options.Enable", false);
+        enable = configuration.getBoolean("Options.Enabled", false);
         priority = configuration.getInt("Options.Priority", 5);
         author = configuration.getString("Options.Author");
         version = configuration.getString("Options.Version");
@@ -345,11 +345,11 @@ public class FileReplacerConfig implements ReplacerConfig {
         permissionLimit = configuration.getString("Options.Filter.User.Permission", "");
         windowTitleLimit = configuration.getStringList("Options.Filter.ItemStack.Window-Title");
         windowTitleLimitIgnoreInventory = configuration.getBoolean("Options.Filter.ItemStack.Ignore-Inventory-Title", false);
-        handleScoreboardTitle = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Title", false);
-        handleScoreboardEntityName = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Entity-Name", false);
-        handleScoreboardTeamDisplayName = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Team-Display-Name", false);
-        handleScoreboardTeamPrefix = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Team-Prefix", false);
-        handleScoreboardTeamSuffix = configuration.getBoolean("Options.Filter.ScoreBoard.Replace-Team-Suffix", false);
+        handleScoreboardTitle = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Title", false);
+        handleScoreboardEntityName = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Entity-Name", false);
+        handleScoreboardTeamDisplayName = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Team-Display-Name", false);
+        handleScoreboardTeamPrefix = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Team-Prefix", false);
+        handleScoreboardTeamSuffix = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Team-Suffix", false);
 
         locales = new HashSet<>();
         for (String s : configuration.getStringList("Options.Filter.User.Locales")) {

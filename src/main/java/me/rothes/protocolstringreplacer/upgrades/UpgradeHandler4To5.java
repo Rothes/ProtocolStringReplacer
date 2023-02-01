@@ -3,7 +3,7 @@ package me.rothes.protocolstringreplacer.upgrades;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
-import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -11,25 +11,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class UpgradeHandler4To5 extends AbstractUpgradeHandler{
+public final class UpgradeHandler4To5 extends AbstractUpgradeHandler {
 
     @Override
     public void upgrade() {
         CommentYamlConfiguration config = ProtocolStringReplacer.getInstance().getConfig();
         Pattern commentPattern = CommentYamlConfiguration.getCommentKeyPattern();
-        ArrayList<String> coments = new ArrayList<>();
+        ArrayList<String> comments = new ArrayList<>();
         String locale = null;
         for (String key : config.getKeys(true)) {
             if (commentPattern.matcher(key).find()) {
-                coments.add(key);
+                comments.add(key);
             } else if (key.equals("Options.Localization")){
                 locale = config.getString(key);
-                for (String comment : coments) {
+                for (String comment : comments) {
                     config.set(comment, null);
                 }
                 config.set(key, null);
             } else {
-                coments.clear();
+                comments.clear();
             }
         }
         config.set("Configs-Version", 5);
@@ -45,7 +45,7 @@ public class UpgradeHandler4To5 extends AbstractUpgradeHandler{
     }
 
     @Override
-    protected void upgradeReplacerConfig(@NotNull File file, @NotNull DotYamlConfiguration config) {
+    protected void upgradeReplacerConfig(@NotNull File file, @NotNull YamlConfiguration config) {
         // Empty method.
     }
 
