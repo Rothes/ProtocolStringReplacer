@@ -75,7 +75,7 @@ Options:
       Direct: -1
 
 # 替换的字符串列表.
-# 替换模式优先度: Json > Common, 忽略文件优先度.
+# 替换模式优先度: Direct > Json > Common, 忽略文件优先度.
 Replaces:
   # 常规文本替换模式.
   # 常规替换模式中的每个条目根据 Json 中的不同格式分割.
