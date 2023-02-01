@@ -34,7 +34,7 @@ public class TileEntityDataPost18 extends AbstractServerSignPacketListener {
         PacketContainer packet = packetEvent.getPacket();
         if (packet.getModifier().read(1).equals(signType)) {
             Object read = packet.getStructures().withType(MinecraftReflection.getNBTBaseClass()).read(0);
-            setSignText(packetEvent, new NBTContainer(read), user, filter);
+            replaceSign(packetEvent, new NBTContainer(read), user, filter);
         }
     }
 

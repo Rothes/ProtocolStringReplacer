@@ -115,7 +115,7 @@ public final class MapChunkPost18 extends AbstractServerSignPacketListener {
                         continue;
                     }
                     NBTContainer nbtContainer = new NBTContainer(nbt);
-                    setSignText(packetEvent, nbtContainer, user, filter);
+                    replaceSign(packetEvent, nbtContainer, user, filter);
                 }
             }
         } catch (IllegalAccessException e) {

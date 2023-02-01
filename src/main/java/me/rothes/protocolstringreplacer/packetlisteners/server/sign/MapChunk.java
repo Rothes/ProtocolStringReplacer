@@ -28,7 +28,7 @@ public final class MapChunk extends AbstractServerSignPacketListener {
                 continue;
             }
             if ("minecraft:sign".equals(nbtContainer.getString("id"))) {
-                setSignText(packetEvent, nbtContainer, user, filter);
+                replaceSign(packetEvent, nbtContainer, user, filter);
             }
         }
     }

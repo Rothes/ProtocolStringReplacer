@@ -22,7 +22,7 @@ public final class TileEntityData extends AbstractServerSignPacketListener {
         // 9: Set the text on a sign
         if (packet.getIntegers().read(0) == 9) {
             Object read = packet.getStructures().withType(MinecraftReflection.getNBTBaseClass()).read(0);
-            setSignText(packetEvent, new NBTContainer(read), user, filter);
+            replaceSign(packetEvent, new NBTContainer(read), user, filter);
         }
     }
 
