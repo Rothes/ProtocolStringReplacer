@@ -71,7 +71,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     }
 
     protected final boolean checkFilter(PsrUser user, ReplacerConfig replacerConfig) {
-        return checkPermission(user, replacerConfig) && replacerConfig.acceptsLocale(user.getClientLocale());
+        return replacerConfig.isEnabled() && checkPermission(user, replacerConfig) && replacerConfig.acceptsLocale(user.getClientLocale());
     }
 
     protected final boolean checkPermission(PsrUser user, ReplacerConfig replacerConfig) {
