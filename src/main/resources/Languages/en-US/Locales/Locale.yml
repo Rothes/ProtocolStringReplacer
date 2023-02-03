@@ -63,6 +63,7 @@ Sender:
           Simple-Help: '&7 * &e/psr capture add &7- &bEnable capture of listen type'
           Detailed-Help: '&7 * &e/psr capture add <Listen type> &7- &bEnable capture of listen type'
           Listen-Type-Cannot-Be-Captured: '&cThis listen type is not capturable for you.'
+          Listen-Type-Not-Enabled: '&cThis listen type is not enabled in config.'
           Capture-Added: '&aEnabled capture of &f%0% &a.'
           Already-Capturing-Listen-Type: '&cYou have already enabled capture of &f%0% &c.'
         Remove:

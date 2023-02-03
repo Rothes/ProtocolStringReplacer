@@ -63,6 +63,7 @@ Sender:
           Simple-Help: '&7 * &e/psr capture add &7- &b启用监听类型的文本捕获'
           Detailed-Help: '&7 * &e/psr capture add <监听类型> &7- &b启用监听类型的文本捕获'
           Listen-Type-Cannot-Be-Captured: '&c您不可捕获此监听类型.'
+          Listen-Type-Not-Enabled: '&c此监听类型未配置为启用.'
           Capture-Added: '&a已启用 &f%0% &a的捕获.'
           Already-Capturing-Listen-Type: '&c您已经启用了 &f%0% &c的捕获了.'
         Remove:

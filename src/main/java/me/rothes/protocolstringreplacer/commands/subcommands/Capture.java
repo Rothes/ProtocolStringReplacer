@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
@@ -59,6 +60,12 @@ public class Capture extends SubCommand {
             if (!listenType.isCapturable()) {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                         "Sender.Commands.Capture.Children.Add.Listen-Type-Cannot-Be-Captured"));
+                return;
+            }
+            if (!ProtocolStringReplacer.getInstance().getConfig()
+                    .getBoolean("Options.Features.Packet-Listener.Listen-Type-Enabled." + listenType.getName(), false)) {
+                user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
+                        "Sender.Commands.Capture.Children.Add.Listen-Type-Not-Enabled"));
                 return;
             }
             if (user.isCapturing(listenType)) {
