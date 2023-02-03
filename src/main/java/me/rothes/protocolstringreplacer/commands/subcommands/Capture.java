@@ -1,6 +1,5 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
@@ -170,7 +169,7 @@ public class Capture extends SubCommand {
                     return;
                 }
                 MessageUtils.sendCaptureInfoClipboard(user, captureInfos.get(index));
-                user.sendFilteredText("§aClick any entry to copy");
+                user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-Any-Entry-To-Copy"));
             });
         }
     }

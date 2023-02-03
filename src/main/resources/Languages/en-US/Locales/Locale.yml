@@ -26,9 +26,9 @@ Console-Sender:
       Invalid-Listener-Priority: '&cInvalid Listener-Priority value! Using defaults ''HIGHEST'''
       Invalid-Config-Load-LifeCycle: '&cInvalid Config-Load-LifeCycle value! Using defaults ''ENABLE'''
     Updater:
-      Invalid-Channel: '§cPSR is in a invalid channel ("%0%"). Please update your plugin to the latest version.'
-      Error-Checking-Version: '§cFailed to check version information via server, Please try updating your plugin: %0%'
-      Error-Parsing-Json: '§cFailed to parse version information Json, Please try updating your plugin: %0%'
+      Invalid-Channel: '&cPSR is in a invalid channel ("%0%"). Please update your plugin to the latest version.'
+      Error-Checking-Version: '&cFailed to check version information via server, Please try updating your plugin: %0%'
+      Error-Parsing-Json: '&cFailed to parse version information Json, Please try updating your plugin: %0%'
 
 Command-Block-Sender:
   Messages:
@@ -77,6 +77,12 @@ Sender:
           Results-Header: '&7&m---------&7&l &7[ &c&lP&6&lS&3&lR &7- &eCaptured list&7 ]&l &7&m---------'
           Results-Footer: '&7&m------------------------------------------'
           Not-Capturing-Listen-Type: '&cYou are not capturing &f%0% &c.'
+      Capture-Info:
+        Captured-Contents: '&3&l&m----------------------&3&l Captured Contents &m----------------------'
+        Click-For-Clipboard: '&aClick for clipboard'
+        Click-To-Copy: '&aClick to copy'
+        Click-Any-Entry-To-Copy: '&aClick any entry to copy'
+        Extra-Prefix: 'Extra: '
     Edit:
       Description: 'Replacers editor'
       Help:
@@ -220,7 +226,7 @@ Sender:
       Description: 'Reload configs'
       Already-Reloading: '&cPlugin is already reloading. Please reload later.'
       Async-Reloading: '&bReloading plugin in async...'
-      Error-Occurred: '§cAn error occurred while reloading the plugin. Please check the console.'
+      Error-Occurred: '&cAn error occurred while reloading the plugin. Please check the console.'
       Complete: '&aConfigs has been reloaded.'
       Help:
         Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eReload&7 ]&l &7&m------------'

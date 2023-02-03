@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
@@ -342,12 +343,13 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         info.setUser(user);
         info.setListenType(listenType);
 
-        ComponentBuilder extraBuilder = new ComponentBuilder("Extra: ").color(ChatColor.BLUE).bold(true).append("").reset();
+        ComponentBuilder extraBuilder = new ComponentBuilder(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Extra-Prefix")).color(ChatColor.BLUE).bold(true).append("").reset();
         container.createDefaultChildren();
         container.createJsons(container);
         List<Replaceable> jsons = container.getJsons();
         extraBuilder.append("[Nbt Json] ").color(ChatColor.GOLD)
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n§aClick to copy")))
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
+                        + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                 .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                         ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
         ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), nbt);
@@ -357,7 +359,8 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         container.createJsons(container);
         jsons = container.getJsons();
         extraBuilder.append("  ").reset().append("[Display Json] ").color(ChatColor.GOLD)
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n§aClick to copy")))
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
+                        + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                 .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                         ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
         info.setExtra(extraBuilder.create());
@@ -395,7 +398,6 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         }
 
         info.setJsons(jsons);
-        List<String> infoJsons = info.getJsons();
         ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, entries);
         try {
             container.createDefaultChildrenDeep();

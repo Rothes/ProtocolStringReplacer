@@ -24,7 +24,7 @@ public class MessageUtils {
         Validate.notNull(info, "CaptureInfo cannot be null");
 
         String time = dateFormat.format(new Date(info.getTime()));
-        ComponentBuilder hoverTextBuilder = new ComponentBuilder("").append("§3§l§m----------------------§3§l Captured Contents §m----------------------\n")
+        ComponentBuilder hoverTextBuilder = new ComponentBuilder(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Captured-Contents")).append("\n")
                 .append("§b§lCommons: " + (info.getTexts().isEmpty() ? "§fN/A\n" : "\n"));
         for (String text : info.getTexts()) {
             hoverTextBuilder.append("§6§l- ");
@@ -48,7 +48,7 @@ public class MessageUtils {
             }
             hoverTextBuilder.append(sb.append("\n").toString());
         }
-        hoverTextBuilder.append("§aClick for clipboard");
+        hoverTextBuilder.append(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-For-Clipboard"));
 
         ComponentBuilder captureMessageBuilder = new ComponentBuilder("")
                 .append("§3 §l" + info.getListenType().getName() + "§3: §b" + time
@@ -66,7 +66,8 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, text) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, text);
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§aClick to copy")))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                     .append("").color(ChatColor.RESET).bold(false)
                     .append(ColorUtils.showColorCodes(text)).create());
         }
@@ -75,7 +76,8 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, json) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, json);
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§aClick to copy")))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                     .append("").color(ChatColor.RESET).bold(false)
                     .append(json).create());
         }
@@ -84,7 +86,8 @@ public class MessageUtils {
             ClickEvent clickEvent = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                     new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, direct) : new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, direct);
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§aClick to copy")))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                     .append("").color(ChatColor.RESET).bold(false)
                     .append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true))).create());
         }

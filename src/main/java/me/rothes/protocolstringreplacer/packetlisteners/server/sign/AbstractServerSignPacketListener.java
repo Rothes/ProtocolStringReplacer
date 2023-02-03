@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
@@ -49,9 +50,11 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
             info.setTime(System.currentTimeMillis());
             info.setUser(user);
             info.setListenType(listenType);
-            ComponentBuilder extraBuilder = new ComponentBuilder("Extra: ").color(ChatColor.BLUE).bold(true).append("").reset();
+            ComponentBuilder extraBuilder = new ComponentBuilder(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Extra-Prefix"))
+                    .color(ChatColor.BLUE).bold(true).append("").reset();
             extraBuilder.append("[Nbt Json] ").color(ChatColor.GOLD)
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(originalNbt + "\n§aClick to copy")))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(originalNbt + "\n"
+                            + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                     .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                             ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, originalNbt));
             info.setExtra(extraBuilder.create());
