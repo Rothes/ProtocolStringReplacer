@@ -66,7 +66,7 @@ Replaces:
 # Replaces:
 #   Common:
 #   - Original: '§0'
-#     Replacement: "\u001B[0;30m" # # ANSI 转义码色彩
+#     Replacement: "\u001B[0;30m" # ANSI 转义码色彩
 #   - Original: '§1'
 #     Replacement: "\u001B[0;34m"
 #   - Original: '§2'
