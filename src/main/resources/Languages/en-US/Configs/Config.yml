@@ -1,5 +1,5 @@
 # Don't edit Configs-Version manually!
-Configs-Version: 5
+Configs-Version: 6
 
 Options:
   # Locale language. Will search for specified .yml file in ProtocolStringReplacer/Locales.
