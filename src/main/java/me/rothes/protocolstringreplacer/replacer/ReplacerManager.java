@@ -114,10 +114,10 @@ public class ReplacerManager {
     }
 
     public void registerTask() {
-        ProtocolStringReplacer instrance = ProtocolStringReplacer.getInstance();
-        long cleanAccessInterval = instrance.getConfigManager().cleanAccessInterval;
-        long cleanTaskInterval = instrance.getConfigManager().cleanTaskInterval;
-        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instrance, () -> {
+        ProtocolStringReplacer instance = ProtocolStringReplacer.getInstance();
+        long cleanAccessInterval = instance.getConfigManager().cleanAccessInterval;
+        long cleanTaskInterval = instance.getConfigManager().cleanTaskInterval;
+        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             List<ItemMeta> needToRemove = new ArrayList<>();
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
@@ -126,7 +126,7 @@ public class ReplacerManager {
                 }
             }
             if (!needToRemove.isEmpty()) {
-                Bukkit.getScheduler().runTask(instrance, () -> {
+                Bukkit.getScheduler().runTask(instance, () -> {
                     ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
                             String.valueOf(needToRemove.size())));
                     for (ItemMeta itemMeta : needToRemove) {
@@ -510,20 +510,20 @@ public class ReplacerManager {
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
         Validate.notNull(replaceMode, "Replaces Mode cannot be null");
 
-        if (replacerConfig.getMatchMode() == MatchMode.CONTAIN) {
-            return replacerConfig.getBlocksStringSearcher(replaceMode).containsMatch(string);
-
-        } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
-            return replacerConfig.getBlocks(replaceMode).contains(string);
-
-        } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
-            List<Object> blocks = replacerConfig.getBlocks(replaceMode);
-            for (Object patternObject : blocks) {
-                Pattern pattern = (Pattern) patternObject;
-                if (pattern.matcher(string).find()) {
-                    return true;
+        switch (replacerConfig.getMatchMode()) {
+            case CONTAIN:
+                return replacerConfig.getBlocksStringSearcher(replaceMode).containsMatch(string);
+            case EQUAL:
+                return replacerConfig.getBlocks(replaceMode).contains(string);
+            case REGEX:
+                List<Object> blocks = replacerConfig.getBlocks(replaceMode);
+                for (Object patternObject : blocks) {
+                    Pattern pattern = (Pattern) patternObject;
+                    if (pattern.matcher(string).find()) {
+                        return true;
+                    }
                 }
-            }
+                break;
         }
         return false;
     }
