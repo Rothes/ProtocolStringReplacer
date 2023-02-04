@@ -1,7 +1,6 @@
 package me.rothes.protocolstringreplacer.upgrades;
 
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
-import me.rothes.protocolstringreplacer.api.configuration.DotYamlConfiguration;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 
