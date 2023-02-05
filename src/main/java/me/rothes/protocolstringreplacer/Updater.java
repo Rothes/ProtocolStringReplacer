@@ -57,9 +57,9 @@ public class Updater implements Listener {
     @EventHandler
     public void playerJoin(PlayerJoinEvent e) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            if (e.getPlayer().hasPermission("protocolstringreplacer.updater.notify") || e.getPlayer().isOp()) {
+            if (e.getPlayer().hasPermission("protocolstringreplacer.updater.notify")) {
                 for (String message : messages) {
-                    e.getPlayer().sendMessage(message);
+                    e.getPlayer().sendMessage(PsrLocalization.getLocaledMessage("Sender.Prefix") + message);
                 }
 
             }
