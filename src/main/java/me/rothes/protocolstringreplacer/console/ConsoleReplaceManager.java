@@ -413,6 +413,8 @@ public final class ConsoleReplaceManager {
             if (restore) {
                 if (oriJndiLkup instanceof StrLookup) {
                     pluginsMap.put("jndi", (StrLookup) oriJndiLkup);
+                } else {
+                    pluginsMap.remove("jndi");
                 }
             } else {
                 oriJndiLkup = pluginsMap.get("jndi");
