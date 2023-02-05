@@ -79,8 +79,8 @@ public class Updater implements Listener {
             }
             Map<String, Map<String, Integer>> map = new HashMap<>();
             Map<String, Integer> entry = new HashMap<>();
-            entry.put(replaces + (replaces >= 1 ? " Replaces" : " Replace"), 1);
-            map.put(configs + (configs >= 1 ? " Configs" : " Config"), entry);
+            entry.put(replaces + (replaces > 1 ? " Replaces" : " Replace"), 1);
+            map.put(configs + (configs > 1 ? " Configs" : " Config"), entry);
             return map;
         }));
         metrics.addCustomChart(new DrilldownPie("Blocks_Count", () -> {
@@ -137,8 +137,7 @@ public class Updater implements Listener {
 
         for (Map.Entry<String, JsonElement> entry : root.getAsJsonObject("Version_Actions").entrySet()) {
             String[] split = entry.getKey().split("-");
-            if (Integer.parseInt(split[1]) > VERSION_NUMBER
-                    && VERSION_NUMBER > Integer.parseInt(split[0])) {
+            if (Integer.parseInt(split[1]) > VERSION_NUMBER && VERSION_NUMBER > Integer.parseInt(split[0])) {
                 JsonObject message = (JsonObject) entry.getValue();
                 if (message.has("Message"))
                     sendJsonMessage(message, entry.getKey());
