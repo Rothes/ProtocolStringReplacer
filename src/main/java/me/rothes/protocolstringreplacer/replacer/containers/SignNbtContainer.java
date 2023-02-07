@@ -33,14 +33,15 @@ public class SignNbtContainer extends AbstractContainer<NBTContainer> {
             key = "Text" + i;
             String original = content.getString(key);
             if (original == null || original.equals("null")) {
-                continue;
+                original = "{\"text\":\"\"}";
             }
             String finalKey = key;
-            children.add(new ChatJsonContainer(original, root, true) {
+            String finalOriginal = original;
+            children.add(new ChatJsonContainer(finalOriginal, root, true) {
                 @Override
                 public @NotNull String getResult() {
                     String result = super.getResult();
-                    if (!result.equals(original)) {
+                    if (!result.equals(finalOriginal)) {
                         SignNbtContainer.this.content.setString(finalKey, result);
                     }
                     return result;
