@@ -19,6 +19,7 @@ public class SignNbtContainer extends AbstractContainer<NBTContainer> {
             @Override
             public @NotNull String getResult() {
                 String result = super.getResult();
+                SignNbtContainer.this.content.clearNBT();
                 SignNbtContainer.this.content.mergeCompound(new NBTContainer(result));
                 return result;
             }
