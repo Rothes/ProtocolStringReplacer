@@ -1,0 +1,23 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - Chat
+  Match-Mode: Contain
+Replaces:
+  Common:
+  - Original: This item has been deprecated
+    Replacement: 此物品已弃用
+  - Original: It will be removed soon!
+    Replacement: 它将会在不久后的版本中被移除!
+  - Original: Missing chest\! Auto-Crafters need to be placed above a chest
+    Replacement: 缺少箱子! 自动合成器必须放在一个箱子的上面
+  - Original: Crouch and Right-Click
+    Replacement: 潜行 + 右键
+  - Original: this block with the item you want it to craft
+    Replacement: 此方块以设定你想要合成的物品
+  - Original: We could not find any valid recipes for the item you are holding
+    Replacement: 没有任何适用于合成你手上拿着的物品的配方

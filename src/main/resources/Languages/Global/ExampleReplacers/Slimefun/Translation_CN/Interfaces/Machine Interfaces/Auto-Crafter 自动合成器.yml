@@ -1,0 +1,28 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - ItemStack
+    ItemStack:
+      Window-Title:
+      - '{"extra":[{"color":"dark_green","text":"Auto-Crafter "},{"color":"dark_gray","text":"(Vanilla)"}],"text":""}'
+      - '{"extra":[{"color":"dark_green","text":"Auto-Crafter "},{"color":"dark_gray","text":"(Enhanced)"}],"text":""}'
+      - '{"extra":[{"color":"dark_green","text":"Auto-Crafter "},{"color":"dark_gray","text":"(Armor Forge)"}],"text":""}'
+  Match-Mode: Contain
+Replaces:
+  Direct:
+  - Original: §aSelect this recipe
+    Replacement: §a选择这个配方
+  - Original: §aThis recipe is currently enabled
+    Replacement: §a此配方目前已启用
+  - Original: §eLeft Click §7to temporarily disable the recipe
+    Replacement: §e左键单击 §7暂时禁用配方
+  - Original: §eRight Click §7to remove this recipe
+    Replacement: §e右键单击 §7移除这个配方
+  - Original: §cThis recipe is currently disabled
+    Replacement: §c此配方目前已禁用
+  - Original: §eLeft Click §7to re-enable this recipe
+    Replacement: §e左键单击 §7重新启用此配方

@@ -1,0 +1,68 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - ItemStack
+    ItemStack:
+      Window-Title:
+      - '{"text":"Cargo Node (Input)"}'
+      - '{"text":"Cargo Node (Output)"}'
+      - '{"text":"Advanced Cargo Node (Output)"}'
+  Match-Mode: Contain
+Replaces:
+  Direct:
+  - Original: §3Items
+    Replacement: §3物品管理
+  - Original: §bPut in all Items you want to
+    Replacement: §b在此处放入你想要添加
+  - Original: §bblacklist/whitelist
+    Replacement: §b白名单或黑名单的物品
+  - Original: '§7Type: §fWhitelist'
+    Replacement: '§7过滤模式: §r白名单'
+  - Original: §e> Click to change it to Blacklist
+    Replacement: §e> 点击切换为黑名单模式
+  - Original: '§7Type: §8Blacklist'
+    Replacement: '§7过滤模式: §8黑名单'
+  - Original: §e> Click to change it to Whitelist
+    Replacement: §e> 点击切换为白名单模式
+  - Original: '§7Include Lore: §'
+    Replacement: '§7检查物品Lore: §'
+  - Original: §e> Click to toggle whether the Lore has to match
+    Replacement: §e> 点击切换是否检测物品Lore数据
+  - Original: '§bChannel ID: §'
+    Replacement: '§b信道 ID: §'
+  - Original: §bPrevious Channel
+    Replacement: §b上一信道
+  - Original: §e> Click to decrease the Channel ID by 1
+    Replacement: §e> 点击切换到上一个信道
+  - Original: §bNext Channel
+    Replacement: §b下一信道
+  - Original: §e> Click to increase the Channel ID by 1
+    Replacement: §e> 点击切换到下一个信道
+  - Original: '§7Round-Robin Mode: §'
+    Replacement: '§7循环模式: §'
+  - Original: §e> Click to enable Round Robin Mode
+    Replacement: §e> 点击启用循环模式
+  - Original: §e> Click to disable Round Robin Mode
+    Replacement: §e> 点击禁用循环模式
+  - Original: Items will be equally distributed on the Channel
+    Replacement: 用于让物品在不同信道中均匀发放
+  - Original: '§7"Smart-Filling" Mode:'
+    Replacement: '§7"智能填充" 模式:'
+  - Original: §e> Click to enable "Smart-Filling" Mode
+    Replacement: §e> 单击 启用 "智能填充" 模式
+  - Original: §e> Click to disable "Smart-Filling" Mode
+    Replacement: §e> 单击 禁用 "智能填充" 模式
+  - Original: §fIn this mode, the Cargo node will attempt
+    Replacement: §f在此模式中, 货运节点将会尝试
+  - Original: §fto keep a constant amount of items
+    Replacement: §f在容器中保持恒定的物品数量.
+  - Original: §fin the inventory. This is not perfect
+    Replacement: §f此模式运行地不是非常完美, 并且
+  - Original: §fand will still fill in empty slots that
+    Replacement: §f仍然会向在已配置的堆叠物
+  - Original: §fcome before a stack of a configured item
+    Replacement: §f之前的空槽位中填充

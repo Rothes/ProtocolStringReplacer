@@ -1,0 +1,15 @@
+$Locale/Replacers/Example.yml
+$Locale/Replacers/ConsoleColor.yml
+
+$Locale/ExampleReplacers/ReadMe.md
+$Locale/ExampleReplacers/Slimefun/Translation_CN/ReadMe.md
+Global/ExampleReplacers/Slimefun/Translation_CN/Chat/Text_Contain.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/Console/Regex.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/Console/Text_Contain.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/Entity/Cargo 货运.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/Interfaces/Window-Title.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/Interfaces/Machine Interfaces/Android 可编程式机器人.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/Interfaces/Machine Interfaces/Auto-Crafter 自动合成器.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/Interfaces/Machine Interfaces/Cargo 货运.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/ItemStack/Regex.yml
+Global/ExampleReplacers/Slimefun/Translation_CN/ItemStack/Text_Contain.yml

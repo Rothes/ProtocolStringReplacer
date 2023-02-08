@@ -1,0 +1,19 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - Console
+  Match-Mode: Regex
+Replaces:
+  Common:
+  - Original: 'Auto-saving block data... \(Next auto-save: ([0-9]+)m\)'
+    Replacement: '正在自动保存方块数据... (下次自动保存: $1分钟)'
+  - Original: Saving block data for world "([\W|\w]+)" \(([0-9]+) change\(s\) queued\)
+    Replacement: 正在为世界 "$1" 保存方块数据... (已队列 $2 个变化)
+  - Original: Successfully loaded ([0-9]+) Items and ([0-9]+) Researches
+    Replacement: 成功载入 $1 个物品 和 $2 个研究
+  - Original: \( ([0-9]+) Items from Slimefun, ([0-9]+) Items from ([0-9]+) Addons \)
+    Replacement: ( $1 物品来自粘液科技, $2 物品来自 $3 个扩展之中)

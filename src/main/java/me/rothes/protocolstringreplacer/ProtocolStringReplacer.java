@@ -26,18 +26,27 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public class ProtocolStringReplacer extends JavaPlugin {
     private static ProtocolStringReplacer instance;
@@ -314,8 +323,26 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     private void saveExampleReplacers() throws IOException {
         if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
-            saveResource("/Replacers/Example.yml");
-            saveResource("/Replacers/ConsoleColor.yml");
+            try (
+                    InputStream list = PsrLocalization.getLocaledResource("/Example_Replacers.txt");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(list))
+            ) {
+                for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                    if (line.isEmpty()) {
+                        continue;
+                    }
+
+                    if (line.startsWith("$Locale/")) {
+                        saveResource(line.substring(7));
+                    } else {
+                        File file = new File(instance.getDataFolder(), line.split("/", 2)[1]);
+                        FileUtils.createFile(file);
+                        try (InputStream inputStream = getResource("Languages/" + line)) {
+                            Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        }
+                    }
+                }
+            }
             warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Created-Example-Replacers"));
         }
     }

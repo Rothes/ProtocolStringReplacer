@@ -1,0 +1,19 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - Entity
+  Match-Mode: Contain
+Replaces:
+  Common:
+  - Original: §cNo Cargo Nodes found
+    Replacement: §c未找到货运网络节点
+  - Original: §4Multiple Cargo Regulators connected
+    Replacement: §4连接多个货运网络管理器
+  - Original: '§7Status:'
+    Replacement: '§7状态:'
+  - Original: §a§lONLINE
+    Replacement: §a§l在线

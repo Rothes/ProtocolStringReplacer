@@ -1,0 +1,77 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - ItemStack
+  Match-Mode: Contain
+Replaces:
+  Direct:
+  - Original: §aStart/Continue
+    Replacement: §a开始/继续运行
+  - Original: §bMemory Core
+    Replacement: §b内存核心
+  - Original: §8⇨ §7Click to open the Script Editor
+    Replacement: §8⇨ §7点击打开脚本编辑器
+  - Original: §4Pause
+    Replacement: §4暂停运行
+  - Original: §8⇩ §cFuel Input §8⇩
+    Replacement: §8⇩ §c燃料槽 §8⇩
+  - Original: This Android runs on solid Fuel
+    Replacement: 这个安卓机器人基于固体燃料运行
+  - Original: 'e.g. Coal, Wood, '
+    Replacement: '例如: 煤炭, 木材, '
+  - Original: This Android runs on liquid Fuel
+    Replacement: 这个安卓机器人基于液体燃料运行
+  - Original: 'e.g. Lava, Oil, Fuel, '
+    Replacement: '例如: 熔岩, 原油, 燃油, '
+  - Original: This Android runs on radioactive Fuel
+    Replacement: 这个安卓机器人基于放射性燃料运行
+  - Original: e.g. Uranium, Neptunium or Boosted Uranium
+    Replacement: '例如: 铀块, 镎块 和 强化铀块'
+  - Original: §2> Edit Script
+    Replacement: §2> 编辑脚本
+  - Original: §aEdits your current Script
+    Replacement: §a编辑现在使用中的脚本
+  - Original: §7⇨ §eLeft Click §7to return to the Android's interface
+    Replacement: §7⇨ §e左键 §7回到安卓机器人主界面
+  - Original: §7⇨ §eLeft Click §7to edit
+    Replacement: §7⇨ §e左键 §7编辑此指令
+  - Original: §7⇨ §eRight Click §7to delete
+    Replacement: §7⇨ §e右键 §7移除此指令
+  - Original: Right Click §7to duplicate
+    Replacement: 右键 §7重复运行一次此指令
+  - Original: §7> Add new Command
+    Replacement: §7> 添加一个指令
+  - Original: §4> Create new Script
+    Replacement: §4> 创建新脚本
+  - Original: §cDeletes your current Script
+    Replacement: §c删除现在使用中的脚本
+  - Original: §cand creates a blank one
+    Replacement: §c然后新建一个空白的脚本
+  - Original: §6> Download a Script
+    Replacement: §6> 下载脚本
+  - Original: §eDownload a Script from the Server
+    Replacement: §e从服务器中下载脚本
+  - Original: §eYou can edit or simply use it
+    Replacement: §e你可以编辑或直接使用它
+  - Original: §eUpload a Script
+    Replacement: §e上传脚本
+  - Original: §6Click §7to upload your Android's Script
+    Replacement: §6单击 §7上传现在使用中的脚本
+  - Original: §7to the Server's database
+    Replacement: §7到服务器的数据库
+  - Original: This will override your current Script
+    Replacement: 此操作会覆盖你现在使用中的脚本
+  - Original: §eLeft Click §fto download this Script
+    Replacement: §e单击 §f下载此脚本
+  - Original: '§7Downloads: §f'
+    Replacement: '§7下载数: §f'
+  - Original: '§7Rating: §'
+    Replacement: '§7评分: §'
+  - Original: §6> Back
+    Replacement: §6> 返回
+  - Original: §7Return to the Android's interface
+    Replacement: §7返回到安卓机器人主界面

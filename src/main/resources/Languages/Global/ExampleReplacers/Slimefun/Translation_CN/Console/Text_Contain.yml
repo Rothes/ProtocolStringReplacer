@@ -1,0 +1,27 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - Console
+  Match-Mode: Contain
+Replaces:
+  Common:
+  - Original: '######################### - Slimefun v'
+    Replacement: '######################### - 粘液科技 v'
+  - Original: Slimefun is an Open-Source project that is kept alive by a large community.
+    Replacement: 粘液科技是一个开源的项目, 由其巨大的玩家社区来其保持活力.
+  - Original: Consider helping us maintain this project by contributing on GitHub!
+    Replacement: 请考虑通过在 GitHub 中贡献来帮助我们维护这个项目!
+  - Original: ' - Source Code:  https://github.com/Slimefun/Slimefun4'
+    Replacement: ' - 源代码:     https://github.com/Slimefun/Slimefun4'
+  - Original: ' - Wiki:         https://github.com/Slimefun/Slimefun4/wiki'
+    Replacement: ' - 维基:       https://github.com/Slimefun/Slimefun4/wiki'
+  - Original: ' - Addons:       https://github.com/Slimefun/Slimefun4/wiki/Addons'
+    Replacement: ' - 扩展:       https://github.com/Slimefun/Slimefun4/wiki/Addons'
+  - Original: ' - Bug Reports:  https://github.com/Slimefun/Slimefun4/issues'
+    Replacement: ' - 反馈漏洞:   https://github.com/Slimefun/Slimefun4/issues'
+  - Original: ' - Discord:      https://discord.gg/slimefun'
+    Replacement: ' - Discord:    https://discord.gg/slimefun'

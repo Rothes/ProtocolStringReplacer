@@ -1,0 +1,1865 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - ItemStack
+    - Entity
+    - Chat
+  Match-Mode: Contain
+Replaces:
+  Direct:
+  - Original: Slimefun Guide §7(Chest GUI)
+    Replacement: 粘液科技指南 §7(箱子界面)
+  - Original: Slimefun Guide §4(Cheat Sheet)
+    Replacement: 粘液科技指南 §4(作弊模式)
+  - Original: §4§lOnly openable by Admins
+    Replacement: §4§l只有管理员可以打开
+  - Original: Right Click §8⇨ §7Browse Items
+    Replacement: 右键 §8⇨ §7浏览项目
+  - Original: Right Click §8⇨ §7Open Settings / Credits
+    Replacement: 右键 §8⇨ §7打开 设置 & 详情
+  - Original: '§7Last Activity: '
+    Replacement: '§7上次活动: '
+  - Original: '§7Forks: '
+    Replacement: '§7分叉: '
+  - Original: '§7Stars: '
+    Replacement: '§7星星: '
+  - Original: §7§oSlimefun 4 is a community project,
+    Replacement: §7§oSlimefun 4 是一个社区项目,
+  - Original: §7§othe source code is available on GitHub
+    Replacement: §7§o源代码可以在 GitHub 上查看
+  - Original: §7§oand if you want to keep this Plugin alive
+    Replacement: §7§o同时如果你想要保持这个插件的活动
+  - Original: §7§othen please consider contributing to it
+    Replacement: §7§o那么请考虑为插件做出贡献
+  - Original: §7⇨ §eClick to go to GitHub
+    Replacement: §7⇨ §e单击前往 GitHub
+  - Original: §7Do you need help with an Item or machine\?
+    Replacement: §7你是否需要关于一个物品或武器的帮助?
+  - Original: §7You cannot figure out what to do\?
+    Replacement: §7你是否不了解要做什么?
+  - Original: §7Check out our community-maintained Wiki
+    Replacement: §7看看我们的社区维护的维基
+  - Original: §7and become one of our Editors!
+    Replacement: §7并成为其中的一个编辑者!
+  - Original: §7⇨ §eClick to go to the official Slimefun Wiki
+    Replacement: §7⇨ §e单击前往粘液科技官方维基
+  - Original: '§7Slimefun Guide Type: §eSurvival Mode'
+    Replacement: '§7粘液科技指南种类: §e生存模式'
+  - Original: '§7Slimefun Guide Type: §eCheat Mode'
+    Replacement: '§7粘液科技指南种类: §e作弊模式'
+  - Original: §7⇨ §eClick to change the type
+    Replacement: §7⇨ §e单击更改种类
+  - Original: '§bFireworks: §aYes'
+    Replacement: '§b烟花效果: §a开启'
+  - Original: '§bFireworks: §4No'
+    Replacement: '§b烟花效果: §4关闭'
+  - Original: §7You can now toggle whether you
+    Replacement: §7你现在可以切换
+  - Original: §7will be presented with a big firework
+    Replacement: §7是否在头上放出一个大烟花
+  - Original: §7upon researching an item
+    Replacement: §7在你解锁一个物品的研究时
+  - Original: §7⇨ §eClick to enable your fireworks
+    Replacement: §7⇨ §e单击开启你的烟花效果
+  - Original: §7⇨ §eClick to disable your fireworks
+    Replacement: §7⇨ §e单击关闭你的烟花效果
+  - Original: '§bLearning Animation: §aYes'
+    Replacement: '§b学习动画: §a开启'
+  - Original: '§bLearning Animation: §4No'
+    Replacement: '§b学习动画: §4关闭'
+  - Original: §7will see information about your pondering in chat
+    Replacement: §7是否在聊天中显示你的思考
+  - Original: §7⇨ §eClick to enable your learning animation
+    Replacement: §7⇨ §e单击开启你的学习动画
+  - Original: §7⇨ §eClick to disable your learning animation
+    Replacement: §7⇨ §e单击关闭你的学习动画
+  - Original: §7Slimefun is huge. But its addons are what makes
+    Replacement: §7粘液科技十分庞大. 但它的附属更是让
+  - Original: §7this plugin truly shine. Go check them out, some
+    Replacement: §7这个插件真正闪耀的东西. 请看看它们,
+  - Original: §7of them may be exactly what you were missing out on!
+    Replacement: §7你可能恰恰错过了其中的一些东西!
+  - Original: '§7Installed on this Server: '
+    Replacement: '§7此服务器安装的附属: '
+  - Original: §7⇨ §eClick to see all available addons for Slimefun4
+    Replacement: §7⇨ §e单击查看所有 Slimefun4 的可用附属插件
+  - Original: §7§oBug reports have to be made in English!
+    Replacement: §7§o必须使用英语编写问题反馈!
+  - Original: '§7Open Issues: '
+    Replacement: '§7开启的议题: '
+  - Original: '§7Pending Pull Requests: '
+    Replacement: '§7待定拉取请求: '
+  - Original: §7⇨ §eClick to go to the Slimefun4 Bug Tracker
+    Replacement: §7⇨ §e单击前往 Slimefun4 问题追踪器
+  - Original: '> Click to unlock'
+    Replacement: '> 点击解锁'
+  - Original: '§7Cost: §b'
+    Replacement: '§7花费: §b'
+  - Original: §eRight Click§7 to use
+    Replacement: §e右键§7 使用
+  - Original: §eRight Click§7 to open
+    Replacement: §e右键§7 打开
+  - Original: Needs to be unlocked elsewhere
+    Replacement: 需要在别处解锁
+  - Original: '§fLeft Click: §7Go back to previous Page'
+    Replacement: '§f左键: §7回到上一页'
+  - Original: 'left Click: §7Go back to Main Menu'
+    Replacement: '左键: §7回到主菜单'
+  - Original: (Double chest)
+    Replacement: (大型箱子)
+  - Original: (Facing up)
+    Replacement: 朝上
+  - Original: ' J Buffer'
+    Replacement: ' J 缓冲区'
+  - Original: ' J Capacity'
+    Replacement: ' J 容量'
+  - Original: Energy Regulator
+    Replacement: 能源网络调节器
+  - Original: Core Component of an Energy Network
+    Replacement: 能源网络的核心组成部分
+  - Original: Energy Connector
+    Replacement: 能源网络连接器
+  - Original: '§7Range: §c6 blocks'
+    Replacement: '§7范围: §c6 方块'
+  - Original: Place this between machines
+    Replacement: 将连接器放于机器和
+  - Original: and generators to connect them
+    Replacement: 能源网络调节器之间
+  - Original: to your regulator
+    Replacement: 以连接它们到网络
+  - Original: Small Energy Capacitor
+    Replacement: 小型能源电容器
+  - Original: Basic Capacitor
+    Replacement: 基础电容器
+  - Original: Medium Energy Capacitor
+    Replacement: 中型能源电容器
+  - Original: Average Capacitor
+    Replacement: 普通电容器
+  - Original: Big Energy Capacitor
+    Replacement: 大型能源电容器
+  - Original: Medium Capacitor
+    Replacement: 中级电容器
+  - Original: Large Energy Capacitor
+    Replacement: 巨型能源电容器
+  - Original: Good Capacitor
+    Replacement: 优质电容器
+  - Original: Carbonado Edged Energy Capacitor
+    Replacement: 黑金刚石镶边能源电容器
+  - Original: End-Game Capacitor
+    Replacement: 终级电容器
+  - Original: Energized Energy Capacitor
+    Replacement: 电力强化能源电容器
+  - Original: §bSolar Generator
+    Replacement: §b太阳能发电机
+  - Original: Basic Generator
+    Replacement: 基础发电机
+  - Original: Advanced Solar Generator
+    Replacement: 高级太阳能发电机
+  - Original: Medium Generator
+    Replacement: 中级发电机
+  - Original: Carbonado Solar Generator
+    Replacement: 黑金刚石太阳能发电机
+  - Original: End-Game Generator
+    Replacement: 终级发电机
+  - Original: Energized Solar Generator
+    Replacement: 电力强化太阳能发电机
+  - Original: §9Works at Night
+    Replacement: §9可在夜晚中工作
+  - Original: Charging Bench
+    Replacement: 充电座
+  - Original: Charges Items such as Jetpacks
+    Replacement: 为喷气背包等物品充能
+  - Original: Basic Machine
+    Replacement: 基础电力机器
+  - Original: '§8⇨ §e⚡ §7Energy Loss: §c'
+    Replacement: '§8⇨ §e⚡ §7能源损耗: §c'
+  - Original: Electric Furnace
+    Replacement: 电炉
+  - Original: Medium Machine
+    Replacement: 中级电力机器
+  - Original: Electric Gold Pan
+    Replacement: 电力淘金盘
+  - Original: End-Game Machine
+    Replacement: 终级电力机器
+  - Original: Electric Dust Washer
+    Replacement: 电力洗矿机
+  - Original: Electric Ingot Factory
+    Replacement: 电力冶炼炉
+  - Original: Electrified Crucible
+    Replacement: 电力坩埚
+  - Original: Electric Ore Grinder
+    Replacement: 电力矿磨机
+  - Original: Works as an Ore Crusher and Grind Stone
+    Replacement: 具有碎矿机和磨石的功能
+  - Original: Heated Pressure Chamber
+    Replacement: 电热压力舱
+  - Original: Electric Ingot Pulverizer
+    Replacement: 电力碎锭机
+  - Original: Pulverizes Ingots into Dust
+    Replacement: 将锭全部粉碎为矿粉
+  - Original: Coal Generator
+    Replacement: 煤炭发电机
+  - Original: Average Generator
+    Replacement: 普通发电机
+  - Original: Advanced Generator
+    Replacement: 高级发电机
+  - Original: Bio Reactor
+    Replacement: 生物反应器
+  - Original: Auto Drier
+    Replacement: 自动烘干机
+  - Original: Auto Brewer
+    Replacement: 自动酿造机
+  - Original: Electric Press
+    Replacement: 电力压缩机
+  - Original: Magnesium-powered Generator
+    Replacement: 镁能发电机
+  - Original: Auto Enchanter
+    Replacement: 自动附魔机
+  - Original: Auto Disenchanter
+    Replacement: 自动祛魔机
+  - Original: Auto Anvil
+    Replacement: 自动铁砧
+  - Original: '§8⇨ §7Repair Factor: '
+    Replacement: '§8⇨ §7修复倍率: '
+  - Original: Book Binder
+    Replacement: 附魔集合机
+  - Original: Binds multiple enchanted books into one
+    Replacement: 将多本附魔书结合为一本
+  - Original: Refinery
+    Replacement: 炼油厂
+  - Original: Refines Oil to create Fuel
+    Replacement: 提炼原油并制成燃油
+  - Original: Lava Generator
+    Replacement: 熔岩发电机
+  - Original: Combustion Reactor
+    Replacement: 燃烧反应机
+  - Original: Food Fabricator
+    Replacement: 食品加工器
+  - Original: Produces §aOrganic Food
+    Replacement: 生产 §a有机食物
+  - Original: Auto-Breeder
+    Replacement: 自动喂养器
+  - Original: Runs on §aOrganic Food
+    Replacement: 基于 §a有机食物 §f运行
+  - Original: Animal Growth Accelerator
+    Replacement: 动物成长加速器
+  - Original: Tree Growth Accelerator
+    Replacement: 树木生长加速器
+  - Original: Runs on §aOrganic Fertilizer
+    Replacement: 基于 §a有机肥料 §f运行
+  - Original: '§8⇨ §7Radius: '
+    Replacement: '§8⇨ §7范围: '
+  - Original: EXP Collector
+    Replacement: 经验收集器
+  - Original: Collects nearby Exp and stores it
+    Replacement: 收集附近的经验球并储存它们
+  - Original: Food Composter
+    Replacement: 食物堆肥机
+  - Original: Produces §aOrganic Fertilizer
+    Replacement: 生产 §a有机肥料
+  - Original: Advanced Machine
+    Replacement: 高级电力机器
+  - Original: Crop Growth Accelerator
+    Replacement: 作物生长加速器
+  - Original: Freezer
+    Replacement: 电力冰冻机
+  - Original: Nuclear Reactor
+    Replacement: 核能反应机
+  - Original: Requires Cooling
+    Replacement: 需要降温冷却
+  - Original: Must be surrounded by Water
+    Replacement: 必须使用水包围住
+  - Original: Must be supplied with Reactor Coolant Cells
+    Replacement: 必须供给反应冷却单元
+  - Original: Nether Star Reactor
+    Replacement: 下界之星反应机
+  - Original: Runs on Nether Stars
+    Replacement: 基于 下界之星 运行
+  - Original: 84M J in total
+    Replacement: 84 MJ 发电量
+  - Original: Must be supplied with Nether Ice Coolant Cells
+    Replacement: 必须供给下界冰冷却单元
+  - Original: Causes nearby Entities to get Withered
+    Replacement: 导致附近的实体受到凋零效果
+  - Original: Automated Crafting Chamber
+    Replacement: 自动工作台
+  - Original: ' J/Item'
+    Replacement: ' J/物品'
+  - Original: Fluid Pump
+    Replacement: 流体泵
+  - Original: ' J/Block'
+    Replacement: ' J/方块'
+  - Original: ' J/Animal'
+    Replacement: ' J/动物'
+  - Original: ' J/Golem'
+    Replacement: ' J/铁傀儡'
+  - Original: ' J/Wither'
+    Replacement: ' J/凋零'
+  - Original: Carbon Press
+    Replacement: 电力碳压机
+  - Original: Electric Smeltery
+    Replacement: 电力冶炼炉
+  - Original: Alloys-Only, doesn't smelt Dust into Ingots
+    Replacement: 仅用于制作合金, 不可用于炼锭
+  - Original: Iron Golem Assembler
+    Replacement: 铁傀儡构建器
+  - Original: '§7Cooldown: §b30 Seconds'
+    Replacement: '§8⇨ §7冷却时长: §b30秒'
+  - Original: Wither Assembler
+    Replacement: 凋零构建器
+  - Original: §7Pumpkin Slot
+    Replacement: §7南瓜槽
+  - Original: This Slot accepts Pumpkins
+    Replacement: 此槽位允许放入南瓜
+  - Original: §7Iron Block Slot
+    Replacement: §7铁块槽
+  - Original: This Slot accepts Iron Blocks
+    Replacement: 此槽位允许放入铁块
+  - Original: This Machine takes up to half a Minute to operate
+    Replacement: 这个机器需要半分钟来进行操作
+  - Original: so give it some Time!
+    Replacement: 让我们给它一点时间吧!
+  - Original: '§7Enabled: §4✘'
+    Replacement: '§7启用: §4✘'
+  - Original: §e> Click to enable this Machine
+    Replacement: §e> 点击启用这个机器
+  - Original: '§7Enabled: §4✔'
+    Replacement: '§7启用: §4✔'
+  - Original: §e> Click to disable this Machine
+    Replacement: §e> 点击关闭这个机器
+  - Original: §7Wither Skeleton Skull Slot
+    Replacement: §7凋零骷髅头颅槽
+  - Original: This Slot accepts Wither Skeleton Skulls
+    Replacement: 此槽位允许放入凋零骷髅头颅
+  - Original: §7Soul Sand Slot
+    Replacement: §7灵魂沙槽
+  - Original: This Slot accepts Soul Sand
+    Replacement: 此槽位允许放入灵魂沙
+  - Original: §7Fuel Slot
+    Replacement: §7燃料槽
+  - Original: This Slot accepts radioactive Fuel such as
+    Replacement: 此槽位允许放入放射性燃料, 如
+  - Original: §2Uranium §for §aNeptunium
+    Replacement: §2铀块 §f和 §a镎块
+  - Original: §bCoolant Slot
+    Replacement: §b冷却槽
+  - Original: This Slot accepts Coolant Cells
+    Replacement: 此槽位允许放入冷却单元
+  - Original: Without any Coolant Cells, your Reactor
+    Replacement: 如果没有放入冷却单元
+  - Original: §4will explode
+    Replacement: §4你的反应机将会爆炸
+  - Original: §7Access Port
+    Replacement: §7反应机交互枢纽
+  - Original: §cNot detected
+    Replacement: §c未检测到
+  - Original: §7Access Port must be
+    Replacement: §7反应机交互枢纽必须
+  - Original: §7placed 3 blocks above
+    Replacement: §7放置在这个反应机上
+  - Original: §7a reactor!
+    Replacement: §7三个方块的位置!
+  - Original: §7> Click to view Access Port
+    Replacement: §7> 点击查看交互枢纽
+  - Original: '§7Focus: §eElectricity'
+    Replacement: '§7重心: §e发电'
+  - Original: §6Your Reactor will focus on Power Generation
+    Replacement: §6你的反应机会注重于发电
+  - Original: §6If your Energy Network doesn't need Power
+    Replacement: §6如果你的能源网络不需要电力
+  - Original: §6it will not produce any either
+    Replacement: §6反应机会停止生产
+  - Original: §7⇨ Click to change the Focus to §eProduction
+    Replacement: §7⇨ 点击切换重心为 §e生产
+  - Original: '§7Focus: §eProduction'
+    Replacement: '§7重心: §e生产'
+  - Original: §6Your Reactor will focus on producing goods
+    Replacement: §6你的反应机会注重于生产
+  - Original: §6it will continue to run and simply will
+    Replacement: §6反应机仍会继续运行
+  - Original: §6not generate any Power in the mean time
+    Replacement: §6但不会产生电能
+  - Original: §7⇨ Click to change the Focus to §ePower Generation
+    Replacement: §7⇨ 点击切换重心为 §e发电
+  - Original: §bProduce Collector
+    Replacement: §b产物收集器
+  - Original: §fThis machine allows you to
+    Replacement: §f这个机器可以让你
+  - Original: §fcollect produce from nearby animals
+    Replacement: §f收集附近动物的产物
+  - Original: Grandmas Walking Stick
+    Replacement: 祖母的拐杖
+  - Original: Grandpas Walking Stick
+    Replacement: 祖父的拐杖
+  - Original: Sword of Beheading
+    Replacement: 处决之剑
+  - Original: Beheading II
+    Replacement: 斩首者 II
+  - Original: Has a chance to behead Mobs
+    Replacement: 有概率斩下怪物的头颅
+  - Original: (even a higher chance for Wither Skeletons)
+    Replacement: (凋零骷髅也可获得更高掉落几率)
+  - Original: Blade of Vampires
+    Replacement: 吸血鬼之刃
+  - Original: Life Steal I
+    Replacement: 生命偷取 I
+  - Original: Everytime you attack something
+    Replacement: 每次你攻击生物时
+  - Original: you have a 45% chance to
+    Replacement: 你将有 45% 的概率
+  - Original: recover 2 Hearts of your Health
+    Replacement: 回复自己 2♥ 血量
+  - Original: Seismic Axe
+    Replacement: 地震斧
+  - Original: §7§oA portable Earthquake
+    Replacement: §7§o一个随身携带的地震制造者
+  - Original: Soulbound Sword
+    Replacement: 灵魂绑定剑
+  - Original: Soulbound Trident
+    Replacement: 灵魂绑定三叉戟
+  - Original: Soulbound Bow
+    Replacement: 灵魂绑定弓
+  - Original: Explosive Bow
+    Replacement: 爆炸之弓
+  - Original: will launch hit enemys into the air
+    Replacement: 会将击中的敌人弹射到空中
+  - Original: Icy Bow
+    Replacement: 冰封之弓
+  - Original: Any Arrows fired using this Bow
+    Replacement: 这个弓射出的弓箭
+  - Original: will prevent hit enemys from moving
+    Replacement: 会阻止击中的敌人移动
+  - Original: for 2 seconds
+    Replacement: 持续 2 秒
+  - Original: Portable Crafter
+    Replacement: 便携工作台
+  - Original: §a§oA portable Crafting Table
+    Replacement: §a§o一个随身携带的工作台
+  - Original: Portable Dustbin
+    Replacement: 便携垃圾桶
+  - Original: Your portable Item-Destroyer
+    Replacement: 一个随身携带的物品摧毁器
+  - Original: Rag
+    Replacement: 碎布
+  - Original: Extinguishes Fire
+    Replacement: 扑灭身上的火焰
+  - Original: Bandage
+    Replacement: 绷带
+  - Original: Splint
+    Replacement: 夹板
+  - Original: Vitamins
+    Replacement: 维他命
+  - Original: Cures Poison/Wither/Radiation
+    Replacement: 治愈 毒药/凋零/辐射
+  - Original: §cMedicine
+    Replacement: §c医药
+  - Original: §eSmall Backpack
+    Replacement: §e小型背包
+  - Original: §eBackpack
+    Replacement: §e背包
+  - Original: §eLarge Backpack
+    Replacement: §e大型背包
+  - Original: §eWoven Backpack
+    Replacement: §e编织背包
+  - Original: §eGilded Backpack
+    Replacement: §e镀金背包
+  - Original: §eRadiant Backpack
+    Replacement: §e金光闪闪的背包
+  - Original: §bCooler
+    Replacement: §b冰箱
+  - Original: Allows you to store Juices/Smoothies
+    Replacement: 可以储存饮料和冰沙
+  - Original: and automatically consumes them when you are hungry
+    Replacement: 并在你饿的时候自动食用它们
+  - Original: and you have this in your Inventory
+    Replacement: 你必须把此物品随身携带在物品栏内
+  - Original: Tape Measure
+    Replacement: 卷尺
+  - Original: §eCrouch & Right Click §7to set an anchor
+    Replacement: §e潜行 + 右键 §7设置锚点
+  - Original: §eRight Click §7to measure
+    Replacement: §e右键 §7测量
+  - Original: Output Chest
+    Replacement: 基础物品输出箱
+  - Original: A basic machine will try to put
+    Replacement: 如果基础机器放置于发射器
+  - Original: items in this chest if it's placed
+    Replacement: 附近, 机器会尝试把物品
+  - Original: adjacent to the dispenser
+    Replacement: 放进这个箱子里
+  - Original: §eEnhanced Crafting Table
+    Replacement: §e增强型工作台
+  - Original: A regular Crafting Table cannot
+    Replacement: 普通的工作台已经无法
+  - Original: hold this massive Amount of Power
+    Replacement: 容纳如此庞大的能量了
+  - Original: §bGrind Stone
+    Replacement: §b磨石
+  - Original: Grinds items down into other items
+    Replacement: 将物品磨成其他东西
+  - Original: §6Armor Forge
+    Replacement: §6盔甲锻造台
+  - Original: Gives you the ability to create powerful armor
+    Replacement: 让你获得制作强大盔甲的能力
+  - Original: §bOre Crusher
+    Replacement: §b碎矿机
+  - Original: Crushes ores to double them
+    Replacement: 磨碎矿石以获得双倍资源
+  - Original: §bCompressor
+    Replacement: §b压缩机
+  - Original: §aCompresses Items
+    Replacement: §a压缩物品
+  - Original: Makeshift Smeltery
+    Replacement: 临时冶炼炉
+  - Original: Improvised version of the Smeltery
+    Replacement: 临时使用版的冶炼炉
+  - Original: that only allows you to
+    Replacement: 它仅可以用于
+  - Original: smelt dusts into ingots
+    Replacement: 将碎矿熔炼成锭
+  - Original: §6Smeltery
+    Replacement: §6冶炼炉
+  - Original: A high-temperature furnace
+    Replacement: 一个高温的冶炼炉
+  - Original: that allows you to smelt dusts
+    Replacement: 它可以用于把碎矿
+  - Original: into ingots and create alloys
+    Replacement: 熔炼成锭和制造合金
+  - Original: Automatic Ignition Chamber
+    Replacement: 自动点火机
+  - Original: Prevents the Smeltery from using up fire
+    Replacement: 让冶炼炉始终充满火焰
+  - Original: Just fill it up with "Flint and Steel"
+    Replacement: 只需要填充 "打火石" 在里面
+  - Original: and place it adjacent to the Smeltery's dispenser
+    Replacement: 并将其放置在冶炼炉的发射器旁边
+  - Original: §bPressure Chamber
+    Replacement: §b压力机
+  - Original: §aCompresses Items even further
+    Replacement: §a更进一步地压缩物品
+  - Original: §a压缩物品 even further
+    Replacement: §a更进一步地压缩物品
+  - Original: Magic Workbench
+    Replacement: 魔法工作台
+  - Original: Infuses Items with magical Energy
+    Replacement: 注入魔力到物品里面
+  - Original: Ore Washer
+    Replacement: 洗矿机
+  - Original: Washes Sifted Ore to filter Ores
+    Replacement: 洗涤筛石, 过滤矿石
+  - Original: and gives you small Stone Chunks
+    Replacement: 并给予你一些小石块
+  - Original: Table Saw
+    Replacement: 桌锯
+  - Original: Allows you to get 8 planks from 1 Log
+    Replacement: 切割一个原木为8块木板
+  - Original: Works with all log types
+    Replacement: 适用于所有原木种类
+  - Original: §aComposter
+    Replacement: §a泥土堆肥机
+  - Original: Can convert various Materials over Time
+    Replacement: 消耗时间来转换一些物料
+  - Original: Automated Panning Machine
+    Replacement: 自动淘金机
+  - Original: A MultiBlock Version of the Gold Pan
+    Replacement: 一个多方块结构化的机器
+  - Original: and Nether Gold Pan combined in one machine
+    Replacement: 淘金盘和下界淘金盘的结合体
+  - Original: Industrial Miner
+    Replacement: 工业挖矿机
+  - Original: This Multiblock will mine any Ores
+    Replacement: 这个多方块结构化的机器会采集
+  - Original: in a 7x7 area underneath it
+    Replacement: 它下面7x7范围内的所有矿石
+  - Original: Place coal or similar in its chest
+    Replacement: 在其箱子内放入煤炭
+  - Original: §fto fuel this machine
+    Replacement: §f或者其他东西来提供燃料
+  - Original: Advanced Industrial Miner
+    Replacement: 高级工业挖矿机
+  - Original: Advanced 工业挖矿机
+    Replacement: 高级工业挖矿机
+  - Original: in a 11x11 area underneath it
+    Replacement: 它下面11x11范围内的所有矿石
+  - Original: Place a bucket of fuel or lava in
+    Replacement: 在其箱子内放入燃油桶
+  - Original: its chest to fuel this machine
+    Replacement: 或者熔岩桶来提供燃料
+  - Original: §a+ Silk Touch
+    Replacement: §a+ 精准采集
+  - Original: §cCrucible
+    Replacement: §c坩埚
+  - Original: Used to smelt Items into Liquids
+    Replacement: 用于将物品熔化成液体
+  - Original: Juicer
+    Replacement: 榨汁机
+  - Original: Allows you to create delicious Juice
+    Replacement: 用于制作可口的饮料
+  - Original: Enhanced Furnace
+    Replacement: 增强型熔炉
+  - Original: 'Processing Speed: '
+    Replacement: '熔炼速度: '
+  - Original: 'Fuel Efficiency: '
+    Replacement: '燃料效率: '
+  - Original: 'Luck Multiplier: '
+    Replacement: '幸运倍率: '
+  - Original: Reinforced Furnace
+    Replacement: 强化熔炉
+  - Original: Carbonado Edged Furnace
+    Replacement: 黑金刚石镶边熔炉
+  - Original: Block Placer
+    Replacement: 方块放置机
+  - Original: All Blocks in this Dispenser
+    Replacement: 置于这个发射器的方块
+  - Original: will automatically get placed
+    Replacement: 会自动地被放置
+  - Original: §6Gold Pan
+    Replacement: §6淘金盘
+  - Original: §eRight Click§7 to collect resources
+    Replacement: §e单击右键 §7>
+  - Original: §7from Gravel
+    Replacement: §7回收沙砾为其它资源
+  - Original: §4Nether Gold Pan
+    Replacement: §4下界淘金盘
+  - Original: §7from Soul Sand
+    Replacement: §7回收灵魂沙为其它资源
+  - Original: Grappling Hook
+    Replacement: 抓钩
+  - Original: Smelter's Pickaxe
+    Replacement: 熔炉镐
+  - Original: §c§lAuto-Smelting
+    Replacement: §c§l自动熔炼
+  - Original: §9Works with Fortune
+    Replacement: §9可配合时运附魔使用
+  - Original: Lumber Axe
+    Replacement: 伐木斧
+  - Original: Cuts down the whole Tree
+    Replacement: 砍掉一整棵树木
+  - Original: Pickaxe of Containment
+    Replacement: 刷怪笼之镐
+  - Original: §9Can pickup Spawners
+    Replacement: §9可以挖掘刷怪笼
+  - Original: Hercules' Pickaxe
+    Replacement: 赫拉克勒斯之镐
+  - Original: So powerful that it
+    Replacement: 由于过于强力
+  - Original: crushes all mined Ores
+    Replacement: 使得挖掘的矿石
+  - Original: into Dust
+    Replacement: 全部破碎为矿粉
+  - Original: Explosive Pickaxe
+    Replacement: 爆炸之镐
+  - Original: Allows you to mine a good bit
+    Replacement: 让你每一次都能够
+  - Original: of Blocks at once
+    Replacement: 挖掘更多的方块
+  - Original: Explosive Shovel
+    Replacement: 爆炸之锹
+  - Original: of diggable Blocks at once
+    Replacement: 挖掘更多可采掘的方块
+  - Original: Pickaxe of the Seeker
+    Replacement: 寻矿镐
+  - Original: Will always point you to the nearest Ore
+    Replacement: 让你指向离你最近的矿石
+  - Original: but might get damaged when doing it
+    Replacement: 但同时可能会消耗耐久
+  - Original: §eRight Click§7 to be pointed to the nearest Ore
+    Replacement: §e右键 §7指向最近的矿石
+  - Original: Cobalt Pickaxe
+    Replacement: 高速镐
+  - Original: Pickaxe of Vein Mining
+    Replacement: 矿脉镐
+  - Original: This Pickaxe will dig out
+    Replacement: 这个镐子可以让你挖掘
+  - Original: whole Veins of Ores
+    Replacement: 整个连锁的矿石
+  - Original: Climbing Pick
+    Replacement: 攀岩镐
+  - Original: Allows you to climb certain surfaces
+    Replacement: 让你攀爬上特定的表面
+  - Original: by right-clicking
+    Replacement: 通过单击右键使用
+  - Original: Enchant this pick with Efficiency to
+    Replacement: 效率附魔可以让你
+  - Original: climb even faster
+    Replacement: 攀爬得更快
+  - Original: Soulbound Pickaxe
+    Replacement: 灵魂绑定镐
+  - Original: Soulbound Axe
+    Replacement: 灵魂绑定斧
+  - Original: Soulbound Shovel
+    Replacement: 灵魂绑定锹
+  - Original: Soulbound Hoe
+    Replacement: 灵魂绑定锄
+  - Original: Reinforced Alloy Ingot
+    Replacement: 强化合金锭
+  - Original: Hardened Metal
+    Replacement: 硬化金属
+  - Original: Damascus Steel Ingot
+    Replacement: 大马士革钢锭
+  - Original: Steel Ingot
+    Replacement: 钢锭
+  - Original: §bBronze Ingot
+    Replacement: §b青铜合金锭
+  - Original: Duralumin Ingot
+    Replacement: 硬铝合金锭
+  - Original: Billon Ingot
+    Replacement: 银铜合金锭
+  - Original: §bBrass Ingot
+    Replacement: §b黄铜合金锭
+  - Original: Aluminum Brass Ingot
+    Replacement: 铝黄铜合金锭
+  - Original: Aluminum Bronze Ingot
+    Replacement: 铝青铜合金锭
+  - Original: Corinthian Bronze Ingot
+    Replacement: 科林斯青铜合金锭
+  - Original: Solder Ingot
+    Replacement: 铅锡合金锭
+  - Original: Synthetic Sapphire
+    Replacement: 人造蓝宝石
+  - Original: This item can be used in a
+    Replacement: 这个物品可以像普通的
+  - Original: workbench and acts like Lapis Lazuli
+    Replacement: 青金石一样在工作台中使用
+  - Original: Synthetic Diamond
+    Replacement: 人造钻石
+  - Original: workbench and acts like a normal Diamond
+    Replacement: 钻石一样在工作台中使用
+  - Original: Raw Carbonado
+    Replacement: 黑色钻石
+  - Original: Nickel Ingot
+    Replacement: 镍锭
+  - Original: Cobalt Ingot
+    Replacement: 钴锭
+  - Original: §b§lCarbonado
+    Replacement: §b§l黑金刚石
+  - Original: '"Black Diamond"'
+    Replacement: '"黑色钻石"'
+  - Original: Ferrosilicon
+    Replacement: 硅铁
+  - Original: Iron Dust
+    Replacement: 铁粉
+  - Original: Gold Dust
+    Replacement: 金粉
+  - Original: Copper Dust
+    Replacement: 铜粉
+  - Original: Tin Dust
+    Replacement: 锡粉
+  - Original: Lead Dust
+    Replacement: 铅粉
+  - Original: Silver Dust
+    Replacement: 银粉
+  - Original: Aluminum Dust
+    Replacement: 铝粉
+  - Original: Zinc Dust
+    Replacement: 锌粉
+  - Original: §6Magnesium
+    Replacement: §6镁粉
+  - Original: Copper Ingot
+    Replacement: 铜锭
+  - Original: Tin Ingot
+    Replacement: 锡锭
+  - Original: Silver Ingot
+    Replacement: 银锭
+  - Original: Lead Ingot
+    Replacement: 铅锭
+  - Original: Aluminum Ingot
+    Replacement: 铝锭
+  - Original: Zinc Ingot
+    Replacement: 锌锭
+  - Original: Magnesium Ingot
+    Replacement: 镁锭
+  - Original: Sulfate
+    Replacement: 硫粉
+  - Original: §eCarbon
+    Replacement: §e碳
+  - Original: Compressed Carbon
+    Replacement: 压缩碳
+  - Original: Carbon Chunk
+    Replacement: 碳块
+  - Original: §fGold Ingot §7
+    Replacement: §f金锭 §7
+  - Original: Silicon
+    Replacement: 纯硅
+  - Original: §6§lGilded Iron
+    Replacement: §6§l闪闪发光的铁锭
+  - Original: Synthetic Emerald
+    Replacement: 人造绿宝石
+  - Original: This item can be used to
+    Replacement: 这个物品可以用于
+  - Original: trade with Villagers
+    Replacement: 和村民们交易
+  - Original: §4Uranium
+    Replacement: §4铀块
+  - Original: 'Radiation level: §2HIGH'
+    Replacement: '辐射等级: §2高'
+  - Original: Hazmat Suit required
+    Replacement: 需要装备防化服
+  - Original: Redstone Alloy Ingot
+    Replacement: 红石合金锭
+  - Original: 'Magnesium '
+    Replacement: 镁
+  - Original: Magnesium Salt
+    Replacement: 镁盐
+  - Original: A special type of fuel that can be
+    Replacement: 一种特殊的燃料, 可以用在
+  - Original: used in a Magnesium-powered Generator
+    Replacement: 以镁为动力的发电机中
+  - Original: Bucket of Oil
+    Replacement: 原油桶
+  - Original: Bucket of Fuel
+    Replacement: 燃油桶
+  - Original: §e下界冰
+    Replacement: §e下界冰冷却剂
+  - Original: 'Radiation level: §eMODERATE'
+    Replacement: '辐射等级: §e中等'
+  - Original: Blistering Ingot
+    Replacement: 发疱锭
+  - Original: Enriched 下界冰
+    Replacement: 浓缩下界冰冷却剂
+  - Original: 'Radiation level: §cVERY HIGH'
+    Replacement: '辐射等级: §c非常高'
+  - Original: §aNeptunium
+    Replacement: §a镎块
+  - Original: §7Plutonium
+    Replacement: §7钚块
+  - Original: §2Boosted Uranium
+    Replacement: §2强化铀块
+  - Original: Fortune Cookie
+    Replacement: 幸运曲奇
+  - Original: Tells you stuff about your Future
+    Replacement: 预测你未来的一些事
+  - Original: Diet Cookie
+    Replacement: 减肥曲奇
+  - Original: A very §a§olightweight §acookie
+    Replacement: 一个非常 §o轻薄 §a的曲奇
+  - Original: Beef Jerky
+    Replacement: 牛肉干
+  - Original: Pork Jerky
+    Replacement: 猪肉干
+  - Original: Chicken Jerky
+    Replacement: 鸡肉干
+  - Original: Mutton Jerky
+    Replacement: 羊肉干
+  - Original: Rabbit Jerky
+    Replacement: 兔肉干
+  - Original: Fish Jerky
+    Replacement: 鱼肉干
+  - Original: Extra saturating
+    Replacement: 获得额外的饱食度
+  - Original: Kelp Cookie
+    Replacement: 海藻曲奇
+  - Original: Magic Sugar
+    Replacement: 魔法糖
+  - Original: Feel the Power of Hermes
+    Replacement: 感受赫耳墨斯的力量吧
+  - Original: Monster Jerky
+    Replacement: 怪物肉干
+  - Original: No longer hungry
+    Replacement: 让饥饿远离我
+  - Original: §cApple Juice
+    Replacement: §c苹果汁
+  - Original: Carrot Juice
+    Replacement: 胡萝卜汁
+  - Original: Melon Juice
+    Replacement: 西瓜汁
+  - Original: Pumpkin Juice
+    Replacement: 南瓜汁
+  - Original: Sweet Berry Juice
+    Replacement: 甜浆果汁
+  - Original: Restores §b§o
+    Replacement: 回复 §b§o
+  - Original: Golden Apple Juice
+    Replacement: 金苹果汁
+  - Original: 0 §7§oHunger
+    Replacement: 0 §7§o饥饿度
+  - Original: 5 §7§oHunger
+    Replacement: 5 §7§o饥饿度
+  - Original: Magical Lump
+    Replacement: 魔法因子
+  - Original: Ender Lump
+    Replacement: 末影因子
+  - Original: '§c§oTier: '
+    Replacement: '§c§o等级: '
+  - Original: Magical Book Cover
+    Replacement: 魔法书封面
+  - Original: Used for various Magic Books
+    Replacement: 用于各种魔法书
+  - Original: Magical Glass
+    Replacement: 魔法玻璃
+  - Original: Used for various Magical Gadgets
+    Replacement: 用于各种魔法道具
+  - Original: Lava Crystal
+    Replacement: 熔岩水晶
+  - Original: Common Talisman
+    Replacement: 普通护身符
+  - Original: Necrotic Skull
+    Replacement: 死灵头颅
+  - Original: Essence of Afterlife
+    Replacement: 后生精华
+  - Original: Synthetic Shulker Shell
+    Replacement: 人造潜影贝
+  - Original: workbench like a normal Shulker Shell
+    Replacement: 潜影贝一样在工作台中使用
+  - Original: Broken Spawner
+    Replacement: 破碎的刷怪笼
+  - Original: '§7Type: §b'
+    Replacement: '§7种类: §b'
+  - Original: Fractured, must be repaired in an Ancient Altar
+    Replacement: 已破碎, 需要在古老祭坛中修复
+  - Original: Ancient Pedestal
+    Replacement: 古代基座
+  - Original: Part of the Ancient Altar
+    Replacement: 古老祭坛的一部分
+  - Original: Blank Rune
+    Replacement: 黑色符石
+  - Original: Ancient Rune
+    Replacement: 古代符石
+  - Original: §b§lAir§8§l]
+    Replacement: §b§l气§8§l]
+  - Original: §c§lEarth§8§l]
+    Replacement: §c§l地§8§l]
+  - Original: §4§lFire§8§l]
+    Replacement: §4§l火§8§l]
+  - Original: §1§lWater§8§l]
+    Replacement: §1§l水§8§l]
+  - Original: §5§lEnder§8§l]
+    Replacement: §5§l末影§8§l]
+  - Original: §e§lLightning§8§l]
+    Replacement: §e§l闪电§8§l]
+  - Original: §d§lRainbow§8§l]
+    Replacement: §d§l彩虹§8§l]
+  - Original: §5§lSoulbound§8§l]
+    Replacement: §5§l系魂§8§l]
+  - Original: §6§lEnchantment§8§l]
+    Replacement: §6§l附魔§8§l]
+  - Original: §eDrop this rune onto a dropped item to
+    Replacement: §e通过将这个符石丢至一个掉落物上
+  - Original: §5bind §ethat item to your soul
+    Replacement: §e你可以 §5灵魂绑定 §e那个物品
+  - Original: §eIt is advised that you only use this rune
+    Replacement: §e建议你仅将这个符石
+  - Original: §eon §6important §eitems
+    Replacement: §e用于 §6重要 §e的物品上
+  - Original: §eItems bound to your soul won't drop on death
+    Replacement: §e死亡时, 不会掉落你灵魂绑定的物品
+  - Original: §6enchant §ethat item with a random enchantment
+    Replacement: §e你可以为它添加一个随机的 §6附魔 §e
+  - Original: Strange Nether Goo
+    Replacement: 奇怪的下界粘液
+  - Original: A strange bio matter that
+    Replacement: 一个奇怪的生物物质
+  - Original: can be acquired from
+    Replacement: 可以通过与猪灵
+  - Original: bartering with Piglins
+    Replacement: 交换物品取得
+  - Original: §4§lVillagers§8§l]
+    Replacement: §4§l村民§8§l]
+  - Original: Right click a villager to clear
+    Replacement: 右键一个村民可以清除
+  - Original: their current job and trades
+    Replacement: 他目前的职业和交易组合
+  - Original: The villager will start looking
+    Replacement: 过一段时间之后
+  - Original: for a job again after some
+    Replacement: 村民会重新寻找
+  - Original: time has passed
+    Replacement: 一个新的职业
+  - Original: Ender Helmet
+    Replacement: 末影帽子
+  - Original: Ender Chestplate
+    Replacement: 末影外套
+  - Original: Ender Leggings
+    Replacement: 末影裤子
+  - Original: Ender Boots
+    Replacement: 末影靴子
+  - Original: Sometimes its here, sometimes there
+    Replacement: 有时我在这里, 有时我又在那里
+  - Original: + No Enderpearl Damage
+    Replacement: + 免除末影珍珠伤害
+  - Original: + Speed
+    Replacement: + 速度
+  - Original: Slime Helmet
+    Replacement: 粘液头盔
+  - Original: Slime Chestplate
+    Replacement: 粘液盔甲
+  - Original: Slime Leggings
+    Replacement: 粘液护腿
+  - Original: Slime Boots
+    Replacement: 粘液靴子
+  - Original: Bouncy Feeling
+    Replacement: 很有弹性的防具
+  - Original: + Jump Boost
+    Replacement: + 跳跃提升
+  - Original: + No Fall Damage
+    Replacement: + 免除掉落伤害
+  - Original: Glowstone Helmet
+    Replacement: 荧石帽子
+  - Original: Glowstone Chestplate
+    Replacement: 荧石外套
+  - Original: Glowstone Leggings
+    Replacement: 荧石裤子
+  - Original: Glowstone Boots
+    Replacement: 荧石靴子
+  - Original: Shining like the sun
+    Replacement: 像阳光一样闪耀
+  - Original: ' Night Vision'
+    Replacement: ' 夜视'
+  - Original: §oReinforced
+    Replacement: §o强化版
+  - Original: Farmer Shoes
+    Replacement: 农夫靴
+  - Original: Prevents you from trampling your Crops
+    Replacement: 防止你践踏你的农作物
+  - Original: Boots of the Stomper
+    Replacement: 践踏者之靴
+  - Original: All Fall Damage you receive
+    Replacement: 转移你将受到的掉落伤害
+  - Original: will be applied to nearby Mobs/Players
+    Replacement: 到附近的怪物/玩家身上
+  - Original: Soulbound Helmet
+    Replacement: 灵魂绑定头盔
+  - Original: Soulbound Chestplate
+    Replacement: 灵魂绑定胸甲
+  - Original: Soulbound Leggings
+    Replacement: 灵魂绑定护腿
+  - Original: Soulbound Boots
+    Replacement: 灵魂绑定靴子
+  - Original: Bee Helmet
+    Replacement: 蜜蜂头盔
+  - Original: Bee Wings
+    Replacement: 蜜蜂翅膀
+  - Original: §9Activates Slow falling
+    Replacement: §9在接近地面时
+  - Original: §9when approaching the ground
+    Replacement: §9会激活缓慢降落
+  - Original: Bee Leggings
+    Replacement: 蜜蜂护腿
+  - Original: Bee Boots
+    Replacement: 蜜蜂靴子
+  - Original: Elytra Cap
+    Replacement: 鞘翅帽
+  - Original: This helmet will protect you from
+    Replacement: 当你在使用鞘翅飞行时
+  - Original: crashing while flying with an elytra
+    Replacement: 使用这个头盔可以保护你不会撞死
+  - Original: §6Sifted Ore
+    Replacement: §6筛矿
+  - Original: Wheat Flour
+    Replacement: 面粉
+  - Original: Steel Plate
+    Replacement: 钢板
+  - Original: Chain
+    Replacement: 锁链
+  - Original: Hook
+    Replacement: 钩子
+  - Original: §6Stone Chunk
+    Replacement: §6石块
+  - Original: Salt
+    Replacement: 盐
+  - Original: Heavy Cream
+    Replacement: 浓奶油
+  - Original: Cheese
+    Replacement: 奶酪
+  - Original: Butter
+    Replacement: 黄油
+  - Original: Crushed Ore
+    Replacement: 碎矿
+  - Original: Pulverized Ore
+    Replacement: 碎矿粉
+  - Original: Pure Ore Cluster
+    Replacement: 纯矿簇
+  - Original: Tiny Pile of Uranium
+    Replacement: 碎铀块
+  - Original: 'Radiation level: §eLOW'
+    Replacement: '辐射等级: §e低'
+  - Original: Small Chunk of Uranium
+    Replacement: 小型铀块
+  - Original: §bCloth
+    Replacement: §b布料
+  - Original: Tin Can
+    Replacement: 锡罐头
+  - Original: Gold Block
+    Replacement: 金块
+  - Original: Reinforced Plate
+    Replacement: 强化合金板
+  - Original: Duct Tape
+    Replacement: 胶带
+  - Original: You can repair Items using this
+    Replacement: 在自动铁砧中使用此胶带
+  - Original: in an Auto-Anvil
+    Replacement: 以修复你的物品
+  - Original: Organic Food
+    Replacement: 有机食物
+  - Original: '§7Content: §9Wheat'
+    Replacement: '§7装纳: §9小麦'
+  - Original: '§7Content: §9Carrots'
+    Replacement: '§7装纳: §9胡萝卜'
+  - Original: '§7Content: §9Potatoes'
+    Replacement: '§7装纳: §9马铃薯'
+  - Original: '§7Content: §9Seeds'
+    Replacement: '§7装纳: §9小麦种子'
+  - Original: '§7Content: §9Beetroot'
+    Replacement: '§7装纳: §9甜菜根'
+  - Original: '§7Content: §9Melon'
+    Replacement: '§7装纳: §9西瓜'
+  - Original: '§7Content: §9Apple'
+    Replacement: '§7装纳: §9苹果'
+  - Original: '§7Content: §9Sweet Berries'
+    Replacement: '§7装纳: §9甜浆果'
+  - Original: '§7Content: §9Dried Kelp'
+    Replacement: '§7装纳: §9干海带'
+  - Original: '§7Content: §9Seagrass'
+    Replacement: '§7装纳: §9海草'
+  - Original: '§7Content: §9Cocoa Beans'
+    Replacement: '§7装纳: §9可可豆'
+  - Original: Organic Fertilizer
+    Replacement: 有机肥料
+  - Original: '§7Content: §9Cocoa beans'
+    Replacement: '§7装纳: §9可可豆'
+  - Original: Damascus Steel Helmet
+    Replacement: 大马士革钢头盔
+  - Original: Damascus Steel Chestplate
+    Replacement: 大马士革钢胸甲
+  - Original: Damascus Steel Leggings
+    Replacement: 大马士革钢护腿
+  - Original: Damascus Steel Boots
+    Replacement: 大马士革钢靴子
+  - Original: Reinforced Helmet
+    Replacement: 强化合金头盔
+  - Original: Reinforced Chestplate
+    Replacement: 强化合金胸甲
+  - Original: Reinforced Leggings
+    Replacement: 强化合金护腿
+  - Original: Reinforced Boots
+    Replacement: 强化合金靴子
+  - Original: Cactus Helmet
+    Replacement: 仙人掌帽子
+  - Original: Cactus Chestplate
+    Replacement: 仙人掌外套
+  - Original: Cactus Leggings
+    Replacement: 仙人掌裤子
+  - Original: Cactus Boots
+    Replacement: 仙人掌靴子
+  - Original: Gilded Iron Helmet
+    Replacement: 闪闪发光的铁头盔
+  - Original: Gilded Iron Chestplate
+    Replacement: 闪闪发光的铁胸甲
+  - Original: Gilded Iron Leggings
+    Replacement: 闪闪发光的铁护腿
+  - Original: Gilded Iron Boots
+    Replacement: 闪闪发光的铁靴子
+  - Original: Scuba Helmet
+    Replacement: 水下呼吸帽
+  - Original: Allows you to breathe underwater
+    Replacement: 让你在水下也能呼吸
+  - Original: Hazmat Suit
+    Replacement: 防化服胸甲
+  - Original: 防化服胸甲 Leggings
+    Replacement: 防化服护腿
+  - Original: Allows you to walk through fire and lava
+    Replacement: 让你在火和熔岩中也能穿行
+  - Original: Hazmat Boots
+    Replacement: 防化服靴子
+  - Original: 'Full set effects:'
+    Replacement: '套装效果:'
+  - Original: '- Radiation immunity'
+    Replacement: '- 免除辐射伤害'
+  - Original: '- Bee Sting protection'
+    Replacement: '- 免除蜂蜇伤害'
+  - Original: Golden Helmet
+    Replacement: 黄金头盔
+  - Original: Golden Chestplate
+    Replacement: 黄金胸甲
+  - Original: Golden Leggings
+    Replacement: 黄金护腿
+  - Original: Golden Boots
+    Replacement: 黄金靴子
+  - Original: Talisman of the Anvil
+    Replacement: 铁砧护身符
+  - Original: Each Talisman can prevent
+    Replacement: 每个护身符都可以保护
+  - Original: 1 Tool from breaking, but will then
+    Replacement: 1 个工具不受损坏
+  - Original: be consumed
+    Replacement: 然后消耗殆尽自身的能力
+  - Original: '§4§lWARNING:'
+    Replacement: '§4§l警告:'
+  - Original: This Talisman does not work on
+    Replacement: 此护身符不能在过于
+  - Original: Tools which are too powerful
+    Replacement: 强大的工具上发挥作用
+  - Original: due to their complexity
+    Replacement: 因为它们的结构过于复杂
+  - Original: Talisman of the Miner
+    Replacement: 矿工护身符
+  - Original: While you have this Talisman
+    Replacement: 如果你把此护身符
+  - Original: in your Inventory it has
+    Replacement: 放于你的物品栏
+  - Original: a 20% chance of doubling
+    Replacement: 每次你都有 20% 的概率
+  - Original: all Ores you mine
+    Replacement: 获得双倍的挖掘掉落
+  - Original: Talisman of the Farmer
+    Replacement: 农夫护身符
+  - Original: all crops you harvest
+    Replacement: 获得双倍的收成
+  - Original: Talisman of the Hunter
+    Replacement: 猎人护身符
+  - Original: all Drops from Mobs you kill
+    Replacement: 获得双倍的击杀怪物掉落
+  - Original: Talisman of the Lava Walker
+    Replacement: 熔岩行者护身符
+  - Original: in your Inventory it will
+    Replacement: 放于你的物品栏
+  - Original: give you Fire Resistance
+    Replacement: 你将会获得抗火效果
+  - Original: as soon as you touch Lava
+    Replacement: 如果你触碰到熔岩
+  - Original: but will then be consumed
+    Replacement: 然后护身符会消耗殆尽自身的能力
+  - Original: Talisman of the Water Breather
+    Replacement: 潜水者护身符
+  - Original: give you the ability
+    Replacement: 如果你在水底缺氧
+  - Original: to breath underwater as
+    Replacement: 你将会获得
+  - Original: soon as you start drowning
+    Replacement: 水下呼吸效果
+  - Original: Talisman of the Angel
+    Replacement: 天使护身符
+  - Original: in your Inventory it has a
+    Replacement: 于你的物品栏
+  - Original: 75% chance to prevent you
+    Replacement: 每次你都有 75% 的概率
+  - Original: from taking Fall Damage
+    Replacement: 免受掉落导致的伤害
+  - Original: Talisman of the Firefighter
+    Replacement: 消防员护身符
+  - Original: as soon as you start burning
+    Replacement: 如果你着火了
+  - Original: Talisman of the Magician
+    Replacement: 法师护身符
+  - Original: in your Inventory it gives
+    Replacement: 放于你的物品栏
+  - Original: you a 80% Luck Bonus on Enchanting
+    Replacement: 每次你附魔时都有 80% 的幸运加成
+  - Original: You will sometimes get an Extra Enchantment
+    Replacement: 偶尔可以获得一个额外的附魔
+  - Original: Talisman of the Traveller
+    Replacement: 旅行者护身符
+  - Original: you a 60% Chance for a decent
+    Replacement: 每次你开始疾跑时你都有
+  - Original: Speed Buff when you start sprinting
+    Replacement: 60% 的概率获得速度效果
+  - Original: Talisman of the Warrior
+    Replacement: 战士护身符
+  - Original: you Strength III whenever you get hit
+    Replacement: 如果你被攻击你会获得 力量III 效果
+  - Original: Talisman of the Knight
+    Replacement: 骑士护身符
+  - Original: you a 30% Chance for 5 Seconds of Regeneration
+    Replacement: 如果你被攻击你有 30% 的概率
+  - Original: whenever You get hit
+    Replacement: 获得 5 秒的生命恢复效果
+  - Original: Talisman of the Caveman
+    Replacement: 穴居人护身符
+  - Original: in your inventory it gives
+    Replacement: 放于你的物品栏
+  - Original: you a 50% chance for a decent
+    Replacement: 每次你挖掘矿石你都有 50%
+  - Original: Haste buff when you mine any ore
+    Replacement: 的概率获得急迫效果
+  - Original: Talisman of the Wise
+    Replacement: 智者护身符
+  - Original: you a 20% chance of doubling
+    Replacement: 每次你都有 20% 的
+  - Original: any experience you obtain
+    Replacement: 获得双倍的经验值拾取
+  - Original: Talisman of the Whirlwind
+    Replacement: 旋风护身符
+  - Original: Having this Talisman
+    Replacement: 如果把此护身符放于物品栏
+  - Original: in your Inventory will reflect
+    Replacement: 每次你都有 60% 的概率
+  - Original: 60% of any projectiles fired at you
+    Replacement: 反弹射击在你身上的东西
+  - Original: Only a thrown Trident can pierce
+    Replacement: 只有掷出的三叉戟
+  - Original: through this layer of protection
+    Replacement: 可以刺穿它的保护罩
+  - Original: Talisman of the Wizard
+    Replacement: 巫师护身符
+  - Original: in your Inventory it allows you to
+    Replacement: 放于你的物品栏
+  - Original: obtain Fortune Level 4/5 however
+    Replacement: 你有机会获得 时运 4/5 级
+  - Original: it also has a chance to lower the
+    Replacement: 但它也可能导致你的物品
+  - Original: Level of some Enchantments on your Item
+    Replacement: 的其他附魔的等级得到降低
+  - Original: Ender Backpack
+    Replacement: 末影背包
+  - Original: A portable Ender Chest
+    Replacement: 一个随身携带的末影箱
+  - Original: Magic Eye of Ender
+    Replacement: 魔法末影之眼
+  - Original: Requires full Ender Armor
+    Replacement: 需要装备末影套装
+  - Original: Right Click§7 to shoot an Ender Pearl
+    Replacement: 右键§7 掷出末影珍珠
+  - Original: Elemental Staff §7- §b§oWind
+    Replacement: 元素法杖 §7- §b§o风
+  - Original: 'Element: §b§oWind'
+    Replacement: '元素: §b§o风'
+  - Original: Right Click§7 to launch yourself forward
+    Replacement: 右键§7 将你向前方推送
+  - Original: Elemental Staff §7- §1§oWater
+    Replacement: 元素法杖 §7- §1§o水
+  - Original: 'Element: §1§oWater'
+    Replacement: '元素: §1§o水'
+  - Original: Right Click§7 to extinguish yourself
+    Replacement: 右键§7 扑灭身上的火焰
+  - Original: §7- §c§oFire
+    Replacement: §7- §c§o火
+  - Original: 'Element: §c§oFire'
+    Replacement: '元素: §c§o火'
+  - Original: §7- §8§oStorm
+    Replacement: §7- §8§o风暴
+  - Original: 'Element: §8§oStorm'
+    Replacement: '元素: §8§o风暴'
+  - Original: Elemental Staff
+    Replacement: 元素法杖
+  - Original: Right Click§7 to summon a lightning
+    Replacement: 右键§7 释放闪电
+  - Original: ' Uses §7left'
+    Replacement: ' 次 §7剩余使用次数'
+  - Original: Magical Zombie Pills
+    Replacement: 魔法僵尸重生药
+  - Original: Right Click §7a Zombified Villager
+    Replacement: 右键 §7僵尸村民
+  - Original: or §7a Zombified Piglin to
+    Replacement: 或者 §7僵尸猪灵
+  - Original: instantly cure it from its curse
+    Replacement: 可以瞬间解除它们受到的诅咒
+  - Original: Infused Magnet
+    Replacement: 注入磁铁
+  - Original: Magical infused Magnets
+    Replacement: 充满魔法的注入磁铁
+  - Original: attract nearby Items
+    Replacement: 会吸引附近的掉落物
+  - Original: as long as it is somewhere in
+    Replacement: 并将它们全部马上
+  - Original: your Inventory
+    Replacement: 注入到你的物品栏内
+  - Original: Hold §eShift§7 to pick up nearby Items
+    Replacement: 按住 §eShift §7吸取附近的物品
+  - Original: Soulbound Backpack
+    Replacement: 灵魂绑定背包
+  - Original: Reinforced Spawner
+    Replacement: 修复的刷怪笼
+  - Original: Scroll of Dimensional Teleposition
+    Replacement: 空间传送卷轴
+  - Original: This Scroll is capable of creating
+    Replacement: 这个卷轴可以创建
+  - Original: a temporary black Hole which pulls
+    Replacement: 一个临时的黑洞
+  - Original: nearby Entities into itself and sends
+    Replacement: 吸入附近的实体
+  - Original: them into another Dimension where
+    Replacement: 并将他们传送到
+  - Original: everything is turned around
+    Replacement: 另一翻转的维度
+  - Original: 'In other words: Makes Entities turn by 180 Degrees'
+    Replacement: '简单点说就是: 让实体旋转180度'
+  - Original: Tome of Knowledge Sharing
+    Replacement: 学识巨著
+  - Original: '§7Owner: §bNone'
+    Replacement: '§7著主: §b无'
+  - Original: '§7Owner: §b'
+    Replacement: '§7著主: §b'
+  - Original: §eRight Click§7 to bind this Tome to yourself
+    Replacement: §e右键单击§7 绑定这本巨著到自己
+  - Original: §eRight Click§7 to obtain all Researches by
+    Replacement: §e右键单击§7 获得之前著主的所有研究
+  - Original: §7the previously assigned Owner
+    Replacement: §7
+  - Original: Flask of Knowledge
+    Replacement: 知识之瓶
+  - Original: Allows you to store some of
+    Replacement: 让你存储一些经验
+  - Original: your Experience in a Bottle
+    Replacement: 到玻璃瓶之中
+  - Original: 'Cost: §a1 Level'
+    Replacement: '消耗: §a1 级'
+  - Original: Ancient Altar
+    Replacement: 古代祭坛
+  - Original: Multi-Block Altar for
+    Replacement: 一个多方块结构化的祭坛
+  - Original: magical Crafting Processes
+    Replacement: 用于魔法合成工序
+  - Original: Infernal Bonemeal
+    Replacement: 下界骨粉
+  - Original: Speeds up the Growth of
+    Replacement: 也可以用于
+  - Original: Nether Warts as well
+    Replacement: 催熟下界疣
+  - Original: Elytra Scale
+    Replacement: 鞘翅鳞片
+  - Original: Infused Elytra
+    Replacement: 经验注入鞘翅
+  - Original: Soulbound Elytra
+    Replacement: 灵魂绑定鞘翅
+  - Original: Rainbow Wool
+    Replacement: 彩虹羊毛
+  - Original: Rainbow Glass Pane
+    Replacement: 彩虹玻璃板
+  - Original: Rainbow Glass
+    Replacement: 彩虹玻璃
+  - Original: Rainbow Clay
+    Replacement: 彩虹粘土块
+  - Original: Rainbow Concrete
+    Replacement: 彩虹混凝土
+  - Original: Rainbow Glazed Terracotta
+    Replacement: 彩虹带釉陶瓦
+  - Original: Cycles through all Colors of the Rainbow
+    Replacement: 在彩虹的所有颜色间循环切换
+  - Original: Infused Hopper
+    Replacement: 注入漏斗
+  - Original: Automatically picks up nearby Items in a 7x7x7
+    Replacement: 自动吸取附近 7x7x7
+  - Original: Radius when placed
+    Replacement: 范围内的掉落物
+  - Original: Electric Jetpack
+    Replacement: 喷气背包
+  - Original: '§8⇨ §7Material: §bDuralumin'
+    Replacement: '§8⇨ §7材质: §b硬铝合金'
+  - Original: '§8⇨ §7Material: §bSolder'
+    Replacement: '§8⇨ §7材质: §b铅锡合金'
+  - Original: '§8⇨ §7Material: §bBillon'
+    Replacement: '§8⇨ §7材质: §b银铜合金'
+  - Original: '§8⇨ §7Material: §bSteel'
+    Replacement: '§8⇨ §7材质: §b钢'
+  - Original: '§8⇨ §7Material: §bDamascus Steel'
+    Replacement: '§8⇨ §7材质: §b大马士革钢'
+  - Original: '§8⇨ §7Material: §bReinforced Alloy'
+    Replacement: '§8⇨ §7材质: §b强化合金'
+  - Original: '§8⇨ §7Material: §bCarbonado'
+    Replacement: '§8⇨ §7材质: §b黑金刚石'
+  - Original: '§8⇨ §7Thrust: §c'
+    Replacement: '§8⇨ §7推动力: §c'
+  - Original: §eCrouch§7 to use
+    Replacement: §e潜行§7 使用
+  - Original: Multi Tool
+    Replacement: 万用工具
+  - Original: §eCrouch & Right Click§7 to switch modes
+    Replacement: §e潜行 & 右键§7 切换模式
+  - Original: Jet Boots
+    Replacement: 喷气靴子
+  - Original: '§b⚡ §7Speed: §b'
+    Replacement: '§b⚡ §7效率: §b'
+  - Original: '§8⇨ §7Accuracy: §'
+    Replacement: '§8⇨ §7精确度: §'
+  - Original: Parachute
+    Replacement: 降落伞
+  - Original: Hologram Projector
+    Replacement: 全息投影仪
+  - Original: Projects an Editable Hologram
+    Replacement: 投影一个可编辑的全息图像
+  - Original: Text §e
+    Replacement: 文本 §e
+  - Original: Click to edit
+    Replacement: 点击编辑
+  - Original: '§7Offset: §'
+    Replacement: '§7偏移: §'
+  - Original: 'Left Click: §7'
+    Replacement: '左键: §7'
+  - Original: 'Right Click: §7'
+    Replacement: '右键: §7'
+  - Original: Solar Helmet
+    Replacement: 太阳能头盔
+  - Original: Charges held Items and Armor
+    Replacement: 为手持的物品和装备充能
+  - Original: Night Vision Goggles
+    Replacement: 夜视镜
+  - Original: Armored 喷
+    Replacement: 装甲喷
+  - Original: Multimeter
+    Replacement: 多用电表
+  - Original: Measures the Amount of stored
+    Replacement: 测量一个方块内
+  - Original: Energy in a Block
+    Replacement: 存储的能量
+  - Original: Ender Talisman of the Anvil
+    Replacement: 末影铁砧护身符
+  - Original: Ender Talisman of the Farmer
+    Replacement: 末影农夫护身符
+  - Original: Ender Talisman of the Miner
+    Replacement: 末影矿工护身符
+  - Original: Ender Talisman of the Hunter
+    Replacement: 末影猎人护身符
+  - Original: Ender Talisman of the Lava Walker
+    Replacement: 末影熔岩行者护身符
+  - Original: Ender Talisman of the Water Breather
+    Replacement: 末影潜水者护身符
+  - Original: Ender Talisman of the Angel
+    Replacement: 末影天使护身符
+  - Original: Ender Talisman of the Firefighter
+    Replacement: 末影消防员护身符
+  - Original: Ender Talisman of the Magician
+    Replacement: 末影法师护身符
+  - Original: Ender Talisman of the Traveller
+    Replacement: 末影旅行者护身符
+  - Original: Ender Talisman of the Warrior
+    Replacement: 末影战士护身符
+  - Original: Ender Talisman of the Knight
+    Replacement: 末影骑士护身符
+  - Original: Ender Talisman of the Caveman
+    Replacement: 末影穴居人护身符
+  - Original: Ender Talisman of the Wise
+    Replacement: 末影智者护身符
+  - Original: Ender Talisman of the Whirlwind
+    Replacement: 末影旋风护身符
+  - Original: Ender Talisman of the Wizard
+    Replacement: 末影巫师护身符
+  - Original: §oEnder Infused
+    Replacement: §o末影能力注入
+  - Original: Android Interface §9(Items)
+    Replacement: 安卓机器人容器 §9(物品)
+  - Original: Android Interface §c(Fuel)
+    Replacement: 安卓机器人容器 §c(燃料)
+  - Original: Items stored in an Android's Inventory
+    Replacement: 安卓机器人会把库存
+  - Original: will be inserted into this Interface
+    Replacement: 中的物品放入这个容器中
+  - Original: when its Script tells them to do so
+    Replacement: 如果接收到指定的脚本指令
+  - Original: Items stored in this Interface
+    Replacement: 安卓机器人会获取这个
+  - Original: will be inserted into an Android's Fuel Slot
+    Replacement: 容器中的物品放入燃料槽
+  - Original: §cProgrammable Android
+    Replacement: §c可编程式机器人
+  - Original: '§8⇨ §7Function: None'
+    Replacement: '§8⇨ §7专职: 无'
+  - Original: '§8⇨ §7Function: Mining'
+    Replacement: '§8⇨ §7专职: 挖矿'
+  - Original: '§8⇨ §7Function: Farming'
+    Replacement: '§8⇨ §7专职: 农作'
+  - Original: '§8⇨ §7Function: Woodcutting'
+    Replacement: '§8⇨ §7专职: 伐木'
+  - Original: '§8⇨ §7Function: Fishing'
+    Replacement: '§8⇨ §7专职: 钓鱼'
+  - Original: '§8⇨ §7Function: Slaughtering'
+    Replacement: '§8⇨ §7专职: 屠宰'
+  - Original: '§8⇨ §7Success Rate: '
+    Replacement: '§8⇨ §7捕获率: '
+  - Original: '§8⇨ §7Damage: '
+    Replacement: '§8⇨ §7伤害值: '
+  - Original: Advanced Programmable Android
+    Replacement: 高级可编程式机器人
+  - Original: Can also harvest Plants from ExoticGarden
+    Replacement: 可用于收获异域花园的作物
+  - Original: Empowered Programmable Android
+    Replacement: 可授权编程式机器人
+  - Original: 编程式机器人 §7(Normal)
+    Replacement: 编程式机器人 §7(普通)
+  - Original: 编程式机器人 §7(Miner)
+    Replacement: 编程式机器人 §7(矿工)
+  - Original: 编程式机器人 §7(Farmer)
+    Replacement: 编程式机器人 §7(农夫)
+  - Original: 编程式机器人 §7(Woodcutter)
+    Replacement: 编程式机器人 §7(伐木工)
+  - Original: 编程式机器人 §7(Fisherman)
+    Replacement: 编程式机器人 §7(渔夫)
+  - Original: 编程式机器人 §7(Butcher)
+    Replacement: 编程式机器人 §7(屠夫)
+  - Original: Cargo Motor
+    Replacement: 货运马达
+  - Original: §7Important ingredient for items
+    Replacement: §7与货运管理相关的
+  - Original: §7related to Cargo Management
+    Replacement: §7物品的重要材料
+  - Original: Cargo Manager
+    Replacement: 货运网络管理器
+  - Original: Core Component of an Item Transport Network
+    Replacement: 货运网络的核心组成部分
+  - Original: Advanced Cargo Node §c(Output)
+    Replacement: 高级货运节点 §c(输出)
+  - Original: §7Cargo Node §c(Input)
+    Replacement: §7货运网络节点 §c(输入)
+  - Original: §7Cargo Node §c(Output)
+    Replacement: §7货运网络节点 §c(输出)
+  - Original: §7Cargo Node §c(Connector)
+    Replacement: §7货运网络节点 §c(连接器)
+  - Original: Cargo Connector Pipe
+    Replacement: 货运网络的连接管
+  - Original: Cargo Input Pipe
+    Replacement: 货运网络的输入器
+  - Original: Cargo Output Pipe
+    Replacement: 货运网络的输出器
+  - Original: Reactor Access Port
+    Replacement: 反应机交互枢纽
+  - Original: Allows you to interact with a Reactor
+    Replacement: 允许货运节点与
+  - Original: via Cargo Nodes, can also be used
+    Replacement: 反应机交互
+  - Original: as a Buffer
+    Replacement: 也可以用作缓冲器
+  - Original: Must be placed §a3 Blocks §eabove the Reactor
+    Replacement: 必须放在高于反应堆 §33个方块 §e的位置
+  - Original: §7Byproduct Slot
+    Replacement: §7副产物槽
+  - Original: This Slot contains the Reactor's Byproduct
+    Replacement: 此槽位能够容纳反应机的副产物
+  - Original: such as §aNeptunium §for §7Plutonium
+    Replacement: 例如 §2镎块 §f和 §a钚块
+  - Original: §7Reactor
+    Replacement: §7反应机
+  - Original: §7Reactor must be
+    Replacement: §7反应机必须放置在
+  - Original: §7placed 3 blocks below
+    Replacement: §7这个反应机交互枢纽
+  - Original: §7the access port!
+    Replacement: §7下面三个方块的位置!
+  - Original: §6Detected
+    Replacement: §6已检测到
+  - Original: §7> Click to view Reactor
+    Replacement: §7> 点击查看反应机
+  - Original: Trash Can
+    Replacement: 垃圾桶
+  - Original: Will destroy all Items put into it
+    Replacement: 会摧毁一切放入其中的物品
+  - Original: §6Crafting Motor
+    Replacement: §6合成马达
+  - Original: §7Important component of Auto-Crafters
+    Replacement: §7自动合成器的重要组成部分
+  - Original: §2Auto-Crafter §8(Vanilla)
+    Replacement: §2自动合成器§8 (原版)
+  - Original: Place this machine on top of a
+    Replacement: 将这个机器放在箱子或类似的
+  - Original: chest or similar and make it craft
+    Replacement: 方块上面, 以让它自动地合成
+  - Original: normal §eCrafting Table
+    Replacement: 普通的 §e工作台
+  - Original: §2Auto-Crafter §8(Enhanced)
+    Replacement: §2自动合成器§8 (增强)
+  - Original: §2Auto-Crafter §8(Armor Forge)
+    Replacement: §2自动合成器§8 (盔甲锻造台)
+  - Original: §eArmor Forge
+    Replacement: §e盔甲锻造台
+  - Original: §bBirthday Cake
+    Replacement: §b生日蛋糕
+  - Original: §6Glass of Milk
+    Replacement: §6一瓶牛奶
+  - Original: §6Chocolate Milk
+    Replacement: §6巧克力牛奶
+  - Original: §aEgg Nog
+    Replacement: §a蛋乳
+  - Original: §cApple Cider
+    Replacement: §c苹果酒
+  - Original: §aC§ch§ar§ci§as§ct§am§ca§as§c §aC§co§ao§ck§ai§ce
+    Replacement: §a圣§c诞§a曲§c奇
+  - Original: §aF§cr§au§ci§at§c §aC§ca§ak§ce
+    Replacement: §a水§c果§a蛋§c糕
+  - Original: §fApple Pie
+    Replacement: §f苹果派
+  - Original: §6Hot Chocolate
+    Replacement: §6热曲奇
+  - Original: §aC§ch§ar§ci§as§ct§am§ca§as§c §aC§ca§ak§ce
+    Replacement: §a圣§c诞§a蛋§c糕
+  - Original: §6Caramel
+    Replacement: §6焦糖
+  - Original: §6焦糖 Apple
+    Replacement: §6焦糖苹果
+  - Original: §6Chocolate Apple
+    Replacement: §6巧克力苹果
+  - Original: §aC§ch§ar§ci§as§ct§am§ca§as§c §aP§cr§ae§cs§ae§cn§at
+    Replacement: §a圣§c诞§a礼§c物
+  - Original: '§7From: §cTheBusyBiscuit'
+    Replacement: '§7来自: §cTheBusyBiscuit'
+  - Original: '§7To: §eYou'
+    Replacement: '§7送往: §e你'
+  - Original: ' §7(Christmas)'
+    Replacement: ' §7(圣诞节)'
+  - Original: §a[§cC§ah§cr§ai§cs§at§cm§aa§cs§a §cE§ad§ci§at§ci§ao§cn§a]
+    Replacement: §a【§c圣§a诞§c节§a限§c定§a】
+  - Original: ' §7(Halloween)'
+    Replacement: ' §7(万圣节)'
+  - Original: §c[§6Halloween Edition§c]
+    Replacement: §c【§6万圣节限定§c】
+  - Original: §6Carrot Pie
+    Replacement: §6胡萝卜派
+  - Original: §fEaster Egg
+    Replacement: §f复活节彩蛋
+  - Original: §dHappy Easter! Have a surprise
+    Replacement: §d复活节快乐! 带走惊喜吧
+  - Original: ' §7(Valentine''s Day)'
+    Replacement: ' §7(情人节)'
+  - Original: §5[§dValentine's Day Edition§5]
+    Replacement: §5【§d情人节限定§5】
+  - Original: §bGPS Transmitter
+    Replacement: §bGPS 发射器
+  - Original: Advanced GPS Transmitter
+    Replacement: 高级 GPS 发射器
+  - Original: Carbonado GPS Transmitter
+    Replacement: 黑金刚石镶边 GPS 发射器
+  - Original: Energized GPS Transmitter
+    Replacement: 电力强化 GPS 发射器
+  - Original: GPS Control Panel
+    Replacement: GPS 控制面板
+  - Original: Allows you to track your Satellites
+    Replacement: 能够追踪卫星
+  - Original: and manage your Waypoints
+    Replacement: 和管理路径点
+  - Original: GPS Marker Tool
+    Replacement: GPS 标记工具
+  - Original: Allows you to set a Waypoint at
+    Replacement: 能够在放置这个的地方
+  - Original: the Location you place this
+    Replacement: 创建一个路径点
+  - Original: GPS Emergency Transmitter
+    Replacement: GPS 紧急发射器
+  - Original: Carrying this in your Inventory
+    Replacement: 如果你把这个放于你的物品栏
+  - Original: automatically sets a Waypoint
+    Replacement: 每次你死亡的时候都会自动
+  - Original: at your Location when you die
+    Replacement: 在这个地方创建一个路径点
+  - Original: GPS Geo-Scanner
+    Replacement: GEO 地形扫描器
+  - Original: Scans a Chunk for natural Resources
+    Replacement: 扫描区块中的自然资源
+  - Original: such as §8Oil
+    Replacement: 例如 §8原油
+  - Original: Portable Geo-Scanner
+    Replacement: 便携 GEO 地形扫描器
+  - Original: Right Click§7 to scan
+    Replacement: 右键 §7扫描
+  - Original: Oil Pump
+    Replacement: 原油泵
+  - Original: Pumps up Oil and fills it into Buckets
+    Replacement: 抽出原油并装灌到桶内
+  - Original: Make sure to Geo-Scan the Chunk first
+    Replacement: 需要先进行 GEO 地形扫描
+  - Original: GEO Miner
+    Replacement: GEO 矿机
+  - Original: Mines up resources from the chunk
+    Replacement: 采掘区块中无法使用
+  - Original: These Resources cannot be mined with a pickaxe
+    Replacement: 镐来获取的资源
+  - Original: Small Chunks of Uranium
+    Replacement: 小型铀块
+  - Original: Nether Ice
+    Replacement: 下界冰
+  - Original: GPS Teleporter Pylon
+    Replacement: GPS 传送塔
+  - Original: Teleporter Component
+    Replacement: 传送器的核心组成部分
+  - Original: GPS Teleporter Matrix
+    Replacement: GPS 传送网
+  - Original: This is your Teleporter's Main Component
+    Replacement: 传送器的核心组成部分
+  - Original: This Matrix allows Players to choose from all
+    Replacement: 用于让玩家选择放置
+  - Original: Waypoints made by the Player who has placed
+    Replacement: 这个装置的人创建的
+  - Original: §fthis Device
+    Replacement: §f所有路径点
+  - Original: §bPortable Teleporter
+    Replacement: §b便携传送器
+  - Original: §fThis device allows you to teleport
+    Replacement: §f这个装置可以让你从各个地方
+  - Original: §fto your waypoints from anywhere
+    Replacement: §f传送到你的路径点
+  - Original: GPS Activation Device §3(Shared)
+    Replacement: GPS 传送激活装置 §3(共享)
+  - Original: GPS Activation Device §a(Personal)
+    Replacement: GPS 传送激活装置 §a(私人)
+  - Original: Place this onto a Teleportation Matrix
+    Replacement: 将这个东西放置于
+  - Original: and step onto this Plate to activate
+    Replacement: GPS 传送网上, 踩上去
+  - Original: the Teleportation Process
+    Replacement: 即可启动传送程序
+  - Original: This Version only allows the Person who
+    Replacement: 这个型号的激活装置
+  - Original: placed this Device to use it
+    Replacement: 只允许放置它的人使用
+  - Original: §bElevator Plate
+    Replacement: §b电梯
+  - Original: Place an Elevator Plate on every floor
+    Replacement: 将这个电梯放于不同的楼层
+  - Original: and you will be able to teleport between them
+    Replacement: 然后你就可以在它们之间传送
+  - Original: Right Click this Block §7to name it
+    Replacement: 右键此方块 §7命名电梯楼层
+  - Original: §7Floor Name §e
+    Replacement: §7楼层名 §e
+  - Original: Basic Circuit Board
+    Replacement: 基础电路板
+  - Original: Advanced Circuit Board
+    Replacement: 高级电路板
+  - Original: Battery
+    Replacement: 电池
+  - Original: Steel Thruster
+    Replacement: 钢制推进器
+  - Original: Power Crystal
+    Replacement: 能量水晶
+  - Original: Solar Panel
+    Replacement: 太阳能板
+  - Original: Transforms Sunlight to Energy
+    Replacement: 将太阳能转化为电能
+  - Original: §9Photovoltaic Cell
+    Replacement: §9太阳能单元
+  - Original: §7Important component for
+    Replacement: §b太阳能发电机
+  - Original: §7crafting a §b太阳能发电机
+    Replacement: §7的重要制作材料
+  - Original: Reinforced Cloth
+    Replacement: 强化布料
+  - Original: This cloth has been reinforced
+    Replacement: 这种布使用了 §b铅
+  - Original: with §bLead §fto protect against
+    Replacement: 来用于加固, 以保护
+  - Original: radioactive substances
+    Replacement: 你免受辐射伤害
+  - Original: §cMagnet
+    Replacement: §c磁铁
+  - Original: Electromagnet
+    Replacement: 电磁铁
+  - Original: Electric Motor
+    Replacement: 电动马达
+  - Original: Heating Coil
+    Replacement: 加热线圈
+  - Original: Copper Wire
+    Replacement: 铜丝
+  - Original: Crucial component in electric modules
+    Replacement: 电器组件的关键材料
+  - Original: Hardened Glass
+    Replacement: 硬化玻璃
+  - Original: Withstands Explosions
+    Replacement: 能够承受爆炸伤害
+  - Original: Withstands Wither Bosses
+    Replacement: 能够承受凋零打击
+  - Original: Cooling Unit
+    Replacement: 冷却装置
+  - Original: Wither-Proof Obsidian
+    Replacement: 防凋零黑曜石
+  - Original: Plastic Sheet
+    Replacement: 塑料片
+  - Original: Android Memory Core
+    Replacement: 安卓内存核心
+  - Original: Wither-Proof Glass
+    Replacement: 防凋零玻璃
+  - Original: §bReactor Coolant Cell
+    Replacement: §b反应冷却单元
+  - Original: §6下界冰 Coolant Cell
+    Replacement: §6下界冰冷却单元
+  - Original: §6Nether Ice Coolant Cell
+    Replacement: §6下界冰冷却单元

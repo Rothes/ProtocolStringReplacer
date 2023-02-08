@@ -1,0 +1,33 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - ItemStack
+  Match-Mode: Regex
+Replaces:
+  Direct:
+  - Original: (\d) J/s
+    Replacement: $1 J/秒
+  - Original: '§8⇨ §7Speed: §a(\d)/time'
+    Replacement: '§8⇨ §7效率: §a$1/次'
+  - Original: §8⇨ §7Lasts (\d+)m (\d+)s
+    Replacement: §8⇨ §7持续发电 $1分钟 $2秒
+  - Original: §e⚡ §7(\d+)K J in total
+    Replacement: §e⚡ §7共可发电 $1 KJ
+  - Original: §([a7])Survival Mode
+    Replacement: §$1生存模式
+  - Original: §([a7])Cheat Sheet
+    Replacement: §$1作弊模式
+  - Original: Level (I+) - Medical Supply
+    Replacement: 等级 $1 - 医疗用品
+  - Original: Restores (\d) Hearts
+    Replacement: 回复 $1♥ 血量
+  - Original: '§7Size: §e(\d)'
+    Replacement: '§7容量: §e$1'
+  - Original: ' §7\((\d+)\-Carat\)'
+    Replacement: ' §7($1-克拉)'
+  - Original: anything that can be crafted using a(n)?
+    Replacement: 所有你想合成的物品. 相当于一个

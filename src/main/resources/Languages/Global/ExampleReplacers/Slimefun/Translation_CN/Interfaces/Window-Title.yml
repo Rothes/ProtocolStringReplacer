@@ -1,0 +1,45 @@
+Options:
+  Enabled: true
+  Priority: 30
+  Version: '230208'
+  Author: Rothes
+  Filter:
+    Listen-Types:
+    - Window-Title
+  Match-Mode: Contain
+Replaces:
+  Direct:
+  - Original: Slimefun 指南
+    Replacement: §8粘液科技指南
+  - Original: Enhanced Furnace
+    Replacement: §8增强型熔炉
+  - Original: Reinforced Furnace
+    Replacement: §8强化熔炉
+  - Original: Carbonado Edged Furnace
+    Replacement: §8黑金刚石镶边熔炉
+  - Original: Block Placer
+    Replacement: §8方块放置机
+  - Original: Android Interface §9(Items)
+    Replacement: §8安卓机器人容器 §9(物品)
+  - Original: Android Interface §c(Fuel)
+    Replacement: §8安卓机器人容器 §c(燃料)
+  - Original: Programmable Android
+    Replacement: §8可编程式机器人
+  - Original: Advanced Programmable Android
+    Replacement: §8高级可编程式机器人
+  - Original: Empowered Programmable Android
+    Replacement: §8可授权编程式机器人
+  - Original: Android Scripts
+    Replacement: §8机器人脚本
+  - Original: Advanced Cargo Node (Output)
+    Replacement: §8高级货运节点 (输出)
+  - Original: Cargo Node (Input)
+    Replacement: §8货运网络节点 (输入)
+  - Original: Cargo Node (Output)
+    Replacement: §8货运网络节点 (输出)
+  - Original: §2Auto-Crafter §8(Vanilla)
+    Replacement: §2自动合成器§8 (原版)
+  - Original: §2Auto-Crafter §8(Enhanced)
+    Replacement: §2自动合成器§8 (增强)
+  - Original: §2Auto-Crafter §8(Armor Forge)
+    Replacement: §2自动合成器§8 (盔甲锻造台)
