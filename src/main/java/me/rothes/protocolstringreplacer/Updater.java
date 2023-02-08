@@ -28,7 +28,7 @@ import java.util.Map;
 public class Updater implements Listener {
 
     private static final String VERSION_CHANNEL = "Stable";
-    private static final int VERSION_NUMBER = 107;
+    private static final int VERSION_NUMBER = 108;
     private final HashMap<String, Integer> msgTimesMap = new HashMap<>();
     private final List<String> messages = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
@@ -118,6 +118,7 @@ public class Updater implements Listener {
     }
 
     private void checkJson(String json) {
+        @SuppressWarnings("deprecation") // For legacy server supports
         JsonElement element = new JsonParser().parse(json);
         JsonObject root = element.getAsJsonObject();
         JsonObject channels = root.getAsJsonObject("Version_Channels");

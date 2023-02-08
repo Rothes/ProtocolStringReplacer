@@ -5,8 +5,8 @@
       "Log_Level": "Info",
       "Actions": [],
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.17.1\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.17.1\") 了!\n§b请更新您的插件: https://beta.mcbbs.net/resource/servermod/xmkw2tv1"
+        "en-US": "§bA new version of PSR (\"2.17.2\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.17.2\") 了!\n§b请更新您的插件: https://beta.mcbbs.net/resource/servermod/xmkw2tv1"
       }
     }
   },
@@ -15,6 +15,7 @@
       "Log_Level": "Info",
       "Actions": [],
       "Message_Times": 1,
+      "Notify_In_Game": false,
       "Message": {
         "en-US": "§bEnjoy PSR? Join our Discord: https://discord.gg/zwzzkmYCBb",
         "zh-CN": "§b喜欢PSR吗? 欢迎加入我们的 QQ群: 422532220 !"
