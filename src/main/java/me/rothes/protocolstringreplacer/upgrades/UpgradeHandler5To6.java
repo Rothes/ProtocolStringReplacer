@@ -41,7 +41,11 @@ public final class UpgradeHandler5To6 extends AbstractUpgradeHandler {
     }
 
     private void renameNode(@NotNull YamlConfiguration config, @NotNull String o, @NotNull String n) {
-        config.set(n, config.get(o));
+        Object old = config.get(o);
+        if (old == null) {
+            return;
+        }
+        config.set(n, old);
         config.set(o, null);
     }
 
