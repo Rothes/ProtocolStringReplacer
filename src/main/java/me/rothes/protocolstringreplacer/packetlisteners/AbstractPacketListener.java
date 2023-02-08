@@ -33,7 +33,7 @@ public abstract class AbstractPacketListener {
             return ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
         } catch (UnsupportedOperationException e) {
             // TemporaryPlayer throws
-            ProtocolStringReplacer.warn("Unable to get the player from packet. Must be an issue from ProtocolLib: " + e);
+            ProtocolStringReplacer.warn("Unable to get the player [" + player.getAddress() + "] from packet. Must be an issue from ProtocolLib: " + e);
             return null;
         }
     }
