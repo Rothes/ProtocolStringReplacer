@@ -92,8 +92,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         consoleReplaceManager = new ConsoleReplaceManager(this);
         consoleReplaceManager.initialize();
 
-        loadConfig();
-        PsrLocalization.initialize(instance);
+        loadConfigAndLocale();
         checkConfig();
         enableModify(ConfigManager.LifeCycle.INIT);
     }
@@ -275,15 +274,23 @@ public class ProtocolStringReplacer extends JavaPlugin {
         }
     }
 
-    private void loadConfig() {
+    private void loadConfigAndLocale() {
+        configFile = new File(instance.getDataFolder() + "/Config.yml");
+        config = new CommentYamlConfiguration();
+        if (!configFile.exists()) {
+            PsrLocalization.initialize(instance);
+            return;
+        }
+
         try {
-            configFile = new File(instance.getDataFolder() + "/Config.yml");
-            config = new CommentYamlConfiguration();
             config.load(configFile);
         } catch (IOException | InvalidConfigurationException e) {
+            PsrLocalization.initialize(instance);
             error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Config-Failed-To-Load"), e);
             config = PsrLocalization.getDefaultLocaledConfig();
+            return;
         }
+        PsrLocalization.initialize(instance);
     }
 
     private void checkConfig() {
@@ -414,7 +421,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
             try {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
-                loadConfig();
+                loadConfigAndLocale();
                 checkConfig();
                 replacerManager.cancelCleanTask();
                 replacerManager.saveReplacerConfigs();
