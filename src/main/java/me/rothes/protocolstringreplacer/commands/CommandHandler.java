@@ -25,10 +25,11 @@ import java.util.List;
 public class CommandHandler implements TabCompleter, CommandExecutor {
 
     private final LinkedList<SubCommand> subCommands = new LinkedList<>();
+    private final ProtocolStringReplacer plugin = ProtocolStringReplacer.getInstance();
 
     public void initialize() {
-        ProtocolStringReplacer.getInstance().getCommand("ProtocolStringReplacer").setExecutor(this);
-        Bukkit.getServer().getPluginCommand("ProtocolStringReplacer").setTabCompleter(this);
+        plugin.getCommand("ProtocolStringReplacer").setExecutor(this);
+        plugin.getCommand("ProtocolStringReplacer").setTabCompleter(this);
 
         subCommands.add(new Edit());
         subCommands.add(new Parse());
@@ -41,7 +42,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         if (sender instanceof CommandBlock) {
             sender.sendMessage(PsrLocalization.getLocaledMessage("Command-Block-Sender.Messages.Command-Not-Available"));
         } else {
-            PsrUser user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
+            PsrUser user = plugin.getUserManager().getUser(sender);
             if (args.length > 0) {
                 String[] mergedArgs = ArgUtils.mergeQuotes(args);
 
@@ -79,7 +80,8 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player && ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
+        if (plugin.getConfigManager().cmdTypingSound
+                && sender instanceof Player && plugin.getServerMajorVersion() >= 9) {
             Player player = (Player) sender;
             player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 80.0F, 1.0F);
         }
@@ -87,7 +89,7 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         String[] mergedArgs = ArgUtils.mergeQuotes(args);
 
         List<String> list = new ArrayList<>();
-        PsrUser user = ProtocolStringReplacer.getInstance().getUserManager().getUser(sender);
+        PsrUser user = plugin.getUserManager().getUser(sender);
         if (mergedArgs.length == 1) {
             list.add("help");
             if (user.hasCommandToConfirm() && !user.isConfirmExpired()) {

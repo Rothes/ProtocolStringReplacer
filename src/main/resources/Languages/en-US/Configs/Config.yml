@@ -18,6 +18,9 @@ Options:
   ProtocolLib-Side-Stack-Print-Count: 3
 
   Features:
+    # Enable command typing sound in game.
+    Command-Typing-Sound-Enabled: true
+
     # Console related options.
     Console:
       # Show loaded replacer configs in console.

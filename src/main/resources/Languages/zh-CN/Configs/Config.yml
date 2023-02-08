@@ -18,6 +18,9 @@ Options:
   ProtocolLib-Side-Stack-Print-Count: 3
 
   Features:
+    # 启用游戏内指令输入音效.
+    Command-Typing-Sound-Enabled: true
+
     # 控制台相关设定.
     Console:
       # 在控制台内显示加载的替换配置文件.

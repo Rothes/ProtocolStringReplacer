@@ -6,6 +6,8 @@ public class ConfigManager {
 
     public final boolean printReplacer;
 
+    public final boolean cmdTypingSound;
+
     public final char placeholderHead;
     public final char placeholderTail;
 
@@ -28,6 +30,7 @@ public class ConfigManager {
 
     public ConfigManager(ProtocolStringReplacer instance) {
         this.printReplacer = instance.getConfig().getBoolean("Options.Features.Console.Print-Replacer-Config-When-Loaded", false);
+        this.cmdTypingSound = instance.getConfig().getBoolean("Options.Features.Command-Typing-Sound-Enabled", true);
 
         String placeholderHead = instance.getConfig().getString("Options.Features.Placeholder.Placeholder-Head");
         if (placeholderHead == null || placeholderHead.isEmpty()) {
