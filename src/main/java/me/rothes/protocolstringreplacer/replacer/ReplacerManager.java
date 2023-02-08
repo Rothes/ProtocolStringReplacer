@@ -95,7 +95,7 @@ public class ReplacerManager {
                 CommentYamlConfiguration config = new CommentYamlConfiguration();
                 config.load(file);
                 loaded.put(file, config);
-            } catch (IOException | InvalidConfigurationException e) {
+            } catch (Throwable e) {
                 ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Replacer-Failed-To-Load",
                         file.getAbsolutePath().substring((ProtocolStringReplacer.getInstance().getDataFolder().getAbsolutePath() + "\\").length()).replace('\\', '/')), e);
             }
