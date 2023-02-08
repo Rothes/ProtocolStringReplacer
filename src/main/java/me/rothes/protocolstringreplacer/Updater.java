@@ -158,7 +158,9 @@ public class Updater implements Listener {
             String logLevel = json.has("Log_Level") ? json.get("Log_Level").getAsString() : "default maybe";
 
             for (String s : msg.split("\n")) {
-                messages.add(s);
+                if (!json.has("Notify_In_Game") || json.get("Notify_In_Game").getAsBoolean()) {
+                    messages.add(s);
+                }
                 switch (logLevel) {
                     case "Error":
                         ProtocolStringReplacer.error(s);
