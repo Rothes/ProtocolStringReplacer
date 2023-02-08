@@ -2,6 +2,7 @@ Console-Sender:
   Messages:
     Command-Not-Available: '&c仅玩家可使用该指令.'
     Initialize:
+      Config-Failed-To-Load: '&c无法载入全局配置文件. 请通过下面的报错堆栈检查错误. 正在使用默认值.'
       Require-Spigot: '&c本插件需要使用 Spigot 或其衍生服务端.'
       Recommend-Paper: '您未使用 Paper 或其衍生服务端核心. 建议使用 Paper 以获得完整功能.'
       Out-Dated-Server: '您使用的服务端过旧, 可能无法正常享受一些功能..'

@@ -18,6 +18,7 @@ import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.PluginManager;
@@ -275,8 +276,14 @@ public class ProtocolStringReplacer extends JavaPlugin {
     }
 
     private void loadConfig() {
-        configFile = new File(instance.getDataFolder() + "/Config.yml");
-        config = CommentYamlConfiguration.loadConfiguration(configFile);
+        try {
+            configFile = new File(instance.getDataFolder() + "/Config.yml");
+            config = new CommentYamlConfiguration();
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Config-Failed-To-Load"), e);
+            config = PsrLocalization.getDefaultLocaledConfig();
+        }
     }
 
     private void checkConfig() {

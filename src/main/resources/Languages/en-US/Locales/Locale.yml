@@ -2,6 +2,7 @@ Console-Sender:
   Messages:
     Command-Not-Available: '&cOnly players can execute this command.'
     Initialize:
+      Config-Failed-To-Load: '&cFailed to load global config. Please fix the problem with the trace stack. Using defaults.'
       Require-Spigot: '&cThis plugin must run on Spigot server or its fork.'
       Recommend-Paper: 'You are not running Paper server or its fork. It''s recommended to switch to Paper for full supports.'
       Out-Dated-Server: 'Your server version is too outdated, and may not enjoy some features normally...'
