@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 public abstract class AbstractPacketListener {
 
     protected final PacketType packetType;
-    public PacketAdapter packetAdapter;
+    protected PacketAdapter packetAdapter;
 
     protected AbstractPacketListener(@Nonnull PacketType packetType) {
         this.packetType = packetType;
