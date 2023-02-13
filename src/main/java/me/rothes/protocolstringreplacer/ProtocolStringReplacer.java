@@ -339,6 +339,8 @@ public class ProtocolStringReplacer extends JavaPlugin {
                         FileUtils.createFile(file);
                         try (InputStream inputStream = getResource("Languages/" + line)) {
                             Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        } catch (Throwable t) {
+                            warn("Failed to create example replacer config " + line + ": " + t);
                         }
                     }
                 }
