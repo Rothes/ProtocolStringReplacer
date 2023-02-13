@@ -1,4 +1,4 @@
-name: Bug Report Form
+name: Bug Report
 description: Report a Bug or an Issue
 title: "[Bug] "
 labels: [🐞 Unconfirmed bug]
@@ -119,7 +119,7 @@ body:
       description: |
         You can add any other context about the issue here.
       placeholder: |
-        Screenshots, videos, more info...
+        Screenshots, videos, System version, more info...
 
   - type: markdown
     attributes:
