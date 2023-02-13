@@ -84,7 +84,7 @@ body:
       placeholder: 'git-Purpur-1894 (MC: 1.19.3)*'
 
   - id: psr-version
-    type: textarea
+    type: input
     validations:
       required: true
     attributes:
@@ -95,7 +95,7 @@ body:
       placeholder: '2.17.3'
 
   - id: protocollib-version
-    type: textarea
+    type: input
     validations:
       required: true
     attributes:
