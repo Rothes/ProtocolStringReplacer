@@ -1,0 +1,128 @@
+name: Bug Report 错误报告
+description: 报告错误或议题 [中文|Chinese]
+title: "[Bug] "
+labels: [🐞 Unconfirmed bug]
+assignees:
+  - Rothes
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 欢迎来到 ProtocolStringReplacer 问题追踪器
+        如果您需要帮助, 可以加入我们的 [Discord 服务器](https://discord.gg/zwzzkmYCBb) 或 [QQ群](https://qm.qq.com/cgi-bin/qm/qr?k=mDtcrvBGzqbA05mPLzBnPAYXm5lskYxg&jump_from=webapi).
+        感谢您愿意花费一些时间来帮助我们填写这个错误报告.
+  
+  - id: checklist
+    type: checkboxes
+    attributes:
+      label: '检查清单'
+      description: 在创建问题之前，请先检查此清单.
+      options:
+      - label: 我已经尝试过了最新开发版本的 ProtocolLib.
+      - label: 我正在使用最新的官方 PSR.
+        required: true
+      - label: 我搜寻了类似的未关闭议题, 但没有找到任何有关的错误报告。
+        required: true
+  
+  - id: description
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: '描述'
+      description: |
+        清楚、详细地描述您遇到的错误是什么.
+        您提供的信息越多, 我们就越容易处理这个问题.
+      placeholder: |
+        当我在做 [...] 时, 我遇到了 [...].
+
+  - id: reproduction-steps
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: '重现步骤'
+      description: |
+        重现此问题的完整步骤.
+        您描述地越清晰, 我们就越容易复现这个问题.
+      placeholder: |
+        1. 先做 [...]
+        2. 再做 [...]
+        3. 错误 [...] 发生了
+
+  - id: expected-behaviour
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: '预期行为'
+      description: |
+        您认为怎么样才是正确、预期的行为?
+      placeholder: |
+        我希望它能够 [...].
+
+  - id: stacktrace
+    type: input
+    attributes:
+      label: '堆栈轨迹'
+      description: |
+        检查您的服务端日志, 搜索任何来自 ProtocolStringReplacer 的警告及错误信息.
+        如果您不确定, 请发送您的完整日志.
+      placeholder: https://pastebin.com/...
+
+  - id: server-software
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: '服务端版本'
+      description: |
+        请输入您使用的服务端, 包括版本号.
+        执行 /about 指令并粘贴其输出.
+      placeholder: 'git-Purpur-1894 (MC: 1.19.3)*'
+
+  - id: psr-version
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: 'ProtocolStringReplacer 版本'
+      description: |
+        **"最新" 不是版本号, 我们需要确切的版本号.**
+        请输入 ProtocolStringReplacer 的版本号.
+      placeholder: '2.17.3'
+
+  - id: protocollib-version
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: 'ProtocolLib 版本'
+      description: |
+        执行 /protocol version 指令并粘贴其输出.
+      placeholder: 'v5.0.0-SNAPSHOT-b612'
+
+  - id: other-versions
+    type: textarea
+    attributes:
+      label: '其它插件'
+      description: |
+        如果您的议题于其它插件有关系, 请在此处填写.
+      placeholder: MyPluginA v1.0, MyPluginB v1.1 ...
+
+  - id: additional-context
+    type: textarea
+    attributes:
+      label: '额外内容'
+      description: |
+        您可以在此处添加有关本议题的补充.
+      placeholder: |
+        截图, 视频, 系统版本, 以及其它的更多信息...
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 非常感谢您能够提交此错误报告!
+        如果您之后发现了任何有助于解决此议题的其他信息, 请立即在此议题下回复!
+        任何更多信息都有助于我们解决此议题!
