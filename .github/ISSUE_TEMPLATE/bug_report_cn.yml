@@ -1,4 +1,4 @@
-name: Bug Report 错误报告
+name: Bug Report
 description: 报告错误或议题 [中文|Chinese]
 title: "[Bug] "
 labels: [🐞 Unconfirmed bug]
@@ -89,7 +89,7 @@ body:
     attributes:
       label: 'ProtocolStringReplacer 版本'
       description: |
-        **"最新" 不是版本号, 我们需要确切的版本号.**
+        **"最新" 不是版本号, 我们需要的是一个确切的版本号.**
         请输入 ProtocolStringReplacer 的版本号.
       placeholder: '2.17.3'
 
@@ -108,7 +108,7 @@ body:
     attributes:
       label: '其它插件'
       description: |
-        如果您的议题于其它插件有关系, 请在此处填写.
+        如果您的议题与其它插件有关系, 请在此处填写.
       placeholder: MyPluginA v1.0, MyPluginB v1.1 ...
 
   - id: additional-context
