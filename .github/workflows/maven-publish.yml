@@ -17,10 +17,15 @@ jobs:
           
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
+        
+#       - uses: actions/upload-artifact@v3
+#         with:
+#           name: ProtocolStringReplacer-Snapshot
+#           path: target/ProtocolStringReplacer v[\d\.]+.jar
       
       - run: mkdir ProtocolStringReplacer && cp target/*.jar ProtocolStringReplacer
       
       - uses: actions/upload-artifact@v3
         with:
-          name: artifact
+          name: ProtocolStringReplacer-Snapshot
           path: ProtocolStringReplacer
