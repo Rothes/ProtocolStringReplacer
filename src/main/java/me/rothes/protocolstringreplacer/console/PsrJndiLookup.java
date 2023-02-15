@@ -13,7 +13,7 @@ import java.util.Objects;
 @Plugin(name = "jndi", category = StrLookup.CATEGORY)
 public class PsrJndiLookup implements StrLookup {
 
-    static final String CONTAINER_JNDI_RESOURCE_PATH_PREFIX = "java:comp/env/";
+//    static final String CONTAINER_JNDI_RESOURCE_PATH_PREFIX = "java:comp/env/";
 
     @Override
     public String lookup(final String key) {
@@ -25,28 +25,26 @@ public class PsrJndiLookup implements StrLookup {
         if (key == null) {
             return null;
         }
+        // runTaskLater to avoid errors.
+        Bukkit.getScheduler().runTaskLater(ProtocolStringReplacer.getInstance()
+                , () -> ProtocolStringReplacer.info("Blocked not whitelisted Jndi looking up [" + key + "]")
+                , 0L);
+        return null;
+
         // TODO: Maybe add a config for those really need jndi..?
-        if (true) {
-            // runTaskLater to avoid errors.
-            Bukkit.getScheduler().runTaskLater(ProtocolStringReplacer.getInstance()
-                    , () -> ProtocolStringReplacer.info("Blocked not whitelisted Jndi looking up [" + key + "]")
-                    , 0L);
-            return null;
-        }
-
-        try (final JndiManager jndiManager = JndiManager.getDefaultManager()) {
-            final String jndiName = convertJndiName(key);
-            return Objects.toString(jndiManager.lookup(jndiName), null);
-        } catch (final NamingException e) {
-            return null;
-        }
+//        try (final JndiManager jndiManager = JndiManager.getDefaultManager()) {
+//            final String jndiName = convertJndiName(key);
+//            return Objects.toString(jndiManager.lookup(jndiName), null);
+//        } catch (final NamingException e) {
+//            return null;
+//        }
     }
 
-    private String convertJndiName(final String jndiName) {
-        if (!jndiName.startsWith(CONTAINER_JNDI_RESOURCE_PATH_PREFIX) && jndiName.indexOf(':') == -1) {
-            return CONTAINER_JNDI_RESOURCE_PATH_PREFIX + jndiName;
-        }
-        return jndiName;
-    }
+//    private String convertJndiName(final String jndiName) {
+//        if (!jndiName.startsWith(CONTAINER_JNDI_RESOURCE_PATH_PREFIX) && jndiName.indexOf(':') == -1) {
+//            return CONTAINER_JNDI_RESOURCE_PATH_PREFIX + jndiName;
+//        }
+//        return jndiName;
+//    }
 
 }
