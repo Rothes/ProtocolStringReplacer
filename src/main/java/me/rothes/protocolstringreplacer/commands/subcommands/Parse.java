@@ -98,7 +98,8 @@ public class Parse extends SubCommand {
         }
 
         ComponentBuilder placeholderMessage = new ComponentBuilder(PsrLocalization.getLocaledMessage("Sender.Commands.Parse.Result.PAPI-Replace.Start-Prefix"));
-        if (ProtocolStringReplacer.getInstance().getReplacerManager().hasPlaceholder(text)) {
+        if (ProtocolStringReplacer.getInstance().getConfigManager().placeholderEnabled
+                && ProtocolStringReplacer.getInstance().getReplacerManager().hasPlaceholder(text)) {
             String original1 = text;
             PsrUser placeholderTarget = player == null ? ProtocolStringReplacer.getInstance().getUserManager().getConsoleUser() :
                     ProtocolStringReplacer.getInstance().getUserManager().getUser(player);

@@ -1,5 +1,7 @@
 package me.rothes.protocolstringreplacer;
 
+import org.bukkit.Bukkit;
+
 import java.util.Locale;
 
 public class ConfigManager {
@@ -8,8 +10,10 @@ public class ConfigManager {
 
     public final boolean cmdTypingSound;
 
+    public final boolean placeholderEnabled;
     public final char placeholderHead;
     public final char placeholderTail;
+    public final boolean consolePlaceholder;
 
     public final long cleanTaskInterval;
     public final long cleanAccessInterval;
@@ -18,7 +22,6 @@ public class ConfigManager {
 
     public final String listenerPriority;
     public final boolean forceReplace;
-    public final boolean consolePlaceholder;
 
     public final boolean convertPlayerChat;
     public final boolean removeCacheWhenMerchantTrade;
@@ -40,6 +43,16 @@ public class ConfigManager {
             this.placeholderHead = placeholderHead.charAt(0);
         }
 
+        if (instance.getConfig().getBoolean("Options.Features.Placeholder.Placeholder-Enabled", true)) {
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                placeholderEnabled = true;
+            } else {
+                ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Missing-PAPI"));
+                placeholderEnabled = false;
+            }
+        } else {
+            placeholderEnabled = false;
+        }
         String placeholderTail = instance.getConfig().getString("Options.Features.Placeholder.Placeholder-Tail");
         if (placeholderTail == null || placeholderTail.isEmpty()) {
             ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Config.Invalid-Placeholder-Tail"));

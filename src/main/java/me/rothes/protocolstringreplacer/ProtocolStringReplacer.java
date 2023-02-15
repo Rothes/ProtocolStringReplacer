@@ -185,7 +185,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 warn("\033[0;31m" + PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Recommend-Paper") + "\033[0m");
             }
         }
-        if (!checkDepends("PlaceholderAPI", "ProtocolLib")) {
+        if (!checkDepends("ProtocolLib")) {
             initialize();
             new Updater(this).start();
         }

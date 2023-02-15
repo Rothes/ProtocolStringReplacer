@@ -30,6 +30,8 @@ Options:
     # 以防止玩家通过占位符获取到不该获取的信息.
     # 在默认值下, 使用如｛player_name｝的格式来获取占位符的变量.
     Placeholder:
+      # 启用 PlaceholderAPI 功能. 如果您不需要解析占位符, 可以关闭此功能.
+      Placeholder-Enabled: true
       # 使用占位符的前缀. 仅允许一个字符.
       Placeholder-Head: ｛
       # 使用占位符的后缀. 仅允许一个字符.

@@ -7,6 +7,7 @@ Console-Sender:
       Recommend-Paper: '您未使用 Paper 或其衍生服务端核心. 建议使用 Paper 以获得完整功能.'
       Out-Dated-Server: '您使用的服务端过旧, 可能无法正常享受一些功能..'
       Missing-Dependency: '&c未检测到前置插件 %0%，请安装后再使用本插件.'
+      Missing-PAPI: '&c未安装 PlaceholderAPI, 尽管您在全局配置中启用了占位符功能, 此功能已被禁用.'
       Created-Example-Replacers: '&a已生成示例配置.'
       Added-Missing-Config-Key: '&c自动补充了 Config.yml 缺失的配置键 %0%'
       Backing-Up-Configs: '&a正在备份配置文件到文件夹: %0%'

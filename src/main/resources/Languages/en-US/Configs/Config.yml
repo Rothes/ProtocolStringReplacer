@@ -31,6 +31,8 @@ Options:
     # By default, you can use the format with ｛player_name｝(Chinese character) to use the placeholder.
     # You may need to edit them for convenient usage.
     Placeholder:
+      # Enable PlaceholderAPI features. Disable if you don't need placeholder parsing.
+      Placeholder-Enabled: true
       # The prefix of a placeholder. Only one character allowed.
       Placeholder-Head: ｛
       # The suffix of a placeholder. Only one character allowed.

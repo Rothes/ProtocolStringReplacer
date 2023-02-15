@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -138,9 +139,11 @@ public class ReplacerManager {
     }
 
     public void initialize() {
-        this.papiReplacer = new PAPIReplacer();
-        papiHead = papiReplacer.getHead();
-        papiTail = papiReplacer.getTail();
+        if (ProtocolStringReplacer.getInstance().getConfigManager().placeholderEnabled) {
+            this.papiReplacer = new PAPIReplacer();
+            papiHead = papiReplacer.getHead();
+            papiTail = papiReplacer.getTail();
+        }
 
         File path = new File(ProtocolStringReplacer.getInstance().getDataFolder() + "/Replacers");
         long startTime = System.nanoTime();
@@ -396,14 +399,10 @@ public class ReplacerManager {
     }
 
     public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables) {
-        setPapi(user, replaceables, getPapiIndexes(replaceables));
-    }
-
-    public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables, List<Integer> indexes) {
         Validate.notNull(user, "PsrUser cannot be null");
         Validate.notNull(replaceables, "List cannot be null");
-        Validate.notNull(indexes, "List cannot be null");
 
+        List<Integer> indexes = getPapiIndexes(replaceables);
         if (indexes.isEmpty()) {
             return;
         }
@@ -426,6 +425,10 @@ public class ReplacerManager {
 
     public List<Integer> getPapiIndexes(@Nonnull List<Replaceable> replaceables) {
         Validate.notNull(replaceables, "List cannot be null");
+
+        if (!ProtocolStringReplacer.getInstance().getConfigManager().placeholderEnabled) {
+            return Collections.emptyList();
+        }
 
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < replaceables.size(); i++) {
