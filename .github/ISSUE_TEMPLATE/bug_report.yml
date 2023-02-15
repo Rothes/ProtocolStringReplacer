@@ -1,0 +1,129 @@
+name: Bug Report
+description: Report a Bug or an Issue
+title: "[Bug] "
+labels: [🐞 Unconfirmed bug]
+assignees:
+  - Rothes
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome to the ProtocolStringReplacer Bug Tracker
+        If you need support, you can join our [Discord server](https://discord.gg/zwzzkmYCBb) or [QQ Group](https://qm.qq.com/cgi-bin/qm/qr?k=mDtcrvBGzqbA05mPLzBnPAYXm5lskYxg&jump_from=webapi).
+        Thanks for taking the time to fill out this bug report.
+  
+  - id: checklist
+    type: checkboxes
+    attributes:
+      label: 'Checklist'
+      description: Please go through this checklist before creating the issue.
+      options:
+      - label: I have tried the latest development version of ProtocolLib.
+      - label: I am using the latest available official release of PSR.
+        required: true
+      - label: I searched for similar open issues and could not find any existing bug report on this.
+        required: true
+  
+  - id: description
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: 'Description'
+      description: |
+        A clear and detailed description of what the bug is.
+        The more information you can provide, the easier we can handle this problem.
+      placeholder: |
+        When doing [...] I experienced [...].
+
+  - id: reproduction-steps
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: 'Reproduction Steps'
+      description: |
+        The exact steps to reproduce this issue.
+        The more detailed, the easier we can reproduce it.
+      placeholder: |
+        1. Do [...]
+        2. Then do [...]
+        3. Now [...] happens
+
+  - id: expected-behaviour
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: 'Expected Behavior'
+      description: |
+        What were you expecting to happen?
+        What do you think would have been the correct behaviour?
+      placeholder: |
+        I expected [...] to happen.
+
+  - id: stacktrace
+    type: input
+    attributes:
+      label: 'StackTrace'
+      description: |
+        Check your server log and search for any warning or error messages from ProtocolStringReplacer.
+        If you are unsure about it, post your full log.
+      placeholder: https://pastebin.com/...
+
+  - id: server-software
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: 'Server Software'
+      description: |
+        Please input the software your server is running on, including the version.
+        Run /about and paste the output here.
+      placeholder: 'git-Purpur-1894 (MC: 1.19.3)*'
+
+  - id: psr-version
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: 'ProtocolStringReplacer version'
+      description: |
+        **"latest" is not a version number, we need the exact version.**
+        Please input the version of ProtocolStringReplacer.
+      placeholder: '2.17.3'
+
+  - id: protocollib-version
+    type: input
+    validations:
+      required: true
+    attributes:
+      label: 'ProtocolLib version'
+      description: |
+        Run /protocol version and paste the exact version here.
+      placeholder: 'v5.0.0-SNAPSHOT-b612'
+
+  - id: other-versions
+    type: textarea
+    attributes:
+      label: 'Other plugins'
+      description: |
+        If your issue is related to other plugins, put them here.
+      placeholder: MyPluginA v1.0, MyPluginB v1.1 ...
+
+  - id: additional-context
+    type: textarea
+    attributes:
+      label: 'Additional Context'
+      description: |
+        You can add any other context about the issue here.
+      placeholder: |
+        Screenshots, videos, System version, more info...
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Thank you for submitting your bug report!
+        If you find any additional info that can help to address this issue, don't hesitate to comment on the issue!
+        Any additional info can help us fix this bug faster.
