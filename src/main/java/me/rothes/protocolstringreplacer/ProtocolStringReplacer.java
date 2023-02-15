@@ -36,6 +36,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
@@ -325,7 +326,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         if (!new File(instance.getDataFolder() + "/Replacers/").exists()) {
             try (
                     InputStream list = PsrLocalization.getLocaledResource("/Example_Replacers.txt");
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(list))
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(list, StandardCharsets.UTF_8))
             ) {
                 for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                     if (line.isEmpty()) {
