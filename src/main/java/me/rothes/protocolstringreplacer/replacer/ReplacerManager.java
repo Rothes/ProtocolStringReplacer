@@ -525,6 +525,8 @@ public class ReplacerManager {
                     }
                 }
                 break;
+            default:
+                throw new AssertionError();
         }
         return false;
     }
