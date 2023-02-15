@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.replacer.containers;
 
+import me.rothes.protocolstringreplacer.api.exceptions.JsonSyntaxException;
 import me.rothes.protocolstringreplacer.utils.SpigotUtils;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ public class ChatJsonContainer extends AbstractContainer<String> {
             try {
                 componentsContainer = new ComponentsContainer(ComponentSerializer.parse(content), root);
             } catch (Throwable t) {
-                throw new RuntimeException("Serializer can't parse Json: " + content);
+                throw new JsonSyntaxException("Serializer can't parse Json: " + content, t);
             }
             children.add(componentsContainer);
         }

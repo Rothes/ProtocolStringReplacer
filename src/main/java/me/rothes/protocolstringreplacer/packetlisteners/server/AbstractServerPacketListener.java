@@ -9,6 +9,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
+import me.rothes.protocolstringreplacer.api.exceptions.JsonSyntaxException;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.AbstractPacketListener;
@@ -115,7 +116,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         try {
             container.createDefaultChildren();
         } catch (Throwable t) {
-            throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+            throw new JsonSyntaxException("Unable to create default children. Please check your Json format.\n"
                     + "Original Json: " + json + "\n"
                     + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
@@ -123,7 +124,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         try {
             container.createTexts(container);
         } catch (Throwable t) {
-            throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+            throw new JsonSyntaxException("Unable to create Texts. Please check your Json format.\n"
                     + "Original Json: " + json + "\n"
                     + "Replaced Json: " + container.getJsons().get(0).getText() + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
@@ -213,7 +214,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             try {
                 container.createDefaultChildren();
             } catch (Throwable t) {
-                throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+                throw new JsonSyntaxException("Unable to create default children. Please check your Json format.\n"
                         + "Original Json: " + json + "\n"
                         + "Replaced Json: " + jsons.get(0).getText() + "\n"
                         + "If you need support, please provide the stacktrace below.", t);
@@ -221,7 +222,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             try {
                 container.createTexts(container);
             } catch (Throwable t) {
-                throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+                throw new JsonSyntaxException("Unable to create Texts. Please check your Json format.\n"
                         + "Original Json: " + json + "\n"
                         + "Replaced Json: " + jsons.get(0).getText() + "\n"
                         + "If you need support, please provide the stacktrace below.", t);
@@ -402,7 +403,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         try {
             container.createDefaultChildrenDeep();
         } catch (Throwable t) {
-            throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+            throw new JsonSyntaxException("Unable to create default children. Please check your Json format.\n"
                     + "Original Jsons: " + originalJsons + "\n"
                     + "Replaced Jsons: " + jsons + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
@@ -410,7 +411,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         try {
             container.createTexts(container);
         } catch (Throwable t) {
-            throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+            throw new JsonSyntaxException("Unable to create Texts. Please check your Json format.\n"
                     + "Original Jsons: " + originalJsons + "\n"
                     + "Replaced Jsons: " + jsons + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
@@ -455,7 +456,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             } catch (Throwable t) {
                 String replaced = container.getNbtString();
                 container.restoreItem();
-                throw new RuntimeException("Unable to parse ItemStack Nbt Jsons. Please check your Json format.\n"
+                throw new JsonSyntaxException("Unable to parse ItemStack Nbt Jsons. Please check your Json format.\n"
                         + "Original Nbt Json: " + container.getNbtString() + "\n"
                         + "Replaced Nbt Json: " + replaced + "\n"
                         + "If you need support, please provide the stacktrace below.", t);
@@ -509,7 +510,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             try {
                 container.createDefaultChildrenDeep();
             } catch (Throwable t) {
-                throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+                throw new JsonSyntaxException("Unable to create default children. Please check your Json format.\n"
                         + "Original Jsons: " + originalJsons + "\n"
                         + "Replaced Jsons: " + container.getJsons() + "\n"
                         + "If you need support, please provide the stacktrace below.", t);
@@ -517,7 +518,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             try {
                 container.createTexts(container);
             } catch (Throwable t) {
-                throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+                throw new JsonSyntaxException("Unable to create Texts. Please check your Json format.\n"
                         + "Original Jsons: " + originalJsons + "\n"
                         + "Replaced Jsons: " + container.getJsons() + "\n"
                         + "If you need support, please provide the stacktrace below.", t);

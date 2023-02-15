@@ -7,6 +7,7 @@ import de.tr7zw.changeme.nbtapi.NbtApiException;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
+import me.rothes.protocolstringreplacer.api.exceptions.JsonSyntaxException;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
@@ -64,7 +65,7 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
         try {
             container.getResult();
         } catch (NbtApiException exception) {
-            throw new RuntimeException("Unable to parse Sign Nbt Json. Please check your Json format.\n"
+            throw new JsonSyntaxException("Unable to parse Sign Nbt Json. Please check your Json format.\n"
                     + "Original Nbt Json: " + originalNbt + "\n"
                     + "Replaced Nbt Json: " + jsons.get(0).getText() + "\n"
                     + "If you need support, please provide the stacktrace below.", exception);
@@ -83,7 +84,7 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
                     sb.append(baseComponent.toLegacyText());
                 }
             } catch (Throwable t) {
-                throw new RuntimeException("Unable to parse Sign Nbt Json. Please check your Json format.\n"
+                throw new JsonSyntaxException("Unable to parse Sign Nbt Json. Please check your Json format.\n"
                         + "Original Nbt Json: " + originalNbt + "\n"
                         + "Replaced Nbt Json: " + container.getNbtString() + "\n"
                         + "If you need support, please provide the stacktrace below.", t);
@@ -123,7 +124,7 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
         try {
             container.createDefaultChildrenDeep();
         } catch (Throwable t) {
-            throw new RuntimeException("Unable to create default children. Please check your Json format.\n"
+            throw new JsonSyntaxException("Unable to create default children. Please check your Json format.\n"
                     + "Original Jsons: " + originalJsons + "\n"
                     + "Replaced Jsons: " + jsons + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
@@ -131,7 +132,7 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
         try {
             container.createTexts(container);
         } catch (Throwable t) {
-            throw new RuntimeException("Unable to create Texts. Please check your Json format.\n"
+            throw new JsonSyntaxException("Unable to create Texts. Please check your Json format.\n"
                     + "Original Jsons: " + originalJsons + "\n"
                     + "Replaced Jsons: " + jsons + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
