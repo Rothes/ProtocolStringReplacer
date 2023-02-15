@@ -5,6 +5,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.api.exceptions.IncompatibleServerException;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
@@ -152,7 +153,7 @@ public class PlayerChatHelper {
         try {
             return messageContentField.get(messageBodyField.get((playerChatMessage)));
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -160,7 +161,7 @@ public class PlayerChatHelper {
         try {
             return WrappedChatComponent.fromHandle(((Optional<Object>)playerChatMessageComponentField.get((playerChatMessage))).get());
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -168,7 +169,7 @@ public class PlayerChatHelper {
         try {
             return WrappedChatComponent.fromHandle(componentField.get(messageContentField.get(messageBodyField.get((playerChatMessage)))));
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -176,7 +177,7 @@ public class PlayerChatHelper {
         try {
             return WrappedChatComponent.fromLegacyText((String) messageStringField.get(messageBody));
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -184,7 +185,7 @@ public class PlayerChatHelper {
         try {
             return WrappedChatComponent.fromHandle(componentField.get(componentHolder));
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -192,7 +193,7 @@ public class PlayerChatHelper {
         try {
             componentField.set(messageContentField.get(messageBodyField.get((playerChatMessage))), wrappedChatComponent.getHandle());
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -200,7 +201,7 @@ public class PlayerChatHelper {
         try {
             componentField.set(componentHolder, wrappedChatComponent.getHandle());
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -212,7 +213,7 @@ public class PlayerChatHelper {
         try {
             return (int) chatTypeField.get(object);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -228,7 +229,7 @@ public class PlayerChatHelper {
             }
             return WrappedChatComponent.fromHandle(o);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -236,7 +237,7 @@ public class PlayerChatHelper {
         try {
             displayNameField.set(object, wrappedChatComponent);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -252,7 +253,7 @@ public class PlayerChatHelper {
             }
             return WrappedChatComponent.fromHandle(o);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 
@@ -260,7 +261,7 @@ public class PlayerChatHelper {
         try {
             teamNameField.set(object, wrappedChatComponent);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
     }
 

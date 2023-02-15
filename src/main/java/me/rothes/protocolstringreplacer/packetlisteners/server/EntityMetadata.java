@@ -43,7 +43,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             packet = ognPacket.deepClone();
         } catch (RuntimeException e) {
             if (exceptionTimes < ProtocolStringReplacer.getInstance().getConfigManager().protocolLibSideStackPrintCount) {
-                ProtocolStringReplacer.warn("Exception which may be a ProtocolLib side problem:", e);
+                ProtocolStringReplacer.warn("Exception which may be a ProtocolLib side problem: ", e);
                 ProtocolStringReplacer.warn("Please try to update your ProtocolLib to the latest development version.");
                 exceptionTimes++;
             }

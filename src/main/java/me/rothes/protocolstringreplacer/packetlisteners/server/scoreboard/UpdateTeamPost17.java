@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import me.rothes.protocolstringreplacer.api.exceptions.IncompatibleServerException;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.jetbrains.annotations.NotNull;
@@ -69,7 +70,7 @@ public final class UpdateTeamPost17 extends BaseUpdateTeamListener {
             wrappedChatComponent.setJson(replacedJson);
             field.set(infoObj, wrappedChatComponent.getHandle());
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleServerException(e);
         }
         return false;
     }
