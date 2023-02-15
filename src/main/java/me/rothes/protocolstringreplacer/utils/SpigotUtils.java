@@ -68,7 +68,6 @@ public class SpigotUtils {
     public static String serializeComponents(BaseComponent... components) {
         try {
             if (components.length == 1) {
-                ProtocolStringReplacer.warn(components[0].getClass().getCanonicalName());
                 return psrSerializer.toJson(components[0]);
             } else {
                 return psrSerializer.toJson(new TextComponent(components));
