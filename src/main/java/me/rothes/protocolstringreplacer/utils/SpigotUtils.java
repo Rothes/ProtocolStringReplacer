@@ -41,16 +41,16 @@ public class SpigotUtils {
                     } catch (NoSuchMethodError e) {
                         GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping();
                         try {
-                            gsonBuilder.registerTypeAdapter(BaseComponent.class, new ComponentSerializer()).
-                                    registerTypeAdapter(TextComponent.class, new TextComponentSerializer()).
-                                    registerTypeAdapter(TranslatableComponent.class, new TranslatableComponentSerializer()).
-                                    registerTypeAdapter(KeybindComponent.class, new KeybindComponentSerializer()).
-                                    registerTypeAdapter(ScoreComponent.class, new ScoreComponentSerializer()).
-                                    registerTypeAdapter(SelectorComponent.class, new SelectorComponentSerializer()).
-                                    registerTypeAdapter(Entity.class, new EntitySerializer()).
-                                    registerTypeAdapter(Text.class, new TextSerializer()).
-                                    registerTypeAdapter(Item.class, new ItemSerializer()).
-                                    registerTypeAdapter(ItemTag.class, new ItemTag.Serializer());
+                            gsonBuilder.registerTypeAdapter(BaseComponent.class, new ComponentSerializer())
+                                    .registerTypeAdapter(TextComponent.class, new TextComponentSerializer())
+                                    .registerTypeAdapter(TranslatableComponent.class, new TranslatableComponentSerializer())
+                                    .registerTypeAdapter(KeybindComponent.class, new KeybindComponentSerializer())
+                                    .registerTypeAdapter(ScoreComponent.class, new ScoreComponentSerializer())
+                                    .registerTypeAdapter(SelectorComponent.class, new SelectorComponentSerializer())
+                                    .registerTypeAdapter(Entity.class, new EntitySerializer())
+                                    .registerTypeAdapter(Text.class, new TextSerializer())
+                                    .registerTypeAdapter(Item.class, new ItemSerializer())
+                                    .registerTypeAdapter(ItemTag.class, new ItemTag.Serializer());
                         } catch (NoClassDefFoundError ignored) {
                             // Some types are not available on legacy servers.
                         }
@@ -66,10 +66,16 @@ public class SpigotUtils {
     }
 
     public static String serializeComponents(BaseComponent... components) {
-        if ( components.length == 1 ) {
-            return psrSerializer.toJson(components[0]);
-        } else {
-            return psrSerializer.toJson(new TextComponent(components));
+        try {
+            if (components.length == 1) {
+                ProtocolStringReplacer.warn(components[0].getClass().getCanonicalName());
+                return psrSerializer.toJson(components[0]);
+            } else {
+                return psrSerializer.toJson(new TextComponent(components));
+            }
+        } catch (Throwable t) {
+            // ComponentSerializer Gson may be modified during Runtime.
+            return ComponentSerializer.toString(components);
         }
     }
 
