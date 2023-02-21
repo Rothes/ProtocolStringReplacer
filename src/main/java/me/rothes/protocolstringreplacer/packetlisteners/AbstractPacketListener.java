@@ -29,13 +29,12 @@ public abstract class AbstractPacketListener {
     protected final PsrUser getEventUser(@Nonnull PacketEvent packetEvent) {
         Validate.notNull(packetEvent, "Packet Event cannot be null");
         Player player = packetEvent.getPlayer();
-        try {
-            return ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
-        } catch (UnsupportedOperationException e) {
-            // TemporaryPlayer throws
-            ProtocolStringReplacer.warn("Unable to get the player [" + player.getAddress() + "] from packet " + packetType.name() + ". "
-                    + "Must be an issue from ProtocolLib: " + e);
+        if (packetEvent.isPlayerTemporary()) {
+            ProtocolStringReplacer.warn("ProtocolLib returns temporary player [" + player.getAddress() + "] for packet " + packetType.name() + ". "
+                    + "It cannot be processed.");
             return null;
+        } else {
+            return ProtocolStringReplacer.getInstance().getUserManager().getUser(player);
         }
     }
 
