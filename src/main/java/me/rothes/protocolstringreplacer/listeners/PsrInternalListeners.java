@@ -19,15 +19,14 @@ public class PsrInternalListeners implements Listener {
     public void onPsrReload(PsrReloadEvent e) {
         if (e.getReloadState() == PsrReloadEvent.ReloadState.BEFORE) {
             maxRecords = ProtocolStringReplacer.getInstance().getConfigManager().maxCaptureRecords;
-        } else if (e.getReloadState() == PsrReloadEvent.ReloadState.FINISH) {
-            if (maxRecords != ProtocolStringReplacer.getInstance().getConfigManager().maxCaptureRecords) {
+        } else if (e.getReloadState() == PsrReloadEvent.ReloadState.FINISH
                 // maxCaptureRecords changed, reset user capture status.
-                PsrUserManager userManager = ProtocolStringReplacer.getInstance().getUserManager();
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    PsrUser user = userManager.getUser(player);
-                    for (ListenType value : ListenType.values()) {
-                        user.removeCaptureType(value);
-                    }
+                && maxRecords != ProtocolStringReplacer.getInstance().getConfigManager().maxCaptureRecords) {
+            PsrUserManager userManager = ProtocolStringReplacer.getInstance().getUserManager();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                PsrUser user = userManager.getUser(player);
+                for (ListenType value : ListenType.values()) {
+                    user.removeCaptureType(value);
                 }
             }
         }
