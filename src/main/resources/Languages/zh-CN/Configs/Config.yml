@@ -17,6 +17,9 @@ Options:
   # PSR 会显示多少次由 ProtocolLib 导致的报错? 设置为 0 为永久禁止.
   ProtocolLib-Side-Stack-Print-Count: 3
 
+  # 设置 /psr capture list 最多储存多少条捕获记录.
+  Max-Capture-Records: 100
+
   Features:
     # 启用游戏内指令输入音效.
     Command-Typing-Sound-Enabled: true

@@ -8,6 +8,7 @@ import me.rothes.protocolstringreplacer.api.user.PsrUserManager;
 import me.rothes.protocolstringreplacer.commands.CommandHandler;
 import me.rothes.protocolstringreplacer.console.ConsoleReplaceManager;
 import me.rothes.protocolstringreplacer.events.PsrReloadEvent;
+import me.rothes.protocolstringreplacer.listeners.PsrInternalListeners;
 import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
 import me.rothes.protocolstringreplacer.listeners.PlayerQuitListener;
 import me.rothes.protocolstringreplacer.packetlisteners.PacketListenerManager;
@@ -242,6 +243,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         CommandHandler commandHandler = new CommandHandler();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), instance);
+        Bukkit.getServer().getPluginManager().registerEvents(new PsrInternalListeners(), instance);
         packetListenerManager = new PacketListenerManager();
         packetListenerManager.initialize();
         commandHandler.initialize();

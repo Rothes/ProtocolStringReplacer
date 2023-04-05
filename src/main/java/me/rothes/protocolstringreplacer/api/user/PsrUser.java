@@ -180,7 +180,7 @@ public class PsrUser {
 
     public void addCaptureType(ListenType listenType) {
         captureTypes.add(listenType);
-        captures.put(listenType, new ArrayList<>(100));
+        captures.put(listenType, new ArrayList<>(ProtocolStringReplacer.getInstance().getConfigManager().maxCaptureRecords));
     }
 
     public void removeCaptureType(ListenType listenType) {
@@ -205,8 +205,8 @@ public class PsrUser {
             }
         }
 
-        if (captureInfos.size() == 100) {
-            captureInfos.remove(99);
+        if (captureInfos.size() == ProtocolStringReplacer.getInstance().getConfigManager().maxCaptureRecords) {
+            captureInfos.remove(ProtocolStringReplacer.getInstance().getConfigManager().maxCaptureRecords - 1);
         }
         captures.get(listenType).add(info);
     }
