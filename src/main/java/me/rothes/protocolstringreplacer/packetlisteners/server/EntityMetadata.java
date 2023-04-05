@@ -8,6 +8,10 @@ import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.utils.nmsmappings.ClassWrapper;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
@@ -111,7 +115,18 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             String replacedJson = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), filter);
             if (replacedJson != null) {
                 wrappedChatComponent.setJson(replacedJson);
-                return Optional.of(wrappedChatComponent.getHandle());
+                return wrappedChatComponent.getHandle();
+            } else {
+                return this;
+            }
+
+        } else if (object instanceof WrappedChatComponent) {
+            // Name of the entity
+            WrappedChatComponent wrappedChatComponent = (WrappedChatComponent) object;
+            String replacedJson = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), filter);
+            if (replacedJson != null) {
+                wrappedChatComponent.setJson(replacedJson);
+                return wrappedChatComponent;
             } else {
                 return this;
             }
@@ -126,6 +141,10 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(object);
             List<ReplacerConfig> replacerConfigs = ProtocolStringReplacer.getInstance().getReplacerManager().getAcceptedReplacers(user, filter);
             replaceItemStack(packetEvent, user, listenType, itemStack, replacerConfigs, replacerConfigs, replacerConfigs, false);
+
+//        } else if (ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz().isInstance(object)) {
+//            NBTContainer container = new NBTContainer(object);
+//            return null;
         }
         return null;
     }
