@@ -47,6 +47,11 @@ public class PsrReloadEvent extends Event implements Cancellable {
         this.cancelled = cancelled;
     }
 
+    @NotNull
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public enum ReloadState {
         BEFORE,
         FINISH
