@@ -11,6 +11,7 @@ import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowC
 import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.KickDisconnect;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.ChatPreview;
+import me.rothes.protocolstringreplacer.packetlisteners.server.chat.DisguisedChat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.SystemChat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.bossbar.BossBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.Chat;
@@ -106,6 +107,9 @@ public class PacketListenerManager {
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
             listeners.add(new SystemChat());
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() != 19 || ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 3) {
+                listeners.add(new DisguisedChat());
+            }
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() == 19 && ProtocolStringReplacer.getInstance().getServerMinorVersion() <= 2) {
