@@ -1,5 +1,6 @@
 package me.rothes.protocolstringreplacer.replacer.containers;
 
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -7,9 +8,22 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class ComponentContainer extends AbstractContainer<BaseComponent> {
+
+    private static final boolean TRANSLATE_FALLBACK = supportFallback();
+
+    private static boolean supportFallback() {
+        for (Method method : TranslatableComponent.class.getDeclaredMethods()) {
+            if (method.getName().equals("getFallback")) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public ComponentContainer(@NotNull BaseComponent component) {
         super(component);
@@ -44,6 +58,17 @@ public class ComponentContainer extends AbstractContainer<BaseComponent> {
                 for (BaseComponent component : with) {
                     children.add(new ComponentContainer(component, root));
                 }
+            }
+
+            if (TRANSLATE_FALLBACK) {
+                children.add(new SimpleTextContainer(translatableComponent.getFallback(), root) {
+                    @Override
+                    public @NotNull String getResult() {
+                        String result = super.getResult();
+                        translatableComponent.setFallback(result);
+                        return result;
+                    }
+                });
             }
         }
 
