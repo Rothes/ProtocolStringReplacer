@@ -54,7 +54,7 @@ public class MessageUtils {
                 .append("§3 §l" + info.getListenType().getName() + "§3: §b" + time
                         + (info.getCount() > 1 ? " §7x" + info.getCount() : ""))
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverTextBuilder.create()))
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr capture clipboard " + info.getListenType() + " " + index));
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/psr capture clipboard " + info.getListenType().getName() + " " + index));
         user.sendFilteredMessage(captureMessageBuilder.create());
     }
 
