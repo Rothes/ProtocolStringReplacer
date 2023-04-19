@@ -60,7 +60,7 @@ public class ComponentContainer extends AbstractContainer<BaseComponent> {
                 }
             }
 
-            if (TRANSLATE_FALLBACK) {
+            if (TRANSLATE_FALLBACK && translatableComponent.getFallback() != null) {
                 children.add(new SimpleTextContainer(translatableComponent.getFallback(), root) {
                     @Override
                     public @NotNull String getResult() {
