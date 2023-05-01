@@ -20,6 +20,7 @@ Console-Sender:
       Replacer-Throw-Exception: '&cAn error occurred when loading replacer config %0% :'
       Invalid-Listen-Type: '&cInvalid listen type: %0%'
       Invalid-Match-Mode: '&cInvalid match mode: %0%. Using defaults "Contain"'
+      Missing-Enabled-Warning: '&e`Options.Enabled` is not defined in replacer config, disabling it by default.'
     Schedule:
       Purging-Item-Cache: '&aRunning itemmeta cache purging task. %0% items in total will be purged.'
     Config:

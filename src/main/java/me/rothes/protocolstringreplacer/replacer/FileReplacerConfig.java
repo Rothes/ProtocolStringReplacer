@@ -261,6 +261,9 @@ public class FileReplacerConfig implements ReplacerConfig {
         this.configuration = configuration;
         this.file = file;
         enable = configuration.getBoolean("Options.Enabled", false);
+        if (!configuration.contains("Options.Enabled", true)) {
+            ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Missing-Enabled-Warning"));
+        }
         priority = configuration.getInt("Options.Priority", 5);
         author = configuration.getString("Options.Author");
         version = configuration.getString("Options.Version");

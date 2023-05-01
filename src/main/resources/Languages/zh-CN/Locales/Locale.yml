@@ -20,6 +20,7 @@ Console-Sender:
       Replacer-Throw-Exception: '&c加载配置文件 %0% 时出错:'
       Invalid-Listen-Type: '&c未知或不支持的监听类型: %0%'
       Invalid-Match-Mode: '&c未知的文本匹配方式: %0%. 使用默认值"Contain"'
+      Missing-Enabled-Warning: '&e配置文件未定义 Options.Enabled , 默认不使其生效.'
     Schedule:
       Purging-Item-Cache: '&a正在执行缓存清理任务. 将清理 %0% 个条目.'
     Config:
