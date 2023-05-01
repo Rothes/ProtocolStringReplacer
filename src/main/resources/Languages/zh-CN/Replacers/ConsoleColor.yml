@@ -2,13 +2,13 @@
 # 如果您的服务端不在控制台内转换色彩, 您可以使用此配置作为替代.
 # 如果使用旧版 Paper/ Purpur 服务端, 可能不需要此配置.
 Options:
-  Enable: true
+  Enabled: true
   Priority: 1
-  Version: '2.15.0'
+  Version: '2.17.4'
   Author: Rothes
   Filter:
     Listen-Types:
-      - console
+      - Console
   Match-Mode: Contain
 
 ### 使用 RGB 色彩 - 如果与您的控制台/终端兼容.

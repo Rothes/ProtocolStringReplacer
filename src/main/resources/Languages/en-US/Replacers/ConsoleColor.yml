@@ -3,13 +3,13 @@
 # you can use this instead.
 # If you are legacy Paper/ Purpur, you may not need this.
 Options:
-  Enable: true
+  Enabled: true
   Priority: 1
-  Version: '2.15.0'
+  Version: '2.17.4'
   Author: Rothes
   Filter:
     Listen-Types:
-      - console
+      - Console
   Match-Mode: Contain
 
 ### These are rgb colors - if compatible with your terminal.
