@@ -1,12 +1,12 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 110,
+      "Latest_Version_Number": 111,
       "Log_Level": "Info",
       "Actions": [],
       "Message": {
-        "en-US": "§bA new version of PSR (\"2.17.4\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
-        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.17.4\") 了!\n§b请更新您的插件: https://beta.mcbbs.net/resource/servermod/xmkw2tv1"
+        "en-US": "§bA new version of PSR (\"2.17.5\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/",
+        "zh-CN": "§bProtocolStringReplacer 有新版本 (\"2.17.5\") 了!\n§b请更新您的插件: https://beta.mcbbs.net/resource/servermod/xmkw2tv1"
       }
     }
   },
@@ -30,7 +30,5 @@
         "zh-CN": "§c您使用的版本已被远程服务器禁止. 这通常是因为该版本存在重大问题. 请更新插件."
       }
     }
-  },
-  "Comment": "Latest_Version below here is only for old version support...",
-  "Latest_Version": "99999.999.9"
+  }
 }
