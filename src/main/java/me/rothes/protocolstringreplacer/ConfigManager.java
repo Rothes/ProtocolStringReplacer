@@ -3,7 +3,10 @@ package me.rothes.protocolstringreplacer;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import org.bukkit.Bukkit;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class ConfigManager {
 
@@ -48,7 +51,16 @@ public class ConfigManager {
 
         if (config.getBoolean("Options.Features.Placeholder.Placeholder-Enabled", true)) {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                placeholderEnabled = true;
+                List<Integer> ver = Arrays.stream(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")
+                        .getDescription().getVersion().split("\\."))
+                        .map(Integer::parseInt).collect(Collectors.toList());
+
+                if (ver.get(1) < 10 || (ver.get(1) == 10 && ver.get(2) < 7)) {
+                    ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Incompatible-PAPI-Version"));
+                    placeholderEnabled = false;
+                } else {
+                    placeholderEnabled = true;
+                }
             } else {
                 ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Missing-PAPI"));
                 placeholderEnabled = false;

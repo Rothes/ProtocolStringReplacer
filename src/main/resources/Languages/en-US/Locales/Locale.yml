@@ -8,6 +8,7 @@ Console-Sender:
       Out-Dated-Server: 'Your server version is too outdated, and may not enjoy some features normally...'
       Missing-Dependency: '&cDependency plugin ''%0%'' is not detected，please install it before using this plugin.'
       Missing-PAPI: '&cPlaceholderAPI is not installed, Placeholder features is disabled though you enabled it in global config.'
+      Incompatible-PAPI-Version: '&cIncompatible PlaceholderAPI version, v2.10.7+ is required. Placeholder features is disabled though you enabled it in global config.'
       Created-Example-Replacers: '&aGenerated example replacer configs.'
       Added-Missing-Config-Key: '&cAutomatically added missing configuration key in Config.yml %0%'
       Backing-Up-Configs: '&aBacking up configurations to folder: %0%'
