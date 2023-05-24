@@ -105,7 +105,8 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
 
     public void entriesPeriod() {
         children.clear();
-        jsonReplaceables.clear();
+        if (jsonReplaceables != null)
+            jsonReplaceables.clear();
         NBTCompound display = nbtItem.getCompound("display");
         if (display != null) {
             if (display.hasTag("Name")) {

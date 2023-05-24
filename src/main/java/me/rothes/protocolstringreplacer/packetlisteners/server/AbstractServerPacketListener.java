@@ -316,7 +316,6 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             if (papiIndexes.length != 0) {
                 container.cloneItem();
                 container.entriesPeriod();
-                container.createJsons(container);
                 container.createDefaultChildrenDeep();
                 container.createTexts(container);
 
