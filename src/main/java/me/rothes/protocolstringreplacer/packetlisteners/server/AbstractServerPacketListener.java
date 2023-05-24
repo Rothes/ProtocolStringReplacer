@@ -315,7 +315,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
             if (papiIndexes.length != 0) {
                 container.cloneItem();
-                container.createDefaultChildren();
+                container.entriesPeriod();
                 container.createDefaultChildrenDeep();
                 container.createTexts(container);
 
