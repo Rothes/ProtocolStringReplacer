@@ -167,9 +167,6 @@ public class ReplacerManager {
                                 .replace('\\', '/')), throwable);
             }
         }
-
-        // To warm up the lambda below.
-        replacedItemCache.put(null, new ItemMetaCache(null, 1L, false, new int[0]));
     }
 
     public void addReplacerConfig(ReplacerConfig replacerConfig) {
