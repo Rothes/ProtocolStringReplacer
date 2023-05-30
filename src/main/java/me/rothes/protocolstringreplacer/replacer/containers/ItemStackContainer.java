@@ -224,6 +224,10 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
         return nbtItem.toString();
     }
 
+    public Material getItemType() {
+        return content.getType();
+    }
+
     public void restoreItem() {
         content.setItemMeta(original);
         nbtItem.clearNBT();
@@ -236,14 +240,14 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
 
     private boolean loadCache() {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        metaCache = replacerManager.getReplacedItemCache(original);
+        metaCache = replacerManager.getReplacedItemCache(original, getItemType());
         if (metaCache != null) {
             nbtItem = metaCache.getNbtItem();
             metaCache.setLastAccessTime(System.currentTimeMillis());
             return true;
         } else {
             nbtItem = new NBTItem(content);
-            metaCache = replacerManager.addReplacedItemCache(original, nbtItem, false, new int[0]);
+            metaCache = replacerManager.addReplacedItemCache(original, nbtItem, getItemType(), false, new int[0]);
             return false;
         }
     }

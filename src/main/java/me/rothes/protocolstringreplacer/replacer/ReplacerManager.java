@@ -12,6 +12,7 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
@@ -37,12 +39,44 @@ public class ReplacerManager {
     private char papiHead;
     private char papiTail;
     private final LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
-    private final HashMap<ItemMeta, ItemMetaCache> replacedItemCache = new HashMap<>();
+    private final HashMap<ItemMapEntry, ItemMetaCache> replacedItemCache = new HashMap<>();
     private BukkitTask cleanTask;
+
+    public static class ItemMapEntry {
+        public final ItemMeta itemMeta;
+        public final Material itemType;
+
+        public ItemMapEntry(ItemMeta itemMeta, Material itemType) {
+            this.itemMeta = itemMeta;
+            this.itemType = itemType;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ItemMapEntry that = (ItemMapEntry) o;
+            return Objects.equals(itemMeta, that.itemMeta) && itemType == that.itemType;
+        }
+
+        @Override
+        public int hashCode() {
+            return itemMeta.hashCode() ^ itemType.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return "ItemMapEntry{" +
+                    "itemMeta=" + itemMeta +
+                    ", itemType=" + itemType +
+                    '}';
+        }
+
+    }
 
     public static class ItemMetaCache {
 
-        private NBTItem nbtItem;
+        private final NBTItem nbtItem;
         private long lastAccessTime;
         private boolean blocked;
         private int[] placeholderIndexes;
@@ -117,9 +151,9 @@ public class ReplacerManager {
         long cleanAccessInterval = instance.getConfigManager().cleanAccessInterval;
         long cleanTaskInterval = instance.getConfigManager().cleanTaskInterval;
         cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-            List<ItemMeta> needToRemove = new ArrayList<>();
+            List<ItemMapEntry> needToRemove = new ArrayList<>();
             long currentTime = System.currentTimeMillis();
-            for (Map.Entry<ItemMeta, ItemMetaCache> entry : replacedItemCache.entrySet()) {
+            for (Map.Entry<ItemMapEntry, ItemMetaCache> entry : replacedItemCache.entrySet()) {
                 if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
                     needToRemove.add(entry.getKey());
                 }
@@ -128,7 +162,7 @@ public class ReplacerManager {
                 Bukkit.getScheduler().runTask(instance, () -> {
                     ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
                             String.valueOf(needToRemove.size())));
-                    for (ItemMeta itemMeta : needToRemove) {
+                    for (ItemMapEntry itemMeta : needToRemove) {
                         replacedItemCache.remove(itemMeta);
                     }
                 });
@@ -204,16 +238,16 @@ public class ReplacerManager {
     }
 
     @Nullable
-    public ItemMetaCache getReplacedItemCache(ItemMeta itemMeta) {
-        return replacedItemCache.get(itemMeta);
+    public ItemMetaCache getReplacedItemCache(ItemMeta itemMeta, Material material) {
+        return replacedItemCache.get(new ItemMapEntry(itemMeta, material));
     }
 
     public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull NBTItem nbtItem,
-                                              boolean blocked, int[] papiIndexes) {
+                                              @NotNull Material type, boolean blocked, int[] papiIndexes) {
         Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
         ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
-        replacedItemCache.put(original, itemMetaCache);
+        replacedItemCache.put(new ItemMapEntry(original, type), itemMetaCache);
         return itemMetaCache;
     }
 

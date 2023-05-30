@@ -60,6 +60,11 @@ Options:
       Handle-Nbt-Display-Compound: false
       # Whether handle each entry of the display nbt of the item. Default is true.
       Handle-Nbt-Display-Entries: true
+      # Filter for the item type. If set to null or empty list, will handle all the items.
+      # Otherwise, PSR will only handle the items list here.
+      Handle-Item-Types:
+        - DIRT
+        - STONE
     User:
       # Required permission. If set, user must have this permission
       # to make this replacer config take effects.

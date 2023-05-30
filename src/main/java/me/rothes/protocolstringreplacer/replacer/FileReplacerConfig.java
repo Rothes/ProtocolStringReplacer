@@ -5,6 +5,7 @@ import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.neosearch.stringsearcher.StringSearcher;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -57,6 +59,7 @@ public class FileReplacerConfig implements ReplacerConfig {
     private boolean handleItemStackNbt;
     private boolean handleItemStackDisplay;
     private boolean handleItemStackDisplayEntries;
+    private List<Material> acceptedItemTypes;
     private HashSet<String> locales;
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
@@ -361,6 +364,20 @@ public class FileReplacerConfig implements ReplacerConfig {
         handleItemStackNbt = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Compound", false);
         handleItemStackDisplay = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Display-Compound", false);
         handleItemStackDisplayEntries = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Display-Entries", true);
+        List<String> materialStrList = configuration.getStringList("Options.Filter.ItemStack.Handle-Item-Types");
+        if (materialStrList.isEmpty()) {
+            acceptedItemTypes = Collections.emptyList();
+        } else {
+            acceptedItemTypes = new ArrayList<>(materialStrList.size());
+            for (String mat : materialStrList) {
+                Material material = Material.matchMaterial(mat);
+                if (material == null) {
+                    ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Unknown-Item-Type", mat));
+                } else {
+                    acceptedItemTypes.add(material);
+                }
+            }
+        }
 
         locales = new HashSet<>();
         for (String s : configuration.getStringList("Options.Filter.User.Locales")) {
@@ -456,6 +473,11 @@ public class FileReplacerConfig implements ReplacerConfig {
     }
 
     @Override
+    public @NotNull List<Material> acceptedItemTypes() {
+        return acceptedItemTypes;
+    }
+
+    @Override
     public boolean acceptsLocale(String locale) {
         return locale == null || locales.isEmpty() || locales.contains(locale);
     }
@@ -484,6 +506,13 @@ public class FileReplacerConfig implements ReplacerConfig {
                 ", windowTitleLimitIgnoreInventory=" + windowTitleLimitIgnoreInventory +
                 ", handleScoreboardTitle=" + handleScoreboardTitle +
                 ", handleScoreboardEntityName=" + handleScoreboardEntityName +
+                ", handleScoreboardTeamDisplayName=" + handleScoreboardTeamDisplayName +
+                ", handleScoreboardTeamPrefix=" + handleScoreboardTeamPrefix +
+                ", handleScoreboardTeamSuffix=" + handleScoreboardTeamSuffix +
+                ", handleItemStackNbt=" + handleItemStackNbt +
+                ", handleItemStackDisplay=" + handleItemStackDisplay +
+                ", handleItemStackDisplayEntries=" + handleItemStackDisplayEntries +
+                ", acceptedItemTypes=" + acceptedItemTypes +
                 ", locales=" + locales +
                 '}';
     }

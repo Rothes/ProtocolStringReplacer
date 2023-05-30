@@ -58,6 +58,11 @@ Options:
       Handle-Nbt-Display-Compound: false
       # 是否处理物品的 Display nbt 组件中的各个元素. 默认为true.
       Handle-Nbt-Display-Entries: true
+      # 过滤要处理的物品类型. 若设为 null 或空列表, 则会处理所有物品.
+      # 否则, PSR 只会处理此处列出的物品类型.
+      Handle-Item-Types:
+        - DIRT
+        - STONE
     User:
       # 处理所需权限. 若设定, 用户必须拥有该权限
       # 才能使该替换配置为其生效.

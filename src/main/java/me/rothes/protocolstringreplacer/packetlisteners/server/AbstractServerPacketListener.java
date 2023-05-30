@@ -339,6 +339,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                                              @Nonnull ListenType listenType, List<ReplacerConfig> nbt,
                                              List<ReplacerConfig> display, List<ReplacerConfig> entries) {
         ItemStackContainer container = new ItemStackContainer(itemStack, false);
+        Material type = container.getItemType();
         CaptureInfo info = new CaptureInfoImpl();
         info.setTime(System.currentTimeMillis());
         info.setUser(user);
@@ -353,7 +354,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                         + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                 .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                         ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
-        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), nbt);
+        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(nbt, type));
         container.getResult();
 
         container.displayPeriod();
@@ -365,7 +366,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                         ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
         info.setExtra(extraBuilder.create());
-        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), display);
+        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(display, type));
         container.getResult();
 
         container.entriesPeriod();
@@ -385,6 +386,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         }
         info.setDirects(directs);
 
+        List<ReplacerConfig> filtered = matchItemType(entries, type);
         for (Replaceable json : jsons) {
             StringBuilder sb = new StringBuilder();
             for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
@@ -392,14 +394,14 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             }
 
             String directString = sb.toString();
-            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, entries);
+            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, filtered);
             if (!replaceDirect.equals(directString)) {
                 json.setText(SpigotUtils.serializeComponents(TextComponent.fromLegacyText(replaceDirect)));
             }
         }
 
         info.setJsons(jsons);
-        ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, entries);
+        ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, filtered);
         try {
             container.createDefaultChildrenDeep();
         } catch (Throwable t) {
@@ -423,23 +425,26 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
     private static boolean cacheItemStack(@Nonnull ItemStackContainer container, List<ReplacerConfig> nbt,
                                           List<ReplacerConfig> display, List<ReplacerConfig> entries) {
         ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+        Material type = container.getItemType();
 
+        List<ReplacerConfig> filtered = matchItemType(nbt, type);
         container.createDefaultChildren();
         container.createJsons(container);
-        if (checkBlocked(container.getJsons().get(0).getText(), nbt, replacerManager)) {
+        if (checkBlocked(container.getJsons().get(0).getText(), filtered, replacerManager)) {
             container.getMetaCache().setBlocked(true);
             return true;
         }
-        replacerManager.replaceJsonReplaceable(container.getJsons().get(0), nbt);
+        replacerManager.replaceJsonReplaceable(container.getJsons().get(0), filtered);
         container.getResult();
 
+        filtered = matchItemType(display, type);
         container.displayPeriod();
         container.createJsons(container);
-        if (checkBlocked(container.getJsons().get(0).getText(), display, replacerManager)) {
+        if (checkBlocked(container.getJsons().get(0).getText(), filtered, replacerManager)) {
             container.getMetaCache().setBlocked(true);
             return true;
         }
-        replacerManager.replaceJsonReplaceable(container.getJsons().get(0), display);
+        replacerManager.replaceJsonReplaceable(container.getJsons().get(0), filtered);
         container.getResult();
 
         container.entriesPeriod();
@@ -447,6 +452,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
         boolean direct = false;
 
+        filtered = matchItemType(entries, type);
         for (Replaceable json : container.getJsons()) {
             StringBuilder sb = new StringBuilder();
             try {
@@ -464,11 +470,11 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
             String directString = sb.toString();
 
-            if (ProtocolStringReplacer.getInstance().getReplacerManager().isDirectBlocked(directString, entries)) {
+            if (ProtocolStringReplacer.getInstance().getReplacerManager().isDirectBlocked(directString, filtered)) {
                 container.getMetaCache().setBlocked(true);
                 return true;
             }
-            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, entries);
+            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, filtered);
             if (!replaceDirect.equals(directString)) {
                 BaseComponent[] baseComponents = TextComponent.fromLegacyText(replaceDirect);
                 BaseComponent head = baseComponents[0];
@@ -538,6 +544,16 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         container.getMetaCache().setPlaceholderIndexes(indexes);
         container.getResult();
         return false;
+    }
+
+    private static List<ReplacerConfig> matchItemType(List<ReplacerConfig> raw, Material material) {
+        List<ReplacerConfig> result = new ArrayList<>(raw.size());
+        for (ReplacerConfig cfg : raw) {
+            if (cfg.acceptedItemTypes().isEmpty() || cfg.acceptedItemTypes().contains(material)) {
+                result.add(cfg);
+            }
+        }
+        return result;
     }
 
     private static boolean checkBlocked(String json, List<ReplacerConfig> replacerConfigs, ReplacerManager replacerManager) {

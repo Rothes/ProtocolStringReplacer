@@ -5,6 +5,7 @@ import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.MatchMode;
 import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.neosearch.stringsearcher.StringSearcher;
@@ -95,6 +96,9 @@ public interface ReplacerConfig {
     }
     default boolean handleItemStackDisplayEntries() {
         return true;
+    }
+    default @NotNull List<Material> acceptedItemTypes() {
+        return Collections.emptyList();
     }
     default boolean acceptsLocale(String locale) {
         return true;
