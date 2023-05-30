@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public interface ReplacerConfig {
 
@@ -97,8 +98,8 @@ public interface ReplacerConfig {
     default boolean handleItemStackDisplayEntries() {
         return true;
     }
-    default @NotNull List<Material> acceptedItemTypes() {
-        return Collections.emptyList();
+    default @NotNull Set<Material> acceptedItemTypes() {
+        return Collections.emptySet();
     }
     default boolean acceptsLocale(String locale) {
         return true;

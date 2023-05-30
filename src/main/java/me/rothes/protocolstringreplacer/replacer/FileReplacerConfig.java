@@ -59,7 +59,7 @@ public class FileReplacerConfig implements ReplacerConfig {
     private boolean handleItemStackNbt;
     private boolean handleItemStackDisplay;
     private boolean handleItemStackDisplayEntries;
-    private List<Material> acceptedItemTypes;
+    private Set<Material> acceptedItemTypes;
     private HashSet<String> locales;
 
     public FileReplacerConfig(@Nonnull File file, @Nonnull CommentYamlConfiguration configuration) {
@@ -366,9 +366,9 @@ public class FileReplacerConfig implements ReplacerConfig {
         handleItemStackDisplayEntries = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Display-Entries", true);
         List<String> materialStrList = configuration.getStringList("Options.Filter.ItemStack.Handle-Item-Types");
         if (materialStrList.isEmpty()) {
-            acceptedItemTypes = Collections.emptyList();
+            acceptedItemTypes = Collections.emptySet();
         } else {
-            acceptedItemTypes = new ArrayList<>(materialStrList.size());
+            acceptedItemTypes = new HashSet<>(materialStrList.size());
             for (String mat : materialStrList) {
                 Material material = Material.matchMaterial(mat);
                 if (material == null) {
@@ -473,7 +473,7 @@ public class FileReplacerConfig implements ReplacerConfig {
     }
 
     @Override
-    public @NotNull List<Material> acceptedItemTypes() {
+    public @NotNull Set<Material> acceptedItemTypes() {
         return acceptedItemTypes;
     }
 
