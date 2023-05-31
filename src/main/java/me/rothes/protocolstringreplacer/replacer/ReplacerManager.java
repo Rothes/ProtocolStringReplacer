@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -233,10 +234,11 @@ public class ReplacerManager {
         Validate.notNull(user, "PsrUser cannot be null");
         Validate.notNull(filter, "BiPredicate Filter cannot be null");
 
-        List<ReplacerConfig> result = new ArrayList<>();
-        for (ReplacerConfig replacerConfig : replacerConfigList) {
-            if (filter.test(replacerConfig, user)) {
-                result.add(replacerConfig);
+        List<ReplacerConfig> result = new LinkedList<>(replacerConfigList);
+        Iterator<ReplacerConfig> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            if (!filter.test(iterator.next(), user)) {
+                iterator.remove();
             }
         }
         return result;
