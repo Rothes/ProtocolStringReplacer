@@ -39,7 +39,7 @@ public class ReplacerManager {
     private PAPIReplacer papiReplacer;
     private char papiHead;
     private char papiTail;
-    private final LinkedList<ReplacerConfig> replacerConfigList = new LinkedList<>();
+    private final List<ReplacerConfig> replacerConfigList = new ArrayList<>();
     private final EnumMap<Material, HashMap<ItemMeta, ItemMetaCache>> replacedItemCache = new EnumMap<>(Material.class);
     private BukkitTask cleanTask;
 
