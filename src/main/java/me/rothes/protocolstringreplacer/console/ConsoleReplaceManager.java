@@ -135,7 +135,7 @@ public final class ConsoleReplaceManager {
             Node appenders = getAppendersNode(config);
 
             // Remove PSR converter.
-            getConverters(config).remove("PSRFormatting");
+            getConverters(config).remove("PsrFormatting");
 
             processAppenders(config, appenders, true);
             replaceReader(config, true);
@@ -180,7 +180,7 @@ public final class ConsoleReplaceManager {
         Node appenders = getAppendersNode(config);
 
         // Add PSR converter.
-        getConverters(config).put("PSRFormatting", PsrLogEventPatternConverter.class);
+        getConverters(config).put("PsrFormatting", PsrLogEventPatternConverter.class);
 
         processAppenders(config, appenders, false);
         patterns.clear();
@@ -248,7 +248,7 @@ public final class ConsoleReplaceManager {
                 field = loggerNamePatternSelector.getDeclaredField("defaultFormatters");
                 field.setAccessible(true);
                 patterns.add(defaultPattern);
-                field.set(selector, parser.parse(restore ? defaultPattern : ("%PSRFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
+                field.set(selector, parser.parse(restore ? defaultPattern : ("%PsrFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
                 field.setAccessible(false);
 
                 Node patternMatch = getChild(selectorNode, "PatternMatch");
@@ -264,7 +264,7 @@ public final class ConsoleReplaceManager {
                     field = formatter.getClass().getDeclaredField("formatters");
                     field.setAccessible(true);
                     patterns.add(pattern);
-                    field.set(formatter, parser.parse(restore ? pattern : ("%PSRFormatting{" + ++index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
+                    field.set(formatter, parser.parse(restore ? pattern : ("%PsrFormatting{" + ++index + "}" + (removeAnsi ? "{removeAnsi}" : ""))).toArray(new PatternFormatter[0]));
                     field.setAccessible(false);
                 }
 
@@ -274,7 +274,7 @@ public final class ConsoleReplaceManager {
                 String defaultPattern = (String) field.get(layout);
                 patterns.add(defaultPattern);
                 String pattern = restore ? appenderNode.getAttributes().getNamedItem("pattern").getNodeValue()
-                        : ("%PSRFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""));
+                        : ("%PsrFormatting{" + index + "}" + (removeAnsi ? "{removeAnsi}" : ""));
                 field.set(layout, pattern);
                 field.setAccessible(false);
                 if (isLegacy) {

@@ -15,15 +15,15 @@ import org.apache.logging.log4j.core.pattern.PatternFormatter;
 
 import java.util.List;
 
-@ConverterKeys({"PSRFormatting"})
-@Plugin(name = "PSRFormatting", category = PatternConverter.CATEGORY)
+@ConverterKeys({"PsrFormatting"})
+@Plugin(name = "PsrFormatting", category = PatternConverter.CATEGORY)
 public class PsrLogEventPatternConverter extends LogEventPatternConverter {
 
     private final List<PatternFormatter> formatters;
     private final boolean removeAnsi;
 
     protected PsrLogEventPatternConverter(List<PatternFormatter> formatters, boolean removeAnsi) {
-        super("PSRFormatting", null);
+        super("PsrFormatting", null);
         this.formatters = formatters;
         this.removeAnsi = removeAnsi;
     }
