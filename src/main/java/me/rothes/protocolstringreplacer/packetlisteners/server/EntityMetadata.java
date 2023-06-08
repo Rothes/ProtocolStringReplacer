@@ -8,14 +8,10 @@ import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.utils.nmsmappings.ClassWrapper;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
-import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,8 +22,9 @@ public final class EntityMetadata extends AbstractServerPacketListener {
 
     public byte exceptionTimes = 0;
 
-    private final boolean shouldDV = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19
-            && ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 3;
+    private final boolean shouldDV = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 20
+            || (ProtocolStringReplacer.getInstance().getServerMajorVersion() == 19
+                && ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 3);
 
     public EntityMetadata() {
         super(PacketType.Play.Server.ENTITY_METADATA, ListenType.ENTITY);
@@ -48,7 +45,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         } catch (RuntimeException e) {
             if (exceptionTimes < ProtocolStringReplacer.getInstance().getConfigManager().protocolLibSideStackPrintCount) {
                 ProtocolStringReplacer.warn("Exception which may be a ProtocolLib side problem: ", e);
-                ProtocolStringReplacer.warn("Please try to update your ProtocolLib to the latest development version.");
+                ProtocolStringReplacer.warn("Please try to update your ProtocolLib to the latest (development) version.");
                 exceptionTimes++;
             }
             return;
