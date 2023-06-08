@@ -14,7 +14,6 @@ public final class MapChunkPost18 extends AbstractServerSignPacketListener {
 
     private Field dataField;
     private Field listField;
-    private Object signType;
     private Field subTypeField;
     private Field subNbtField;
 
@@ -63,14 +62,6 @@ public final class MapChunkPost18 extends AbstractServerSignPacketListener {
         extraField = field;
         */
 
-        Object type;
-        try {
-            type = Class.forName("net.minecraft.world.level.block.entity.TileEntityTypes").getField("h").get(null);
-        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-            throw new UnsupportedOperationException("Error when hooking into MAP_CHUNK packet");
-        }
-        signType = type;
-
         Class<?> subClass;
         try {
             subClass = Class.forName(dataClass.getCanonicalName() + "$a");
@@ -109,7 +100,7 @@ public final class MapChunkPost18 extends AbstractServerSignPacketListener {
         try {
             Object data = dataField.get(packet);
             for (Object obj : (List<?>) listField.get(data)) {
-                if (subTypeField.get(obj).equals(signType)) {
+                if (TileTypeHelper.isSignType(subTypeField.get(obj))) {
                     Object nbt = subNbtField.get(obj);
                     if (nbt == null) {
                         continue;

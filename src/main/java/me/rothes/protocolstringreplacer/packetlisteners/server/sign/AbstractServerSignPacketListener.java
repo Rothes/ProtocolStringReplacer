@@ -98,7 +98,7 @@ public abstract class AbstractServerSignPacketListener extends AbstractServerPac
             info.setDirects(directs);
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < directs.size(); i++) {
             String directString = directs.get(i);
             if (replacerManager.isDirectBlocked(directString, replacers)) {
                 packetEvent.setCancelled(true);
