@@ -52,7 +52,7 @@ public class ConfigManager {
         if (config.getBoolean("Options.Features.Placeholder.Placeholder-Enabled", true)) {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 List<Integer> ver = Arrays.stream(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")
-                        .getDescription().getVersion().split("\\."))
+                        .getDescription().getVersion().split("-")[0].split("\\."))
                         .map(Integer::parseInt).collect(Collectors.toList());
 
                 if (ver.get(1) < 10 || (ver.get(1) == 10 && ver.get(2) < 7)) {
