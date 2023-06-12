@@ -162,10 +162,12 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                 });
             }
             if (nbtItem.hasTag("pages")) {
-                if (type == WRITABLE_BOOK) {
-                    addTextList(nbtItem.getStringList("pages"));
-                } else {
+                Boolean resolved = nbtItem.getBoolean("resolved");
+                if (resolved != null && resolved) {
+                    // Is Json. Only in WRITTEN_BOOK.
                     addJsonList(nbtItem.getStringList("pages"));
+                } else {
+                    addTextList(nbtItem.getStringList("pages"));
                 }
             }
         }
