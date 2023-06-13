@@ -61,7 +61,12 @@ public final class UpdateTeamPost17 extends BaseUpdateTeamListener {
     private boolean processField(Object infoObj, Field field, PacketEvent event, PsrUser user,
                                  BiPredicate<ReplacerConfig, PsrUser> filter) {
         try {
-            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(field.get(infoObj));
+            Object handle = field.get(infoObj);
+            if (handle == null) {
+                // Other plugins (e.g. NametagEdit) may cause NPE
+                return false;
+            }
+            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(handle);
             String json = wrappedChatComponent.getJson();
             String replacedJson = getReplacedJson(event, user, listenType, json, filter);
             if (replacedJson == null) {
