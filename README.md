@@ -4,7 +4,7 @@
 
 A Spigot plugin for Minecraft 1.8 - 1.20.X that gives you the ability to edit the strings/components in packet sends to players.
 
-Please vist [SpigotMC](#links) or [MCBBS](#links) for a detailed description. 
+Please visit [SpigotMC](#links) or [MCBBS](#links) for a detailed description. 
 
 ## Download
 For stable releases, go SpigotMC or MCBBS. Also, we create a tag for each published version on GitHub. You can compile it yourself.
@@ -20,13 +20,13 @@ We accept pull request, feel free to contribute. But please discuss the changes 
 ## Related Links <a id='links'></a>
 
 *   **Wiki**:
-[https://rothes.gitbook.io/protocolstringreplacer/](https://rothes.gitbook.io/protocolstringreplacer)
+[https://rothes.gitbook.io/protocolstringreplacer](https://rothes.gitbook.io/protocolstringreplacer)
 
 *   **MCBBS**:
 [https://www.mcbbs.net/thread-1209429-1-1.html](https://www.mcbbs.net/thread-1209429-1-1.html)
 
 *   **SpigotMC**:
-[https://www.spigotmc.org/resources/protocolstringreplacer.96573/](https://www.spigotmc.org/resources/protocolstringreplacer.96573/)
+[https://www.spigotmc.org/resources/protocolstringreplacer.96573](https://www.spigotmc.org/resources/protocolstringreplacer.96573/)
 
 *   **bStats**:
 [https://bstats.org/plugin/bukkit/ProtocolStringReplacer/11740](https://bstats.org/plugin/bukkit/ProtocolStringReplacer/11740)
