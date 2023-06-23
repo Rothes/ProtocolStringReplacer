@@ -4,7 +4,7 @@
 
 A Spigot plugin for Minecraft 1.8 - 1.20.X that gives you the ability to edit the strings/components in packet sends to players.
 
-Please vist [SpigotMC]((#links)) or [MCBBS](#links) for a detailed description. 
+Please vist [SpigotMC](#links) or [MCBBS](#links) for a detailed description. 
 
 ## Download
 For stable releases, go SpigotMC or MCBBS. Also, we create a tag for each published version on GitHub. You can compile it yourself.
