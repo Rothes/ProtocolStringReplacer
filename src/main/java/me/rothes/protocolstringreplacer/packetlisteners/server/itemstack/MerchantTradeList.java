@@ -103,9 +103,11 @@ public final class MerchantTradeList extends AbstractServerItemPacketListener {
 
         public Object bukkitToCraft(MerchantRecipe bukkit) {
             MerchantRecipe craft = (MerchantRecipe) bukkitMerchantRecipeToCraft.invoke(null, bukkit);
-            // Thanks, CraftBukkit
-            craft.setDemand(bukkit.getDemand());
-            craft.setSpecialPrice(bukkit.getSpecialPrice());
+            // Thanks, CraftBukkit. Doesn't set these field for 1.18-1.19.1
+            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() == 18) {
+                craft.setDemand(bukkit.getDemand());
+                craft.setSpecialPrice(bukkit.getSpecialPrice());
+            }
             return craft;
         }
 
