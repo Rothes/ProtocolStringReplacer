@@ -21,8 +21,11 @@ public final class TileEntityData extends AbstractServerSignPacketListener {
         PacketContainer packet = packetEvent.getPacket();
         // 9: Set the text on a sign
         if (packet.getIntegers().read(0) == 9) {
-            Object read = packet.getStructures().withType(MinecraftReflection.getNBTBaseClass()).read(0);
+            // Have to clone, to make sure the result of the player doesn't affect other players and may kick random players.
+            PacketContainer clone = packet.deepClone();
+            Object read = clone.getStructures().withType(MinecraftReflection.getNBTBaseClass()).read(0);
             replaceSign(packetEvent, new NBTContainer(read), user, filter);
+            packetEvent.setPacket(clone);
         }
     }
 
