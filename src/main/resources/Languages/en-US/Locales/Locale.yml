@@ -70,6 +70,7 @@ Sender:
           Listen-Type-Cannot-Be-Captured: '&cThis listen type is not capturable for you.'
           Listen-Type-Not-Enabled: '&cThis listen type is not enabled in config.'
           Capture-Added: '&aEnabled capture of &f%0% &a.'
+          Capture-Usage-Tip: '&aTrigger the packet(msg), and use &elist &asubcommand for the result.'
           Already-Capturing-Listen-Type: '&cYou have already enabled capture of &f%0% &c.'
         Remove:
           Simple-Help: '&7 * &e/psr capture remove &7- &bDisable capture of listen type'

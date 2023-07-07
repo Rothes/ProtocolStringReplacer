@@ -77,6 +77,8 @@ public class Capture extends SubCommand {
             user.addCaptureType(listenType);
             user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
                     "Sender.Commands.Capture.Children.Add.Capture-Added", listenType.getName()));
+            user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
+                    "Sender.Commands.Capture.Children.Add.Capture-Usage-Tip", listenType.getName()));
         } else {
             user.sendFilteredText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Children.Add.Detailed-Help"));
         }

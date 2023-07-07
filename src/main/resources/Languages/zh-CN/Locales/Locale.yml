@@ -70,6 +70,7 @@ Sender:
           Listen-Type-Cannot-Be-Captured: '&c您不可捕获此监听类型.'
           Listen-Type-Not-Enabled: '&c此监听类型未配置为启用.'
           Capture-Added: '&a已启用 &f%0% &a的捕获.'
+          Capture-Usage-Tip: '&a触发此数据包(消息), 并使用 &elist &a子指令以获取结果.'
           Already-Capturing-Listen-Type: '&c您已经启用了 &f%0% &c的捕获了.'
         Remove:
           Simple-Help: '&7 * &e/psr capture remove &7- &b移除监听类型的内容捕获'
