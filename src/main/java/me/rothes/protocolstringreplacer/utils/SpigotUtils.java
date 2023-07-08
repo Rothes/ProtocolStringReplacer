@@ -24,6 +24,7 @@ import net.md_5.bungee.chat.TextComponentSerializer;
 import net.md_5.bungee.chat.TranslatableComponentSerializer;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public class SpigotUtils {
 
@@ -76,6 +77,30 @@ public class SpigotUtils {
             // ComponentSerializer Gson may be modified during Runtime.
             return ComponentSerializer.toString(components);
         }
+    }
+
+    @SuppressWarnings({"deprecation"})
+    public static boolean compareComponents(BaseComponent[] a, BaseComponent[] b) {
+        if (a == null && b != null || a != null && b == null) {
+            return false;
+        }
+        if (a == null) {
+            return true;
+        }
+        if (a.length != b.length) {
+            return false;
+        }
+        for (int i = 0, length = a.length; i < length; i++) {
+            BaseComponent component = a[i];
+            BaseComponent other = b[i];
+            if (!component.toLegacyText().equals(other.toLegacyText())) {
+                return false;
+            } else if (component.getHoverEvent() != other.getHoverEvent() && component.getHoverEvent() != null
+                    && !compareComponents(component.getHoverEvent().getValue(), other.getHoverEvent().getValue())) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
