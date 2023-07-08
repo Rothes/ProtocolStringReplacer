@@ -3,9 +3,6 @@ package me.rothes.protocolstringreplacer.packetlisteners.server;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.EquivalentConverter;
-import com.comphenix.protocol.utility.MinecraftReflection;
-import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
@@ -20,9 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 public final class EntityMetadata extends AbstractServerPacketListener {
-
-    private final Class<?> CHAT_BASE_COMPONENT = MinecraftReflection.getIChatBaseComponentClass();
-    private final EquivalentConverter<ItemStack> ITEMSTACK_CONVERTER = BukkitConverters.getItemStackConverter();
 
     public byte exceptionTimes = 0;
 
@@ -106,16 +100,10 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             Optional<?> value = (Optional<?>) object;
             if (value.isPresent()) {
                 Object get = value.get();
-                WrappedChatComponent wrappedChatComponent;
-                if (CHAT_BASE_COMPONENT.isInstance(get)) {
-                    // Legacy
-                    wrappedChatComponent = WrappedChatComponent.fromHandle(get);
-                } else if (get instanceof WrappedChatComponent) {
-                    // New
-                    wrappedChatComponent = (WrappedChatComponent) get;
-                } else {
+                if (!(get instanceof WrappedChatComponent)) {
                     return null;
                 }
+                WrappedChatComponent wrappedChatComponent = (WrappedChatComponent) get;
 
                 String json = wrappedChatComponent.getJson();
                 String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
@@ -128,21 +116,6 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 } else {
                     return this;
                 }
-            }
-
-        } else if (CHAT_BASE_COMPONENT.isInstance(object)) {
-            // Name of the entity
-            WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(object);
-            String json = wrappedChatComponent.getJson();
-            String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
-            if (replacedJson != null) {
-                if (json.equals(replacedJson)) {
-                    return null;
-                }
-                wrappedChatComponent.setJson(replacedJson);
-                return wrappedChatComponent.getHandle();
-            } else {
-                return this;
             }
 
         } else if (object instanceof WrappedChatComponent) {
@@ -167,7 +140,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
 
         } else if (object instanceof ItemStack) {
             // Item in Item Frame
-            ItemStack itemStack = ITEMSTACK_CONVERTER.getSpecific(object);
+            ItemStack itemStack = (ItemStack) object;
             List<ReplacerConfig> replacerConfigs = ProtocolStringReplacer.getInstance().getReplacerManager().getAcceptedReplacers(user, filter);
             replaceItemStack(packetEvent, user, listenType, itemStack, replacerConfigs, replacerConfigs, replacerConfigs, true);
 
