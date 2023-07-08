@@ -21,6 +21,9 @@ import java.util.Optional;
 
 public final class EntityMetadata extends AbstractServerPacketListener {
 
+    private final Class<?> CHAT_BASE_COMPONENT = MinecraftReflection.getIChatBaseComponentClass();
+    private final EquivalentConverter<ItemStack> ITEMSTACK_CONVERTER = BukkitConverters.getItemStackConverter();
+
     public byte exceptionTimes = 0;
 
     private final boolean shouldDV = ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 20
@@ -51,7 +54,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 Object o = processObject(packetEvent, user, getValue);
                 if (o == this) {
                     return packet;
-                } else if (o != null && o != EQUAL && o != getValue) {
+                } else if (o != null && o != getValue) {
                     if (clone) {
                         PacketContainer cloned = clonePacket(packet);
                         processPacket(packetEvent, user, cloned, false);
@@ -70,7 +73,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     Object o = processObject(packetEvent, user, getValue);
                     if (o == this) {
                         return packet;
-                    } else if (o != null && o != EQUAL && o != getValue) {
+                    } else if (o != null && o != getValue) {
                         if (clone) {
                             PacketContainer cloned = clonePacket(packet);
                             processPacket(packetEvent, user, cloned, false);
@@ -97,10 +100,6 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         }
     }
 
-    private final Class<?> CHAT_BASE_COMPONENT = MinecraftReflection.getIChatBaseComponentClass();
-    private final EquivalentConverter<ItemStack> ITEMSTACK_CONVERTER = BukkitConverters.getItemStackConverter();
-    private final Object EQUAL = new Object();
-
     private Object processObject(PacketEvent packetEvent, PsrUser user, Object object) {
         if (object instanceof Optional<?>) {
             // Name of the entity
@@ -122,7 +121,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
                 if (replacedJson != null) {
                     if (json.equals(replacedJson)) {
-                        return EQUAL;
+                        return null;
                     }
                     wrappedChatComponent.setJson(replacedJson);
                     return Optional.of(wrappedChatComponent.getHandle());
@@ -138,7 +137,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
             if (replacedJson != null) {
                 if (json.equals(replacedJson)) {
-                    return EQUAL;
+                    return null;
                 }
                 wrappedChatComponent.setJson(replacedJson);
                 return wrappedChatComponent.getHandle();
@@ -153,7 +152,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
             if (replacedJson != null) {
                 if (json.equals(replacedJson)) {
-                    return EQUAL;
+                    return null;
                 }
                 wrappedChatComponent.setJson(replacedJson);
                 return wrappedChatComponent;

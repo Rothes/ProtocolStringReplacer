@@ -4,11 +4,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.lookup.StrLookup;
-import org.apache.logging.log4j.core.net.JndiManager;
 import org.bukkit.Bukkit;
-
-import javax.naming.NamingException;
-import java.util.Objects;
 
 @Plugin(name = "jndi", category = StrLookup.CATEGORY)
 public class PsrJndiLookup implements StrLookup {

@@ -24,7 +24,6 @@ import net.md_5.bungee.chat.TextComponentSerializer;
 import net.md_5.bungee.chat.TranslatableComponentSerializer;
 
 import java.lang.reflect.Field;
-import java.util.Objects;
 
 public class SpigotUtils {
 

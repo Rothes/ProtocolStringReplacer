@@ -1,6 +1,5 @@
 package me.rothes.protocolstringreplacer.replacer.containers;
 
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
