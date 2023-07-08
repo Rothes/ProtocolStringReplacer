@@ -3,6 +3,7 @@ package me.rothes.protocolstringreplacer.packetlisteners.server;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.EquivalentConverter;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
@@ -35,29 +36,27 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         if (user == null) {
             return;
         }
-        PacketContainer ognPacket = packetEvent.getPacket();
-        PacketContainer packet;
-        try {
-//            if (ognPacket.getEntityModifier(packetEvent).read(0) == null) {
-//                return;
-//            }
-            packet = ognPacket.deepClone();
-        } catch (RuntimeException e) {
-            if (exceptionTimes < ProtocolStringReplacer.getInstance().getConfigManager().protocolLibSideStackPrintCount) {
-                ProtocolStringReplacer.warn("Exception which may be a ProtocolLib side problem: ", e);
-                ProtocolStringReplacer.warn("Please try to update your ProtocolLib to the latest (development) version.");
-                exceptionTimes++;
-            }
-            return;
+        PacketContainer packet = packetEvent.getPacket();
+        PacketContainer processed = processPacket(packetEvent, user, packet, true);
+        if (packet != processed) {
+            packetEvent.setPacket(processed);
         }
+    }
+
+    private PacketContainer processPacket(PacketEvent packetEvent, PsrUser user, PacketContainer packet, boolean clone) {
         if (shouldDV) {
             List<WrappedDataValue> dataValueList = packet.getDataValueCollectionModifier().read(0);
             for (WrappedDataValue wrappedDataValue : dataValueList) {
                 Object getValue = wrappedDataValue.getValue();
                 Object o = processObject(packetEvent, user, getValue);
                 if (o == this) {
-                    return;
-                } else if (o != null) {
+                    return packet;
+                } else if (o != null && o != EQUAL && o != getValue) {
+                    if (clone) {
+                        PacketContainer cloned = clonePacket(packet);
+                        processPacket(packetEvent, user, cloned, false);
+                        return cloned;
+                    }
                     wrappedDataValue.setValue(o);
                 }
             }
@@ -70,15 +69,37 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     Object getValue = watchableObject.getValue();
                     Object o = processObject(packetEvent, user, getValue);
                     if (o == this) {
-                        return;
-                    } else if (o != null) {
+                        return packet;
+                    } else if (o != null && o != EQUAL && o != getValue) {
+                        if (clone) {
+                            PacketContainer cloned = clonePacket(packet);
+                            processPacket(packetEvent, user, cloned, false);
+                            return cloned;
+                        }
                         watchableObject.setValue(o);
                     }
                 }
             }
         }
-        packetEvent.setPacket(packet);
+        return packet;
     }
+
+    private PacketContainer clonePacket(PacketContainer packet) {
+        try {
+            return packet.deepClone();
+        } catch (RuntimeException e) {
+            if (exceptionTimes < ProtocolStringReplacer.getInstance().getConfigManager().protocolLibSideStackPrintCount) {
+                ProtocolStringReplacer.warn("Exception which is a ProtocolLib side problem: " + e);
+                ProtocolStringReplacer.warn("Please update your ProtocolLib to the latest (development) version.");
+                exceptionTimes++;
+            }
+            return null;
+        }
+    }
+
+    private final Class<?> CHAT_BASE_COMPONENT = MinecraftReflection.getIChatBaseComponentClass();
+    private final EquivalentConverter<ItemStack> ITEMSTACK_CONVERTER = BukkitConverters.getItemStackConverter();
+    private final Object EQUAL = new Object();
 
     private Object processObject(PacketEvent packetEvent, PsrUser user, Object object) {
         if (object instanceof Optional<?>) {
@@ -87,7 +108,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             if (value.isPresent()) {
                 Object get = value.get();
                 WrappedChatComponent wrappedChatComponent;
-                if (MinecraftReflection.getIChatBaseComponentClass().isInstance(get)) {
+                if (CHAT_BASE_COMPONENT.isInstance(get)) {
                     // Legacy
                     wrappedChatComponent = WrappedChatComponent.fromHandle(get);
                 } else if (get instanceof WrappedChatComponent) {
@@ -97,8 +118,12 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     return null;
                 }
 
-                String replacedJson = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), filter);
+                String json = wrappedChatComponent.getJson();
+                String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
                 if (replacedJson != null) {
+                    if (json.equals(replacedJson)) {
+                        return EQUAL;
+                    }
                     wrappedChatComponent.setJson(replacedJson);
                     return Optional.of(wrappedChatComponent.getHandle());
                 } else {
@@ -106,11 +131,15 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 }
             }
 
-        } else if (MinecraftReflection.getIChatBaseComponentClass().isInstance(object)) {
+        } else if (CHAT_BASE_COMPONENT.isInstance(object)) {
             // Name of the entity
             WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(object);
-            String replacedJson = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), filter);
+            String json = wrappedChatComponent.getJson();
+            String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
             if (replacedJson != null) {
+                if (json.equals(replacedJson)) {
+                    return EQUAL;
+                }
                 wrappedChatComponent.setJson(replacedJson);
                 return wrappedChatComponent.getHandle();
             } else {
@@ -120,8 +149,12 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         } else if (object instanceof WrappedChatComponent) {
             // Name of the entity
             WrappedChatComponent wrappedChatComponent = (WrappedChatComponent) object;
-            String replacedJson = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), filter);
+            String json = wrappedChatComponent.getJson();
+            String replacedJson = getReplacedJson(packetEvent, user, listenType, json, filter);
             if (replacedJson != null) {
+                if (json.equals(replacedJson)) {
+                    return EQUAL;
+                }
                 wrappedChatComponent.setJson(replacedJson);
                 return wrappedChatComponent;
             } else {
@@ -131,13 +164,13 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         } else if (object instanceof String) {
             // Name of the entity CONFIRMED ON SPIGOT 1.12.2
             String replacedText = getReplacedText(packetEvent, user, listenType, (String) object, filter);
-            return replacedText == null ? this : replacedText;
+            return replacedText == null ? this : replacedText.equals(object) ? EQUAL : replacedText;
 
-        } else if (BukkitConverters.getItemStackConverter().getSpecificType().isInstance(object)) {
+        } else if (object instanceof ItemStack) {
             // Item in Item Frame
-            ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(object);
+            ItemStack itemStack = ITEMSTACK_CONVERTER.getSpecific(object);
             List<ReplacerConfig> replacerConfigs = ProtocolStringReplacer.getInstance().getReplacerManager().getAcceptedReplacers(user, filter);
-            replaceItemStack(packetEvent, user, listenType, itemStack, replacerConfigs, replacerConfigs, replacerConfigs, false);
+            replaceItemStack(packetEvent, user, listenType, itemStack, replacerConfigs, replacerConfigs, replacerConfigs, true);
 
 //        } else if (ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz().isInstance(object)) {
 //            NBTContainer container = new NBTContainer(object);
