@@ -163,7 +163,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
         } else if (object instanceof String) {
             // Name of the entity CONFIRMED ON SPIGOT 1.12.2
             String replacedText = getReplacedText(packetEvent, user, listenType, (String) object, filter);
-            return replacedText == null ? this : replacedText.equals(object) ? EQUAL : replacedText;
+            return replacedText == null ? this : replacedText.equals(object) ? null : replacedText;
 
         } else if (object instanceof ItemStack) {
             // Item in Item Frame
