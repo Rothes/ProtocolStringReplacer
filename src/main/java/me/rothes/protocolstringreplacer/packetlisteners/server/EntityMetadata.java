@@ -34,16 +34,21 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             return;
         }
         PacketContainer packet = packetEvent.getPacket();
-        PacketContainer processed = processPacket(packetEvent, user, packet, true);
+        PacketContainer processed = processPacket(packetEvent, user, packet, null, -1);
         if (packet != processed) {
             packetEvent.setPacket(processed);
         }
     }
 
-    private PacketContainer processPacket(PacketEvent packetEvent, PsrUser user, PacketContainer packet, boolean clone) {
+    private PacketContainer processPacket(PacketEvent packetEvent, PsrUser user, PacketContainer packet, Object first, int index) {
+        boolean clone = first == null;
         if (shouldDV) {
             List<WrappedDataValue> dataValueList = packet.getDataValueCollectionModifier().read(0);
-            for (WrappedDataValue wrappedDataValue : dataValueList) {
+            if (!clone) {
+                dataValueList.get(index).setValue(first);
+            }
+            for (int i = index + 1, dataValueListSize = dataValueList.size(); i < dataValueListSize; i++) {
+                WrappedDataValue wrappedDataValue = dataValueList.get(i);
                 Object getValue = wrappedDataValue.getValue();
                 Object o = processObject(packetEvent, user, getValue);
                 if (o == this) {
@@ -51,7 +56,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                 } else if (o != null && o != getValue) {
                     if (clone) {
                         PacketContainer cloned = clonePacket(packet);
-                        processPacket(packetEvent, user, cloned, false);
+                        processPacket(packetEvent, user, cloned, o, i);
                         return cloned;
                     }
                     wrappedDataValue.setValue(o);
@@ -60,9 +65,12 @@ public final class EntityMetadata extends AbstractServerPacketListener {
 
         } else {
             List<WrappedWatchableObject> metadataList = packet.getWatchableCollectionModifier().read(0);
-
+            if (!clone) {
+                metadataList.get(index).setValue(first);
+            }
             if (metadataList != null) {
-                for (WrappedWatchableObject watchableObject : metadataList) {
+                for (int i = index + 1, metadataListSize = metadataList.size(); i < metadataListSize; i++) {
+                    WrappedWatchableObject watchableObject = metadataList.get(i);
                     Object getValue = watchableObject.getValue();
                     Object o = processObject(packetEvent, user, getValue);
                     if (o == this) {
@@ -70,7 +78,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
                     } else if (o != null && o != getValue) {
                         if (clone) {
                             PacketContainer cloned = clonePacket(packet);
-                            processPacket(packetEvent, user, cloned, false);
+                            processPacket(packetEvent, user, cloned, o, i);
                             return cloned;
                         }
                         watchableObject.setValue(o);
