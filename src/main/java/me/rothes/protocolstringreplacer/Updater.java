@@ -94,8 +94,8 @@ public class Updater implements Listener {
             }
             Map<String, Map<String, Integer>> map = new HashMap<>();
             Map<String, Integer> entry = new HashMap<>();
-            entry.put(blocks + (blocks >= 1 ? " Blocks" : " Block"), 1);
-            map.put(configs + (configs >= 1 ? " Configs" : " Config"), entry);
+            entry.put(blocks + (blocks > 1 ? " Blocks" : " Block"), 1);
+            map.put(configs + (configs > 1 ? " Configs" : " Config"), entry);
             return map;
         }));
     }

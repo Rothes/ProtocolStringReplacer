@@ -197,16 +197,6 @@ public class ReplacerManager {
         return new ArrayList<>(replacerConfigList);
     }
 
-    public int getReplacesCount() {
-        int count = 0;
-        for (ReplacerConfig replacerConfig : replacerConfigList) {
-            if (replacerConfig.isEnabled()) {
-                count = count + replacerConfig.getReplaces(ReplaceMode.COMMON).size();
-            }
-        }
-        return count;
-    }
-
     public void saveReplacerConfigs() {
         for (ReplacerConfig replacerConfig : replacerConfigList) {
             if (replacerConfig.isEdited()) {
@@ -475,42 +465,44 @@ public class ReplacerManager {
         Validate.notNull(replacerConfig, "Replacer File cannot be null");
         Validate.notNull(replaceMode, "Replaces Mode cannot be null");
 
-        if (replacerConfig.getMatchMode() == MatchMode.CONTAIN) {
-            // Using Aho-Corasick algorithm.
-            int i = 0;
+        switch (replacerConfig.getMatchMode()) {
+            case CONTAIN:
+                // Using Aho-Corasick algorithm.
+                int i = 0;
 
-            StringBuilder resultBuilder = new StringBuilder();
-            for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replaceMode).parseText(string)) {
-                if (emit.getStart() > i) {
-                    resultBuilder.append(string, i, emit.getStart());
+                StringBuilder resultBuilder = new StringBuilder();
+                for (Emit<String> emit : replacerConfig.getReplacesStringSearcher(replaceMode).parseText(string)) {
+                    if (emit.getStart() > i) {
+                        resultBuilder.append(string, i, emit.getStart());
+                    }
+                    resultBuilder.append(emit.getPayload());
+                    i = emit.getEnd() + 1;
                 }
-                resultBuilder.append(emit.getPayload());
-                i = emit.getEnd() + 1;
-            }
 
-            if (i < string.length()) {
-                resultBuilder.append(string.substring(i));
-            }
+                if (i < string.length()) {
+                    resultBuilder.append(string.substring(i));
+                }
 
-            return resultBuilder.toString();
+                return resultBuilder.toString();
 
-        } else if (replacerConfig.getMatchMode() == MatchMode.EQUAL) {
-            Object get = replacerConfig.getReplaces(replaceMode).get(string);
-            if (get != null) {
-                return (String) get;
-            }
-            return string;
-        } else if (replacerConfig.getMatchMode() == MatchMode.REGEX) {
-            String result = string;
+            case EQUAL:
+                Object get = replacerConfig.getReplaces(replaceMode).get(string);
+                if (get != null) {
+                    return (String) get;
+                }
+                return string;
+            case REGEX:
+                String result = string;
 
-            @SuppressWarnings("unchecked")
-            Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replaceMode).entrySet();
-            for (Map.Entry<Pattern, String> entry : set) {
-                result = entry.getKey().matcher(result).replaceAll(entry.getValue());
-            }
-            return result;
+                @SuppressWarnings("unchecked")
+                Set<Map.Entry<Pattern, String>> set = replacerConfig.getReplaces(replaceMode).entrySet();
+                for (Map.Entry<Pattern, String> entry : set) {
+                    result = entry.getKey().matcher(result).replaceAll(entry.getValue());
+                }
+                return result;
+            default:
+                throw new AssertionError();
         }
-        throw new AssertionError();
     }
 
     public boolean getBlocked(@Nonnull String string, @Nonnull ReplacerConfig replacerConfig, @Nonnull ReplaceMode replaceMode) {
@@ -531,11 +523,10 @@ public class ReplacerManager {
                         return true;
                     }
                 }
-                break;
+                return false;
             default:
                 throw new AssertionError();
         }
-        return false;
     }
 
 }
