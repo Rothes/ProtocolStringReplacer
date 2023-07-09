@@ -450,22 +450,18 @@ public class ReplacerManager {
     }
 
     public boolean hasPlaceholder(@NotNull String string) {
-        boolean headFound = false;
-        boolean tailFound = false;
-        for(int i = 0; i < string.length(); i++) {
-            char Char = string.charAt(i);
-            if (!headFound) {
-                if (Char == papiHead) {
-                    headFound = true;
+        boolean findHead = true;
+        for(int i = 0, length = string.length(); i < length; i++) {
+            char ch = string.charAt(i);
+            if (findHead) {
+                if (ch == papiHead) {
+                    findHead = false;
                 }
-            } else {
-                if (Char == papiTail) {
-                    tailFound = true;
-                    break;
-                }
+            } else if (ch == papiTail) {
+                return true;
             }
         }
-        return tailFound;
+        return false;
     }
 
     public String setPlaceholder(@NotNull PsrUser user, @NotNull String string) {
