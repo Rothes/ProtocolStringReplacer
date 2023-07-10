@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
+import me.rothes.protocolstringreplacer.scheduler.PsrScheduler;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.DrilldownPie;
 import org.bukkit.Bukkit;
@@ -40,7 +41,7 @@ public class Updater implements Listener {
     public void start() {
         initMetrics();
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        PsrScheduler.runTaskTimerAsynchronously(() -> {
             try {
                 String json = getJson();
                 if (json == null) {
@@ -56,7 +57,7 @@ public class Updater implements Listener {
 
     @EventHandler
     public void playerJoin(PlayerJoinEvent e) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        PsrScheduler.runTaskAsynchronously(() -> {
             if (e.getPlayer().hasPermission("protocolstringreplacer.updater.notify")) {
                 for (String message : messages) {
                     e.getPlayer().sendMessage(PsrLocalization.getLocaledMessage("Sender.Prefix") + message);

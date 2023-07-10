@@ -1,10 +1,10 @@
 package me.rothes.protocolstringreplacer.console;
 
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.scheduler.PsrScheduler;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.lookup.StrLookup;
-import org.bukkit.Bukkit;
 
 @Plugin(name = "jndi", category = StrLookup.CATEGORY)
 public class PsrJndiLookup implements StrLookup {
@@ -22,8 +22,7 @@ public class PsrJndiLookup implements StrLookup {
             return null;
         }
         // runTaskLater to avoid errors.
-        Bukkit.getScheduler().runTaskLater(ProtocolStringReplacer.getInstance()
-                , () -> ProtocolStringReplacer.info("Blocked not whitelisted Jndi looking up [" + key + "]")
+        PsrScheduler.runTaskLater(() -> ProtocolStringReplacer.info("Blocked not whitelisted Jndi looking up [" + key + "]")
                 , 0L);
         return null;
 

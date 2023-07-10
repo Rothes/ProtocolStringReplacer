@@ -13,6 +13,7 @@ import me.rothes.protocolstringreplacer.listeners.PlayerJoinListener;
 import me.rothes.protocolstringreplacer.listeners.PlayerQuitListener;
 import me.rothes.protocolstringreplacer.packetlisteners.PacketListenerManager;
 import me.rothes.protocolstringreplacer.replacer.ReplacerManager;
+import me.rothes.protocolstringreplacer.scheduler.PsrScheduler;
 import me.rothes.protocolstringreplacer.upgrades.AbstractUpgradeHandler;
 import me.rothes.protocolstringreplacer.upgrades.UpgradeEnum;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
@@ -57,6 +58,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
     private byte serverMinorVersion;
     private boolean isSpigot;
     private boolean isPaper;
+    private boolean isFolia;
     private boolean hasPaperComponent;
     private boolean hasStarted;
     private boolean reloading;
@@ -88,6 +90,12 @@ public class ProtocolStringReplacer extends JavaPlugin {
             e.printStackTrace();
         }
         logger = this.getLogger();
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            isFolia = true;
+        } catch (ClassNotFoundException e) {
+            isFolia = false;
+        }
 
         // Start Console Replacer first to remove the Ansi in log files.
         String[] split = Bukkit.getServer().getBukkitVersion().split("-")[0].split("\\.");
@@ -199,7 +207,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         if (replacerManager != null) {
             replacerManager.saveReplacerConfigs();
         }
-        Bukkit.getScheduler().cancelTasks(instance);
+        PsrScheduler.cancelTasks();
     }
 
     public byte getServerMajorVersion() {
@@ -216,6 +224,10 @@ public class ProtocolStringReplacer extends JavaPlugin {
 
     public boolean isPaper() {
         return isPaper;
+    }
+
+    public boolean isFolia() {
+        return isFolia;
     }
 
     public boolean hasPaperComponent() {
@@ -438,12 +450,12 @@ public class ProtocolStringReplacer extends JavaPlugin {
         reloading = true;
         Validate.notNull(user, "user cannot be null");
         PsrReloadEvent event = new PsrReloadEvent(PsrReloadEvent.ReloadState.BEFORE, user);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        PsrScheduler.runTask(() -> Bukkit.getServer().getPluginManager().callEvent(event));
         if (event.isCancelled()) {
             reloading = false;
             return;
         }
-        Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+        PsrScheduler.runTaskAsynchronously(() -> {
             try {
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Async-Reloading"));
                 loadConfigAndLocale();
@@ -460,7 +472,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                     player.updateInventory();
                 }
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
-                Bukkit.getScheduler().runTask(instance, () -> {
+                PsrScheduler.runTask(() -> {
                     // Don't need to check cancelled here
                     Bukkit.getServer().getPluginManager().callEvent(new PsrReloadEvent(PsrReloadEvent.ReloadState.FINISH, user));
                 });

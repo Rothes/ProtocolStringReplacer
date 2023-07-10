@@ -1,14 +1,14 @@
 package me.rothes.protocolstringreplacer.commands.subcommands;
 
-import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
-import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
+import me.rothes.protocolstringreplacer.replacer.ListenType;
+import me.rothes.protocolstringreplacer.scheduler.PsrScheduler;
 import me.rothes.protocolstringreplacer.utils.MessageUtils;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -109,7 +109,7 @@ public class Capture extends SubCommand {
 
     private void listCommand(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length == 3 || args.length == 4) {
-            Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
+            PsrScheduler.runTaskAsynchronously(() -> {
                 ListenType listenType = ListenType.getType(args[2]);
                 if (listenType == null) {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
@@ -157,7 +157,7 @@ public class Capture extends SubCommand {
 
     private void clipboardCommand(@Nonnull PsrUser user, @Nonnull String[] args) {
         if (args.length == 4) {
-            Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () -> {
+            PsrScheduler.runTaskAsynchronously(() -> {
                 ListenType listenType = ListenType.getType(args[2]);
                 if (!user.isCapturing(listenType)) {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(

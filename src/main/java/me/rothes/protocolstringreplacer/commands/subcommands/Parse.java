@@ -6,6 +6,7 @@ import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
 import me.rothes.protocolstringreplacer.replacer.ReplaceMode;
+import me.rothes.protocolstringreplacer.scheduler.PsrScheduler;
 import me.rothes.protocolstringreplacer.utils.ColorUtils;
 import me.rothes.protocolstringreplacer.commands.SubCommand;
 import net.md_5.bungee.api.ChatColor;
@@ -67,7 +68,7 @@ public class Parse extends SubCommand {
 
             user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Parse.Start-Parse"));
             ReplaceMode finalReplaceMode = replaceMode;
-            Bukkit.getScheduler().runTaskAsynchronously(ProtocolStringReplacer.getInstance(), () ->
+            PsrScheduler.runTaskAsynchronously(() ->
                     startParse(user, args[1], player, listenType, finalReplaceMode));
             return;
         }

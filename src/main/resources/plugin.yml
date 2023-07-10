@@ -3,6 +3,7 @@ version: ${project.version}
 main: me.rothes.protocolstringreplacer.ProtocolStringReplacer
 author: Rothes
 api-version: 1.13
+folia-supported: true
 softdepend:
   - ProtocolLib
   - PlaceholderAPI

@@ -1,5 +1,6 @@
 package com.sk89q.protocolstringreplacer;
 
+import io.papermc.paper.plugin.configuration.PluginMeta;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
@@ -47,6 +48,11 @@ public class PsrDisguisePlugin implements Plugin {
     @Override
     public PluginDescriptionFile getDescription() {
         return plugin.getDescription();
+    }
+
+    @Override
+    public @NotNull PluginMeta getPluginMeta() {
+        return null;
     }
 
     @Override

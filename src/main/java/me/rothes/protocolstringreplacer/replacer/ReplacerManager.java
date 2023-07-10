@@ -1,20 +1,20 @@
 package me.rothes.protocolstringreplacer.replacer;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import me.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
-import me.rothes.protocolstringreplacer.replacer.containers.Container;
-import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import me.rothes.protocolstringreplacer.replacer.containers.Container;
+import me.rothes.protocolstringreplacer.replacer.containers.Replaceable;
+import me.rothes.protocolstringreplacer.scheduler.PsrScheduler;
+import me.rothes.protocolstringreplacer.scheduler.PsrTask;
 import me.rothes.protocolstringreplacer.utils.FileUtils;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.neosearch.stringsearcher.Emit;
 
@@ -41,7 +41,7 @@ public class ReplacerManager {
     private char papiTail;
     private final List<ReplacerConfig> replacerConfigList = new ArrayList<>();
     private final EnumMap<Material, HashMap<ItemMeta, ItemMetaCache>> replacedItemCache = new EnumMap<>(Material.class);
-    private BukkitTask cleanTask;
+    private PsrTask cleanTask;
 
     public static class ItemMetaCache {
 
@@ -105,7 +105,7 @@ public class ReplacerManager {
         return loaded;
     }
 
-    public BukkitTask getCleanTask() {
+    public PsrTask getCleanTask() {
         return cleanTask;
     }
 
@@ -119,7 +119,7 @@ public class ReplacerManager {
         ProtocolStringReplacer instance = ProtocolStringReplacer.getInstance();
         long cleanAccessInterval = instance.getConfigManager().cleanAccessInterval;
         long cleanTaskInterval = instance.getConfigManager().cleanTaskInterval;
-        cleanTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+        cleanTask = PsrScheduler.runTaskTimerAsynchronously(() -> {
             long currentTime = System.currentTimeMillis();
             int purged = 0;
 
@@ -141,9 +141,9 @@ public class ReplacerManager {
 
             }
             if (purged != 0) {
-                int finalPurged = purged;
-                Bukkit.getScheduler().runTask(instance, () -> ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
-                        String.valueOf(finalPurged))));
+                ProtocolStringReplacer.info(
+                        PsrLocalization.getLocaledMessage("Console-Sender.Messages.Schedule.Purging-Item-Cache",
+                        String.valueOf(purged)));
             }
         }, 0L, cleanTaskInterval);
     }
