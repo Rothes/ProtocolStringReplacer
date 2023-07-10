@@ -8,11 +8,12 @@ import java.util.concurrent.TimeUnit;
 
 public class PsrScheduler {
 
+    private static final ProtocolStringReplacer PLUGIN = ProtocolStringReplacer.getInstance();
+    private static final boolean FOLIA = PLUGIN.isFolia();
+
     private PsrScheduler() {
 
     }
-    private static final ProtocolStringReplacer PLUGIN = ProtocolStringReplacer.getInstance();
-    private static final boolean FOLIA = PLUGIN.isFolia();
 
     public static PsrTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
         if (FOLIA) {

@@ -6,7 +6,7 @@
 
     <groupId>me.rothes</groupId>
     <artifactId>ProtocolStringReplacer</artifactId>
-    <version>2.18.2-DEV</version>
+    <version>2.19.0</version>
     <packaging>jar</packaging>
 
     <repositories>
