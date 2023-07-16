@@ -263,10 +263,10 @@ public class FileReplacerConfig implements ReplacerConfig {
     private void loadData(File file, CommentYamlConfiguration configuration) {
         this.configuration = configuration;
         this.file = file;
-        enable = configuration.getBoolean("Options.Enabled", false);
-        if (!configuration.contains("Options.Enabled", true)) {
+        if (!configuration.contains("Options.Enabled")) {
             ProtocolStringReplacer.warn(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Missing-Enabled-Warning"));
         }
+        enable = configuration.getBoolean("Options.Enabled", false);
         priority = configuration.getInt("Options.Priority", 5);
         author = configuration.getString("Options.Author");
         version = configuration.getString("Options.Version");
