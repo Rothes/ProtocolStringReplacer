@@ -255,7 +255,7 @@ public class FileReplacerConfig implements ReplacerConfig {
 
     public int checkReplaceKey(@Nonnull String key, @Nonnull ReplaceMode replaceMode) {
         for (int i = 0; i < replaces.get(replaceMode).size(); i++) {
-            if (replaces.get(replaceMode).get(i).equals(key)) {
+            if (replaces.get(replaceMode).get(i).toString().equals(key)) {
                 return i;
             }
         }

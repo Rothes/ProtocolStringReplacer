@@ -201,7 +201,7 @@ public class Replace extends SubCommand {
                                     ColorUtils.showColorCodes(replacement, replaceMode == ReplaceMode.DIRECT)));
                 } else {
                     user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage(
-                            "Sender.Commands.Edit.Children.Replace.Children.Same-Original-Text"));
+                            "Sender.Commands.Edit.Children.Replace.Children.Same-Original-Text", String.valueOf(i)));
                 }
             } else if (args.length == 7) {
                 if (!StringUtils.isNumeric(args[4])) {
