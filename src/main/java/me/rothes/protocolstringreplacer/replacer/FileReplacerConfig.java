@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class FileReplacerConfig implements ReplacerConfig {
 
@@ -160,13 +161,14 @@ public class FileReplacerConfig implements ReplacerConfig {
             for (short i = 0; i < replaces.size(); i++) {
                 ListOrderedMap entryMap = new ListOrderedMap();
                 Object object = replaces.get(i);
-                entryMap.put("Original", object);
+                entryMap.put("Original", object.toString());
                 entryMap.put("Replacement", replaces.get(object));
                 result.add(entryMap);
             }
             configuration.set("Replaces." + replaceMode.getNode(), result);
 
-            configuration.set("Blocks." + replaceMode.getNode(), blocks.get(replaceMode));
+            configuration.set("Blocks." + replaceMode.getNode(),
+                    blocks.get(replaceMode).stream().map(Object::toString).collect(Collectors.toList()));
         }
         try {
             configuration.save(file);
