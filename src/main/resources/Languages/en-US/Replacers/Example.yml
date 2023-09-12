@@ -1,4 +1,8 @@
-# The settings of this replacer config.
+# This configuration file shows most of the options we have. You can have a check.
+# !!! If you directly modify the Replaces/Blocks entries of this configuration, it will not take effect !!!
+# Because we have limited the permissions and client locales required to take effect. Please go to line 72 to view them.
+
+# The options of this replacer config.
 Options:
   # Whether this config is enabled or not. Plugin will not process this config
   # if configured false. By default, it's false if undefined.
@@ -87,6 +91,7 @@ Options:
 
 # List of replace strings.
 # Replace mode priority: Direct > Json > Common. This ignores priority in replacer configs.
+# Tip: You can use `/psr capture` command to capture the exact original strings fast.
 Replaces:
   # Common string replace mode.
   # Each entry in a common replace mode is split according to a different format in Json.
