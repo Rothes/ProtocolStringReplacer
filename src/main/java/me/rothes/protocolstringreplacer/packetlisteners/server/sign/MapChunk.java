@@ -21,7 +21,7 @@ public final class MapChunk extends AbstractServerSignPacketListener {
             return;
         }
         PacketContainer packet = packetEvent.getPacket();
-        List<?> read = (List<?>) packet.getStructures().withType(Collection.class).read(0);
+        List<?> read = (List<?>) packet.getModifier().withType(Collection.class).read(0);
         for (Object nbt : read) {
             NBTContainer nbtContainer = new NBTContainer(nbt);
             if (!nbtContainer.hasTag("id")) {

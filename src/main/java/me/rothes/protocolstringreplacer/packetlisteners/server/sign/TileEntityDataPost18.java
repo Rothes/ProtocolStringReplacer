@@ -23,7 +23,7 @@ public class TileEntityDataPost18 extends AbstractServerSignPacketListener {
         if (TileTypeHelper.isSignType(packet.getModifier().read(1))) {
             // Have to clone, to make sure the result of the player doesn't affect other players and may kick random players.
             PacketContainer clone = packet.deepClone();
-            Object read = clone.getStructures().withType(MinecraftReflection.getNBTBaseClass()).read(0);
+            Object read = clone.getModifier().withType(MinecraftReflection.getNBTBaseClass()).read(0);
             replaceSign(packetEvent, new NBTContainer(read), user, filter);
             packetEvent.setPacket(clone);
         }
