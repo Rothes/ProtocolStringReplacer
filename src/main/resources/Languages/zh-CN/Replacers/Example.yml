@@ -18,23 +18,24 @@ Options:
   # 'Regex' : 使用Java正则表达式
   # 不区分大小写.
   Match-Mode: 'Contain'
-  # 筛选功能. 用于指定此文件替换字符串的条件.
+  # 筛选功能. 用于指定此文件处理字符串的条件.
   Filter:
     # 监听类型.
-    # 指定替换何处的字符串. 默认为全部. 可选值:
-    # 'Chat' : 替换聊天(chat|actionbar)信息文本
-    # 'Chat-Preview' : 替换聊天预览(Chat Preview)中的文本
-    # 'Tab-Complete' : 替换 Tab Complete 中的文本
-    # 'Sign' : 替换告示牌文本
-    # 'Title' : 替换标题(title|subtitle)文本
-    # 'Entity' : 替换实体名文本
-    # 'Boss-Bar' : 替换Boss血量条文本
-    # 'ItemStack' : 替换物品(物品名|Lore|书署名|书内容)文本
-    # 'Window-Title' : 替换容器标题文本
-    # 'ScoreBoard' : 替换计分板(标题|实体名称)
-    # 'Console' : 替换控制台内显示的文本信息
-    # 'Kick-Disconnect' : 替换踢出玩家时客户端上的踢出消息
-    # 'Combat-Kill' : 替换玩家重生界面上的死亡信息
+    # 指定处理何处的字符串. 默认为全部. 可选值:
+    # 'ActionBar' : 处理动作栏信息文本
+    # 'Chat' : 处理聊天信息文本
+    # 'Chat-Preview' : 处理聊天预览(Chat Preview)中的文本
+    # 'Tab-Complete' : 处理 Tab Complete 中的文本
+    # 'Sign' : 处理告示牌文本
+    # 'Title' : 处理标题(title|subtitle)文本
+    # 'Entity' : 处理实体名文本
+    # 'Boss-Bar' : 处理Boss血量条文本
+    # 'ItemStack' : 处理物品(物品名|Lore|书署名|书内容)文本
+    # 'Window-Title' : 处理容器标题文本
+    # 'ScoreBoard' : 处理计分板(标题|实体名称)
+    # 'Console' : 处理控制台内显示的文本信息
+    # 'Kick-Disconnect' : 处理踢出玩家时客户端上的踢出消息
+    # 'Combat-Kill' : 处理玩家重生界面上的死亡信息
     # 不区分大小写.
     Listen-Types:
       - Chat

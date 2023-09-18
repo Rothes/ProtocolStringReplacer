@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
@@ -22,6 +23,16 @@ public class SystemChat extends AbstractServerComponentsPacketListener {
         PacketContainer packet = packetEvent.getPacket();
         Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
         if (!(isFiltered.isPresent() && isFiltered.get())) {
+
+            StructureModifier<Boolean> booleans = packet.getBooleans();
+            if (booleans.size() == 1) {
+                if (booleans.read(0)) {
+                    return;
+                }
+            } else if (packet.getIntegers().read(0) == EnumWrappers.ChatType.GAME_INFO.getId()) {
+                return;
+            }
+
             PsrUser user = getEventUser(packetEvent);
             if (user == null) {
                 return;

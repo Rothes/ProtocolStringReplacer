@@ -1,4 +1,4 @@
-package me.rothes.protocolstringreplacer.packetlisteners.server;
+package me.rothes.protocolstringreplacer.packetlisteners.server.actionbar;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
@@ -6,15 +6,17 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
+import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
+import org.jetbrains.annotations.NotNull;
 
-public final class ActionBar extends AbstractServerComponentsPacketListener {
+public final class SetActionBar extends AbstractServerComponentsPacketListener {
 
-    public ActionBar() {
-        super(PacketType.Play.Server.SET_ACTION_BAR_TEXT, ListenType.CHAT);
+    public SetActionBar() {
+        super(PacketType.Play.Server.SET_ACTION_BAR_TEXT, ListenType.ACTIONBAR);
     }
 
-    protected void process(PacketEvent packetEvent) {
+    protected void process(@NotNull PacketEvent packetEvent) {
         PsrUser user = getEventUser(packetEvent);
         if (user == null) {
             return;

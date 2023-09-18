@@ -20,23 +20,24 @@ Options:
   # 'Regex' : Use Java Regex
   # This is not case-sensitive.
   Match-Mode: 'Contain'
-  # Filter function. Used to specify the conditions for replacing strings in this config.
+  # Filter function. Used to specify the conditions for strings handling in this config.
   Filter:
     # Listen types.
-    # Specify where to replace the string. All by default. Options:
-    # 'Chat' : Replace strings in chat|actionbar
-    # 'Chat-Preview' : Replace strings in Chat Preview
-    # 'Tab-Complete' : Replace strings in Tab Complete
-    # 'Sign' : Replace strings on signs
-    # 'Title' : Replace strings in title|subtitle
-    # 'Entity' : Replace strings of entity display name, itemframe name, etc.
-    # 'Boss-Bar' : Replace strings of Boss health bar
-    # 'ItemStack' : Replace strings in item such as display name|Lore|author of the book|content of the book
-    # 'Window-Title' : Replace strings of containers name
-    # 'ScoreBoard' : Replace strings in scoreboard title|entity name
-    # 'Console' : Replace strings in console
-    # 'Kick-Disconnect' : Replace strings in kick message on client when kicking player
-    # 'Combat-Kill' : Replace strings in death message on respawn screen
+    # Specify which strings to handle. All are included by default. Options:
+    # 'ActionBar': Handle strings in ActionBar
+    # 'Chat' : Handle strings in chat
+    # 'Chat-Preview' : Handle strings in Chat Preview
+    # 'Tab-Complete' : Handle strings in Tab Complete
+    # 'Sign' : Handle strings on signs
+    # 'Title' : Handle strings in title|subtitle
+    # 'Entity' : Handle strings of entity display name, itemframe name, etc.
+    # 'Boss-Bar' : Handle strings of Boss health bar
+    # 'ItemStack' : Handle strings in item such as display name|Lore|author of the book|content of the book
+    # 'Window-Title' : Handle strings of containers name
+    # 'ScoreBoard' : Handle strings in scoreboard title|entity name
+    # 'Console' : Handle strings in console
+    # 'Kick-Disconnect' : Handle strings in kick message on client when kicking player
+    # 'Combat-Kill' : Handle strings in death message on respawn screen
     # This is not case-sensitive.
     Listen-Types:
       - Chat

@@ -8,8 +8,11 @@ import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.SettingsLocale;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
-import me.rothes.protocolstringreplacer.packetlisteners.server.ActionBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.actionbar.ChatActionBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.actionbar.SetActionBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.KickDisconnect;
+import me.rothes.protocolstringreplacer.packetlisteners.server.actionbar.SystemChatActionBar;
+import me.rothes.protocolstringreplacer.packetlisteners.server.actionbar.TitleActionBar;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.ChatPreview;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.DisguisedChat;
 import me.rothes.protocolstringreplacer.packetlisteners.server.chat.SystemChat;
@@ -71,11 +74,12 @@ public class PacketListenerManager {
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
             listeners.add(new SetTitleText());
             listeners.add(new SetSubtitleText());
-            listeners.add(new ActionBar());
+            listeners.add(new SetActionBar());
 
             listeners.add(new PlayerCombatKill());
         } else {
             listeners.add(new Title());
+            listeners.add(new TitleActionBar());
 
             listeners.add(new CombatEvent());
         }
@@ -107,6 +111,7 @@ public class PacketListenerManager {
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
             listeners.add(new SystemChat());
+            listeners.add(new SystemChatActionBar());
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() != 19 || ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 3) {
                 listeners.add(new DisguisedChat());
             }
@@ -129,6 +134,7 @@ public class PacketListenerManager {
         listeners.add(new KickDisconnect());
         listeners.add(new TabComplete());
         listeners.add(new Chat());
+        listeners.add(new ChatActionBar());
         listeners.add(new SetSlot());
         listeners.add(new OpenWindow());
         listeners.add(new EntityMetadata());

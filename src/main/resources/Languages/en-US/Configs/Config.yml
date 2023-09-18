@@ -64,6 +64,7 @@ Options:
       # Set which listen types are enabled. If you don't need PSR to handle the strings in
       # the listen type, set it to false can help with performance.
       Listen-Type-Enabled:
+        ActionBar: true
         Boss-Bar: true
         Chat: true
         Chat-Preview: true

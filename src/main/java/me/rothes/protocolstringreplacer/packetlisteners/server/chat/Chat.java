@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
@@ -42,6 +43,7 @@ public final class Chat extends AbstractServerComponentsPacketListener {
 
     protected void process(PacketEvent packetEvent) {
         PacketContainer packet = packetEvent.getPacket();
+
         Optional<Boolean> isFiltered = packet.getMeta("psr_filtered_packet");
         if (!(isFiltered.isPresent() && isFiltered.get())) {
             PsrUser user = getEventUser(packetEvent);
@@ -51,6 +53,12 @@ public final class Chat extends AbstractServerComponentsPacketListener {
 
             if (convert(packet, user)) {
                 packetEvent.setCancelled(true);
+                return;
+            }
+
+            if (packet.getChatTypes().read(0) == EnumWrappers.ChatType.GAME_INFO
+                    || (packet.getBytes().size() >= 1 && packet.getBytes().read(0) == 2)) {
+                // ActionBar Message.
                 return;
             }
 

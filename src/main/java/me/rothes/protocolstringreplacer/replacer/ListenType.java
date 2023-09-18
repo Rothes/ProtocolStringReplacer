@@ -14,7 +14,8 @@ public enum ListenType {
     SCOREBOARD("ScoreBoard", true),
     CONSOLE("Console", false),
     KICK_DISCONNECT("Kick-Disconnect", true), // Is it important capture-able now? lol
-    COMBAT_KILL("Combat-Kill", true);
+    COMBAT_KILL("Combat-Kill", true),
+    ACTIONBAR("ActionBar", true);
 
     private String name;
     private boolean capturable;

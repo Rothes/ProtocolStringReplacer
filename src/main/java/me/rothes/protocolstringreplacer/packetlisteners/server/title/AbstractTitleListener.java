@@ -12,7 +12,11 @@ import me.rothes.protocolstringreplacer.api.user.PsrUser;
 public abstract class AbstractTitleListener extends AbstractServerComponentsPacketListener {
 
     protected AbstractTitleListener(PacketType packetType) {
-        super(packetType, ListenType.TITLE);
+        this(packetType, ListenType.TITLE);
+    }
+
+    protected AbstractTitleListener(PacketType packetType, ListenType listenType) {
+        super(packetType, listenType);
     }
 
     protected void process(PacketEvent packetEvent) {
