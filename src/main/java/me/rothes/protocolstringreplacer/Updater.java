@@ -29,7 +29,7 @@ import java.util.Map;
 public class Updater implements Listener {
 
     private static final String VERSION_CHANNEL = "Stable";
-    private static final int VERSION_NUMBER = 114;
+    private static final int VERSION_NUMBER = 115;
     private final HashMap<String, Integer> msgTimesMap = new HashMap<>();
     private final List<String> messages = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
