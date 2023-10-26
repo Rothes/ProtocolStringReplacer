@@ -242,7 +242,7 @@ public class PlayerChatHelper {
     }
 
     public static BaseComponent getTeamName(Object object) {
-        return ComponentSerializer.parse(WrappedChatComponent.fromHandle(getTeamNameWrapped(object)).getJson())[0];
+        return ComponentSerializer.parse(getTeamNameWrapped(object).getJson())[0];
     }
 
     public static WrappedChatComponent getTeamNameWrapped(Object object) {
