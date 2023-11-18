@@ -249,7 +249,7 @@ public class PlayerChatHelper {
         try {
             Object o = teamNameField.get(object);
             if (o == null) {
-                return null;
+                return WrappedChatComponent.fromText("");
             }
             return WrappedChatComponent.fromHandle(o);
         } catch (IllegalAccessException e) {
