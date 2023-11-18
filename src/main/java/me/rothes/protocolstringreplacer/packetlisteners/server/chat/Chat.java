@@ -20,25 +20,10 @@ import java.util.Optional;
 
 public final class Chat extends AbstractServerComponentsPacketListener {
 
-    private final Version version;
+    final PlayerChatHelper.Version version = PlayerChatHelper.version;
 
     public Chat() {
         super(PacketType.Play.Server.CHAT, ListenType.CHAT);
-        byte serverMajorVersion = ProtocolStringReplacer.getInstance().getServerMajorVersion();
-        byte serverMinorVersion = ProtocolStringReplacer.getInstance().getServerMinorVersion();
-        if (serverMajorVersion <= 18) {
-            version = Version.R8_0_TO_R18_2;
-        } else if (serverMajorVersion == 19){
-            if (serverMinorVersion == 0) {
-                version = Version.R19_0;
-            } else if (serverMinorVersion <= 2) {
-                version = Version.R19_1_TO_R19_2;
-            } else {
-                version = Version.R19_3;
-            }
-        } else {
-            version = Version.R19_3;
-        }
     }
 
     protected void process(PacketEvent packetEvent) {
@@ -62,7 +47,7 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 return;
             }
 
-            if (version != Version.R8_0_TO_R18_2) {
+            if (version != PlayerChatHelper.Version.V8_0_TO_V18_2) {
                 // on 1.19+ we can no longer modify the message, they have added the final modifier.
                 return;
             }
@@ -103,21 +88,24 @@ public final class Chat extends AbstractServerComponentsPacketListener {
         PlayerChatHelper.ChatType chatType;
 
         switch (version) {
-            case R19_0:
+            case V8_0_TO_V18_2:
+                return false;
+            case V19_0:
                 componentModifier = packet.getChatComponents();
                 wrappedChatComponent = componentModifier.read(0);
 
                 chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatSender(modifier);
                 chatType = PlayerChatHelper.getChatTypeFromId(packet.getIntegers().read(0));
                 break;
-            case R19_1_TO_R19_2:
+            case V19_1_TO_V19_2:
                 wrappedChatComponent = PlayerChatHelper.getChatMessage(packet.getModifier()
                         .withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0));
 
                 chatMessageTypeSubOrChatSender = PlayerChatHelper.getChatMessageTypeSub(modifier);
                 chatType = PlayerChatHelper.getChatTypeFromId(PlayerChatHelper.getChatTypeId(chatMessageTypeSubOrChatSender));
                 break;
-            case R19_3:
+            case V19_3:
+            case V19_4:
                 componentModifier = packet.getChatComponents();
                 wrappedChatComponent = componentModifier.read(0);
                 if (wrappedChatComponent == null) {
@@ -130,7 +118,7 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 chatType = PlayerChatHelper.getChatTypeFromId(PlayerChatHelper.getChatTypeId(chatMessageTypeSubOrChatSender));
                 break;
             default:
-                return false;
+                throw new AssertionError();
         }
 
         if (wrappedChatComponent != null) {
@@ -158,8 +146,8 @@ public final class Chat extends AbstractServerComponentsPacketListener {
             case TELLRAW:
                 // The Format is modified in AsyncPlayerChatEvent or PlayerChatEvent
                 switch (version) {
-                    case R19_0:
-                    case R19_1_TO_R19_2:
+                    case V19_0:
+                    case V19_1_TO_V19_2:
                         user.sendMessage(ComponentSerializer.parse(PlayerChatHelper.getOptionalChatMessage(packet.getModifier()
                                 .withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0)).getJson()));
                         break;
@@ -211,13 +199,6 @@ public final class Chat extends AbstractServerComponentsPacketListener {
                 throw new AssertionError();
         }
         return true;
-    }
-
-    private enum Version {
-        R8_0_TO_R18_2,
-        R19_0,
-        R19_1_TO_R19_2,
-        R19_3
     }
 
 }

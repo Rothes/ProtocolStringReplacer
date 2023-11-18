@@ -14,6 +14,8 @@ import java.util.Optional;
 
 public class PlayerChatHelper {
 
+    static Version version;
+
     // 1.19
     private static Class<?> chatSenderClass;
 
@@ -35,6 +37,24 @@ public class PlayerChatHelper {
     private static Field chatTypeField;
 
     static {
+        byte serverMajorVersion = ProtocolStringReplacer.getInstance().getServerMajorVersion();
+        byte serverMinorVersion = ProtocolStringReplacer.getInstance().getServerMinorVersion();
+        if (serverMajorVersion <= 18) {
+            version = Version.V8_0_TO_V18_2;
+        } else if (serverMajorVersion == 19){
+            if (serverMinorVersion == 0) {
+                version = Version.V19_0;
+            } else if (serverMinorVersion <= 2) {
+                version = Version.V19_1_TO_V19_2;
+            } else if (serverMinorVersion == 3) {
+                version = Version.V19_3;
+            } else {
+                version = Version.V19_4;
+            }
+        } else {
+            version = Version.V19_4;
+        }
+
         try {
             messageBodyClass = MinecraftReflection.getMinecraftClass("network.chat.SignedMessageBody");
         } catch (Throwable ignored) {}
@@ -249,7 +269,7 @@ public class PlayerChatHelper {
         try {
             Object o = teamNameField.get(object);
             if (o == null) {
-                return WrappedChatComponent.fromText("");
+                return null;
             }
             return WrappedChatComponent.fromHandle(o);
         } catch (IllegalAccessException e) {
@@ -274,68 +294,100 @@ public class PlayerChatHelper {
     }
 
     public static ChatType getChatTypeFromId(int id) {
-        if (isLegacy()) {
-            switch (id) {
-                case 0:
-                    return ChatType.PLAYER_CHAT;
-                case 1:
-                    return ChatType.SYSTEM_CHAT;
-                case 2:
-                    return ChatType.GAME_INFO;
-                case 3:
-                    return ChatType.SAY;
-                case 4:
-                    return ChatType.MSG_INCOMING;
-                case 5:
-                    return ChatType.TEAM_MSG_INCOMING;
-                case 6:
-                    return ChatType.EMOTE;
-                case 7:
-                    return ChatType.TELLRAW;
-                default:
-                    ProtocolStringReplacer.warn("Not supported PlayerChatType when convert: " + id);
-                    return ChatType.SYSTEM_CHAT;
-            }
-        } else {
-            switch (id) {
-                case 0:
-                    return ChatType.PLAYER_CHAT;
-                case 1:
-                    return ChatType.SAY;
-                case 2:
-                    return ChatType.MSG_INCOMING;
-                case 3:
-                    return ChatType.MSG_OUTGOING;
-                case 4:
-                    return ChatType.TEAM_MSG_INCOMING;
-                case 5:
-                    return ChatType.TEAM_MSG_OUTGOING;
-                case 6:
-                    return ChatType.EMOTE;
-                case 7:
-                    return ChatType.TELLRAW;
-                default:
-                    ProtocolStringReplacer.warn("Not supported PlayerChatType when convert: " + id);
-                    return ChatType.SYSTEM_CHAT;
-            }
+        switch (version) {
+            case V8_0_TO_V18_2:
+                throw new AssertionError();
+            case V19_0:
+                switch (id) {
+                    case 0:
+                        return ChatType.PLAYER_CHAT;
+                    case 1:
+                        return ChatType.SYSTEM_CHAT;
+                    case 2:
+                        return ChatType.GAME_INFO;
+                    case 3:
+                        return ChatType.SAY;
+                    case 4:
+                        return ChatType.MSG_INCOMING;
+                    case 5:
+                        return ChatType.TEAM_MSG_INCOMING;
+                    case 6:
+                        return ChatType.EMOTE;
+                    case 7:
+                        return ChatType.TELLRAW;
+                    default:
+                        ProtocolStringReplacer.warn("Not supported PlayerChatType when convert: " + id);
+                        return ChatType.SYSTEM_CHAT;
+                }
+            case V19_1_TO_V19_2:
+                switch (id) {
+                    case 0:
+                        return ChatType.PLAYER_CHAT;
+                    case 1:
+                        return ChatType.SAY;
+                    case 2:
+                        return ChatType.MSG_INCOMING;
+                    case 3:
+                        return ChatType.MSG_OUTGOING;
+                    case 4:
+                        return ChatType.TEAM_MSG_INCOMING;
+                    case 5:
+                        return ChatType.TEAM_MSG_OUTGOING;
+                    case 6:
+                        return ChatType.EMOTE;
+                    case 7:
+                        return ChatType.TELLRAW;
+                    default:
+                        ProtocolStringReplacer.warn("Not supported PlayerChatType when convert: " + id);
+                        return ChatType.SYSTEM_CHAT;
+                }
+            case V19_3:
+            case V19_4:
+            default:
+                switch (id) {
+                    case 0:
+                        return ChatType.PLAYER_CHAT;
+                    case 1:
+                        return ChatType.EMOTE;
+                    case 2:
+                        return ChatType.MSG_INCOMING;
+                    case 3:
+                        return ChatType.MSG_OUTGOING;
+                    case 4:
+                        return ChatType.SAY;
+                    case 5:
+                        return ChatType.TEAM_MSG_INCOMING;
+                    case 6:
+                        return ChatType.TEAM_MSG_OUTGOING;
+                    case 7:
+                        return ChatType.TELLRAW;
+                    default:
+                        ProtocolStringReplacer.warn("Not supported PlayerChatType when convert: " + id);
+                        return ChatType.SYSTEM_CHAT;
+                }
         }
     }
 
     public enum ChatType {
-        PLAYER_CHAT(0, 0),
-        SYSTEM_CHAT(1, 1),
-        GAME_INFO(2, -1),
-        SAY(3, 2),
-        MSG_INCOMING(4, 3),
-        MSG_OUTGOING(-1, 4),
-        TEAM_MSG_INCOMING(5, 5),
-        TEAM_MSG_OUTGOING(-1, 6),
-        EMOTE(6, 7),
-        TELLRAW(7, 8);
+        PLAYER_CHAT(),
+        SYSTEM_CHAT(),
+        GAME_INFO(),
+        SAY(),
+        MSG_INCOMING(),
+        MSG_OUTGOING(),
+        TEAM_MSG_INCOMING(),
+        TEAM_MSG_OUTGOING(),
+        EMOTE(),
+        TELLRAW()
 
-        ChatType(int legacyId, int newId) {
-            // TODO
-        }
+    }
+
+    enum Version {
+        V8_0_TO_V18_2,
+        V19_0,
+        V19_1_TO_V19_2,
+        V19_3,
+        V19_4
     }
 
 }
