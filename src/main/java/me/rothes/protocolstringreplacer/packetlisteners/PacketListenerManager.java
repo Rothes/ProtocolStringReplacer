@@ -6,6 +6,7 @@ import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.PsrLocalization;
 import me.rothes.protocolstringreplacer.packetlisteners.client.CloseWindow;
 import me.rothes.protocolstringreplacer.packetlisteners.client.SettingsLocale;
+import me.rothes.protocolstringreplacer.packetlisteners.client.SettingsLocaleUpper20;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.SetCreativeSlot;
 import me.rothes.protocolstringreplacer.packetlisteners.client.itemstack.WindowClick;
 import me.rothes.protocolstringreplacer.packetlisteners.server.actionbar.ChatActionBar;
@@ -143,7 +144,12 @@ public class PacketListenerManager {
         listeners.add(new WindowClick());
         listeners.add(new SetCreativeSlot());
         listeners.add(new CloseWindow());
-        listeners.add(new SettingsLocale());
+        if ((ProtocolStringReplacer.getInstance().getServerMajorVersion() == 20 && ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 2)
+                || ProtocolStringReplacer.getInstance().getServerMajorVersion() > 20) {
+            listeners.add(new SettingsLocaleUpper20());
+        } else {
+            listeners.add(new SettingsLocale());
+        }
 
         for (AbstractPacketListener listener : listeners) {
             try {
