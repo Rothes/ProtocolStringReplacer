@@ -29,7 +29,7 @@ public class ScoreBoardObjective extends AbstractScoreBoardListener {
                 WrappedChatComponent wrappedChatComponent = wrappedChatComponentStructureModifier.read(0);
                 String replaced = getReplacedJson(packetEvent, user, listenType, wrappedChatComponent.getJson(), titleFilter);
                 if (replaced != null) {
-                    wrappedChatComponentStructureModifier.write(0, wrappedChatComponent);
+                    wrappedChatComponentStructureModifier.write(0, WrappedChatComponent.fromJson(replaced));
                 }
             } else {
                 StructureModifier<String> strings = packet.getStrings();
