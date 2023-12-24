@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import me.rothes.protocolstringreplacer.api.capture.CaptureInfo;
@@ -297,7 +298,13 @@ public class PsrUser {
             PacketContainer packet;
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
                 packet = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-                packet.getStrings().write(0, SpigotUtils.serializeComponents(baseComponents));
+                StructureModifier<String> stringModifier = packet.getStrings();
+                if (stringModifier.size() == 0) {
+                    packet.getChatComponents().write(0,
+                            WrappedChatComponent.fromJson(SpigotUtils.serializeComponents(baseComponents)));
+                } else {
+                    stringModifier.write(0, SpigotUtils.serializeComponents(baseComponents));
+                }
                 StructureModifier<Boolean> booleans = packet.getBooleans();
                 if (booleans.size() >= 1) {
                     // 1.19 only

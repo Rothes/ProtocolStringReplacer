@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.rothes.protocolstringreplacer.api.user.PsrUser;
 import me.rothes.protocolstringreplacer.packetlisteners.server.AbstractServerComponentsPacketListener;
 import me.rothes.protocolstringreplacer.replacer.ListenType;
@@ -32,18 +33,27 @@ public class SystemChatActionBar extends AbstractServerComponentsPacketListener 
             return;
         }
 
-        String replaced;
-
         StructureModifier<String> stringModifier = packet.getStrings();
-        String read = stringModifier.read(0);
-        if (read != null) {
-            replaced = getReplacedJson(packetEvent, user, listenType, read, filter);
+        if (stringModifier.size() == 0) {
+            // Since 1.20.3
+            StructureModifier<WrappedChatComponent> components = packet.getChatComponents();
+            WrappedChatComponent replaced = getReplacedJsonWrappedComponent(packetEvent, user, listenType, components.read(0).getJson(), filter);
+            if (replaced == null) {
+                return;
+            }
+            components.write(0, replaced);
         } else {
-            replaced = processPaperComponent(packet.getModifier(), packetEvent, user);
-        }
+            String replaced;
+            String read = stringModifier.read(0);
+            if (read != null) {
+                replaced = getReplacedJson(packetEvent, user, listenType, read, filter);
+            } else {
+                replaced = processPaperComponent(packet.getModifier(), packetEvent, user);
+            }
 
-        if (replaced != null) {
-            stringModifier.write(0, replaced);
+            if (replaced != null) {
+                stringModifier.write(0, replaced);
+            }
         }
     }
 
