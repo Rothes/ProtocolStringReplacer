@@ -56,11 +56,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 if (!canWrite(packetEvent)) {
                     return;
                 }
-                try {
-                    process(packetEvent);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
+                process(packetEvent);
                 if (readOnly) {
                     packetEvent.setReadOnly(readOnly);
                 }
