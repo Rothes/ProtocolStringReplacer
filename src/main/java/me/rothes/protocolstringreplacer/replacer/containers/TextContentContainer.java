@@ -18,7 +18,7 @@ public class TextContentContainer extends AbstractContainer<Text> {
     public void createDefaultChildren() {
         Object object = content.getValue();
         if (object instanceof BaseComponent[]) {
-            children.add(new ComponentsContainer((BaseComponent[]) object) {
+            children.add(new ComponentsContainer((BaseComponent[]) object, root) {
                 @Override
                 public BaseComponent[] getResult() {
                     BaseComponent[] result = super.getResult();
@@ -27,7 +27,7 @@ public class TextContentContainer extends AbstractContainer<Text> {
                 }
             });
         } else {
-            children.add(new SimpleTextContainer((String) object) {
+            children.add(new SimpleTextContainer((String) object, root) {
                 @Override
                 public String getResult() {
                     String result = super.getResult();
