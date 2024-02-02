@@ -162,8 +162,9 @@ public class ItemStackContainer extends AbstractContainer<ItemStack> {
                 });
             }
             if (nbtItem.hasTag("pages")) {
-                Boolean resolved = nbtItem.getBoolean("resolved");
-                if (resolved != null && resolved) {
+//                Boolean resolved = nbtItem.getBoolean("resolved");
+//                if (resolved != null && resolved) {
+                if (type == Material.WRITTEN_BOOK) {
                     // Is Json. Only in WRITTEN_BOOK.
                     addJsonList(nbtItem.getStringList("pages"));
                 } else {
