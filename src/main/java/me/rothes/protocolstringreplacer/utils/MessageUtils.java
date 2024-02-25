@@ -28,12 +28,12 @@ public class MessageUtils {
                 .append("§b§lCommons: " + (info.getTexts().isEmpty() ? "§fN/A\n" : "\n"));
         for (String text : info.getTexts()) {
             hoverTextBuilder.append("§6§l- ");
-            hoverTextBuilder.append(ColorUtils.showColorCodes(text) + "\n").color(ChatColor.RESET);
+            hoverTextBuilder.append(ColorUtils.showColorCodes(text) + "\n").color(null);
         }
         hoverTextBuilder.append("\n§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A\n" : "\n"));
         for (String json : info.getJsons()) {
             hoverTextBuilder.append("§6§l- ");
-            hoverTextBuilder.append(json + "\n").color(ChatColor.RESET);
+            hoverTextBuilder.append(json + "\n").color(null);
         }
         hoverTextBuilder.append("\n§b§lDirects: " + (info.getDirects().isEmpty() ? "§fN/A\n" : "\n"));
         for (String direct : info.getDirects()) {
@@ -72,7 +72,7 @@ public class MessageUtils {
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
-                    .append("").color(ChatColor.RESET).bold(false)
+                    .append("").color(null).bold(false)
                     .append(ColorUtils.showColorCodes(text)).create());
         }
         user.sendFilteredText("§b§lJsons: " + (info.getJsons().isEmpty() ? "§fN/A" : ""));
@@ -82,7 +82,7 @@ public class MessageUtils {
             user.sendFilteredMessage(new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
-                    .append("").color(ChatColor.RESET).bold(false)
+                    .append("").color(null).bold(false)
                     .append(json).create());
         }
         user.sendFilteredText("§b§lDirects: " + (info.getDirects().isEmpty() ? "§fN/A" : ""));
@@ -92,7 +92,7 @@ public class MessageUtils {
             ComponentBuilder clickableMsg = new ComponentBuilder(" - ").color(ChatColor.GOLD).bold(true).event(clickEvent)
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             TextComponent.fromLegacyText(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
-                    .append("").color(ChatColor.RESET).bold(false);
+                    .append("").color(null).bold(false);
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 12) {
                 clickableMsg.append(TextComponent.fromLegacyText(ColorUtils.showColorCodes(direct, true)));
             } else {
