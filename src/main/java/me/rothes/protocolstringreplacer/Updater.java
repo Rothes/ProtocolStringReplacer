@@ -43,7 +43,7 @@ public class Updater implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         PsrScheduler.runTaskTimerAsynchronously(() -> {
             try {
-                String json = getJson();
+                String json = getJson(plugin.getConfigManager().gitRawHost, 0);
                 if (json == null) {
                     return;
                 }
@@ -101,9 +101,9 @@ public class Updater implements Listener {
         }));
     }
 
-    private String getJson() {
+    private String getJson(String domain, int tryTime) {
         try (
-                InputStream stream = new URL("https://" + plugin.getConfigManager().gitRawHost + "/Rothes/ProtocolStringReplacer/master/Version%20Infos.json")
+                InputStream stream = new URL("https://" + domain + "/Rothes/ProtocolStringReplacer/master/Version%20Infos.json")
                         .openStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
         ){
@@ -114,8 +114,13 @@ public class Updater implements Listener {
             return jsonBuilder.toString();
         } catch (IOException ignored) {
             // error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Checking-Version", e.toString()));
+            if (tryTime == 0) {
+                return getJson("mirror.ghproxy.com/https://raw.githubusercontent.com", ++tryTime);
+            } else if (tryTime == 1) {
+                return getJson("raw.githubusercontent.com", ++tryTime);
+            }
+            return null;
         }
-        return null;
     }
 
     private void checkJson(String json) {
