@@ -6,8 +6,20 @@
 
     <groupId>me.rothes</groupId>
     <artifactId>ProtocolStringReplacer</artifactId>
-    <version>2.19.3</version>
+    <version>2.19.4</version>
     <packaging>jar</packaging>
+
+    <properties>
+        <versionChannel>Stable</versionChannel>
+        <versionId>118</versionId>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
 
     <repositories>
         <repository>
@@ -159,15 +171,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.compiler.release>8</maven.compiler.release>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-    </properties>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
