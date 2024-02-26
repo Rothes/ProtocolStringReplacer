@@ -160,6 +160,9 @@ public class Updater implements Listener {
     private void sendJsonMessage(JsonObject json, String id) {
         JsonObject msgJson = json.getAsJsonObject("Message");
         String msg = getLocaledJsonMessage(msgJson);
+        if (msg == null) {
+            return;
+        }
 
         int msgTimes = json.has("Message_Times") ? json.get("Message_Times").getAsInt() : -1;
         int curTimes = msgTimesMap.get(id) == null ? 0 : msgTimesMap.get(id);
@@ -204,10 +207,10 @@ public class Updater implements Listener {
     }
 
     private String getLocaledJsonMessage(@NotNull JsonObject messageJson) {
-        String msg;
+        String msg = null;
         if (messageJson.has(PsrLocalization.getLocale())) {
             msg = messageJson.get(PsrLocalization.getLocale()).getAsString();
-        } else {
+        } else if (messageJson.has("en-US")) {
             msg = messageJson.get("en-US").getAsString();
         }
         return msg;
