@@ -10,6 +10,7 @@ import me.rothes.protocolstringreplacer.scheduler.PsrScheduler;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.DrilldownPie;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -28,14 +29,17 @@ import java.util.Map;
 
 public class Updater implements Listener {
 
-    private static final String VERSION_CHANNEL = "Stable";
-    private static final int VERSION_NUMBER = 117;
     private final HashMap<String, Integer> msgTimesMap = new HashMap<>();
     private final List<String> messages = new ArrayList<>();
     private final ProtocolStringReplacer plugin;
+    private final String VERSION_CHANNEL;
+    private final int VERSION_NUMBER;
 
     Updater(ProtocolStringReplacer plugin) {
         this.plugin = plugin;
+        YamlConfiguration meta = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("metadata.yml"), StandardCharsets.UTF_8));
+        VERSION_CHANNEL = meta.getString("version-channel", "unknown");
+        VERSION_NUMBER = meta.getInt("version-id");
     }
 
     public void start() {
