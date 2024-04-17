@@ -27,6 +27,9 @@ permissions:
   protocolstringreplacer.feature.usermetacache.noncreative:
     description: with protocolstringreplacer.feature.usermetacache, allow to restore the original one when the player in other gamemodes interacts it.
     default: false
+  protocolstringreplacer.feature.parsepapi:
+    description: Parse placeholders from PlaceholderAPI for player. Set to false will prevent any papi parse.
+    default: true
   protocolstringreplacer.updater.notify:
     description: allow you to receive updater info.
     default: op

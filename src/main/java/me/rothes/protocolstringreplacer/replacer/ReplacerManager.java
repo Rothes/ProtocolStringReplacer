@@ -455,8 +455,12 @@ public class ReplacerManager {
     }
 
     public String setPlaceholder(@NotNull PsrUser user, @NotNull String string) {
-        return papiReplacer.apply(string, user.getPlayer(),
-                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
+        if (user.hasPermission("protocolstringreplacer.feature.parsepapi")) {
+            return papiReplacer.apply(string, user.getPlayer(),
+                    PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
+        } else {
+            return string;
+        }
     }
 
     @Nonnull
