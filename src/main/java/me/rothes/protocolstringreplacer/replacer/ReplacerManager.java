@@ -400,6 +400,9 @@ public class ReplacerManager {
     public void setPapi(@Nonnull PsrUser user, @Nonnull List<Replaceable> replaceables) {
         Validate.notNull(user, "PsrUser cannot be null");
         Validate.notNull(replaceables, "List cannot be null");
+        if (!user.hasPermission("protocolstringreplacer.feature.parsepapi")) {
+            return;
+        }
 
         List<Integer> indexes = getPapiIndexes(replaceables);
         if (indexes.isEmpty()) {
@@ -415,6 +418,9 @@ public class ReplacerManager {
         Validate.notNull(user, "PsrUser cannot be null");
         Validate.notNull(replaceables, "List cannot be null");
         Validate.notNull(indexes, "List cannot be null");
+        if (!user.hasPermission("protocolstringreplacer.feature.parsepapi")) {
+            return;
+        }
 
         for (int i : indexes) {
             Replaceable replaceable = replaceables.get(i);
@@ -455,12 +461,8 @@ public class ReplacerManager {
     }
 
     public String setPlaceholder(@NotNull PsrUser user, @NotNull String string) {
-        if (user.hasPermission("protocolstringreplacer.feature.parsepapi")) {
-            return papiReplacer.apply(string, user.getPlayer(),
-                    PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
-        } else {
-            return string;
-        }
+        return papiReplacer.apply(string, user.getPlayer(),
+                PlaceholderAPIPlugin.getInstance().getLocalExpansionManager()::getExpansion);
     }
 
     @Nonnull
