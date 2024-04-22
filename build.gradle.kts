@@ -1,43 +1,40 @@
+import io.izzel.taboolib.gradle.BUKKIT
+import io.izzel.taboolib.gradle.UNIVERSAL
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    kotlin("jvm") version "1.7.10"
     java
+    id("org.jetbrains.kotlin.jvm") version "1.9.23"
+    id("io.izzel.taboolib") version "2.0.11"
     id("com.github.johnrengelman.shadow") version "7.1.2"
+}
+
+taboolib {
+    env {
+        install(UNIVERSAL, BUKKIT)
+    }
+    version { taboolib = "6.1.1-beta26" }
 }
 
 allprojects {
     apply(plugin = "java-library")
-    apply(plugin = "kotlin-platform-jvm")
-    apply(plugin = "com.github.johnrengelman.shadow")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "io.izzel.taboolib")
 
-    group = "io.github.rothes"
-    version = "3.0.0-SNAPSHOT"
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-
-    dependencies {
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
-    }
-
-    tasks.getByName<JavaCompile>("compileJava") {
+    tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
-        sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-        targetCompatibility = JavaVersion.VERSION_1_8.toString()
     }
 
-    tasks.getByName<Test>("test") {
-        useJUnitPlatform()
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs = listOf("-Xjvm-default=all")
+        }
     }
 
-    tasks.named("shadowJar", com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class) {
-        archiveBaseName.set("ProtocolStringReplacer")
-
-        relocate("kotlin", "io.github.rothes.protocolstringreplacer.lib.kotlin")
-        relocate("org.jetbrains", "io.github.rothes.protocolstringreplacer.lib.org.jetbrains")
-        relocate("org.intellij", "io.github.rothes.protocolstringreplacer.lib.org.intellij")
+    configure<JavaPluginConvention> {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
 }

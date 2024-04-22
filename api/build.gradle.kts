@@ -1,8 +1,6 @@
-repositories {
-    maven("https://jitpack.io")
-}
-
 dependencies {
-    implementation("me.carleslc.Simple-YAML:Simple-Yaml:1.8")
-    implementation("net.kyori:adventure-api:4.11.0")
+    compileOnly("ink.ptms.core:v12004:12004:mapped")
+    compileOnly("ink.ptms.core:v12004:12004:universal")
+    compileOnly(kotlin("stdlib"))
+    compileOnly(fileTree("libs"))
 }

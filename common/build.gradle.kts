@@ -1,3 +1,3 @@
-dependencies {
-    compileOnly(project(":api"))
-}
+//dependencies {
+//    compileOnly(project(":api"))
+//}
