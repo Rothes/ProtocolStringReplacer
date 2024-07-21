@@ -1,7 +1,9 @@
 package com.sk89q.protocolstringreplacer;
 
 import io.papermc.paper.plugin.configuration.PluginMeta;
+import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import me.rothes.protocolstringreplacer.ProtocolStringReplacer;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -145,7 +147,27 @@ public class PsrDisguisePlugin implements Plugin {
     }
 
     @Override
+    public @NotNull ComponentLogger getComponentLogger() {
+        return Plugin.super.getComponentLogger();
+    }
+
+    @Override
+    public org.slf4j.@NotNull Logger getSLF4JLogger() {
+        return Plugin.super.getSLF4JLogger();
+    }
+
+    @Override
+    public org.apache.logging.log4j.@NotNull Logger getLog4JLogger() {
+        return Plugin.super.getLog4JLogger();
+    }
+
+    @Override
     public String getName() {
+        return null;
+    }
+
+    @Override
+    public @NotNull LifecycleEventManager<Plugin> getLifecycleManager() {
         return null;
     }
 

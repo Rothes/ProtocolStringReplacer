@@ -265,4 +265,9 @@ public class PsrWrappedLineReader implements LineReader{
         return reader.getAutosuggestion();
     }
 
+    @Override
+    public void zeroOut() {
+        reader.zeroOut();
+    }
+
 }
