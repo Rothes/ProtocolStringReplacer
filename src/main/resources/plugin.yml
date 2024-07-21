@@ -1,5 +1,5 @@
 name: ProtocolStringReplacer
-version: ${project.version}
+version: @versionName@
 main: me.rothes.protocolstringreplacer.ProtocolStringReplacer
 author: Rothes
 api-version: 1.13

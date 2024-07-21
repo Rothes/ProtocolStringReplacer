@@ -1,2 +1,2 @@
-version-channel: '${versionChannel}'
-version-id: ${versionId}
+version-channel: @versionChannel@
+version-id: @versionId@
