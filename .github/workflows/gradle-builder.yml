@@ -9,21 +9,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
           
-      - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots package
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
         
-#       - uses: actions/upload-artifact@v3
-#         with:
-#           name: ProtocolStringReplacer-Snapshot
-#           path: target/ProtocolStringReplacer v[\d\.]+.jar
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: 8.6
+
+      - name: Execute Gradle build
+        run: ./gradlew reobfJar
       
-      - run: mkdir ProtocolStringReplacer && cp target/*.jar ProtocolStringReplacer
+      - run: mkdir ProtocolStringReplacer && cp build/libs/*.jar ProtocolStringReplacer
       
       - uses: actions/upload-artifact@v3
         with:
