@@ -31,7 +31,7 @@ base.archivesName = fileName
 
 tasks {
     shadowJar {
-        archiveFileName = "${fileName}-${project.version}.jar"
+        archiveFileName = "${fileName}-${project.version}-mojmap.jar"
 
         relocate("org.bstats", "io.github.rothes.protocolstringreplacer.lib.org.bstats")
         relocate("org.apache.commons.collections", "io.github.rothes.protocolstringreplacer.lib.org.apache.commons.collections")
@@ -49,7 +49,9 @@ tasks {
             ))
         outputs.cacheIf { false } // Disable cache as it breaks replacements
     }
+}
 
+tasks {
     build {
         dependsOn(reobfJar)
     }
@@ -57,9 +59,9 @@ tasks {
     reobfJar {
         mustRunAfter(shadowJar)
     }
-
-    paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
 }
+
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
 
 allprojects {
     repositories {

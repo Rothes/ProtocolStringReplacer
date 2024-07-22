@@ -1,9 +1,9 @@
 rootProject.name = "ProtocolStringReplacer"
 include("bukkit")
 include("bukkit:nms")
-include("bukkit:nms:packetreader")
-include("bukkit:nms:packetreader:generic_v1_19")
-include("bukkit:nms:packetreader:generic_v1_19_3")
+include("bukkit:nms:common")
+include("bukkit:nms:common:generic_v1_19")
+include("bukkit:nms:common:generic_v1_19_3")
 include("bukkit:nms:v1_19")
 include("bukkit:nms:v1_19_1")
 include("bukkit:nms:v1_19_2")

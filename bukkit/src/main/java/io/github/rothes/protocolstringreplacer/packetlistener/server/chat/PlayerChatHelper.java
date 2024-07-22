@@ -1,20 +1,14 @@
 package io.github.rothes.protocolstringreplacer.packetlistener.server.chat;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.reflect.StructureModifier;
-import com.comphenix.protocol.utility.MinecraftReflection;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.api.exceptions.IncompatibleServerException;
 import io.github.rothes.protocolstringreplacer.nms.NmsManager;
 import io.github.rothes.protocolstringreplacer.nms.packetreader.ChatType;
-import io.github.rothes.protocolstringreplacer.nms.packetreader.IPacketReader;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 public class PlayerChatHelper {

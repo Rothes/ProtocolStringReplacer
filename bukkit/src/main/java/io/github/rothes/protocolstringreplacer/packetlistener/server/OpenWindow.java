@@ -6,11 +6,15 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
+import io.github.rothes.protocolstringreplacer.nms.NmsManager;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public final class OpenWindow extends AbstractServerPacketListener {
 
@@ -28,12 +32,18 @@ public final class OpenWindow extends AbstractServerPacketListener {
             if (declaredField.getType() != int.class && declaredField.getType() != MinecraftReflection.getIChatBaseComponentClass()) {
                 windowTypeField = declaredField;
                 windowTypeField.setAccessible(true);
+            }
+        }
+        if (ProtocolStringReplacer.getInstance().getServerMajorVersion() <= 19) {
+            if (windowTypeField != null) {
                 try {
                     anvilType = windowTypeField.getType().getDeclaredField("h").get(null);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
+        } else {
+            anvilType = NmsManager.INSTANCE.getMenuTypeGetter().getAnvilMenuType();
         }
 
     }

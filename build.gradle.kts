@@ -13,9 +13,7 @@ group = "io.github.rothes"
 version = rootProject.property("versionName").toString()
 
 tasks.register<Copy>("createJars") {
-    from(subprojects.filter { it.parent == project }.flatMap {
-        it.tasks.withType<Jar>()
-    })
+    from(project(":bukkit").tasks.named("reobfJar"))
     into("$buildDir/allJars")
 }
 

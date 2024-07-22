@@ -1,4 +1,7 @@
 plugins {
+    kotlin("jvm") version "1.9.22"
+    id("java")
+    id("io.github.goooler.shadow") version "8.1.8"
     id("io.papermc.paperweight.userdev") version "1.7.1"
 }
 
@@ -15,18 +18,30 @@ dependencies {
 
 subprojects {
     apply(plugin = "io.papermc.paperweight.userdev")
-    if (this.name != "packetreader") {
+    if (this.name != "common") {
         dependencies {
-            compileOnly(project(":bukkit:nms:packetreader"))
+            compileOnly(project(":bukkit:nms:common"))
         }
     }
 
+    tasks.shadowJar {
+        relocate(
+            "io.github.rothes.protocolstringreplacer.nms.generic",
+            "io.github.rothes.protocolstringreplacer.nms.${project.name}"
+        )
+    }
+}
+
+allprojects {
     tasks {
-        shadowJar {
-            relocate(
-                "io.github.rothes.protocolstringreplacer.nms.generic",
-                "io.github.rothes.protocolstringreplacer.nms.${project.name.lowercase()}"
-            )
+        build {
+            dependsOn(reobfJar)
+        }
+
+        reobfJar {
+            mustRunAfter(shadowJar)
         }
     }
+
+    paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
 }
