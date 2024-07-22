@@ -24,9 +24,9 @@ jobs:
           gradle-version: 8.6
 
       - name: Execute Gradle build
-        run: ./gradlew reobfJar
+        run: ./gradlew createJars
       
-      - run: mkdir ProtocolStringReplacer && cp build/libs/*.jar ProtocolStringReplacer
+      - run: mkdir ProtocolStringReplacer && cp build/allJars/*.jar ProtocolStringReplacer
       
       - uses: actions/upload-artifact@v3
         with:
