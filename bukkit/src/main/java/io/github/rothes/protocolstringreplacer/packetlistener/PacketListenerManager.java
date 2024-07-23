@@ -24,6 +24,7 @@ import io.github.rothes.protocolstringreplacer.packetlistener.server.EntityMetad
 import io.github.rothes.protocolstringreplacer.packetlistener.server.OpenWindow;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.bossbar.BossBarPost17;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.chat.TabComplete;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.chat.TabCompletePost20_5;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.combat.CombatEvent;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.combat.PlayerCombatKill;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.itemstack.MerchantTradeList;
@@ -138,7 +139,12 @@ public class PacketListenerManager {
         listeners.add(new ScoreBoardObjective());
 
         listeners.add(new KickDisconnect());
-        listeners.add(new TabComplete());
+        if ((ProtocolStringReplacer.getInstance().getServerMajorVersion() == 20 && ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 5)
+                || ProtocolStringReplacer.getInstance().getServerMajorVersion() > 20) {
+            listeners.add(new TabCompletePost20_5());
+        } else {
+            listeners.add(new TabComplete());
+        }
         listeners.add(new Chat());
         listeners.add(new ChatActionBar());
         listeners.add(new SetSlot());

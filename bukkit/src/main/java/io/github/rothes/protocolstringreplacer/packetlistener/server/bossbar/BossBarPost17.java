@@ -9,7 +9,6 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;

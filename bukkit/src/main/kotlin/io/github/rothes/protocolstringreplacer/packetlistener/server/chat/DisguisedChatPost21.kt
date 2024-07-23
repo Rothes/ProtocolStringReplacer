@@ -4,6 +4,8 @@ import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.PacketEvent
 import com.comphenix.protocol.reflect.accessors.Accessors
 import com.comphenix.protocol.wrappers.WrappedChatComponent
+import io.github.rothes.protocolstringreplacer.componentToJson
+import io.github.rothes.protocolstringreplacer.jsonToComponent
 import io.github.rothes.protocolstringreplacer.nms.NmsManager
 import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerComponentsPacketListener
 import io.github.rothes.protocolstringreplacer.replacer.ListenType
@@ -31,15 +33,14 @@ class DisguisedChatPost21 : AbstractServerComponentsPacketListener(PacketType.Pl
         val optional = target[boundRecord] as Optional<*>
         if (optional.isPresent) {
             getReplacedJson(packetEvent, user, listenType,
-                WrappedChatComponent.fromHandle(optional.get()).json, filter).let {
-                if (it != null) {
-                    target[boundRecord] = Optional.of(WrappedChatComponent.fromJson(it).handle)
+                componentToJson(optional.get()), filter).let { replaced ->
+                if (replaced != null) {
+                    target[boundRecord] = Optional.of(jsonToComponent(replaced))
                 } else {
                     return
                 }
             }
         }
-
 
         val wrappedChatComponentStructureModifier = packetEvent.packet.chatComponents
         val wrappedChatComponent = wrappedChatComponentStructureModifier.read(0)
