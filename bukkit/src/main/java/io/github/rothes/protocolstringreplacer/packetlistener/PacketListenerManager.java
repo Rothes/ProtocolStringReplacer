@@ -18,6 +18,7 @@ import io.github.rothes.protocolstringreplacer.packetlistener.server.KickDisconn
 import io.github.rothes.protocolstringreplacer.packetlistener.server.actionbar.SystemChatActionBar;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.actionbar.TitleActionBar;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.chat.DisguisedChat;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.chat.DisguisedChatPost21;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.chat.SystemChat;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.EntityMetadata;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.OpenWindow;
@@ -114,7 +115,11 @@ public class PacketListenerManager {
             listeners.add(new SystemChat());
             listeners.add(new SystemChatActionBar());
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() != 19 || ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 3) {
-                listeners.add(new DisguisedChat());
+                if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 21) {
+                    listeners.add(new DisguisedChatPost21());
+                } else {
+                    listeners.add(new DisguisedChat());
+                }
             }
         }
 

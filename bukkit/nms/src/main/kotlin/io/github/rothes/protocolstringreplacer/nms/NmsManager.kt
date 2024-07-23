@@ -1,5 +1,7 @@
 package io.github.rothes.protocolstringreplacer.nms
 
+import io.github.rothes.protocolstringreplacer.nms.packetreader.IBlockEntityTypeGetter
+import io.github.rothes.protocolstringreplacer.nms.packetreader.IDisguisedPacketHandler
 import io.github.rothes.protocolstringreplacer.nms.packetreader.IMenuTypeGetter
 import io.github.rothes.protocolstringreplacer.nms.packetreader.IPacketReader
 
@@ -10,7 +12,9 @@ object NmsManager {
     lateinit var minecraftVersion: String
 
     val packetReader by lazy { IPacketReader::class.java.instance }
+    val disguisedPacketHandler by lazy { IDisguisedPacketHandler::class.java.instance }
     val menuTypeGetter by lazy { IMenuTypeGetter::class.java.instance }
+    val blockEntityTypeGetter by lazy { IBlockEntityTypeGetter::class.java.instance }
 
     @Suppress("UNCHECKED_CAST")
     private val <T> Class<T>.versioned: Class<out T>

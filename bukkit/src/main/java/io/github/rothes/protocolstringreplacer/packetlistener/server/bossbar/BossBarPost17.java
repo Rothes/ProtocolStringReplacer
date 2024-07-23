@@ -7,6 +7,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -26,7 +27,10 @@ public final class BossBarPost17 extends AbstractServerPacketListener {
         Class<?> packetClass = PacketType.Play.Server.BOSS.getPacketClass();
         Class<?> actionInterface = null;
         for (Class<?> declaredClass : packetClass.getDeclaredClasses()) {
-            if (declaredClass.isInterface() && declaredClass.getSimpleName().equals("Action")) {
+            if (declaredClass.isInterface() &&
+                    (declaredClass.getSimpleName().equals("Action") // Spigot mappings
+                            || declaredClass.getSimpleName().equals("Operation") // Mojang mappings
+                    )) {
                 actionInterface = declaredClass;
                 break;
             }
