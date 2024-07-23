@@ -82,8 +82,8 @@ public class Updater implements Listener {
     }
 
     private void initMetrics() {
-        BStatsMetrics BStatsMetrics = new BStatsMetrics(plugin, 11740);
-        BStatsMetrics.addCustomChart(new DrilldownPie("Replaces_Count", () -> {
+        BStatsMetrics bStatsMetrics = new BStatsMetrics(plugin, 11740);
+        bStatsMetrics.addCustomChart(new DrilldownPie("Replaces_Count", () -> {
             int configs = 0;
             int replaces = 0;
             for (ReplacerConfig replacerConfig : plugin.getReplacerManager().getReplacerConfigList()) {
@@ -98,7 +98,7 @@ public class Updater implements Listener {
             map.put(configs + (configs > 1 ? " Configs" : " Config"), entry);
             return map;
         }));
-        BStatsMetrics.addCustomChart(new DrilldownPie("Blocks_Count", () -> {
+        bStatsMetrics.addCustomChart(new DrilldownPie("Blocks_Count", () -> {
             int configs = 0;
             int blocks = 0;
             for (ReplacerConfig replacerConfig : plugin.getReplacerManager().getReplacerConfigList()) {
