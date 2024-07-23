@@ -33,7 +33,7 @@ Console-Sender:
     Updater:
       Invalid-Channel: '&c您使用的插件处于一个未知的版本通道("%0%"). 请尝试更新您的插件到最新版本.'
       Error-Checking-Version: '&c无法通过远程服务器检查版本信息, 请尝试更新您的插件: %0%'
-      Error-Parsing-Json: '&c无法正常解析版本信息 Json, 请尝试更新您的插件: %0%'
+      Error-Parsing-Json: '&c无法正常解析版本信息 Json, 请尝试更新您的插件:'
 
 Command-Block-Sender:
   Messages:

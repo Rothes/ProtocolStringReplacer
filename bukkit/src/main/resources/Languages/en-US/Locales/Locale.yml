@@ -33,7 +33,7 @@ Console-Sender:
     Updater:
       Invalid-Channel: '&cPSR is in a invalid channel ("%0%"). Please update your plugin to the latest version.'
       Error-Checking-Version: '&cFailed to check version information via server, Please try updating your plugin: %0%'
-      Error-Parsing-Json: '&cFailed to parse version information Json, Please try updating your plugin: %0%'
+      Error-Parsing-Json: '&cFailed to parse version information Json, Please try updating your plugin:'
 
 Command-Block-Sender:
   Messages:
