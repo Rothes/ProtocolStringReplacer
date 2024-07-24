@@ -8,14 +8,10 @@ import com.comphenix.protocol.reflect.accessors.Accessors
 import com.comphenix.protocol.reflect.accessors.ConstructorAccessor
 import com.comphenix.protocol.reflect.accessors.MethodAccessor
 import com.comphenix.protocol.utility.MinecraftReflection
-import com.comphenix.protocol.wrappers.WrappedEnumEntityUseAction.CONVERTER
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer
 import io.github.rothes.protocolstringreplacer.get
 import io.github.rothes.protocolstringreplacer.set
 import org.bukkit.inventory.MerchantRecipe
-import java.util.function.BiConsumer
-import java.util.function.Supplier
-import java.util.stream.Collectors
 
 class MerchantTradeList : AbstractServerItemPacketListener(PacketType.Play.Server.OPEN_WINDOW_MERCHANT) {
 

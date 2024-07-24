@@ -57,7 +57,7 @@ public class ReplacerManager {
             this.placeholderIndexes = placeholderIndexes;
         }
 
-        public ReadWriteNBT getNbtItem() {
+        public ReadWriteNBT getNbt() {
             return nbtItem;
         }
 
@@ -160,7 +160,7 @@ public class ReplacerManager {
         HashMap<File, CommentYamlConfiguration> loadedFiles = loadReplacesFiles(path);
         ProtocolStringReplacer.info(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Replacer-Config.Pre-Loaded-Replacers",
                 String.valueOf(loadedFiles.size()), String.valueOf((System.nanoTime() - startTime) / 1000000D)));
-        if (loadedFiles.size() == 0) {
+        if (loadedFiles.isEmpty()) {
             return;
         }
         for (Map.Entry<File, CommentYamlConfiguration> entry : loadedFiles.entrySet()) {
@@ -225,12 +225,7 @@ public class ReplacerManager {
         Validate.notNull(filter, "BiPredicate Filter cannot be null");
 
         List<ReplacerConfig> result = new LinkedList<>(replacerConfigList);
-        Iterator<ReplacerConfig> iterator = result.iterator();
-        while (iterator.hasNext()) {
-            if (!filter.test(iterator.next(), user)) {
-                iterator.remove();
-            }
-        }
+        result.removeIf(replacerConfig -> !filter.test(replacerConfig, user));
         return result;
     }
 

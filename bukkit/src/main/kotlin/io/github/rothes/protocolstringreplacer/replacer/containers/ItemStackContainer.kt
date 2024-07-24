@@ -17,7 +17,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     val isFromCache: Boolean
     lateinit var metaCache: ItemMetaCache
         private set
-    private var nbtItem: ReadWriteNBT
+    private var nbt: ReadWriteNBT
     private val original: ItemMeta = content.itemMeta
 
     init {
@@ -28,20 +28,20 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
             if (getCache != null) {
                 metaCache = getCache
                 isFromCache = true
-                nbtItem = metaCache.nbtItem
+                nbt = metaCache.nbt
             } else {
                 isFromCache = false
-                nbtItem = NBT.itemStackToNBT(content)
-                metaCache = replacerManager.addReplacedItemCache(original, nbtItem, itemType, false, IntArray(0))
+                nbt = NBT.itemStackToNBT(content)
+                metaCache = replacerManager.addReplacedItemCache(original, nbt, itemType, false, IntArray(0))
             }
         } else {
             isFromCache = false
-            nbtItem = NBT.itemStackToNBT(content)
+            nbt = NBT.itemStackToNBT(content)
         }
     }
 
     fun cloneItem() {
-        nbtItem = NBT.itemStackToNBT(NBT.itemStackFromNBT(nbtItem))
+        nbt = NBT.itemStackToNBT(NBT.itemStackFromNBT(nbt))
     }
 
     override fun createDefaultChildren() {
@@ -49,11 +49,11 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     }
 
     private fun nbtPeriod() {
-        children.add(object : ChatJsonContainer(nbtItem.toString(), root, false) {
+        children.add(object : ChatJsonContainer(nbt.toString(), root, false) {
             override fun getResult(): String {
                 val result = super.getResult()
-                nbtItem.clearNBT()
-                nbtItem.mergeCompound(NBTContainer(result))
+                nbt.clearNBT()
+                nbt.mergeCompound(NBTContainer(result))
                 return result
             }
         })
@@ -89,7 +89,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
                             val result = super.getResult()
                             display.setString("Name", result)
                             if (NEW_NBT) {
-                                nbtItem.getCompound("components")!!.setString("minecraft:custom_name", result)
+                                nbt.getCompound("components")!!.setString("minecraft:custom_name", result)
                             }
                             return result
                         }
@@ -107,7 +107,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
             if (display.hasTag("Lore")) {
                 if (LORE_JSON) {
                     addJsonList(display.getStringList("Lore"),
-                        if (NEW_NBT) nbtItem.getCompound("components")!!.getStringList("minecraft:lore") else null)
+                        if (NEW_NBT) nbt.getCompound("components")!!.getStringList("minecraft:lore") else null)
                 } else {
                     addTextList(display.getStringList("Lore"))
                 }
@@ -116,29 +116,29 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
 
         val type = content.type
         if (type == WRITABLE_BOOK || type == Material.WRITTEN_BOOK) {
-            if (nbtItem.hasTag("author")) {
-                children.add(object : SimpleTextContainer(nbtItem.getString("author"), root) {
+            if (nbt.hasTag("author")) {
+                children.add(object : SimpleTextContainer(nbt.getString("author"), root) {
                     override fun getResult(): String {
                         val result = super.getResult()
-                        nbtItem.setString("author", result)
+                        nbt.setString("author", result)
                         return result
                     }
                 })
             }
-            if (nbtItem.hasTag("title")) {
-                children.add(object : SimpleTextContainer(nbtItem.getString("title"), root) {
+            if (nbt.hasTag("title")) {
+                children.add(object : SimpleTextContainer(nbt.getString("title"), root) {
                     override fun getResult(): String {
                         val result = super.getResult()
-                        nbtItem.setString("title", result)
+                        nbt.setString("title", result)
                         return result
                     }
                 })
             }
-            if (nbtItem.hasTag("pages")) {
+            if (nbt.hasTag("pages")) {
                 if (type == Material.WRITTEN_BOOK) {
-                    addJsonList(nbtItem.getStringList("pages"))
+                    addJsonList(nbt.getStringList("pages"))
                 } else {
-                    addTextList(nbtItem.getStringList("pages"))
+                    addTextList(nbt.getStringList("pages"))
                 }
             }
         }
@@ -177,7 +177,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
 
     override fun getResult(): ItemStack {
         super.getResult()
-        val replaced = NBT.itemStackFromNBT(nbtItem)!!
+        val replaced = NBT.itemStackFromNBT(nbt)!!
         content.setItemMeta(replaced.itemMeta)
         content = replaced
         return content
@@ -185,22 +185,22 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
 
     fun restoreItem() {
         content.setItemMeta(original)
-        nbtItem.clearNBT()
-        nbtItem.mergeCompound(NBT.itemStackToNBT(content))
+        nbt.clearNBT()
+        nbt.mergeCompound(NBT.itemStackToNBT(content))
     }
 
     val nbtString: String
-        get() = nbtItem.toString()
+        get() = nbt.toString()
 
     val itemType: Material
         get() = content.type
 
     private val displayNbt: ReadWriteNBT?
-        get() = (if (NEW_NBT) nbtItem.getCompound("components")
-            ?.getCompound("minecraft:custom_data") else nbtItem.getCompound("tag"))?.getCompound("display")
+        get() = (if (NEW_NBT) nbt.getCompound("components")
+            ?.getCompound("minecraft:custom_data") else nbt.getCompound("tag"))?.getCompound("display")
     private fun createDisplayNbt(): ReadWriteNBT {
-        return (if (NEW_NBT) nbtItem.getOrCreateCompound("components")
-            .getOrCreateCompound("minecraft:custom_data") else nbtItem.getOrCreateCompound("tag")).getOrCreateCompound("display")
+        return (if (NEW_NBT) nbt.getOrCreateCompound("components")
+            .getOrCreateCompound("minecraft:custom_data") else nbt.getOrCreateCompound("tag")).getOrCreateCompound("display")
     }
 
     companion object {
