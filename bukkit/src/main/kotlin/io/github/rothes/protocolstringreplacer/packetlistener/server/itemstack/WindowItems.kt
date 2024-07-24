@@ -1,52 +1,36 @@
-package io.github.rothes.protocolstringreplacer.packetlistener.server.itemstack;
+package io.github.rothes.protocolstringreplacer.packetlistener.server.itemstack
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.BukkitConverters;
-import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import io.github.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
-import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
-import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import com.comphenix.protocol.PacketType
+import com.comphenix.protocol.events.PacketEvent
+import com.comphenix.protocol.wrappers.BukkitConverters
+import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer
+import io.github.rothes.protocolstringreplacer.get
+import io.github.rothes.protocolstringreplacer.set
+import org.bukkit.Material
 
-import java.util.List;
+class WindowItems : AbstractServerItemPacketListener(PacketType.Play.Server.WINDOW_ITEMS) {
 
-public final class WindowItems extends AbstractServerItemPacketListener {
+    override fun process(packetEvent: PacketEvent) {
+        val user = getEventUser(packetEvent) ?: return
+        user.clearUserMetaCache()
+        val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
+        val nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter)
+        val display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter)
+        val entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter)
 
-    public WindowItems() {
-        super(PacketType.Play.Server.WINDOW_ITEMS);
-    }
-
-    protected void process(@NotNull PacketEvent packetEvent) {
-        PsrUser user = getEventUser(packetEvent);
-        if (user == null) {
-            return;
-        }
-        user.clearUserMetaCache();
-        Object[] read = (Object[]) packetEvent.getPacket().getModifier().read(1);
-        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        List<ReplacerConfig> nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter);
-        List<ReplacerConfig> display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter);
-        List<ReplacerConfig> entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter);
-
-        boolean saveMeta = !user.isInAnvil();
-        for (Object item : read) {
-            ItemStack itemStack = BukkitConverters.getItemStackConverter().getSpecific(item);
-            if (itemStack.getType() == Material.AIR) {
-                saveMeta = true;
-                continue;
+        var saveMeta = !user.isInAnvil
+        packetEvent.packet.modifier[1] = (packetEvent.packet.modifier[1] as Array<*>).map {
+            BukkitConverters.getItemStackConverter().getSpecific(it)
+        }.map { itemStack ->
+            if (itemStack.type == Material.AIR) {
+                saveMeta = true
+                return@map itemStack
             }
-            boolean blocked = AbstractServerPacketListener.replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries,
-                    // Avoid too many packets kick
-                    saveMeta);
-            saveMeta = true;
-            if (blocked) {
-                return;
-            }
-        }
+            replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries, saveMeta).also {
+                saveMeta = true
+            } ?: return
+        }.map {
+            BukkitConverters.getItemStackConverter().getGeneric(it)
+        }.toTypedArray()
     }
-
 }

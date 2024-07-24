@@ -8,23 +8,20 @@ import java.util.List;
 
 public abstract class AbstractContainer<T> implements Container<T> {
 
-    protected T content;
+    protected @NotNull T content;
     protected Container<?> root;
     protected List<Replaceable> jsonReplaceables = null;
     protected List<Replaceable> textReplaceables = null;
     protected List<Container<?>> children = new ArrayList<>();
 
     public AbstractContainer(@NotNull T t) {
-        Validate.notNull(t, "Content cannot be null");
-        this.content = t;
-        this.root = this;
+        this(t, null);
     }
 
-    public AbstractContainer(@NotNull T t, @NotNull Container<?> root) {
+    public AbstractContainer(@NotNull T t, Container<?> root) {
         Validate.notNull(t, "Content cannot be null");
-        Validate.notNull(root, "Root Container cannot be null");
         this.content = t;
-        this.root = root;
+        this.root = root == null ? this : root;
     }
 
     @Override

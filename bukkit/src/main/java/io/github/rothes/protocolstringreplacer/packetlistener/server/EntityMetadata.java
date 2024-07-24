@@ -150,7 +150,7 @@ public final class EntityMetadata extends AbstractServerPacketListener {
             // Item in Item Frame
             ItemStack itemStack = (ItemStack) object;
             List<ReplacerConfig> replacerConfigs = ProtocolStringReplacer.getInstance().getReplacerManager().getAcceptedReplacers(user, filter);
-            replaceItemStack(packetEvent, user, listenType, itemStack, replacerConfigs, replacerConfigs, replacerConfigs, true);
+            return replaceItemStack(packetEvent, user, listenType, itemStack, replacerConfigs, replacerConfigs, replacerConfigs, true);
 
 //        } else if (ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz().isInstance(object)) {
 //            NBTContainer container = new NBTContainer(object);

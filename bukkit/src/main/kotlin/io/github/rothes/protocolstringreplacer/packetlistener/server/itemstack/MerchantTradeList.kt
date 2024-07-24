@@ -1,122 +1,107 @@
-package io.github.rothes.protocolstringreplacer.packetlistener.server.itemstack;
+package io.github.rothes.protocolstringreplacer.packetlistener.server.itemstack
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.EquivalentConverter;
-import com.comphenix.protocol.reflect.FuzzyReflection;
-import com.comphenix.protocol.reflect.StructureModifier;
-import com.comphenix.protocol.reflect.accessors.Accessors;
-import com.comphenix.protocol.reflect.accessors.ConstructorAccessor;
-import com.comphenix.protocol.reflect.accessors.MethodAccessor;
-import com.comphenix.protocol.utility.MinecraftReflection;
-import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import io.github.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
-import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
-import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantRecipe;
-import org.jetbrains.annotations.NotNull;
+import com.comphenix.protocol.PacketType
+import com.comphenix.protocol.events.PacketEvent
+import com.comphenix.protocol.reflect.EquivalentConverter
+import com.comphenix.protocol.reflect.FuzzyReflection
+import com.comphenix.protocol.reflect.accessors.Accessors
+import com.comphenix.protocol.reflect.accessors.ConstructorAccessor
+import com.comphenix.protocol.reflect.accessors.MethodAccessor
+import com.comphenix.protocol.utility.MinecraftReflection
+import com.comphenix.protocol.wrappers.WrappedEnumEntityUseAction.CONVERTER
+import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer
+import io.github.rothes.protocolstringreplacer.get
+import io.github.rothes.protocolstringreplacer.set
+import org.bukkit.inventory.MerchantRecipe
+import java.util.function.BiConsumer
+import java.util.function.Supplier
+import java.util.stream.Collectors
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+class MerchantTradeList : AbstractServerItemPacketListener(PacketType.Play.Server.OPEN_WINDOW_MERCHANT) {
 
-public final class MerchantTradeList extends AbstractServerItemPacketListener {
-
-    private static final Converter CONVERTER = new Converter();
-
-    public MerchantTradeList() {
-        super(PacketType.Play.Server.OPEN_WINDOW_MERCHANT);
-    }
-
-    protected void process(@NotNull PacketEvent packetEvent) {
-        PsrUser user = getEventUser(packetEvent);
-        if (user == null) {
-            return;
+    override fun process(packetEvent: PacketEvent) {
+        val user = getEventUser(packetEvent) ?: return
+        user.isInMerchant = true
+        if (ProtocolStringReplacer.getInstance().configManager.removeCacheWhenMerchantTrade) {
+            user.player.updateInventory()
         }
-        user.setInMerchant(true);
-        if (ProtocolStringReplacer.getInstance().getConfigManager().removeCacheWhenMerchantTrade) {
-            user.getPlayer().updateInventory();
-        }
-        PacketContainer packet = packetEvent.getPacket().deepClone();
-        StructureModifier<List<MerchantRecipe>> merchantRecipeLists = packet.getModifier().withType(
-                MinecraftReflection.getMerchantRecipeList(), CONVERTER);
+        val packet = packetEvent.packet.deepClone()
+        val merchantRecipeLists = packet.modifier.withType(
+            MinecraftReflection.getMerchantRecipeList(), Converter
+        )
 
-        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        List<ReplacerConfig> nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter);
-        List<ReplacerConfig> display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter);
-        List<ReplacerConfig> entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter);
+        val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
+        val nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter)
+        val display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter)
+        val entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter)
 
-        List<MerchantRecipe> replaced = new ArrayList<>();
-
-        MerchantRecipe toAdd;
-        List<MerchantRecipe> read = merchantRecipeLists.read(0);
-        for (MerchantRecipe recipe : read) {
-            List<ItemStack> ingredients = recipe.getIngredients();
-            for (ItemStack ingredient : ingredients) {
-                AbstractServerPacketListener.replaceItemStack(packetEvent, user, listenType, ingredient, nbt, display, entries, false);
+        merchantRecipeLists[0] = merchantRecipeLists[0].map { recipe ->
+            MerchantRecipe(
+                replaceItemStack(packetEvent, user, listenType, recipe.result, nbt, display, entries, true) ?: return,
+                recipe.uses,
+                recipe.maxUses,
+                recipe.hasExperienceReward(),
+                recipe.villagerExperience,
+                recipe.priceMultiplier,
+                recipe.demand,
+                recipe.specialPrice
+            ).also {
+                it.ingredients = recipe.ingredients.map { item ->
+                    replaceItemStack(packetEvent, user, listenType, item!!, nbt, display, entries, false) ?: return
+                }
             }
-            AbstractServerPacketListener.replaceItemStack(packetEvent, user, listenType, recipe.getResult(), nbt, display, entries, true);
-
-            toAdd = new MerchantRecipe(recipe.getResult(), recipe.getUses(), recipe.getMaxUses(),
-                    recipe.hasExperienceReward(), recipe.getVillagerExperience(), recipe.getPriceMultiplier(),
-                    recipe.getDemand(), recipe.getSpecialPrice());
-            toAdd.setIngredients(ingredients);
-            replaced.add(toAdd);
         }
-        merchantRecipeLists.write(0, replaced);
-        packetEvent.setPacket(packet);
+        packetEvent.packet = packet
     }
 
-    private static class Converter implements EquivalentConverter<List<MerchantRecipe>> {
-        private final ConstructorAccessor merchantRecipeListConstructor;
-        private final MethodAccessor bukkitMerchantRecipeToCraft;
-        private final MethodAccessor craftMerchantRecipeToNMS;
-        private final MethodAccessor nmsMerchantRecipeToBukkit;
+    private object Converter : EquivalentConverter<List<MerchantRecipe>> {
 
-        Converter() {
-            Class<?> merchantRecipeListClass = MinecraftReflection.getMerchantRecipeList();
-            merchantRecipeListConstructor = Accessors.getConstructorAccessor(merchantRecipeListClass);
-            Class<?> craftMerchantRecipeClass = MinecraftReflection.getCraftBukkitClass("inventory.CraftMerchantRecipe");
-            FuzzyReflection reflection = FuzzyReflection.fromClass(craftMerchantRecipeClass, false);
-            bukkitMerchantRecipeToCraft = Accessors.getMethodAccessor(reflection.getMethodByName("fromBukkit"));
-            craftMerchantRecipeToNMS = Accessors.getMethodAccessor(reflection.getMethodByName("toMinecraft"));
+        private val merchantRecipeListConstructor: ConstructorAccessor
+        private val bukkitMerchantRecipeToCraft: MethodAccessor
+        private val craftMerchantRecipeToNMS: MethodAccessor
+        private val nmsMerchantRecipeToBukkit: MethodAccessor
 
-            Class<?> merchantRecipeClass = MinecraftReflection.getMinecraftClass(
-                    "world.item.trading.MerchantRecipe", "world.item.trading.MerchantOffer","MerchantRecipe"
-            );
-            reflection = FuzzyReflection.fromClass(merchantRecipeClass, false);
-            nmsMerchantRecipeToBukkit = Accessors.getMethodAccessor(reflection.getMethodByName("asBukkit"));
+        init {
+            val merchantRecipeListClass = MinecraftReflection.getMerchantRecipeList()
+            merchantRecipeListConstructor = Accessors.getConstructorAccessor(merchantRecipeListClass)
+            val craftMerchantRecipeClass = MinecraftReflection.getCraftBukkitClass("inventory.CraftMerchantRecipe")
+            var reflection = FuzzyReflection.fromClass(craftMerchantRecipeClass, false)
+            bukkitMerchantRecipeToCraft = Accessors.getMethodAccessor(reflection.getMethodByName("fromBukkit"))
+            craftMerchantRecipeToNMS = Accessors.getMethodAccessor(reflection.getMethodByName("toMinecraft"))
+
+            val merchantRecipeClass = MinecraftReflection.getMinecraftClass(
+                "world.item.trading.MerchantRecipe", "world.item.trading.MerchantOffer", "MerchantRecipe"
+            )
+            reflection = FuzzyReflection.fromClass(merchantRecipeClass, false)
+            nmsMerchantRecipeToBukkit = Accessors.getMethodAccessor(reflection.getMethodByName("asBukkit"))
         }
 
-        @Override
-        public Object getGeneric(List<MerchantRecipe> specific) {
-            return specific.stream().map(recipe -> craftMerchantRecipeToNMS.invoke(bukkitToCraft(recipe)))
-                    .collect(() -> (List<Object>) merchantRecipeListConstructor.invoke(), List::add, List::addAll);
+        override fun getGeneric(specific: List<MerchantRecipe>): Any {
+            @Suppress("UNCHECKED_CAST")
+            return (merchantRecipeListConstructor.invoke() as MutableList<Any>).apply {
+                specific.forEach { recipe ->
+                    add(craftMerchantRecipeToNMS.invoke(bukkitToCraft(recipe)))
+                }
+            }
         }
 
-        @Override
-        public List<MerchantRecipe> getSpecific(Object generic) {
-            return ((List<Object>) generic).stream().map(o -> (MerchantRecipe)nmsMerchantRecipeToBukkit.invoke(o)).collect(Collectors.toList());
+        override fun getSpecific(generic: Any): List<MerchantRecipe> {
+            return (generic as List<*>).map { o -> nmsMerchantRecipeToBukkit.invoke(o) as MerchantRecipe }
         }
 
-        public Object bukkitToCraft(MerchantRecipe bukkit) {
-            MerchantRecipe craft = (MerchantRecipe) bukkitMerchantRecipeToCraft.invoke(null, bukkit);
+        fun bukkitToCraft(bukkit: MerchantRecipe): Any {
+            val craft = bukkitMerchantRecipeToCraft.invoke(null, bukkit) as MerchantRecipe
             // Thanks, CraftBukkit. Doesn't set these field for 1.18-1.19.1
-            if (ProtocolStringReplacer.getInstance().getServerMajorVersion() == 18) {
-                craft.setDemand(bukkit.getDemand());
-                craft.setSpecialPrice(bukkit.getSpecialPrice());
+            if (ProtocolStringReplacer.getInstance().serverMajorVersion.toInt() == 18) {
+                craft.demand = bukkit.demand
+                craft.specialPrice = bukkit.specialPrice
             }
-            return craft;
+            return craft
         }
 
-        @Override
-        public Class<List<MerchantRecipe>> getSpecificType() {
-            Class<?> dummy = List.class;
-            return (Class<List<MerchantRecipe>>) dummy;
+        override fun getSpecificType(): Class<List<MerchantRecipe>> {
+            @Suppress("UNCHECKED_CAST")
+            return List::class.java as Class<List<MerchantRecipe>>
         }
-
     }
 }

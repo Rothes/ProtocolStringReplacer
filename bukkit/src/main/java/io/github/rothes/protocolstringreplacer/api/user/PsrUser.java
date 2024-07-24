@@ -135,6 +135,12 @@ public class PsrUser {
         this.clientLocale = clientLocale;
     }
 
+    /**
+     * If replace the first itemstack in an anvil, client will be kicked with too many packets.
+     * Use this to avoid the kick.
+     *
+     * @return inAnvil
+     */
     public boolean isInAnvil() {
         return inAnvil;
     }

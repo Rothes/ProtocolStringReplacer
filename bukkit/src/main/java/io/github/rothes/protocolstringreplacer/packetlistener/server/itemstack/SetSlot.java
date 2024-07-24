@@ -29,7 +29,8 @@ public final class SetSlot extends AbstractServerItemPacketListener {
         List<ReplacerConfig> entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter);
 
         ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
-        AbstractServerPacketListener.replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries, true);
+        ItemStack replaced = replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries, true);
+        packetEvent.getPacket().getItemModifier().write(0, replaced);
     }
 
 }

@@ -1,6 +1,6 @@
 package io.github.rothes.protocolstringreplacer.replacer;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import io.github.rothes.protocolstringreplacer.util.scheduler.PsrScheduler;
 import io.github.rothes.protocolstringreplacer.util.scheduler.PsrTask;
 import io.github.rothes.protocolstringreplacer.util.FileUtils;
@@ -45,19 +45,19 @@ public class ReplacerManager {
 
     public static class ItemMetaCache {
 
-        private final NBTItem nbtItem;
+        private final ReadWriteNBT nbtItem;
         private long lastAccessTime;
         private boolean blocked;
         private int[] placeholderIndexes;
 
-        public ItemMetaCache(NBTItem nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
+        public ItemMetaCache(ReadWriteNBT nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
             this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
             this.placeholderIndexes = placeholderIndexes;
         }
 
-        public NBTItem getNbtItem() {
+        public ReadWriteNBT getNbtItem() {
             return nbtItem;
         }
 
@@ -211,7 +211,7 @@ public class ReplacerManager {
         return map == null ? null : map.get(itemMeta);
     }
 
-    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull NBTItem nbtItem,
+    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull ReadWriteNBT nbtItem,
                                               @NotNull Material type, boolean blocked, int[] papiIndexes) {
         Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 

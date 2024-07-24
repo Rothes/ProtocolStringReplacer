@@ -286,7 +286,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         return container.getResult();
     }
 
-    protected static boolean replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
+    protected static ItemStack replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                               @Nonnull ItemStack itemStack, List<ReplacerConfig> nbt,
                                               List<ReplacerConfig> display, List<ReplacerConfig> entries, boolean saveCache) {
         try {
@@ -294,7 +294,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 //            return false;
 //        }
             if (itemStack.getType() == Material.AIR) {
-                return false;
+                return itemStack;
             }
             ItemStack original = itemStack.clone();
 
@@ -303,13 +303,13 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
             if (!container.isFromCache()) {
                 if (cacheItemStack(container, nbt, display, entries)) {
-                    return true;
+                    return null;
                 }
                 container.reset();
             }
             if (container.getMetaCache().isBlocked()) {
                 packetEvent.setCancelled(true);
-                return true;
+                return null;
             }
 
             int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
@@ -329,10 +329,11 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             if (user.isCapturing(listenType)) {
                 captureItemStackInfo(user, original, listenType, nbt, display, entries);
             }
+            return container.getResult();
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        return false;
+        return itemStack;
     }
 
     private static void captureItemStackInfo(@Nonnull PsrUser user, @Nonnull ItemStack itemStack,

@@ -1,52 +1,32 @@
-package io.github.rothes.protocolstringreplacer.packetlistener.server.itemstack;
+package io.github.rothes.protocolstringreplacer.packetlistener.server.itemstack
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.StructureModifier;
-import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import io.github.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
-import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import com.comphenix.protocol.PacketType
+import com.comphenix.protocol.events.PacketEvent
+import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer
+import io.github.rothes.protocolstringreplacer.get
+import io.github.rothes.protocolstringreplacer.set
+import org.bukkit.Material
 
-import java.util.List;
+class WindowItemsPost11 : AbstractServerItemPacketListener(PacketType.Play.Server.WINDOW_ITEMS) {
 
-public final class WindowItemsPost11 extends AbstractServerItemPacketListener {
+    override fun process(packetEvent: PacketEvent) {
+        val user = getEventUser(packetEvent) ?: return
+        user.clearUserMetaCache()
+        val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
+        val nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter)
+        val display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter)
+        val entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter)
 
-    public WindowItemsPost11() {
-        super(PacketType.Play.Server.WINDOW_ITEMS);
-    }
-
-    protected void process(@NotNull PacketEvent packetEvent) {
-        PsrUser user = getEventUser(packetEvent);
-        if (user == null) {
-            return;
-        }
-        user.clearUserMetaCache();
-        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        List<ReplacerConfig> nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter);
-        List<ReplacerConfig> display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter);
-        List<ReplacerConfig> entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter);
-
-        StructureModifier<List<ItemStack>> itemListModifier = packetEvent.getPacket().getItemListModifier();
-        List<ItemStack> read = itemListModifier.read(0);
-        boolean saveMeta = !user.isInAnvil();
-        for (ItemStack itemStack : read) {
-            if (itemStack.getType() == Material.AIR) {
-                saveMeta = true;
-                continue;
+        val itemListModifier = packetEvent.packet.itemListModifier
+        var saveMeta = !user.isInAnvil
+        itemListModifier[0] = itemListModifier[0].map { itemStack ->
+            if (itemStack.type == Material.AIR) {
+                saveMeta = true
+                return@map itemStack
             }
-            boolean blocked = replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries,
-                    // Avoid too many packets kick
-                    saveMeta);
-            saveMeta = true;
-            if (blocked) {
-                return;
-            }
+            replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries, saveMeta).also {
+                saveMeta = true
+            } ?: return
         }
-        itemListModifier.write(0, read);
     }
-
 }
