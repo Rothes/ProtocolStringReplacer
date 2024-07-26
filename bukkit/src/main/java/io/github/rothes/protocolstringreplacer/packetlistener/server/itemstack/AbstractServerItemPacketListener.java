@@ -13,9 +13,9 @@ public abstract class AbstractServerItemPacketListener extends AbstractServerPac
     protected final BiPredicate<ReplacerConfig, PsrUser> itemNbtFilter =
             (replacerConfig, user) -> containType(replacerConfig)
                     && replacerConfig.handleItemStackNbt() && checkFilter(user, replacerConfig) && checkWindowTitle(user, replacerConfig);
-    protected final BiPredicate<ReplacerConfig, PsrUser> itemDisplayFilter =
+    protected final BiPredicate<ReplacerConfig, PsrUser> itemLoreFilter =
             (replacerConfig, user) -> containType(replacerConfig)
-                    && replacerConfig.handleItemStackDisplay() && checkFilter(user, replacerConfig) && checkWindowTitle(user, replacerConfig);
+                    && replacerConfig.handleItemStackLore() && checkFilter(user, replacerConfig) && checkWindowTitle(user, replacerConfig);
     protected final BiPredicate<ReplacerConfig, PsrUser> itemEntriesFilter = (replacerConfig, user) -> containType(replacerConfig)
             && replacerConfig.handleItemStackDisplayEntries() && checkFilter(user, replacerConfig) && checkWindowTitle(user, replacerConfig);
 

@@ -58,7 +58,7 @@ public class FileReplacerConfig implements ReplacerConfig {
     private boolean handleScoreboardTeamSuffix;
 
     private boolean handleItemStackNbt;
-    private boolean handleItemStackDisplay;
+    private boolean handleItemStackLore;
     private boolean handleItemStackDisplayEntries;
     private Set<Material> acceptedItemTypes;
     private HashSet<String> locales;
@@ -364,7 +364,7 @@ public class FileReplacerConfig implements ReplacerConfig {
         handleScoreboardTeamSuffix = configuration.getBoolean("Options.Filter.ScoreBoard.Handle-Team-Suffix", false);
 
         handleItemStackNbt = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Compound", false);
-        handleItemStackDisplay = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Display-Compound", false);
+        handleItemStackLore = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Lore-List", false);
         handleItemStackDisplayEntries = configuration.getBoolean("Options.Filter.ItemStack.Handle-Nbt-Display-Entries", true);
         List<String> materialStrList = configuration.getStringList("Options.Filter.ItemStack.Handle-Item-Types");
         if (materialStrList.isEmpty()) {
@@ -465,8 +465,8 @@ public class FileReplacerConfig implements ReplacerConfig {
     }
 
     @Override
-    public boolean handleItemStackDisplay() {
-        return handleItemStackDisplay;
+    public boolean handleItemStackLore() {
+        return handleItemStackLore;
     }
 
     @Override
@@ -512,7 +512,7 @@ public class FileReplacerConfig implements ReplacerConfig {
                 ", handleScoreboardTeamPrefix=" + handleScoreboardTeamPrefix +
                 ", handleScoreboardTeamSuffix=" + handleScoreboardTeamSuffix +
                 ", handleItemStackNbt=" + handleItemStackNbt +
-                ", handleItemStackDisplay=" + handleItemStackDisplay +
+                ", handleItemStackDisplay=" + handleItemStackLore +
                 ", handleItemStackDisplayEntries=" + handleItemStackDisplayEntries +
                 ", acceptedItemTypes=" + acceptedItemTypes +
                 ", locales=" + locales +

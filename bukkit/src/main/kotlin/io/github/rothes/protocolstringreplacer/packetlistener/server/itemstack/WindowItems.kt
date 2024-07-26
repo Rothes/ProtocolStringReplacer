@@ -15,7 +15,7 @@ class WindowItems : AbstractServerItemPacketListener(PacketType.Play.Server.WIND
         user.clearUserMetaCache()
         val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
         val nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter)
-        val display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter)
+        val lore = replacerManager.getAcceptedReplacers(user, itemLoreFilter)
         val entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter)
 
         var saveMeta = !user.isInAnvil
@@ -26,7 +26,7 @@ class WindowItems : AbstractServerItemPacketListener(PacketType.Play.Server.WIND
                 saveMeta = true
                 return@map itemStack
             }
-            replaceItemStack(packetEvent, user, listenType, itemStack, nbt, display, entries, saveMeta).also {
+            replaceItemStack(packetEvent, user, listenType, itemStack, nbt, lore, entries, saveMeta).also {
                 saveMeta = true
             } ?: return
         }.map {

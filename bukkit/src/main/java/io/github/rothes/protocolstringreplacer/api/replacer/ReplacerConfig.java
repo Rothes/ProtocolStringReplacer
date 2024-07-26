@@ -93,7 +93,7 @@ public interface ReplacerConfig {
     default boolean handleItemStackNbt() {
         return false;
     }
-    default boolean handleItemStackDisplay() {
+    default boolean handleItemStackLore() {
         return false;
     }
     default boolean handleItemStackDisplayEntries() {

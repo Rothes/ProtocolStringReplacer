@@ -61,8 +61,8 @@ Options:
     ItemStack:
       # Json only. Whether handle the whole nbt of the item. Default is false.
       Handle-Nbt-Compound: false
-      # Json only. Whether handle the display nbt of the item. Default is false.
-      Handle-Nbt-Display-Compound: false
+      # Json only. Whether handle the Lore nbt of the item. Default is false.
+      Handle-Nbt-Lore-List: false
       # Whether handle each entry of the display nbt of the item. Default is true.
       Handle-Nbt-Display-Entries: true
       # Filter for the item type. If set to null or empty list, will handle all the items.

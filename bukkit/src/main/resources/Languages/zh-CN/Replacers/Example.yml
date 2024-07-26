@@ -59,8 +59,8 @@ Options:
     ItemStack:
       # 仅 Json. 是否处理物品的完整 nbt. 默认为false.
       Handle-Nbt-Compound: false
-      # 仅 Json. 是否处理物品的 Display nbt 组件. 默认为false.
-      Handle-Nbt-Display-Compound: false
+      # 仅 Json. 是否处理物品的 Lore nbt 列表. 默认为false.
+      Handle-Nbt-Lore-List: false
       # 是否处理物品的 Display nbt 组件中的各个元素. 默认为true.
       Handle-Nbt-Display-Entries: true
       # 过滤要处理的物品类型. 若设为 null 或空列表, 则会处理所有物品.

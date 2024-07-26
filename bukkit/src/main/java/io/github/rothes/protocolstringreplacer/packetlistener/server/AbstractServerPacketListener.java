@@ -288,7 +288,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     protected static ItemStack replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                               @Nonnull ItemStack itemStack, List<ReplacerConfig> nbt,
-                                              List<ReplacerConfig> display, List<ReplacerConfig> entries, boolean saveCache) {
+                                              List<ReplacerConfig> lore, List<ReplacerConfig> entries, boolean saveCache) {
         try {
 //        if (!itemStack.hasItemMeta()) {
 //            return false;
@@ -302,7 +302,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             ItemStackContainer container = new ItemStackContainer(itemStack);
 
             if (!container.isFromCache()) {
-                if (cacheItemStack(container, nbt, display, entries)) {
+                if (cacheItemStack(container, nbt, lore, entries)) {
                     return null;
                 }
                 container.reset();
@@ -327,7 +327,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 user.saveUserMetaCache(original, itemStack);
             }
             if (user.isCapturing(listenType)) {
-                captureItemStackInfo(user, original, listenType, nbt, display, entries);
+                captureItemStackInfo(user, original, listenType, nbt, lore, entries);
             }
             return container.getResult();
         } catch (Throwable t) {
@@ -338,7 +338,7 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
 
     private static void captureItemStackInfo(@Nonnull PsrUser user, @Nonnull ItemStack itemStack,
                                              @Nonnull ListenType listenType, List<ReplacerConfig> nbt,
-                                             List<ReplacerConfig> display, List<ReplacerConfig> entries) {
+                                             List<ReplacerConfig> lore, List<ReplacerConfig> entries) {
         ItemStackContainer container = new ItemStackContainer(itemStack, false);
         Material type = container.getItemType();
         CaptureInfo info = new CaptureInfoImpl();
@@ -356,19 +356,31 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
                 .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                         ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
         ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(nbt, type));
-        container.getResult();
+        container.childrenResult();
 
-        container.displayPeriod();
+//        if (container.displayNamePeriod()) {
+//            container.createJsons(container);
+//            jsons = container.getJsons();
+//            extraBuilder.append("  ").reset().append("[Name Json] ").color(ChatColor.GOLD)
+//                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
+//                            + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
+//                    .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
+//                            ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
+//            ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(lore, type));
+//            container.childrenResult();
+//        }
+
+        container.lorePeriod();
         container.createJsons(container);
         jsons = container.getJsons();
-        extraBuilder.append("  ").reset().append("[Display Json] ").color(ChatColor.GOLD)
+        extraBuilder.append("  ").reset().append("[Lore Json] ").color(ChatColor.GOLD)
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
                         + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
                 .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
                         ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
         info.setExtra(extraBuilder.create());
-        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(display, type));
-        container.getResult();
+        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(lore, type));
+        container.childrenResult();
 
         container.entriesPeriod();
         container.createJsons(container);
@@ -423,12 +435,9 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
         user.addCaptureInfo(listenType, info);
     }
 
-    private static boolean cacheItemStack(@Nonnull ItemStackContainer container, List<ReplacerConfig> nbt,
-                                          List<ReplacerConfig> display, List<ReplacerConfig> entries) {
-        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        Material type = container.getItemType();
-
-        List<ReplacerConfig> filtered = matchItemType(nbt, type);
+    private static boolean handleItemStackPeriod(ReplacerManager replacerManager, Material type,
+                                                 ItemStackContainer container, List<ReplacerConfig> configs) {
+        List<ReplacerConfig> filtered = matchItemType(configs, type);
         container.createDefaultChildren();
         container.createJsons(container);
         if (checkBlocked(container.getJsons().get(0).getText(), filtered, replacerManager)) {
@@ -436,24 +445,35 @@ public abstract class AbstractServerPacketListener extends AbstractPacketListene
             return true;
         }
         replacerManager.replaceJsonReplaceable(container.getJsons().get(0), filtered);
-        container.getResult();
+        container.childrenResult();
+        return false;
+    }
 
-        filtered = matchItemType(display, type);
-        container.displayPeriod();
-        container.createJsons(container);
-        if (checkBlocked(container.getJsons().get(0).getText(), filtered, replacerManager)) {
-            container.getMetaCache().setBlocked(true);
+    private static boolean cacheItemStack(@Nonnull ItemStackContainer container, List<ReplacerConfig> nbt,
+                                          List<ReplacerConfig> display, List<ReplacerConfig> entries) {
+        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+        Material type = container.getItemType();
+
+        container.createDefaultChildren();
+        if (handleItemStackPeriod(replacerManager, type, container, nbt)) {
             return true;
         }
-        replacerManager.replaceJsonReplaceable(container.getJsons().get(0), filtered);
-        container.getResult();
+//        if (container.displayNamePeriod()) {
+//            if (handleItemStackPeriod(replacerManager, type, container, display)) {
+//                return true;
+//            }
+//        }
+        container.lorePeriod();
+        if (handleItemStackPeriod(replacerManager, type, container, display)) {
+            return true;
+        }
 
         container.entriesPeriod();
         container.createJsons(container);
 
         boolean direct = false;
 
-        filtered = matchItemType(entries, type);
+        List<ReplacerConfig> filtered = matchItemType(entries, type);
         for (Replaceable json : container.getJsons()) {
             StringBuilder sb = new StringBuilder();
             try {

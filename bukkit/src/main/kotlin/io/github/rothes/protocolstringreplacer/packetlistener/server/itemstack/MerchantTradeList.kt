@@ -28,12 +28,12 @@ class MerchantTradeList : AbstractServerItemPacketListener(PacketType.Play.Serve
 
         val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
         val nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter)
-        val display = replacerManager.getAcceptedReplacers(user, itemDisplayFilter)
+        val lore = replacerManager.getAcceptedReplacers(user, itemLoreFilter)
         val entries = replacerManager.getAcceptedReplacers(user, itemEntriesFilter)
 
         merchantRecipeLists[0] = merchantRecipeLists[0].map { recipe ->
             MerchantRecipe(
-                replaceItemStack(packetEvent, user, listenType, recipe.result, nbt, display, entries, true) ?: return,
+                replaceItemStack(packetEvent, user, listenType, recipe.result, nbt, lore, entries, true) ?: return,
                 recipe.uses,
                 recipe.maxUses,
                 recipe.hasExperienceReward(),
@@ -43,7 +43,7 @@ class MerchantTradeList : AbstractServerItemPacketListener(PacketType.Play.Serve
                 recipe.specialPrice
             ).also {
                 it.ingredients = recipe.ingredients.map { item ->
-                    replaceItemStack(packetEvent, user, listenType, item!!, nbt, display, entries, false) ?: return
+                    replaceItemStack(packetEvent, user, listenType, item!!, nbt, lore, entries, false) ?: return
                 }
             }
         }

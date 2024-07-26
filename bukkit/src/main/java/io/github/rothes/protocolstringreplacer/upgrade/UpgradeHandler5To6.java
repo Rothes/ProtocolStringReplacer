@@ -31,7 +31,7 @@ public final class UpgradeHandler5To6 extends AbstractUpgradeHandler {
         renameNode(config, "Options.Filter.ScoreBoard.Replace-Team-Prefix", "Options.Filter.ScoreBoard.Handle-Team-Prefix");
         renameNode(config, "Options.Filter.ScoreBoard.Replace-Team-Suffix", "Options.Filter.ScoreBoard.Handle-Team-Suffix");
         config.set("Options.Filter.ItemStack.Handle-Nbt-Compound", false);
-        config.set("Options.Filter.ItemStack.Handle-Nbt-Display-Compound", false);
+        config.set("Options.Filter.ItemStack.Handle-Nbt-Lore-List", false);
         config.set("Options.Filter.ItemStack.Handle-Nbt-Display-Entries", true);
         try {
             config.save(file);

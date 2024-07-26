@@ -49,67 +49,84 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     }
 
     private fun nbtPeriod() {
-        children.add(object : ChatJsonContainer(nbt.toString(), root, false) {
+        val toString = nbt.toString()
+        children.add(object : ChatJsonContainer(toString, root, false) {
             override fun getResult(): String {
                 val result = super.getResult()
-                nbt.clearNBT()
-                nbt.mergeCompound(NBTContainer(result))
+                if (result != toString) {
+                    nbt.clearNBT()
+                    nbt.mergeCompound(NBTContainer(result))
+                }
                 return result
             }
         })
     }
 
-    fun displayPeriod() {
+//    fun displayNamePeriod(): Boolean {
+//        if (!NAME_JSON) {
+//            // Skip if this is not json.
+//            return false
+//        }
+//        children.clear()
+//        jsonReplaceables.clear()
+//        val toString = displayRoot?.getOrNull(NAME_KEY, String::class.java) ?: "{}"
+//        children.add(object : ChatJsonContainer(toString, root, false) {
+//            override fun getResult(): String {
+//                val result = super.getResult()
+//                if (result != toString) {
+//                    displayRootCreated.setString(NAME_KEY, result)
+//                }
+//                return result
+//            }
+//        })
+//        return true
+//    }
+
+    fun lorePeriod(): Boolean {
         children.clear()
         jsonReplaceables.clear()
-        val display = displayNbt
-        children.add(object : ChatJsonContainer(display?.toString() ?: "{}", root, false) {
+        val toString = displayRoot?.getStringList(LORE_KEY)?.toString() ?: "[]"
+        children.add(object : ChatJsonContainer(toString, root, false) {
             override fun getResult(): String {
                 val result = super.getResult()
-                if (display != null) {
-                    display.clearNBT()
-                    display.mergeCompound(NBT.parseNBT(result))
-                } else if (result != "{}") {
-                    createDisplayNbt().mergeCompound(NBT.parseNBT(result))
+                if (result != toString) {
+                    displayRootCreated.mergeCompound(NBTContainer("{\"$LORE_KEY\":$result}"))
                 }
                 return result
             }
         })
+        return true
     }
 
     fun entriesPeriod() {
         children.clear()
-        if (jsonReplaceables != null) jsonReplaceables.clear()
-        val display = displayNbt
+        jsonReplaceables.clear()
+        val display = displayRoot
         if (display != null) {
-            if (display.hasTag("Name")) {
+            if (display.hasTag(NAME_KEY)) {
                 if (NAME_JSON) {
-                    children.add(object : ChatJsonContainer(display.getString("Name"), root, true) {
+                    children.add(object : ChatJsonContainer(display.getString(NAME_KEY), root, true) {
                         override fun getResult(): String {
                             val result = super.getResult()
-                            display.setString("Name", result)
-                            if (NEW_NBT) {
-                                nbt.getCompound("components")!!.setString("minecraft:custom_name", result)
-                            }
+                            display.setString(NAME_KEY, result)
                             return result
                         }
                     })
                 } else {
-                    children.add(object : SimpleTextContainer(display.getString("Name"), root) {
+                    children.add(object : SimpleTextContainer(display.getString(NAME_KEY), root) {
                         override fun getResult(): String {
                             val result = super.getResult()
-                            display.setString("Name", result)
+                            display.setString(NAME_KEY, result)
                             return result
                         }
                     })
                 }
             }
-            if (display.hasTag("Lore")) {
+            if (display.hasTag(LORE_KEY)) {
                 if (LORE_JSON) {
-                    addJsonList(display.getStringList("Lore"),
-                        if (NEW_NBT) nbt.getCompound("components")!!.getStringList("minecraft:lore") else null)
+                    addJsonList(display.getStringList(LORE_KEY))
                 } else {
-                    addTextList(display.getStringList("Lore"))
+                    addTextList(display.getStringList(LORE_KEY))
                 }
             }
         }
@@ -148,14 +165,13 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         super.createDefaultChildren()
     }
 
-    private fun addJsonList(list: ReadWriteNBTList<String>, copy: ReadWriteNBTList<String>? = null) {
+    private fun addJsonList(list: ReadWriteNBTList<String>) {
         val size = list.size()
         for (line in 0 until size) {
             children.add(object : ChatJsonContainer(list[line], root, true) {
                 override fun getResult(): String {
                     val result = super.getResult()
                     list[line] = result
-                    copy?.set(line, result)
                     return result
                 }
             })
@@ -183,6 +199,10 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         return content
     }
 
+    fun childrenResult() {
+        super.getResult()
+    }
+
     fun restoreItem() {
         content.setItemMeta(original)
         nbt.clearNBT()
@@ -195,12 +215,24 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     val itemType: Material
         get() = content.type
 
-    private val displayNbt: ReadWriteNBT?
-        get() = (if (NEW_NBT) nbt.getCompound("components")
-            ?.getCompound("minecraft:custom_data") else nbt.getCompound("tag"))?.getCompound("display")
-    private fun createDisplayNbt(): ReadWriteNBT {
-        return (if (NEW_NBT) nbt.getOrCreateCompound("components")
-            .getOrCreateCompound("minecraft:custom_data") else nbt.getOrCreateCompound("tag")).getOrCreateCompound("display")
+    private val tag = nbt.path(TAG_PATH)
+    private val tagCreated = nbt.create(TAG_PATH)
+    private val displayRoot = tag?.path(DISPLAY_PATH)
+    private val displayRootCreated = tagCreated.create(DISPLAY_PATH)
+
+    private fun ReadWriteNBT.path(path: Array<String>): ReadWriteNBT? {
+        var nbt = this
+        for (key in path) {
+            nbt = nbt.getCompound(key) ?: return null
+        }
+        return nbt
+    }
+    private fun ReadWriteNBT.create(path: Array<String>): ReadWriteNBT {
+        var nbt = this
+        for (key in path) {
+            nbt = nbt.getOrCreateCompound(key)
+        }
+        return nbt
     }
 
     companion object {
@@ -208,6 +240,10 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         private val NAME_JSON = plugin.serverMajorVersion >= 13
         private val LORE_JSON = plugin.serverMajorVersion >= 14
         private val NEW_NBT = plugin.serverMajorVersion == 20.toByte() && plugin.serverMinorVersion >= 5 || plugin.serverMajorVersion > 20
+        private val TAG_PATH = if (NEW_NBT) arrayOf("components") else arrayOf("tag")
+        private val DISPLAY_PATH = if (NEW_NBT) arrayOf() else arrayOf("display")
+        private val NAME_KEY = if (NEW_NBT) "minecraft:custom_name" else "Name"
+        private val LORE_KEY = if (NEW_NBT) "minecraft:lore" else "Lore"
         private val WRITABLE_BOOK: Material = try {
             Material.valueOf("BOOK_AND_QUILL")
         } catch (e: IllegalArgumentException) {
