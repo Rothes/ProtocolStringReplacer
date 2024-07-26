@@ -14,7 +14,7 @@ Console-Sender:
       Backing-Up-Configs: '&aBacking up configurations to folder: %0%'
       Upgrading-Configs: '&aUpgrading configurations version: %0% -> %1%'
     Replacer-Config:
-      Pre-Loaded-Replacers: '&aPre-loaded %0% replacer config(s). &8Took %1%ms'
+      Pre-Loaded-Replacers: '&aFound %0% replacer config(s). &8Took %1%ms'
       Replacer-Load-Complete: '&aSuccessfully loaded replacer config: %0%. &8Took %1%ms'
       Replacer-Failed-To-Load: '&cFailed to load replacer config %0% . Please fix the problem with the trace stack.'
       Replacer-Regex-Exception: '&cFailed to load replacer config %0% , because there''s a regex syntax error in it:'
@@ -52,14 +52,14 @@ Sender:
     Subcommand-Help-Format: '&7 * &e%0% &7- &b%1%'
     Help:
       Header: '&7&m------&7&l &7[ &c&lProtocol&6&lString&3&lReplacer&7 ]&l &7&m------'
-      Footer: '&7&m-----------------------------------------'
+      Footer: '&7&m----------------------------------------'
     Confirm:
       Expired: '&cOperation confirm has timed out. Please execute again.'
       Nothing-To-Confirm: '&cYou have no pending operations to confirm.'
     Capture:
       Description: 'Capture contents in a packet'
       Help:
-        Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eCapture Tool&7 ]&l &7&m------------'
+        Header: '&7&m-------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eCapture Tool&7 ]&l &7&m-------------'
         Footer: '&7&m-----------------------------------------------'
       Add-Capture-Tip: '&cExecute &e/psr capture add %0% &cto enable capture.'
       Remove-Capture-Tip: '&cExecute &e/psr capture remove %0% &cto disable capture.'
@@ -80,11 +80,11 @@ Sender:
         List:
           Simple-Help: '&7 * &e/psr capture list &7- &bList captured contents'
           Detailed-Help: '&7 * &e/psr capture list <Listen type> [page] &7- &bList captured contents'
-          Results-Header: '&7&m---------&7&l &7[ &c&lP&6&lS&3&lR &7- &eCaptured list&7 ]&l &7&m---------'
-          Results-Footer: '&7&m------------------------------------------'
+          Results-Header: '&7&m-------&7&l &7[ &c&lP&6&lS&3&lR &7- &eCaptured list&7 ]&l &7&m-------'
+          Results-Footer: '&7&m-----------------------------------'
           Not-Capturing-Listen-Type: '&cYou are not capturing &f%0% &c.'
       Capture-Info:
-        Captured-Contents: '&3&l&m----------------------&3&l Captured Contents &m----------------------'
+        Captured-Contents: '&3&l&m----------------&3&l Captured Contents &m----------------'
         Click-For-Clipboard: '&aClick for clipboard'
         Click-To-Copy: '&aClick to copy'
         Click-Any-Entry-To-Copy: '&aClick any entry to copy'
@@ -93,7 +93,7 @@ Sender:
       Description: 'Replacers editor'
       Help:
         Header: '&7&m------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eEditor&7 ]&l &7&m------------'
-        Footer: '&7&m-----------------------------------------'
+        Footer: '&7&m----------------------------------------'
       Children:
         File:
           Description: 'Replacer files commands'
@@ -228,6 +228,16 @@ Sender:
       Tab-Complete:
         String-To-Parse: '<String to parse>'
         PAPI-Target: '<PAPI target>'
+    About:
+      Description: 'About plugin'
+      Header: '&7&m-------------&7&l &7[ &c&lP&6&lS&3&lR &7- &eAbout&7 ]&l &7&m-------------'
+      Plugin: ' &c&lProtocol&6&lString&3&lReplacer &bis...'
+      Version: ' &3Version&7: &b'
+      Author: ' &3Author&7: &b'
+      Donate: ' &3Donate&7: &b'
+      GitHub: ' &3GitHub&7: &b'
+      To-Say: ' &aPlease leave a &e⭐Star &afor our free plugin!'
+      Footer: '&7&m-----------------------------------------'
     Reload:
       Description: 'Reload configs'
       Already-Reloading: '&cPlugin is already reloading. Please reload later.'

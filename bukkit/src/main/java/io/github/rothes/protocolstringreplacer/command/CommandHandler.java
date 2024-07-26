@@ -3,6 +3,7 @@ package io.github.rothes.protocolstringreplacer.command;
 import io.github.rothes.protocolstringreplacer.PsrLocalization;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
+import io.github.rothes.protocolstringreplacer.command.subcommands.About;
 import io.github.rothes.protocolstringreplacer.util.ArgUtils;
 import io.github.rothes.protocolstringreplacer.command.subcommands.Capture;
 import io.github.rothes.protocolstringreplacer.command.subcommands.Edit;
@@ -30,9 +31,10 @@ public class CommandHandler implements TabCompleter, CommandExecutor {
         plugin.getCommand("ProtocolStringReplacer").setExecutor(this);
         plugin.getCommand("ProtocolStringReplacer").setTabCompleter(this);
 
+        subCommands.add(new Capture());
         subCommands.add(new Edit());
         subCommands.add(new Parse());
-        subCommands.add(new Capture());
+        subCommands.add(new About());
         subCommands.add(new Reload());
     }
 

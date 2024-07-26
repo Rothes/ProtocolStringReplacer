@@ -14,7 +14,7 @@ Console-Sender:
       Backing-Up-Configs: '&a正在备份配置文件到文件夹: %0%'
       Upgrading-Configs: '&a正在升级配置文件版本 %0% -> %1%'
     Replacer-Config:
-      Pre-Loaded-Replacers: '&a预加载 %0% 个替换配置文件. &8耗时 %1%ms'
+      Pre-Loaded-Replacers: '&a发现 %0% 个替换配置文件. &8耗时 %1%ms'
       Replacer-Load-Complete: '&a成功载入替换配置: %0%. &8耗时 %1%ms'
       Replacer-Failed-To-Load: '&c无法载入配置文件 %0% , 请通过下面的报错堆栈检查错误.'
       Replacer-Regex-Exception: '&c无法载入配置文件 %0% , 因为正则表达式有问题:'
@@ -52,14 +52,14 @@ Sender:
     Subcommand-Help-Format: '&7 * &e%0% &7- &b%1%'
     Help:
       Header: '&7&m------&7&l &7[ &c&lProtocol&6&lString&3&lReplacer&7 ]&l &7&m------'
-      Footer: '&7&m-----------------------------------------'
+      Footer: '&7&m----------------------------------------'
     Confirm:
       Expired: '&c确认操作已超时. 请重新执行.'
       Nothing-To-Confirm: '&c您没有待确认的操作.'
     Capture:
       Description: '捕获数据包的文本内容'
       Help:
-        Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e捕获工具&7 ]&l &7&m-----------'
+        Header: '&7&m-------------&7&l &7[ &c&lP&6&lS&3&lR &7- &e捕获工具&7 ]&l &7&m-------------'
         Footer: '&7&m-------------------------------------------'
       Add-Capture-Tip: '&c使用指令 &e/psr capture add %0% &c即可开启捕获.'
       Remove-Capture-Tip: '&c使用指令 &e/psr capture remove %0% &c即可取消捕获.'
@@ -81,7 +81,7 @@ Sender:
           Simple-Help: '&7 * &e/psr capture list &7- &b列出捕获的文本信息'
           Detailed-Help: '&7 * &e/psr capture list <监听类型> [页码] &7- &b列出捕获的文本信息'
           Results-Header: '&7&m---------&7&l &7[ &c&lP&6&lS&3&lR &7- &e捕获列表&7 ]&l &7&m---------'
-          Results-Footer: '&7&m---------------------------------------'
+          Results-Footer: '&7&m-----------------------------------'
           Not-Capturing-Listen-Type: '&c您未在捕获 &f%0% &c.'
       Capture-Info:
         Captured-Contents: '&3&l&m----------------------&3&l 捕获内容 &m----------------------'
@@ -92,14 +92,14 @@ Sender:
     Edit:
       Description: '替换配置编辑器'
       Help:
-        Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e编辑器&7 ]&l &7&m-----------'
+        Header: '&7&m-------------&7&l &7[ &c&lP&6&lS&3&lR &7- &e编辑器&7 ]&l &7&m-------------'
         Footer: '&7&m-----------------------------------------'
       Children:
         File:
           Description: '替换配置文件相关指令'
           Help:
             Header: '&7&m-----------&7&l &7[ &c&lP&6&lS&3&lR &7- &e文件编辑器&7 ]&l &7&m-----------'
-            Footer: '&7&m---------------------------------------------'
+            Footer: '&7&m----------------------------------------'
           Children:
             Cannot-Find-Replacer-Config: '&c找不到此替换配置文件: &f%0%'
             List:
@@ -118,7 +118,7 @@ Sender:
                 Enabled: '&a启用'
                 Not-Enabled: '&c禁用'
                 Not-Configured: '&7未定义'
-                Footer: '&7&m-----------------------------------------------'
+                Footer: '&7&m------------------------------------------'
             Select:
               Simple-Help: '&7 * &e/psr edit file select &7- &b选定一个替换配置文件'
               Detailed-Help: '&7 * &e/psr file select <替换配置文件|索引> &7- &b选定编辑的替换配置'
@@ -228,6 +228,16 @@ Sender:
       Tab-Complete:
         String-To-Parse: '<要测试的字符串>'
         PAPI-Target: '<占位符目标玩家>'
+    About:
+      Description: '关于插件'
+      Header: '&7&m--------------&7&l &7[ &c&lP&6&lS&3&lR &7- &e关于&7 ]&l &7&m--------------'
+      Plugin: ' &c&lProtocol&6&lString&3&lReplacer &b是...'
+      Version: ' &3版本&7: &b'
+      Author: ' &3作者&7: &b'
+      Donate: ' &3捐赠&7: &b'
+      GitHub: ' &3源代码&7: &b'
+      To-Say: ' &a请给我们的自由软件留下一个 &e⭐Star &a!'
+      Footer: '&7&m------------------------------------------'
     Reload:
       Description: '重载插件配置文件'
       Already-Reloading: '&c插件已经在重载过程中. 请稍后再重载.'
