@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public class SettingsLocale extends AbstractClientPacketListener {
+public class SettingsLocale extends BaseClientPacketListener {
 
     public SettingsLocale() {
         super(PacketType.Play.Client.SETTINGS);

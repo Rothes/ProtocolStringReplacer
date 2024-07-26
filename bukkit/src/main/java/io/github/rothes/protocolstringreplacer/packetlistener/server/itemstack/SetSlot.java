@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public final class SetSlot extends AbstractServerItemPacketListener {
+public final class SetSlot extends BaseServerItemPacketListener {
 
     public SetSlot() {
         super(PacketType.Play.Server.SET_SLOT);

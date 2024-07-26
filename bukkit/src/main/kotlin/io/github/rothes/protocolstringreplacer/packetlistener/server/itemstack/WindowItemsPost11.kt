@@ -7,7 +7,7 @@ import io.github.rothes.protocolstringreplacer.get
 import io.github.rothes.protocolstringreplacer.set
 import org.bukkit.Material
 
-class WindowItemsPost11 : AbstractServerItemPacketListener(PacketType.Play.Server.WINDOW_ITEMS) {
+class WindowItemsPost11 : BaseServerItemPacketListener(PacketType.Play.Server.WINDOW_ITEMS) {
 
     override fun process(packetEvent: PacketEvent) {
         val user = getEventUser(packetEvent) ?: return

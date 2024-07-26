@@ -12,7 +12,7 @@ import io.github.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
 import io.github.rothes.protocolstringreplacer.api.exceptions.JsonSyntaxException;
 import io.github.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.AbstractPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.BasePacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import io.github.rothes.protocolstringreplacer.replacer.ReplaceMode;
 import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager;
@@ -39,14 +39,14 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
-public abstract class AbstractServerPacketListener extends AbstractPacketListener {
+public abstract class BaseServerPacketListener extends BasePacketListener {
 
     protected static final ProtocolStringReplacer plugin = ProtocolStringReplacer.getInstance();
     protected final BiPredicate<ReplacerConfig, PsrUser> filter;
     protected final ListenType listenType;
     private static final String DIRECT_NOT_REPLACED = "PSR Direct Not Replaced - 蔐魬鴯鋆颽漚铼";
 
-    protected AbstractServerPacketListener(PacketType packetType, ListenType listenType) {
+    protected BaseServerPacketListener(PacketType packetType, ListenType listenType) {
         super(packetType);
         this.listenType = listenType;
         filter = (replacerConfig, user) -> containType(replacerConfig) && checkFilter(user, replacerConfig);

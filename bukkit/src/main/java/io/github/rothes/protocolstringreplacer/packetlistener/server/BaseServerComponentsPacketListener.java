@@ -11,11 +11,11 @@ import io.github.rothes.protocolstringreplacer.util.PaperUtils;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.BaseComponent;
 
-public abstract class AbstractServerComponentsPacketListener extends AbstractServerPacketListener {
+public abstract class BaseServerComponentsPacketListener extends BaseServerPacketListener {
 
     protected static final String BLOCKED_JSON = "{\"text\":\"ProtocolStringReplacer blocked message. If you see this, it's caused by other plugin(s).\"}";
 
-    protected AbstractServerComponentsPacketListener(PacketType packetType, ListenType listenType) {
+    protected BaseServerComponentsPacketListener(PacketType packetType, ListenType listenType) {
         super(packetType, listenType);
     }
 

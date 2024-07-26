@@ -8,7 +8,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.exceptions.IncompatibleServerException;
 import io.github.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -69,7 +69,7 @@ public final class UpdateTeamPost17 extends BaseUpdateTeamListener {
             }
             WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromHandle(handle);
             String json = wrappedChatComponent.getJson();
-            String replacedJson = AbstractServerPacketListener.getReplacedJson(event, user, listenType, json, filter);
+            String replacedJson = BaseServerPacketListener.getReplacedJson(event, user, listenType, json, filter);
             if (replacedJson == null) {
                 return true;
             }

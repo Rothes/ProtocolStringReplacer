@@ -7,14 +7,14 @@ import com.comphenix.protocol.reflect.accessors.FieldAccessor;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-public final class BossBarPost17 extends AbstractServerPacketListener {
+public final class BossBarPost17 extends BaseServerPacketListener {
 
     private Field actionField;
     private final HashMap<Class<?>, FieldAccessor> actionComponentField = new HashMap<>();

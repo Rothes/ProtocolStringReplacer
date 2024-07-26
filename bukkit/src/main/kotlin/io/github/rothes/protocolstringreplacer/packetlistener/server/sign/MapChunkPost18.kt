@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 
-class MapChunkPost18 : AbstractServerSignPacketListener(PacketType.Play.Server.MAP_CHUNK) {
+class MapChunkPost18 : BaseServerSignPacketListener(PacketType.Play.Server.MAP_CHUNK) {
 
     private val chunkData: Field
     private val blockEntitiesData: Field

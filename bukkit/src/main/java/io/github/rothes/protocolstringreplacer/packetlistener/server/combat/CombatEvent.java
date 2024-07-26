@@ -7,11 +7,11 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
-public class CombatEvent extends AbstractServerPacketListener {
+public class CombatEvent extends BaseServerPacketListener {
 
     public CombatEvent() {
         super(PacketType.Play.Server.COMBAT_EVENT, ListenType.COMBAT_KILL);

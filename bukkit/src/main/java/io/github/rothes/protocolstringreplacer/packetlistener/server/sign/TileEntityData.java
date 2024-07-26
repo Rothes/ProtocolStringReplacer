@@ -7,7 +7,7 @@ import com.comphenix.protocol.utility.MinecraftReflection;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 
-public final class TileEntityData extends AbstractServerSignPacketListener {
+public final class TileEntityData extends BaseServerSignPacketListener {
 
     public TileEntityData() {
         super(PacketType.Play.Server.TILE_ENTITY_DATA);

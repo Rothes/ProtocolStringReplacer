@@ -13,10 +13,8 @@ import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.stream.Stream;
 
-public final class OpenWindow extends AbstractServerPacketListener {
+public final class OpenWindow extends BaseServerPacketListener {
 
     private Field windowTypeField = null;
     private Object anvilType = null;

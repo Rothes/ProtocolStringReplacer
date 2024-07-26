@@ -9,7 +9,7 @@ import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import java.util.Collection;
 import java.util.List;
 
-public final class MapChunk extends AbstractServerSignPacketListener {
+public final class MapChunk extends BaseServerSignPacketListener {
 
     public MapChunk() {
         super(PacketType.Play.Server.MAP_CHUNK);

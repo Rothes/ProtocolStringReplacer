@@ -7,11 +7,11 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerComponentsPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerComponentsPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
-public class ChatActionBar extends AbstractServerComponentsPacketListener {
+public class ChatActionBar extends BaseServerComponentsPacketListener {
 
     public ChatActionBar() {
         super(PacketType.Play.Server.CHAT, ListenType.ACTIONBAR);

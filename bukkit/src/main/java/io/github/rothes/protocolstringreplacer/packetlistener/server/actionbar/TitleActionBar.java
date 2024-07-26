@@ -3,10 +3,10 @@ package io.github.rothes.protocolstringreplacer.packetlistener.server.actionbar;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.title.AbstractTitleListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.title.BaseTitleListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 
-public class TitleActionBar extends AbstractTitleListener {
+public class TitleActionBar extends BaseTitleListener {
 
     public TitleActionBar() {
         super(PacketType.Play.Server.TITLE, ListenType.ACTIONBAR);

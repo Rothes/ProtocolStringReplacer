@@ -7,13 +7,13 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerComponentsPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerComponentsPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class SystemChat extends AbstractServerComponentsPacketListener {
+public class SystemChat extends BaseServerComponentsPacketListener {
 
     public SystemChat() {
         super(PacketType.Play.Server.SYSTEM_CHAT, ListenType.CHAT);

@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 
-public final class Title extends AbstractTitleListener {
+public final class Title extends BaseTitleListener {
 
     public Title() {
         super(PacketType.Play.Server.TITLE);

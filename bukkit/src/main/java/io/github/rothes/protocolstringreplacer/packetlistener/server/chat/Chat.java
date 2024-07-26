@@ -8,7 +8,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.nms.packetreader.ChatType;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerComponentsPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerComponentsPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.util.PaperUtils;
@@ -20,7 +20,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 
 import java.util.Optional;
 
-public final class Chat extends AbstractServerComponentsPacketListener {
+public final class Chat extends BaseServerComponentsPacketListener {
 
     public final PlayerChatHelper.Version version = PlayerChatHelper.version;
 

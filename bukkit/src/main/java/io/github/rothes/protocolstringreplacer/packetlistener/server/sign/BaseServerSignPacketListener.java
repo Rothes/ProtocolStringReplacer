@@ -10,7 +10,7 @@ import io.github.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;
 import io.github.rothes.protocolstringreplacer.api.exceptions.JsonSyntaxException;
 import io.github.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 import io.github.rothes.protocolstringreplacer.util.SpigotUtils;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager;
@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
-public abstract class AbstractServerSignPacketListener extends AbstractServerPacketListener {
+public abstract class BaseServerSignPacketListener extends BaseServerPacketListener {
 
-    protected AbstractServerSignPacketListener(PacketType packetType) {
+    protected BaseServerSignPacketListener(PacketType packetType) {
         super(packetType, ListenType.SIGN);
     }
 

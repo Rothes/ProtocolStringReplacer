@@ -12,12 +12,12 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public abstract class AbstractPacketListener {
+public abstract class BasePacketListener {
 
     protected final PacketType packetType;
     protected PacketAdapter packetAdapter;
 
-    protected AbstractPacketListener(@Nonnull PacketType packetType) {
+    protected BasePacketListener(@Nonnull PacketType packetType) {
         this.packetType = packetType;
     }
 

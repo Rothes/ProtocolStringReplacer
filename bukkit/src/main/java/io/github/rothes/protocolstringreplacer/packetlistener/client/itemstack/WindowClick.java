@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.inventory.ItemStack;
 
-public final class WindowClick extends AbstractClientItemPacketListener {
+public final class WindowClick extends BaseClientItemPacketListener {
 
     public WindowClick() {
         super(PacketType.Play.Client.WINDOW_CLICK);

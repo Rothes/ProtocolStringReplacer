@@ -3,10 +3,10 @@ package io.github.rothes.protocolstringreplacer.packetlistener.client;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.client.itemstack.AbstractClientItemPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.client.itemstack.BaseClientItemPacketListener;
 import io.github.rothes.protocolstringreplacer.util.scheduler.PsrScheduler;
 
-public class CloseWindow extends AbstractClientItemPacketListener {
+public class CloseWindow extends BaseClientItemPacketListener {
 
     public CloseWindow() {
         super(PacketType.Play.Client.CLOSE_WINDOW);

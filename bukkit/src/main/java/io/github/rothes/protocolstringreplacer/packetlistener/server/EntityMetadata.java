@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public final class EntityMetadata extends AbstractServerPacketListener {
+public final class EntityMetadata extends BaseServerPacketListener {
 
     public byte exceptionTimes = 0;
 

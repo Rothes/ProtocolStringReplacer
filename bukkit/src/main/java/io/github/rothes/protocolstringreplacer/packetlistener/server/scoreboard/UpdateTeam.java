@@ -4,7 +4,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 import org.jetbrains.annotations.NotNull;
 
 public final class UpdateTeam extends BaseUpdateTeamListener {
@@ -21,19 +21,19 @@ public final class UpdateTeam extends BaseUpdateTeamListener {
         if (read == null) {
             return;
         }
-        String replacedText = AbstractServerPacketListener.getReplacedText(packetEvent, user, listenType, read, teamDNameFilter);
+        String replacedText = BaseServerPacketListener.getReplacedText(packetEvent, user, listenType, read, teamDNameFilter);
         if (replacedText == null) {
             return;
         }
         strings.write(1, replacedText);
 
-        replacedText = AbstractServerPacketListener.getReplacedText(packetEvent, user, listenType, strings.read(2), teamPrefixFilter);
+        replacedText = BaseServerPacketListener.getReplacedText(packetEvent, user, listenType, strings.read(2), teamPrefixFilter);
         if (replacedText == null) {
             return;
         }
         strings.write(2, replacedText);
 
-        replacedText = AbstractServerPacketListener.getReplacedText(packetEvent, user, listenType, strings.read(3), teamSuffixFilter);
+        replacedText = BaseServerPacketListener.getReplacedText(packetEvent, user, listenType, strings.read(3), teamSuffixFilter);
         if (replacedText == null) {
             return;
         }

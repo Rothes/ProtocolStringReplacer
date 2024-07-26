@@ -9,7 +9,7 @@ import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
-public class KickDisconnect extends AbstractServerPacketListener {
+public class KickDisconnect extends BaseServerPacketListener {
 
     public KickDisconnect() {
         super(PacketType.Play.Server.KICK_DISCONNECT, ListenType.KICK_DISCONNECT);

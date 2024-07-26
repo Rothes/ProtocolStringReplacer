@@ -8,13 +8,13 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class TabComplete extends AbstractServerPacketListener {
+public class TabComplete extends BaseServerPacketListener {
 
     public TabComplete() {
         super(PacketType.Play.Server.TAB_COMPLETE, ListenType.TAB_COMPLETE);

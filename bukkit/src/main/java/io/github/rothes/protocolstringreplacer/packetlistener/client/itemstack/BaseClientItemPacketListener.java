@@ -3,16 +3,16 @@ package io.github.rothes.protocolstringreplacer.packetlistener.client.itemstack;
 import com.comphenix.protocol.PacketType;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
-import io.github.rothes.protocolstringreplacer.packetlistener.client.AbstractClientPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.client.BaseClientPacketListener;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 
-public abstract class AbstractClientItemPacketListener extends AbstractClientPacketListener {
+public abstract class BaseClientItemPacketListener extends BaseClientPacketListener {
 
-    protected AbstractClientItemPacketListener(PacketType packetType) {
+    protected BaseClientItemPacketListener(PacketType packetType) {
         super(packetType);
     }
 

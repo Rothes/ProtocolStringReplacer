@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-public class SettingsLocaleUpper20 extends AbstractClientPacketListener {
+public class SettingsLocaleUpper20 extends BaseClientPacketListener {
 
     private Field language;
 

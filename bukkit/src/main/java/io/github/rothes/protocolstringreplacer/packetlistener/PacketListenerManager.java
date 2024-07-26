@@ -73,7 +73,7 @@ public class PacketListenerManager {
     }
 
     public void addListeners() {
-        List<AbstractPacketListener> listeners = new ArrayList<>();
+        List<BasePacketListener> listeners = new ArrayList<>();
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
             listeners.add(new SetTitleText());
             listeners.add(new SetSubtitleText());
@@ -162,7 +162,7 @@ public class PacketListenerManager {
             listeners.add(new SettingsLocale());
         }
 
-        for (AbstractPacketListener listener : listeners) {
+        for (BasePacketListener listener : listeners) {
             try {
                 listener.register();
             } catch (Throwable throwable) {

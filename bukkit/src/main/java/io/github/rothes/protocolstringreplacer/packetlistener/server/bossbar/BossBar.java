@@ -5,10 +5,10 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 
-public final class BossBar extends AbstractServerPacketListener {
+public final class BossBar extends BaseServerPacketListener {
 
     public BossBar() {
         super(PacketType.Play.Server.BOSS, ListenType.BOSS_BAR);

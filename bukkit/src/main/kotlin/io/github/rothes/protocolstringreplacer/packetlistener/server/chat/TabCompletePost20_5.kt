@@ -7,12 +7,12 @@ import io.github.rothes.protocolstringreplacer.componentToJson
 import io.github.rothes.protocolstringreplacer.get
 import io.github.rothes.protocolstringreplacer.jsonToComponent
 import io.github.rothes.protocolstringreplacer.modifier
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener
 import io.github.rothes.protocolstringreplacer.replacer.ListenType
 import net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket
 import java.util.Optional
 
-class TabCompletePost20_5: AbstractServerPacketListener(PacketType.Play.Server.TAB_COMPLETE, ListenType.TAB_COMPLETE) {
+class TabCompletePost20_5: BaseServerPacketListener(PacketType.Play.Server.TAB_COMPLETE, ListenType.TAB_COMPLETE) {
 
     private val text = Accessors.getFieldAccessor(ClientboundCommandSuggestionsPacket.Entry::class.java.declaredFields.first { it.type == String::class.java })!!
     private val tooltip = Accessors.getFieldAccessor(ClientboundCommandSuggestionsPacket.Entry::class.java.declaredFields.first { it.type == Optional::class.java })!!

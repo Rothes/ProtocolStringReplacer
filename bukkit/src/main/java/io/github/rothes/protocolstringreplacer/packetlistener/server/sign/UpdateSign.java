@@ -6,9 +6,9 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerPacketListener;
 
-public class UpdateSign extends AbstractServerSignPacketListener {
+public class UpdateSign extends BaseServerSignPacketListener {
 
     public UpdateSign() {
         super(PacketType.Play.Server.UPDATE_SIGN);
@@ -22,7 +22,7 @@ public class UpdateSign extends AbstractServerSignPacketListener {
         PacketContainer packet = packetEvent.getPacket();
         Object[] read = (Object[]) packet.getModifier().read(2);
         for (int i = 0; i < read.length; i++) {
-            String replaced = AbstractServerPacketListener.getReplacedJson(packetEvent, user, listenType,
+            String replaced = BaseServerPacketListener.getReplacedJson(packetEvent, user, listenType,
                     BukkitConverters.getWrappedChatComponentConverter().getSpecific(read[i]).getJson(), filter);
             if (replaced != null) {
                 read[i] = BukkitConverters.getWrappedChatComponentConverter().getGeneric(

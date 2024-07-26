@@ -13,7 +13,7 @@ import io.github.rothes.protocolstringreplacer.get
 import io.github.rothes.protocolstringreplacer.set
 import org.bukkit.inventory.MerchantRecipe
 
-class MerchantTradeList : AbstractServerItemPacketListener(PacketType.Play.Server.OPEN_WINDOW_MERCHANT) {
+class MerchantTradeList : BaseServerItemPacketListener(PacketType.Play.Server.OPEN_WINDOW_MERCHANT) {
 
     override fun process(packetEvent: PacketEvent) {
         val user = getEventUser(packetEvent) ?: return

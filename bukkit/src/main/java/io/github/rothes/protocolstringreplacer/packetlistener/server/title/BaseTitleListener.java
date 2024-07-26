@@ -5,17 +5,17 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import io.github.rothes.protocolstringreplacer.packetlistener.server.AbstractServerComponentsPacketListener;
+import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerComponentsPacketListener;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 
-public abstract class AbstractTitleListener extends AbstractServerComponentsPacketListener {
+public abstract class BaseTitleListener extends BaseServerComponentsPacketListener {
 
-    protected AbstractTitleListener(PacketType packetType) {
+    protected BaseTitleListener(PacketType packetType) {
         this(packetType, ListenType.TITLE);
     }
 
-    protected AbstractTitleListener(PacketType packetType, ListenType listenType) {
+    protected BaseTitleListener(PacketType packetType, ListenType listenType) {
         super(packetType, listenType);
     }
 

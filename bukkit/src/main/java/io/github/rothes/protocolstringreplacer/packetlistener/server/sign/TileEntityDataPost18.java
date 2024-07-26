@@ -8,7 +8,7 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.jetbrains.annotations.NotNull;
 
-public class TileEntityDataPost18 extends AbstractServerSignPacketListener {
+public class TileEntityDataPost18 extends BaseServerSignPacketListener {
 
     public TileEntityDataPost18() {
         super(PacketType.Play.Server.TILE_ENTITY_DATA);
