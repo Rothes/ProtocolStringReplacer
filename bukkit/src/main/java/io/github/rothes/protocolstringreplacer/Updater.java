@@ -117,7 +117,7 @@ public class Updater implements Listener {
 
     private String getJson(String domain, int tryTime) {
         try (
-                InputStream stream = new URL("https://" + domain + "/Rothes/ProtocolStringReplacer/master/Version%20Infos.json")
+                InputStream stream = new URL("https://" + domain + "/Rothes/ProtocolStringReplacer/master/Version_Info.json")
                         .openStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
         ){

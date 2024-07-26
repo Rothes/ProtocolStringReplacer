@@ -1,0 +1,33 @@
+{
+  "Version_Channels": {
+    "Stable": {
+      "Latest_Version_Number": 118,
+      "Log_Level": "Info",
+      "Actions": [],
+      "Message": {
+        "en-US": "§bA new version of PSR (\"2.19.4\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/"
+      }
+    }
+  },
+  "Version_Actions": {
+    "0-999": {
+      "Log_Level": "Info",
+      "Actions": [],
+      "Message_Times": 1,
+      "Notify_In_Game": false,
+      "Message": {
+        "en-US": "§bEnjoy PSR? Join our Discord: https://discord.gg/zwzzkmYCBb",
+        "zh-CN": "§b喜欢PSR吗? 欢迎加入我们的 QQ群: 422532220 !"
+      }
+    },
+    "0-45": {
+      "Log_Level": "Error",
+      "Actions": ["Prohibit"],
+      "Message_Times": 1,
+      "Message": {
+        "en-US": "§cThe version of PSR you are running has been prohibited by the server. This is usually due to a serious problem. Please update the plugin.",
+        "zh-CN": "§c您使用的版本已被远程服务器禁止. 这通常是因为该版本存在重大问题. 请更新插件."
+      }
+    }
+  }
+}
