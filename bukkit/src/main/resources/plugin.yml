@@ -12,6 +12,9 @@ commands:
     aliases: [psr]
     description: ProtocolStringReplacer commands.
 permissions:
+  protocolstringreplacer.command.capture:
+    description: allow you to capture the packet contents.
+    default: op
   protocolstringreplacer.command.edit:
     description: allow you to edit the replacer configs.
     default: op
