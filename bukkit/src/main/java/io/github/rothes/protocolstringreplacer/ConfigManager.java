@@ -35,6 +35,7 @@ public class ConfigManager {
     public final boolean directSkips;
 
     public final String gitRawHost;
+    public final boolean resetConsoleColor;
 
     public ConfigManager(ProtocolStringReplacer instance) {
         CommentYamlConfiguration config = instance.getConfig();
@@ -106,6 +107,7 @@ public class ConfigManager {
         this.removeCacheWhenMerchantTrade = config.getBoolean("Options.Features.ItemMetaCache.Remove-Cache-When-Merchant-Trade", false);
 
         directSkips = config.getBoolean("Options.Features.Replace-Mode.Skip-When-Direct-Replaced", true);
+        resetConsoleColor = config.getBoolean("Options.Features.Console.Reset-Console-Color-At-End", true);
     }
 
     public enum LifeCycle {

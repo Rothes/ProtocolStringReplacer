@@ -28,6 +28,9 @@ Options:
     Console:
       # Show loaded replacer configs in console.
       Print-Replacer-Config-When-Loaded: true
+      # Reset console color after a record is ended.
+      # You may enable this if you modify console color.
+      Reset-Console-Color-At-End: true
 
     # Custom plugin placeholder format. It is recommended to use the format that players can't think of,
     # so they cannot access some information that they should not be obtained.

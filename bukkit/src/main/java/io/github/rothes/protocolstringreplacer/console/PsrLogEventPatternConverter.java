@@ -1,5 +1,6 @@
 package io.github.rothes.protocolstringreplacer.console;
 
+import io.github.rothes.protocolstringreplacer.ConfigManager;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.api.replacer.ReplacerConfig;
 import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager;
@@ -61,6 +62,11 @@ public class PsrLogEventPatternConverter extends LogEventPatternConverter {
                 } else if (c == '') {
                     toAppendTo.delete(i, m + 1);
                 }
+            }
+        } else {
+            ConfigManager configManager = plugin.getConfigManager();
+            if (configManager.resetConsoleColor) {
+                toAppendTo.append("\u001b[0m");
             }
         }
     }
