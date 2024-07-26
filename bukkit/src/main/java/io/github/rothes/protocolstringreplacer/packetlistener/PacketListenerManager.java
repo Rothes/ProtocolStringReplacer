@@ -73,100 +73,101 @@ public class PacketListenerManager {
     }
 
     public void addListeners() {
-        List<BasePacketListener> listeners = new ArrayList<>();
+        List<Class<? extends BasePacketListener>> listeners = new ArrayList<>();
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            listeners.add(new SetTitleText());
-            listeners.add(new SetSubtitleText());
-            listeners.add(new SetActionBar());
+            listeners.add(SetTitleText.class);
+            listeners.add(SetSubtitleText.class);
+            listeners.add(SetActionBar.class);
 
-            listeners.add(new PlayerCombatKill());
+            listeners.add(PlayerCombatKill.class);
         } else {
-            listeners.add(new Title());
-            listeners.add(new TitleActionBar());
+            listeners.add(Title.class);
+            listeners.add(TitleActionBar.class);
 
-            listeners.add(new CombatEvent());
+            listeners.add(CombatEvent.class);
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 11) {
-            listeners.add(new WindowItemsPost11());
+            listeners.add(WindowItemsPost11.class);
         } else {
-            listeners.add(new WindowItems());
+            listeners.add(WindowItems.class);
         }
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 14) {
-            listeners.add(new MerchantTradeList());
+            listeners.add(MerchantTradeList.class);
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 18) {
-            listeners.add(new MapChunkPost18());
-            listeners.add(new TileEntityDataPost18());
+            listeners.add(MapChunkPost18.class);
+            listeners.add(TileEntityDataPost18.class);
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 10) {
-            listeners.add(new MapChunk());
-            listeners.add(new TileEntityData());
+            listeners.add(MapChunk.class);
+            listeners.add(TileEntityData.class);
         } else {
-            listeners.add(new UpdateSign());
+            listeners.add(UpdateSign.class);
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            listeners.add(new BossBarPost17());
+            listeners.add(BossBarPost17.class);
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 9) {
-            listeners.add(new BossBar());
+            listeners.add(BossBar.class);
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 19) {
-            listeners.add(new SystemChat());
-            listeners.add(new SystemChatActionBar());
+            listeners.add(SystemChat.class);
+            listeners.add(SystemChatActionBar.class);
             if (ProtocolStringReplacer.getInstance().getServerMajorVersion() != 19 || ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 3) {
                 if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 21) {
-                    listeners.add(new DisguisedChatPost21());
+                    listeners.add(DisguisedChatPost21.class);
                 } else {
-                    listeners.add(new DisguisedChat());
+                    listeners.add(DisguisedChat.class);
                 }
             }
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() == 19 && ProtocolStringReplacer.getInstance().getServerMinorVersion() <= 2) {
-            listeners.add(new ChatPreview());
+            listeners.add(ChatPreview.class);
         }
 
         if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 17) {
-            listeners.add(new UpdateTeamPost17());
+            listeners.add(UpdateTeamPost17.class);
         } else if (ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 13) {
-            listeners.add(new UpdateTeamPost13());
+            listeners.add(UpdateTeamPost13.class);
         } else {
-            listeners.add(new UpdateTeam());
+            listeners.add(UpdateTeam.class);
         }
-        listeners.add(new UpdateScore());
-        listeners.add(new ScoreBoardObjective());
+        listeners.add(UpdateScore.class);
+        listeners.add(ScoreBoardObjective.class);
 
-        listeners.add(new KickDisconnect());
+        listeners.add(KickDisconnect.class);
         if ((ProtocolStringReplacer.getInstance().getServerMajorVersion() == 20 && ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 5)
                 || ProtocolStringReplacer.getInstance().getServerMajorVersion() > 20) {
-            listeners.add(new TabCompletePost20_5());
+            listeners.add(TabCompletePost20_5.class);
         } else {
-            listeners.add(new TabComplete());
+            listeners.add(TabComplete.class);
         }
-        listeners.add(new Chat());
-        listeners.add(new ChatActionBar());
-        listeners.add(new SetSlot());
-        listeners.add(new OpenWindow());
-        listeners.add(new EntityMetadata());
+        listeners.add(Chat.class);
+        listeners.add(ChatActionBar.class);
+        listeners.add(SetSlot.class);
+        listeners.add(OpenWindow.class);
+        listeners.add(EntityMetadata.class);
 
 
-        listeners.add(new WindowClick());
-        listeners.add(new SetCreativeSlot());
-        listeners.add(new CloseWindow());
+        listeners.add(WindowClick.class);
+        listeners.add(SetCreativeSlot.class);
+        listeners.add(CloseWindow.class);
         if ((ProtocolStringReplacer.getInstance().getServerMajorVersion() == 20 && ProtocolStringReplacer.getInstance().getServerMinorVersion() >= 2)
                 || ProtocolStringReplacer.getInstance().getServerMajorVersion() > 20) {
-            listeners.add(new SettingsLocaleUpper20());
+            listeners.add(SettingsLocaleUpper20.class);
         } else {
-            listeners.add(new SettingsLocale());
+            listeners.add(SettingsLocale.class);
         }
 
-        for (BasePacketListener listener : listeners) {
+        for (Class<? extends BasePacketListener> listener : listeners) {
             try {
-                listener.register();
+                BasePacketListener packetListener = listener.getConstructor().newInstance();
+                packetListener.register();
             } catch (Throwable throwable) {
-                ProtocolStringReplacer.error("Unable to register listener " + listener.getClass().getSimpleName() + ":", throwable);
+                ProtocolStringReplacer.error("Unable to register listener " + listener.getSimpleName() + ":", throwable);
             }
         }
 
