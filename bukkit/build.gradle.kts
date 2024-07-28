@@ -47,7 +47,7 @@ tasks {
                 "versionChannel" to project.property("versionChannel"),
                 "versionId" to project.property("versionId"),
             ))
-        outputs.cacheIf { false } // Disable cache as it breaks replacements
+        outputs.doNotCacheIf("MakeReplacementsWork") { true }
     }
 }
 
