@@ -44,18 +44,21 @@ public class PlayerChatHelper {
         byte serverMinorVersion = ProtocolStringReplacer.getInstance().getServerMinorVersion();
         if (serverMajorVersion <= 18) {
             version = Version.V8_0_TO_V18_2;
-        } else if (serverMajorVersion == 19){
-            if (serverMinorVersion == 0) {
-                version = Version.V19_0;
-            } else if (serverMinorVersion <= 2) {
-                version = Version.V19_1_TO_V19_2;
-            } else if (serverMinorVersion == 3) {
-                version = Version.V19_3;
+        } else {
+            if (serverMajorVersion == 19) {
+                if (serverMinorVersion == 0) {
+                    version = Version.V19_0;
+                } else if (serverMinorVersion <= 2) {
+                    version = Version.V19_1_TO_V19_2;
+                } else if (serverMinorVersion == 3) {
+                    version = Version.V19_3;
+                } else {
+                    version = Version.V19_4;
+                }
             } else {
                 version = Version.V19_4;
             }
-        } else {
-            version = Version.V19_4;
+            NmsManager.INSTANCE.getPacketReader();
         }
 
         if (version != Version.V8_0_TO_V18_2) {
