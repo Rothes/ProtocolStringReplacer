@@ -2,7 +2,9 @@ package io.github.rothes.protocolstringreplacer.replacer.containers
 
 import de.tr7zw.changeme.nbtapi.NBT
 import de.tr7zw.changeme.nbtapi.NBTContainer
+import de.tr7zw.changeme.nbtapi.NBTType
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTCompoundList
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer
 import io.github.rothes.protocolstringreplacer.plugin
@@ -105,21 +107,9 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         if (display != null) {
             if (display.hasTag(NAME_KEY)) {
                 if (NAME_JSON) {
-                    children.add(object : ChatJsonContainer(display.getString(NAME_KEY), root, true) {
-                        override fun getResult(): String {
-                            val result = super.getResult()
-                            display.setString(NAME_KEY, result)
-                            return result
-                        }
-                    })
+                    children.add(CompoundJsonContainer(display, NAME_KEY, root, true))
                 } else {
-                    children.add(object : SimpleTextContainer(display.getString(NAME_KEY), root) {
-                        override fun getResult(): String {
-                            val result = super.getResult()
-                            display.setString(NAME_KEY, result)
-                            return result
-                        }
-                    })
+                    children.add(CompoundTextContainer(display, NAME_KEY, root))
                 }
             }
             if (display.hasTag(LORE_KEY)) {
@@ -133,29 +123,43 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
 
         val type = content.type
         if (type == WRITABLE_BOOK || type == Material.WRITTEN_BOOK) {
-            if (nbt.hasTag("author")) {
-                children.add(object : SimpleTextContainer(nbt.getString("author"), root) {
-                    override fun getResult(): String {
-                        val result = super.getResult()
-                        nbt.setString("author", result)
-                        return result
-                    }
-                })
-            }
-            if (nbt.hasTag("title")) {
-                children.add(object : SimpleTextContainer(nbt.getString("title"), root) {
-                    override fun getResult(): String {
-                        val result = super.getResult()
-                        nbt.setString("title", result)
-                        return result
-                    }
-                })
-            }
-            if (nbt.hasTag("pages")) {
-                if (type == Material.WRITTEN_BOOK) {
-                    addJsonList(nbt.getStringList("pages"))
+            val compound = if (NEW_NBT) {
+                nbt.getCompound("components")?.getCompound("minecraft:${type.name.lowercase()}_content")
+            } else {
+                nbt.getCompound("tag")
+            } ?: return
+
+            if (compound.hasTag("author")) {
+                if (NEW_NBT && compound.getType("author") == NBTType.NBTTagCompound) {
+                    val author = compound.getCompound("author")!!
+                    addTextTag(author, "raw")
+                    addTextTag(author, "filtered")
                 } else {
-                    addTextList(nbt.getStringList("pages"))
+                    children.add(CompoundTextContainer(compound, "author", root))
+                }
+            }
+            if (compound.hasTag("title")) {
+                if (NEW_NBT && compound.getType("title") == NBTType.NBTTagCompound) {
+                    val author = compound.getCompound("title")!!
+                    addTextTag(author, "raw")
+                    addTextTag(author, "filtered")
+                } else {
+                    children.add(CompoundTextContainer(compound, "title", root))
+                }
+            }
+            if (compound.hasTag("pages")) {
+                if (type == Material.WRITTEN_BOOK) {
+                    if (NEW_NBT && compound.getListType("pages") == NBTType.NBTTagCompound) {
+                        addJsonList(compound.getCompoundList("pages"))
+                    } else {
+                        addJsonList(compound.getStringList("pages"))
+                    }
+                } else {
+                    if (NEW_NBT && compound.getListType("pages") == NBTType.NBTTagCompound) {
+                        addTextList(compound.getCompoundList("pages"))
+                    } else {
+                        addTextList(compound.getStringList("pages"))
+                    }
                 }
             }
         }
@@ -163,6 +167,36 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
 
     fun createDefaultChildrenDeep() {
         super.createDefaultChildren()
+    }
+
+    private fun addTextTag(compound: ReadWriteNBT, tag: String) {
+        if (compound.hasTag(tag)) {
+            children.add(CompoundTextContainer(compound, tag, root))
+        }
+    }
+
+    private fun addJsonTag(compound: ReadWriteNBT, tag: String) {
+        if (compound.hasTag(tag)) {
+            children.add(CompoundJsonContainer(compound, tag, root, true))
+        }
+    }
+
+    private fun addJsonList(list: ReadWriteNBTCompoundList) {
+        val size = list.size()
+        for (line in 0 until size) {
+            val compound = list[line]
+            addJsonTag(compound, "raw")
+            addJsonTag(compound, "filtered")
+        }
+    }
+
+    private fun addTextList(list: ReadWriteNBTCompoundList) {
+        val size = list.size()
+        for (line in 0 until size) {
+            val compound = list[line]
+            addTextTag(compound, "raw")
+            addTextTag(compound, "filtered")
+        }
     }
 
     private fun addJsonList(list: ReadWriteNBTList<String>) {
@@ -233,6 +267,39 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
             nbt = nbt.getOrCreateCompound(key)
         }
         return nbt
+    }
+
+    class CompoundJsonContainer(
+        private val compound: ReadWriteNBT,
+        private val key: String,
+        root: Container<*>,
+        createComponents: Boolean,
+        private val original: String = compound.getString(key)
+    ): ChatJsonContainer(original, root, createComponents) {
+
+        override fun getResult(): String {
+            val result = super.getResult()
+            if (result != original) {
+                compound.setString(key, result)
+            }
+            return result
+        }
+    }
+
+    class CompoundTextContainer(
+        private val compound: ReadWriteNBT,
+        private val key: String,
+        root: Container<*>,
+        private val original: String = compound.getString(key)
+    ): SimpleTextContainer(original, root) {
+
+        override fun getResult(): String {
+            val result = super.getResult()
+            if (result != original) {
+                compound.setString(key, result)
+            }
+            return result
+        }
     }
 
     companion object {
