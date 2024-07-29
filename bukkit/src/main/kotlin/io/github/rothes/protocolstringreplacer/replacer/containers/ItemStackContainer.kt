@@ -8,7 +8,7 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTCompoundList
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer
 import io.github.rothes.protocolstringreplacer.plugin
-import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager.ItemMetaCache
+import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager.HandledItemCache
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
@@ -17,7 +17,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     AbstractContainer<ItemStack>(itemStack, root) {
 
     val isFromCache: Boolean
-    lateinit var metaCache: ItemMetaCache
+    lateinit var metaCache: HandledItemCache
         private set
     private var nbt: ReadWriteNBT
     private val original: ItemMeta = content.itemMeta
@@ -26,7 +26,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         if (useCache) {
             val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
 
-            val getCache = replacerManager.getReplacedItemCache(original, itemType)
+            val getCache = replacerManager.getReplacedItemCache(content)
             if (getCache != null) {
                 metaCache = getCache
                 isFromCache = true
@@ -34,7 +34,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
             } else {
                 isFromCache = false
                 nbt = NBT.itemStackToNBT(content)
-                metaCache = replacerManager.addReplacedItemCache(original, nbt, itemType, false, IntArray(0))
+                metaCache = replacerManager.addReplacedItemCache(content, nbt, false, IntArray(0))
             }
         } else {
             isFromCache = false

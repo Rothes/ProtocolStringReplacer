@@ -13,8 +13,7 @@ import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.replacer.containers.Container;
 import io.github.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.neosearch.stringsearcher.Emit;
 
@@ -23,13 +22,12 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -40,17 +38,17 @@ public class ReplacerManager {
     private char papiHead;
     private char papiTail;
     private final List<ReplacerConfig> replacerConfigList = new ArrayList<>();
-    private final EnumMap<Material, HashMap<ItemMeta, ItemMetaCache>> replacedItemCache = new EnumMap<>(Material.class);
+    private final ConcurrentHashMap<ItemStack, HandledItemCache> cacheTable = new ConcurrentHashMap<>();
     private PsrTask cleanTask;
 
-    public static class ItemMetaCache {
+    public static class HandledItemCache {
 
         private final ReadWriteNBT nbtItem;
         private long lastAccessTime;
         private boolean blocked;
         private int[] placeholderIndexes;
 
-        public ItemMetaCache(ReadWriteNBT nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
+        public HandledItemCache(ReadWriteNBT nbtItem, long lastAccessTime, boolean blocked, int[] placeholderIndexes) {
             this.nbtItem = nbtItem;
             this.lastAccessTime = lastAccessTime;
             this.blocked = blocked;
@@ -123,18 +121,15 @@ public class ReplacerManager {
             long currentTime = System.currentTimeMillis();
             int purged = 0;
 
-            List<ItemMeta> needToRemove = new ArrayList<>();
-            for (Map.Entry<Material, HashMap<ItemMeta, ItemMetaCache>> outEntry : replacedItemCache.entrySet()) {
+            List<ItemStack> needToRemove = new ArrayList<>();
+            for (Map.Entry<ItemStack, HandledItemCache> entry : cacheTable.entrySet()) {
                 needToRemove.clear();
-                HashMap<ItemMeta, ItemMetaCache> map = outEntry.getValue();
-                for (Map.Entry<ItemMeta, ItemMetaCache> entry : map.entrySet()) {
-                    if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
-                        needToRemove.add(entry.getKey());
-                    }
+                if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
+                    needToRemove.add(entry.getKey());
                 }
                 if (!needToRemove.isEmpty()) {
-                    for (ItemMeta itemMeta : needToRemove) {
-                        map.remove(itemMeta);
+                    for (ItemStack itemStack : needToRemove) {
+                        cacheTable.remove(itemStack);
                         purged++;
                     }
                 }
@@ -206,18 +201,16 @@ public class ReplacerManager {
     }
 
     @Nullable
-    public ItemMetaCache getReplacedItemCache(ItemMeta itemMeta, Material material) {
-        HashMap<ItemMeta, ItemMetaCache> map = replacedItemCache.get(material);
-        return map == null ? null : map.get(itemMeta);
+    public HandledItemCache getReplacedItemCache(ItemStack original) {
+        return cacheTable.get(original);
     }
 
-    public ItemMetaCache addReplacedItemCache(ItemMeta original, @NotNull ReadWriteNBT nbtItem,
-                                              @NotNull Material type, boolean blocked, int[] papiIndexes) {
+    public HandledItemCache addReplacedItemCache(ItemStack original, @NotNull ReadWriteNBT nbtItem, boolean blocked, int[] papiIndexes) {
         Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
-        ItemMetaCache itemMetaCache = new ItemMetaCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
-        replacedItemCache.computeIfAbsent(type, key -> new HashMap<>()).put(original, itemMetaCache);
-        return itemMetaCache;
+        HandledItemCache handledItemCache = new HandledItemCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);
+        cacheTable.put(original, handledItemCache);
+        return handledItemCache;
     }
 
     public List<ReplacerConfig> getAcceptedReplacers(@Nonnull PsrUser user, @Nonnull BiPredicate<ReplacerConfig, PsrUser> filter) {
