@@ -67,7 +67,7 @@ public class PsrLogEventPatternConverter extends LogEventPatternConverter {
             ConfigManager configManager = plugin.getConfigManager();
             if (configManager != null && configManager.resetConsoleColor) {
                 for (int i = toAppendTo.length() - 1; i >= 0; i--) {
-                    if (toAppendTo.charAt(i) == '\n') {
+                    if (toAppendTo.charAt(i) == '\r') {
                         toAppendTo.insert(i, "\u001b[0m");
                     }
                 }
