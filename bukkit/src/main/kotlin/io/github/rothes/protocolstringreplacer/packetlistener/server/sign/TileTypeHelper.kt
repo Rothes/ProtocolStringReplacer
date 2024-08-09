@@ -9,7 +9,8 @@ object TileTypeHelper {
     private val hangingSignType: Any
 
     init {
-        if (ProtocolStringReplacer.getInstance().serverMajorVersion < 20) {
+        if (ProtocolStringReplacer.getInstance().serverMajorVersion < 19
+            || (ProtocolStringReplacer.getInstance().serverMajorVersion.toInt() == 19 && ProtocolStringReplacer.getInstance().serverMinorVersion <= 2)) {
             signType = Class.forName("net.minecraft.world.level.block.entity.TileEntityTypes").getField("h")[null]
             hangingSignType = Any()
         } else {

@@ -102,11 +102,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         String[] split = Bukkit.getServer().getBukkitVersion().split("-")[0].split("\\.");
         serverMajorVersion = Byte.parseByte(split[1]);
         serverMinorVersion = split.length > 2 ? Byte.parseByte(split[2]) : 0;
-        if (serverMinorVersion != 0) {
-            NmsManager.INSTANCE.setMinecraftVersion("1." + serverMajorVersion + "." + serverMinorVersion);
-        } else {
-            NmsManager.INSTANCE.setMinecraftVersion("1." + serverMajorVersion);
-        }
+        NmsManager.INSTANCE.setVersion(serverMajorVersion, serverMinorVersion);
 
         // Start Console Replacer first to remove the Ansi in log files.
         consoleReplaceManager = new ConsoleReplaceManager(this);

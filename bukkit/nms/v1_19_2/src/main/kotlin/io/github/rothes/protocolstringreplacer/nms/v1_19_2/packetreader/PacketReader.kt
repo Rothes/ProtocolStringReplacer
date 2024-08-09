@@ -1,18 +1,17 @@
-package io.github.rothes.protocolstringreplacer.nms.generic.packetreader
+package io.github.rothes.protocolstringreplacer.nms.v1_19_2.packetreader
 
 import io.github.rothes.protocolstringreplacer.nms.packetreader.ChatType
 import io.github.rothes.protocolstringreplacer.nms.packetreader.IPacketReader
 import net.minecraft.core.MappedRegistry
-import net.minecraft.core.registries.Registries
-import net.minecraft.network.protocol.game.ClientboundDisguisedChatPacket
+import net.minecraft.core.Registry
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket
 import net.minecraft.server.MinecraftServer
 
 class PacketReader: IPacketReader {
 
     private val chatTypes = with(
-        MinecraftServer.getServer().registryAccess().registryOrThrow(Registries.CHAT_TYPE) as MappedRegistry)
-    {
+        MinecraftServer.getServer().registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY) as MappedRegistry
+    ) {
         registryKeySet()
             .sortedBy {
                 getId(this.get(it))

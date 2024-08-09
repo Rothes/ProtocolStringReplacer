@@ -9,25 +9,47 @@ object NmsManager {
 
     private const val PACKAGE_PREFIX = "io.github.rothes.protocolstringreplacer.nms"
 
-    lateinit var minecraftVersion: String
+    private lateinit var minecraftVersion: String
 
-    val packetReader by lazy { IPacketReader::class.java.instance }
-    val disguisedPacketHandler by lazy { IDisguisedPacketHandler::class.java.instance }
-    val menuTypeGetter by lazy { IMenuTypeGetter::class.java.instance }
-    val blockEntityTypeGetter by lazy { IBlockEntityTypeGetter::class.java.instance }
+    fun setVersion(major: Int, minor: Int) {
+        var m = minor
+        while (m < 10) {
+            setVersionProp(major, m)
+            try {
+                create<IPacketReader>()
+                return
+            } catch (ignored: ClassNotFoundException) {
+                m++
+            }
+        }
+        setVersionProp(major, minor)
+    }
+
+    private fun setVersionProp(major: Int, minor: Int) {
+        minecraftVersion = if (minor == 0) "v1_$major" else "v1_${major}_$minor"
+    }
+
+    val packetReader by lazy { create<IPacketReader>() }
+    val disguisedPacketHandler by lazy { create<IDisguisedPacketHandler>() }
+    val menuTypeGetter by lazy { create<IMenuTypeGetter>() }
+    val blockEntityTypeGetter by lazy { create<IBlockEntityTypeGetter>() }
+
+    private inline fun <reified T> create(): T {
+        return T::class.java.instance
+    }
 
     @Suppress("UNCHECKED_CAST")
     private val <T> Class<T>.versioned: Class<out T>
         get() = Class.forName(buildString {
             append(PACKAGE_PREFIX)
-            append(".v")
-            append(minecraftVersion.replace('.', '_'))
+            append(".")
+            append(minecraftVersion)
             append(this@versioned.`package`.name.substring(PACKAGE_PREFIX.length))
             append('.')
             append(this@versioned.simpleName.substring(1))
         }) as Class<out T>
 
-    @Suppress("UNCHECKED_CAST")
     private val <T> Class<T>.instance: T
         get() = this.versioned.getConstructor().newInstance() as T
+
 }
