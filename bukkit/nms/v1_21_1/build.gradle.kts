@@ -1,4 +1,4 @@
-val serverVer = "1.21"
+val serverVer = "1.21.1"
 
 dependencies {
     paperweight.paperDevBundle("$serverVer-R0.1-SNAPSHOT")
