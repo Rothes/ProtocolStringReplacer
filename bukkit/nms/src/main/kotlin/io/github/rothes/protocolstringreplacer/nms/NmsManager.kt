@@ -4,12 +4,14 @@ import io.github.rothes.protocolstringreplacer.nms.packetreader.IBlockEntityType
 import io.github.rothes.protocolstringreplacer.nms.packetreader.IDisguisedPacketHandler
 import io.github.rothes.protocolstringreplacer.nms.packetreader.IMenuTypeGetter
 import io.github.rothes.protocolstringreplacer.nms.packetreader.IPacketReader
+import java.util.function.Consumer
 
 object NmsManager {
 
     private const val PACKAGE_PREFIX = "io.github.rothes.protocolstringreplacer.nms"
 
     private lateinit var minecraftVersion: String
+    lateinit var warningFunction: Consumer<String>
 
     fun setVersion(major: Int, minor: Int) {
         var m = minor
@@ -20,6 +22,20 @@ object NmsManager {
                 return
             } catch (ignored: ClassNotFoundException) {
                 m++
+            }
+        }
+        // On older versions we are not using NMS.
+        if (major >= 19) {
+            warningFunction.accept("Minecraft version 1.$major.$minor is not supported by the plugin version you are running on.")
+            m = minor
+            while (--m >= 0) {
+                setVersionProp(major, m)
+                try {
+                    create<IPacketReader>()
+                    warningFunction.accept("Fallback to 1.$major.$m support and luckily it could be compatible.")
+                    return
+                } catch (ignored: ClassNotFoundException) {
+                }
             }
         }
         setVersionProp(major, minor)

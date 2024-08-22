@@ -18,6 +18,8 @@ import io.github.rothes.protocolstringreplacer.util.scheduler.PsrScheduler;
 import io.github.rothes.protocolstringreplacer.upgrade.AbstractUpgradeHandler;
 import io.github.rothes.protocolstringreplacer.upgrade.UpgradeEnum;
 import io.github.rothes.protocolstringreplacer.util.FileUtils;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -102,6 +104,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         String[] split = Bukkit.getServer().getBukkitVersion().split("-")[0].split("\\.");
         serverMajorVersion = Byte.parseByte(split[1]);
         serverMinorVersion = split.length > 2 ? Byte.parseByte(split[2]) : 0;
+        NmsManager.INSTANCE.setWarningFunction(ProtocolStringReplacer::warn);
         NmsManager.INSTANCE.setVersion(serverMajorVersion, serverMinorVersion);
 
         // Start Console Replacer first to remove the Ansi in log files.
