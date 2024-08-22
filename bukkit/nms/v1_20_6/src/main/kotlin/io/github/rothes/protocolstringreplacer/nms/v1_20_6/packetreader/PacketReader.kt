@@ -1,4 +1,4 @@
-package io.github.rothes.protocolstringreplacer.nms.generic.packetreader
+package io.github.rothes.protocolstringreplacer.nms.v1_20_6.packetreader
 
 import io.github.rothes.protocolstringreplacer.nms.packetreader.ChatType
 import io.github.rothes.protocolstringreplacer.nms.packetreader.IPacketReader

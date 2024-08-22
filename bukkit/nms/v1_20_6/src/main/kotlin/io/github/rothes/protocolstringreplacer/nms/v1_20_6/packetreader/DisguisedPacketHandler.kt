@@ -1,4 +1,4 @@
-package io.github.rothes.protocolstringreplacer.nms.generic.packetreader
+package io.github.rothes.protocolstringreplacer.nms.v1_20_6.packetreader
 
 import net.minecraft.network.chat.ChatType
 import net.minecraft.network.chat.Component
