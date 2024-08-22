@@ -2,7 +2,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/10b4b7cb53d34e8289d708fa3a5e3caf)](https://app.codacy.com/gh/Rothes/ProtocolStringReplacer?utm_source=github.com&utm_medium=referral&utm_content=Rothes/ProtocolStringReplacer&utm_campaign=Badge_Grade_Settings)
 
-A Spigot plugin for Minecraft 1.8 - 1.21 that gives you the ability to edit the strings/components in packet sends to players.
+A Spigot plugin for Minecraft 1.8 - 1.21.1 that gives you the ability to edit the strings/components in packet sends to players.
 
 Please visit [SpigotMC](#links) or [MCBBS](#links) for a detailed description. 
 

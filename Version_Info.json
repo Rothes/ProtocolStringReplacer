@@ -1,11 +1,11 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 122,
+      "Latest_Version_Number": 123,
       "Log_Level": "Info",
       "Actions": [],
       "Message": {
-        "en-US": "§bA new version of PSR (\"3.0.2\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/"
+        "en-US": "§bA new version of PSR (\"3.0.3\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/"
       }
     }
   },
