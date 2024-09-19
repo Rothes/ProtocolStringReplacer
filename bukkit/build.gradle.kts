@@ -17,7 +17,7 @@ dependencies {
     implementation("de.tr7zw:item-nbt-api:2.13.2")
     implementation("org.bstats:bstats-bukkit:3.0.2")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.4")
+    compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("org.apache.logging.log4j:log4j-api:2.23.1")
     compileOnly("org.apache.logging.log4j:log4j-core:2.23.1")
     compileOnly("org.jline:jline-reader:3.26.2")
