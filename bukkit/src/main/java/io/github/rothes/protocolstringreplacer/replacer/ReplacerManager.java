@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -37,7 +38,7 @@ public class ReplacerManager {
     private char papiHead;
     private char papiTail;
     private final List<ReplacerConfig> replacerConfigList = new ArrayList<>();
-    private final HashMap<ItemStack, HandledItemCache> cacheTable = new HashMap<>();
+    private final ConcurrentHashMap<ItemStack, HandledItemCache> cacheTable = new ConcurrentHashMap<>();
     private PsrTask cleanTask;
 
     public static class HandledItemCache {
