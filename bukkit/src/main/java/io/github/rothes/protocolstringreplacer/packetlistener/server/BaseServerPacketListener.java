@@ -323,7 +323,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             }
             ItemStack result = container.getResult();
 
-            if (saveUserCache && !itemStack.equals(result)) {
+            if (saveUserCache && !container.getOriginalNbtString().equals(container.getNbtString())) {
                 user.saveUserItemRestoreCache(itemStack, result);
             }
             if (user.isCapturing(listenType)) {
