@@ -5,7 +5,7 @@
       "Log_Level": "Info",
       "Actions": [],
       "Message": {
-        "en-US": "§bA new version of PSR (\"3.0.3\") is available!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/"
+        "en-US": "§bA new version of PSR is available! You are really out of dated!\n§bDownload here: https://www.spigotmc.org/resources/protocolstringreplacer.96573/"
       }
     }
   },
