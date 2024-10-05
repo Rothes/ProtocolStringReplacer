@@ -17,8 +17,9 @@ public final class WindowClick extends BaseClientItemPacketListener {
             return;
         }
         if (user.hasPermission("protocolstringreplacer.feature.usermetacache.noncreative")) {
-            ItemStack itemStack = packetEvent.getPacket().getItemModifier().read(0);
-            restoreItem(user, itemStack);
+            com.comphenix.protocol.reflect.StructureModifier<org.bukkit.inventory.ItemStack> itemModifier = packetEvent.getPacket().getItemModifier();
+            ItemStack itemStack = itemModifier.read(0);
+            itemModifier.write(0, restoreItem(user, itemStack));
         }
     }
 

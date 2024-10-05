@@ -7,7 +7,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.ComponentConverter;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBT;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.api.capture.CaptureInfo;
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 
 import javax.annotation.Nonnull;
@@ -40,13 +39,13 @@ import java.util.UUID;
 
 public class PsrUser {
 
-    private static Method getLocaleLegacy = getLegacyLocaleMethod();
+    private static final Method getLocaleLegacy = getLegacyLocaleMethod();
 
     private UUID uuid;
     private Player player;
     private CommandSender sender;
 
-    private final HashMap<Short, ItemMeta> metaCache = new HashMap<>();
+    private final HashMap<Short, ItemStack> itemRestoreCache = new HashMap<>();
     private String currentWindowTitle;
     private String clientLocale;
     private boolean inAnvil;
@@ -115,8 +114,8 @@ public class PsrUser {
         return player;
     }
 
-    public HashMap<Short, ItemMeta> getMetaCache() {
-        return metaCache;
+    public HashMap<Short, ItemStack> getItemRestoreCache() {
+        return itemRestoreCache;
     }
 
     public Short nextUniqueCacheKey() {
@@ -350,23 +349,20 @@ public class PsrUser {
     }
 
 
-    public void clearUserMetaCache() {
-        getMetaCache().clear();
+    public void clearUserItemRestoreCache() {
+        getItemRestoreCache().clear();
         uniqueCacheKey = 0;
     }
 
-    public void saveUserMetaCache(ItemStack originalItem, ItemStack replacedItem) {
+    public void saveUserItemRestoreCache(ItemStack originalItem, ItemStack replacedItem) {
         if (this.hasPermission("protocolstringreplacer.feature.usermetacache")) {
             if (ProtocolStringReplacer.getInstance().getConfigManager().removeCacheWhenMerchantTrade && isInMerchant()) {
                 return;
             }
-            ItemMeta originalMeta = originalItem.getItemMeta();
-            if (!originalMeta.equals(replacedItem.getItemMeta())) {
-                NBTItem nbtItem = new NBTItem(replacedItem);
-                nbtItem.addCompound("ProtocolStringReplacer").setShort("UserMetaCacheKey", nextUniqueCacheKey());
-                replacedItem.setItemMeta(nbtItem.getItem().getItemMeta());
-                this.getMetaCache().put(uniqueCacheKey, originalMeta);
-            }
+            NBT.modify(replacedItem, nbt -> {
+                nbt.getOrCreateCompound("ProtocolStringReplacer").setShort("UserMetaCacheKey", nextUniqueCacheKey());
+            });
+            this.getItemRestoreCache().put(uniqueCacheKey, originalItem);
         }
     }
 
@@ -376,7 +372,7 @@ public class PsrUser {
                 "uuid=" + uuid +
                 ", player=" + player +
                 ", currentWindowTitle='" + currentWindowTitle + '\'' +
-                ", metaCache=" + metaCache +
+                ", metaCache=" + itemRestoreCache +
                 ", uniqueCacheKey=" + uniqueCacheKey +
                 ", editorReplacerConfig=" + editorReplacerConfig +
                 '}';

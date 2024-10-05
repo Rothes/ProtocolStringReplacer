@@ -1,12 +1,11 @@
 package io.github.rothes.protocolstringreplacer.packetlistener.client.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBT;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.packetlistener.client.BaseClientPacketListener;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 
@@ -16,27 +15,27 @@ public abstract class BaseClientItemPacketListener extends BaseClientPacketListe
         super(packetType);
     }
 
-    protected void restoreItem(PsrUser user, ItemStack itemStack) {
+    protected ItemStack restoreItem(PsrUser user, ItemStack itemStack) {
         if (!itemStack.hasItemMeta()) {
-            return;
+            return itemStack;
         }
-        NBTItem nbtItem = new NBTItem(itemStack);
-        if (!nbtItem.hasTag("ProtocolStringReplacer")) {
-            return;
-        }
-        Short uniqueCacheKey = nbtItem.getCompound("ProtocolStringReplacer").getShort("UserMetaCacheKey");
-
-        if (uniqueCacheKey != null) {
-            HashMap<Short, ItemMeta> userMetaCache = user.getMetaCache();
-            ItemMeta original = userMetaCache.get(uniqueCacheKey);
-            if (original == null) {
-                ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key, ignoring.\n" + itemStack);
-                return;
+        return NBT.get(itemStack, nbt -> {
+            if (nbt.hasTag("ProtocolStringReplacer")) {
+                Short uniqueCacheKey = nbt.getCompound("ProtocolStringReplacer").getShort("UserMetaCacheKey");
+                if (uniqueCacheKey != null) {
+                    HashMap<Short, ItemStack> userItemRestoreCache = user.getItemRestoreCache();
+                    ItemStack original = userItemRestoreCache.get(uniqueCacheKey);
+                    if (original == null) {
+                        ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key, ignoring.\n" + itemStack);
+                        return itemStack;
+                    }
+                    return original;
+                } else {
+                    ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key due to null, ignoring.\n" + itemStack);
+                }
             }
-            itemStack.setItemMeta(original);
-        } else {
-            ProtocolStringReplacer.warn("Failed to get original ItemMeta by meta-cache key due to null, ignoring.\n" + itemStack);
-        }
+            return itemStack;
+        });
     }
 
 }

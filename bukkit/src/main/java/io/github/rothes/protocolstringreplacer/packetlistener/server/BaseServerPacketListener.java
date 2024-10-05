@@ -321,15 +321,15 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
 
                 replacerManager.setPapi(user, container.getTexts(), papiIndexes);
             }
-            container.getResult();
+            ItemStack result = container.getResult();
 
-            if (saveCache && !original.isSimilar(itemStack)) {
-                user.saveUserMetaCache(original, itemStack);
+            if (saveCache && !original.equals(result)) {
+                user.saveUserItemRestoreCache(original, result);
             }
             if (user.isCapturing(listenType)) {
                 captureItemStackInfo(user, original, listenType, nbt, lore, entries);
             }
-            return container.getResult();
+            return result;
         } catch (Throwable t) {
             t.printStackTrace();
         }

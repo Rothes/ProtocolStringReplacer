@@ -11,7 +11,7 @@ class WindowItemsPost11 : BaseServerItemPacketListener(PacketType.Play.Server.WI
 
     override fun process(packetEvent: PacketEvent) {
         val user = getEventUser(packetEvent) ?: return
-        user.clearUserMetaCache()
+        user.clearUserItemRestoreCache()
         val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
         val nbt = replacerManager.getAcceptedReplacers(user, itemNbtFilter)
         val lore = replacerManager.getAcceptedReplacers(user, itemLoreFilter)

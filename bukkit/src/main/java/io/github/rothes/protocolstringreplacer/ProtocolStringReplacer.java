@@ -18,8 +18,6 @@ import io.github.rothes.protocolstringreplacer.util.scheduler.PsrScheduler;
 import io.github.rothes.protocolstringreplacer.upgrade.AbstractUpgradeHandler;
 import io.github.rothes.protocolstringreplacer.upgrade.UpgradeEnum;
 import io.github.rothes.protocolstringreplacer.util.FileUtils;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -43,7 +41,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -475,7 +472,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 packetListenerManager.removeListeners();
                 packetListenerManager.initialize();
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    userManager.getUser(player).clearUserMetaCache();
+                    userManager.getUser(player).clearUserItemRestoreCache();
                     player.updateInventory();
                 }
                 user.sendFilteredText(PsrLocalization.getPrefixedLocaledMessage("Sender.Commands.Reload.Complete"));
