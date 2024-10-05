@@ -13,7 +13,6 @@ import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.replacer.containers.Container;
 import io.github.rothes.protocolstringreplacer.replacer.containers.Replaceable;
 import org.apache.commons.lang.Validate;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.neosearch.stringsearcher.Emit;
 
@@ -38,7 +37,7 @@ public class ReplacerManager {
     private char papiHead;
     private char papiTail;
     private final List<ReplacerConfig> replacerConfigList = new ArrayList<>();
-    private final ConcurrentHashMap<ItemStack, HandledItemCache> cacheTable = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, HandledItemCache> cacheTable = new ConcurrentHashMap<>();
     private PsrTask cleanTask;
 
     public static class HandledItemCache {
@@ -121,15 +120,15 @@ public class ReplacerManager {
             long currentTime = System.currentTimeMillis();
             int purged = 0;
 
-            List<ItemStack> needToRemove = new ArrayList<>();
-            for (Map.Entry<ItemStack, HandledItemCache> entry : cacheTable.entrySet()) {
+            List<String> needToRemove = new ArrayList<>();
+            for (Map.Entry<String, HandledItemCache> entry : cacheTable.entrySet()) {
                 needToRemove.clear();
                 if ((currentTime - entry.getValue().lastAccessTime) > cleanAccessInterval) {
                     needToRemove.add(entry.getKey());
                 }
                 if (!needToRemove.isEmpty()) {
-                    for (ItemStack itemStack : needToRemove) {
-                        cacheTable.remove(itemStack);
+                    for (String cacheKey : needToRemove) {
+                        cacheTable.remove(cacheKey);
                         purged++;
                     }
                 }
@@ -201,11 +200,11 @@ public class ReplacerManager {
     }
 
     @Nullable
-    public HandledItemCache getReplacedItemCache(ItemStack original) {
+    public HandledItemCache getReplacedItemCache(String original) {
         return cacheTable.get(original);
     }
 
-    public HandledItemCache addReplacedItemCache(ItemStack original, @NotNull ReadWriteNBT nbtItem, boolean blocked, int[] papiIndexes) {
+    public HandledItemCache addReplacedItemCache(String original, @NotNull ReadWriteNBT nbtItem, boolean blocked, int[] papiIndexes) {
         Validate.notNull(nbtItem, "Replaced NBTItem cannot be null");
 
         HandledItemCache handledItemCache = new HandledItemCache(nbtItem, System.currentTimeMillis(), blocked, papiIndexes);

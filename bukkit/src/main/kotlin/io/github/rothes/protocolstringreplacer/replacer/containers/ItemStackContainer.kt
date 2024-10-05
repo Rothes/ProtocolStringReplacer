@@ -23,22 +23,23 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     private val original: ItemMeta = content.itemMeta
 
     init {
+        nbt = NBT.itemStackToNBT(content)
         if (useCache) {
             val replacerManager = ProtocolStringReplacer.getInstance().replacerManager
 
-            val getCache = replacerManager.getReplacedItemCache(content)
+            val nbtString = nbt.toString()
+            val getCache = replacerManager.getReplacedItemCache(nbtString)
             if (getCache != null) {
-                metaCache = getCache
                 isFromCache = true
+                metaCache = getCache
                 nbt = metaCache.nbt
             } else {
                 isFromCache = false
                 nbt = NBT.itemStackToNBT(content)
-                metaCache = replacerManager.addReplacedItemCache(content, nbt, false, IntArray(0))
+                metaCache = replacerManager.addReplacedItemCache(nbtString, nbt, false, IntArray(0))
             }
         } else {
             isFromCache = false
-            nbt = NBT.itemStackToNBT(content)
         }
     }
 
