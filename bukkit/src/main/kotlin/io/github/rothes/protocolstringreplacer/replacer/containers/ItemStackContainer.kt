@@ -11,7 +11,6 @@ import io.github.rothes.protocolstringreplacer.plugin
 import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager.HandledItemCache
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 
 class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCache: Boolean = true, root: Container<*>? = null) :
     AbstractContainer<ItemStack>(itemStack, root) {
@@ -20,7 +19,6 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     lateinit var metaCache: HandledItemCache
         private set
     private var nbt: ReadWriteNBT
-    private val original: ItemMeta = content.itemMeta
 
     init {
         nbt = NBT.itemStackToNBT(content)
@@ -44,7 +42,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     }
 
     fun cloneItem() {
-        nbt = NBT.itemStackToNBT(NBT.itemStackFromNBT(nbt))
+        nbt = NBTContainer().apply { mergeCompound(nbt) }
     }
 
     override fun createDefaultChildren() {
@@ -102,8 +100,8 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     }
 
     fun entriesPeriod() {
-        children.clear()
-        jsonReplaceables.clear()
+        children?.clear()
+        jsonReplaceables?.clear()
         val display = displayRoot
         if (display != null) {
             if (display.hasTag(NAME_KEY)) {
@@ -228,21 +226,15 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
 
     override fun getResult(): ItemStack {
         super.getResult()
-        val replaced = NBT.itemStackFromNBT(nbt)!!
-        content.setItemMeta(replaced.itemMeta)
-        content = replaced
-        return content
+        return NBT.itemStackFromNBT(nbt)!!
     }
 
     fun childrenResult() {
         super.getResult()
     }
 
-    fun restoreItem() {
-        content.setItemMeta(original)
-        nbt.clearNBT()
-        nbt.mergeCompound(NBT.itemStackToNBT(content))
-    }
+    val originalNbtString: String
+        get() = NBT.itemStackToNBT(content).toString()
 
     val nbtString: String
         get() = nbt.toString()
@@ -250,10 +242,10 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
     val itemType: Material
         get() = content.type
 
-    private val tag = nbt.path(TAG_PATH)
-    private val tagCreated = nbt.create(TAG_PATH)
-    private val displayRoot = tag?.path(DISPLAY_PATH)
-    private val displayRootCreated = tagCreated.create(DISPLAY_PATH)
+    private val tag by lazy { nbt.path(TAG_PATH) }
+    private val tagCreated by lazy { nbt.create(TAG_PATH) }
+    private val displayRoot by lazy { tag?.path(DISPLAY_PATH) }
+    private val displayRootCreated by lazy { tagCreated.create(DISPLAY_PATH) }
 
     private fun ReadWriteNBT.path(path: Array<String>): ReadWriteNBT? {
         var nbt = this

@@ -296,16 +296,14 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             if (itemStack.getType() == Material.AIR) {
                 return itemStack;
             }
-            ItemStack original = itemStack.clone();
+            ItemStack original = itemStack;
 
             ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
             ItemStackContainer container = new ItemStackContainer(itemStack);
 
-            if (!container.isFromCache()) {
-                if (cacheItemStack(container, nbt, lore, entries)) {
-                    return null;
-                }
-                container.reset();
+            if (!container.isFromCache() && cacheItemStack(container, nbt, lore, entries)) {
+                // Blocked
+                return null;
             }
             if (container.getMetaCache().isBlocked()) {
                 packetEvent.setCancelled(true);
@@ -314,6 +312,10 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
 
             int[] papiIndexes = container.getMetaCache().getPlaceholderIndexes();
             if (papiIndexes.length != 0) {
+                if (!container.isFromCache()) {
+                    // Otherwise this breaks data in cache
+                    container = new ItemStackContainer(itemStack);
+                }
                 container.cloneItem();
                 container.entriesPeriod();
                 container.createDefaultChildrenDeep();
@@ -339,24 +341,26 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
     private static void captureItemStackInfo(@Nonnull PsrUser user, @Nonnull ItemStack itemStack,
                                              @Nonnull ListenType listenType, List<ReplacerConfig> nbt,
                                              List<ReplacerConfig> lore, List<ReplacerConfig> entries) {
+        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
         ItemStackContainer container = new ItemStackContainer(itemStack, false);
-        Material type = container.getItemType();
-        CaptureInfo info = new CaptureInfoImpl();
-        info.setTime(System.currentTimeMillis());
-        info.setUser(user);
-        info.setListenType(listenType);
+        try {
+            Material type = container.getItemType();
+            CaptureInfo info = new CaptureInfoImpl();
+            info.setTime(System.currentTimeMillis());
+            info.setUser(user);
+            info.setListenType(listenType);
 
-        ComponentBuilder extraBuilder = new ComponentBuilder(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Extra-Prefix")).color(ChatColor.BLUE).bold(true).append("").reset();
-        container.createDefaultChildren();
-        container.createJsons(container);
-        List<Replaceable> jsons = container.getJsons();
-        extraBuilder.append("[Nbt Json] ").color(ChatColor.GOLD)
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
-                        + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
-                .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
-                        ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
-        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(nbt, type));
-        container.childrenResult();
+            ComponentBuilder extraBuilder = new ComponentBuilder(PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Extra-Prefix")).color(ChatColor.BLUE).bold(true).append("").reset();
+            container.createDefaultChildren();
+            container.createJsons(container);
+            List<Replaceable> jsons = container.getJsons();
+            extraBuilder.append("[Nbt Json] ").color(ChatColor.GOLD)
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
+                            + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
+                    .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
+                            ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
+            replacerManager.replaceJsonReplaceable(jsons.get(0), matchItemType(nbt, type));
+            container.childrenResult();
 
 //        if (container.displayNamePeriod()) {
 //            container.createJsons(container);
@@ -370,75 +374,74 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
 //            container.childrenResult();
 //        }
 
-        container.lorePeriod();
-        container.createJsons(container);
-        jsons = container.getJsons();
-        extraBuilder.append("  ").reset().append("[Lore Json] ").color(ChatColor.GOLD)
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
-                        + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
-                .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
-                        ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
-        info.setExtra(extraBuilder.create());
-        ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(lore, type));
-        container.childrenResult();
+            container.lorePeriod();
+            container.createJsons(container);
+            jsons = container.getJsons();
+            extraBuilder.append("  ").reset().append("[Lore Json] ").color(ChatColor.GOLD)
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(jsons.get(0).getText() + "\n"
+                            + PsrLocalization.getLocaledMessage("Sender.Commands.Capture.Capture-Info.Click-To-Copy"))))
+                    .event(new ClickEvent(ProtocolStringReplacer.getInstance().getServerMajorVersion() >= 15 ?
+                            ClickEvent.Action.COPY_TO_CLIPBOARD : ClickEvent.Action.SUGGEST_COMMAND, jsons.get(0).getText()));
+            info.setExtra(extraBuilder.create());
+            ProtocolStringReplacer.getInstance().getReplacerManager().replaceJsonReplaceable(jsons.get(0), matchItemType(lore, type));
+            container.childrenResult();
 
-        container.entriesPeriod();
-        container.createJsons(container);
-        jsons = container.getJsons();
+            container.entriesPeriod();
+            container.createJsons(container);
+            jsons = container.getJsons();
 
-        List<String> originalJsons = jsons.stream().map(Replaceable::getText).collect(Collectors.toList());
+            List<String> originalJsons = jsons.stream().map(Replaceable::getText).collect(Collectors.toList());
 
-        List<String> directs = new ArrayList<>(originalJsons.size());
-        for (String json : originalJsons) {
-            StringBuilder sb = new StringBuilder();
-            for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
-                sb.append(baseComponent.toLegacyText());
+            List<String> directs = new ArrayList<>(originalJsons.size());
+            for (String json : originalJsons) {
+                StringBuilder sb = new StringBuilder();
+                for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
+                    sb.append(baseComponent.toLegacyText());
+                }
+
+                directs.add(sb.toString());
+            }
+            info.setDirects(directs);
+
+            List<ReplacerConfig> filtered = matchItemType(entries, type);
+            for (Replaceable json : jsons) {
+                StringBuilder sb = new StringBuilder();
+                for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
+                    sb.append(baseComponent.toLegacyText());
+                }
+
+                String directString = sb.toString();
+                String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, filtered);
+                if (!replaceDirect.equals(directString)) {
+                    json.setText(SpigotUtils.serializeComponents(TextComponent.fromLegacyText(replaceDirect)));
+                }
             }
 
-            directs.add(sb.toString());
-        }
-        info.setDirects(directs);
-
-        List<ReplacerConfig> filtered = matchItemType(entries, type);
-        for (Replaceable json : jsons) {
-            StringBuilder sb = new StringBuilder();
-            for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
-                sb.append(baseComponent.toLegacyText());
+            info.setJsons(jsons);
+            ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, filtered);
+            try {
+                container.createDefaultChildrenDeep();
+            } catch (Throwable t) {
+                throw new JsonSyntaxException("Unable to create default children.", t);
             }
-
-            String directString = sb.toString();
-            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, filtered);
-            if (!replaceDirect.equals(directString)) {
-                json.setText(SpigotUtils.serializeComponents(TextComponent.fromLegacyText(replaceDirect)));
+            try {
+                container.createTexts(container);
+            } catch (Throwable t) {
+                throw new JsonSyntaxException("Unable to create Texts.", t);
             }
-        }
-
-        info.setJsons(jsons);
-        ProtocolStringReplacer.getInstance().getReplacerManager().replaceContainerJsons(container, filtered);
-        try {
-            container.createDefaultChildrenDeep();
+            info.setTexts(container.getTexts());
+            user.addCaptureInfo(listenType, info);
         } catch (Throwable t) {
-            throw new JsonSyntaxException("Unable to create default children. Please check your Json format.\n"
-                    + "Original Jsons: " + originalJsons + "\n"
-                    + "Replaced Jsons: " + jsons + "\n"
+            throw new JsonSyntaxException("Failed to handle ItemStack (capture). Please check your nbt format.\n"
+                    + "Original Nbt: " + container.getOriginalNbtString() + "\n"
+                    + "Last replaced Nbt: " + container.getNbtString() + "\n"
                     + "If you need support, please provide the stacktrace below.", t);
         }
-        try {
-            container.createTexts(container);
-        } catch (Throwable t) {
-            throw new JsonSyntaxException("Unable to create Texts. Please check your Json format.\n"
-                    + "Original Jsons: " + originalJsons + "\n"
-                    + "Replaced Jsons: " + jsons + "\n"
-                    + "If you need support, please provide the stacktrace below.", t);
-        }
-        info.setTexts(container.getTexts());
-        user.addCaptureInfo(listenType, info);
     }
 
     private static boolean handleItemStackPeriod(ReplacerManager replacerManager, Material type,
                                                  ItemStackContainer container, List<ReplacerConfig> configs) {
         List<ReplacerConfig> filtered = matchItemType(configs, type);
-        container.createDefaultChildren();
         container.createJsons(container);
         if (checkBlocked(container.getJsons().get(0).getText(), filtered, replacerManager)) {
             container.getMetaCache().setBlocked(true);
@@ -451,119 +454,116 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
 
     private static boolean cacheItemStack(@Nonnull ItemStackContainer container, List<ReplacerConfig> nbt,
                                           List<ReplacerConfig> display, List<ReplacerConfig> entries) {
-        ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
-        Material type = container.getItemType();
+        try {
+            ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
+            Material type = container.getItemType();
 
-        container.createDefaultChildren();
-        if (handleItemStackPeriod(replacerManager, type, container, nbt)) {
-            return true;
-        }
+            container.createDefaultChildren();
+            if (handleItemStackPeriod(replacerManager, type, container, nbt)) {
+                return true;
+            }
+            container.childrenResult();
 //        if (container.displayNamePeriod()) {
 //            if (handleItemStackPeriod(replacerManager, type, container, display)) {
 //                return true;
 //            }
 //        }
-        container.lorePeriod();
-        if (handleItemStackPeriod(replacerManager, type, container, display)) {
-            return true;
-        }
-
-        container.entriesPeriod();
-        container.createJsons(container);
-
-        boolean direct = false;
-
-        List<ReplacerConfig> filtered = matchItemType(entries, type);
-        for (Replaceable json : container.getJsons()) {
-            StringBuilder sb = new StringBuilder();
-            try {
-                for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
-                    sb.append(baseComponent.toLegacyText());
-                }
-            } catch (Throwable t) {
-                String replaced = container.getNbtString();
-                container.restoreItem();
-                throw new JsonSyntaxException("Unable to parse ItemStack Nbt Jsons. Please check your Json format.\n"
-                        + "Original Nbt Json: " + container.getNbtString() + "\n"
-                        + "Replaced Nbt Json: " + replaced + "\n"
-                        + "If you need support, please provide the stacktrace below.", t);
-            }
-
-            String directString = sb.toString();
-
-            if (ProtocolStringReplacer.getInstance().getReplacerManager().isDirectBlocked(directString, filtered)) {
-                container.getMetaCache().setBlocked(true);
+            container.lorePeriod();
+            if (handleItemStackPeriod(replacerManager, type, container, display)) {
                 return true;
             }
-            String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, filtered);
-            if (!replaceDirect.equals(directString)) {
-                BaseComponent[] baseComponents = TextComponent.fromLegacyText(replaceDirect);
-                BaseComponent head = baseComponents[0];
-                // Consistent with Vanilla.
-                if (head.isBoldRaw() == null) {
-                    head.setBold(false);
-                }
-                if (head.isUnderlinedRaw() == null) {
-                    head.setUnderlined(false);
-                }
-                if (head.isStrikethroughRaw() == null) {
-                    head.setStrikethrough(false);
-                }
-                if (head.isObfuscatedRaw() == null) {
-                    head.setObfuscated(false);
-                }
-                // Must set false.
-                for (BaseComponent baseComponent : baseComponents) {
-                    if (baseComponent.isItalicRaw() == null) {
-                        baseComponent.setItalic(false);
+            container.childrenResult();
+
+            container.entriesPeriod();
+            container.createJsons(container);
+
+            boolean direct = false;
+
+            List<ReplacerConfig> filtered = matchItemType(entries, type);
+            for (Replaceable json : container.getJsons()) {
+                StringBuilder sb = new StringBuilder();
+                try {
+                    for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
+                        sb.append(baseComponent.toLegacyText());
                     }
+                } catch (Throwable t) {
+                    throw new JsonSyntaxException("Failed to parse replaced lores.", t);
                 }
 
-                json.setText(SpigotUtils.serializeComponents(baseComponents));
-                direct = true;
-            }
+                String directString = sb.toString();
 
-        }
-        if (direct && plugin.getConfigManager().directSkips) {
-            container.createDefaultChildrenDeep();
-            container.createTexts(container);
-        } else {
-            if (replacerManager.isJsonBlocked(container, entries)) {
-                container.getMetaCache().setBlocked(true);
-                return true;
+                if (ProtocolStringReplacer.getInstance().getReplacerManager().isDirectBlocked(directString, filtered)) {
+                    container.getMetaCache().setBlocked(true);
+                    return true;
+                }
+                String replaceDirect = ProtocolStringReplacer.getInstance().getReplacerManager().replaceDirect(directString, filtered);
+                if (!replaceDirect.equals(directString)) {
+                    BaseComponent[] baseComponents = TextComponent.fromLegacyText(replaceDirect);
+                    BaseComponent head = baseComponents[0];
+                    // Consistent with Vanilla.
+                    if (head.isBoldRaw() == null) {
+                        head.setBold(false);
+                    }
+                    if (head.isUnderlinedRaw() == null) {
+                        head.setUnderlined(false);
+                    }
+                    if (head.isStrikethroughRaw() == null) {
+                        head.setStrikethrough(false);
+                    }
+                    if (head.isObfuscatedRaw() == null) {
+                        head.setObfuscated(false);
+                    }
+                    // Must set false.
+                    for (BaseComponent baseComponent : baseComponents) {
+                        if (baseComponent.isItalicRaw() == null) {
+                            baseComponent.setItalic(false);
+                        }
+                    }
+
+                    json.setText(SpigotUtils.serializeComponents(baseComponents));
+                    direct = true;
+                }
+
             }
-            List<String> originalJsons = container.getJsons().stream().map(Replaceable::getText).collect(Collectors.toList());
-            replacerManager.replaceContainerJsons(container, entries);
-            try {
+            if (direct && plugin.getConfigManager().directSkips) {
                 container.createDefaultChildrenDeep();
-            } catch (Throwable t) {
-                throw new JsonSyntaxException("Unable to create default children. Please check your Json format.\n"
-                        + "Original Jsons: " + originalJsons + "\n"
-                        + "Replaced Jsons: " + container.getJsons() + "\n"
-                        + "If you need support, please provide the stacktrace below.", t);
-            }
-            try {
                 container.createTexts(container);
-            } catch (Throwable t) {
-                throw new JsonSyntaxException("Unable to create Texts. Please check your Json format.\n"
-                        + "Original Jsons: " + originalJsons + "\n"
-                        + "Replaced Jsons: " + container.getJsons() + "\n"
-                        + "If you need support, please provide the stacktrace below.", t);
+            } else {
+                if (replacerManager.isJsonBlocked(container, entries)) {
+                    container.getMetaCache().setBlocked(true);
+                    return true;
+                }
+                replacerManager.replaceContainerJsons(container, entries);
+                try {
+                    container.createDefaultChildrenDeep();
+                } catch (Throwable t) {
+                    throw new JsonSyntaxException("Failed to create default children with replaced lores.", t);
+                }
+                try {
+                    container.createTexts(container);
+                } catch (Throwable t) {
+                    throw new JsonSyntaxException("Failed to create texts with replaced lores.", t);
+                }
+                if (replacerManager.isTextBlocked(container, entries)) {
+                    container.getMetaCache().setBlocked(true);
+                    return true;
+                }
+                replacerManager.replaceContainerTexts(container, entries);
             }
-            if (replacerManager.isTextBlocked(container, entries)) {
-                container.getMetaCache().setBlocked(true);
-                return true;
-            }
-            replacerManager.replaceContainerTexts(container, entries);
-        }
 
-        Integer[] ints = replacerManager.getPapiIndexes(container.getTexts()).toArray(new Integer[0]);
-        int[] indexes = new int[ints.length];
-        for (int i = 0; i < ints.length; i++) {
-            indexes[i] = ints[i];
+            Integer[] ints = replacerManager.getPapiIndexes(container.getTexts()).toArray(new Integer[0]);
+            int[] indexes = new int[ints.length];
+            for (int i = 0; i < ints.length; i++) {
+                indexes[i] = ints[i];
+            }
+            container.getMetaCache().setPlaceholderIndexes(indexes);
+            container.getResult();
+        } catch (Throwable t) {
+            throw new JsonSyntaxException("Failed to handle ItemStack. Please check your nbt format.\n"
+                    + "Original Nbt: " + container.getOriginalNbtString() + "\n"
+                    + "Last replaced Nbt: " + container.getNbtString() + "\n"
+                    + "If you need support, please provide the stacktrace below.", t);
         }
-        container.getMetaCache().setPlaceholderIndexes(indexes);
-        container.getResult();
         return false;
     }
 
