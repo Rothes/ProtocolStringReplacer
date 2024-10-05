@@ -302,8 +302,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             ItemStackContainer container = new ItemStackContainer(itemStack);
 
             if (!container.isFromCache() && cacheItemStack(container, nbt, lore, entries)) {
-                // Blocked
-                return null;
+                cacheItemStack(container, nbt, lore, entries);
             }
             if (container.getMetaCache().isBlocked()) {
                 packetEvent.setCancelled(true);
