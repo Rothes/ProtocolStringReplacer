@@ -288,7 +288,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
 
     protected static ItemStack replaceItemStack(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                               @Nonnull ItemStack itemStack, List<ReplacerConfig> nbt,
-                                              List<ReplacerConfig> lore, List<ReplacerConfig> entries, boolean saveCache) {
+                                              List<ReplacerConfig> lore, List<ReplacerConfig> entries, boolean saveUserCache) {
         try {
 //        if (!itemStack.hasItemMeta()) {
 //            return false;
@@ -296,7 +296,6 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             if (itemStack.getType() == Material.AIR) {
                 return itemStack;
             }
-            ItemStack original = itemStack;
 
             ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
             ItemStackContainer container = new ItemStackContainer(itemStack);
@@ -324,11 +323,11 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             }
             ItemStack result = container.getResult();
 
-            if (saveCache && !original.equals(result)) {
-                user.saveUserItemRestoreCache(original, result);
+            if (saveUserCache && !itemStack.equals(result)) {
+                user.saveUserItemRestoreCache(itemStack, result);
             }
             if (user.isCapturing(listenType)) {
-                captureItemStackInfo(user, original, listenType, nbt, lore, entries);
+                captureItemStackInfo(user, itemStack, listenType, nbt, lore, entries);
             }
             return result;
         } catch (Throwable t) {
