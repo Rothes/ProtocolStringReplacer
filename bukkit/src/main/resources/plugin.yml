@@ -11,7 +11,11 @@ commands:
   protocolstringreplacer:
     aliases: [psr]
     description: ProtocolStringReplacer commands.
+    permission: 'protocolstringreplacer.command'
 permissions:
+  'protocolstringreplacer.command':
+    description: ProtocolStringReplacer commands global permission.
+    default: true
   protocolstringreplacer.command.about:
     description: See plugin info.
     default: true
