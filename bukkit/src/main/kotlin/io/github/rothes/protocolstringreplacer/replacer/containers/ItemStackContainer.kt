@@ -30,6 +30,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
             if (getCache != null) {
                 isFromCache = true
                 metaCache = getCache
+                metaCache.lastAccessTime = System.currentTimeMillis()
                 nbt = metaCache.nbt
             } else {
                 isFromCache = false
