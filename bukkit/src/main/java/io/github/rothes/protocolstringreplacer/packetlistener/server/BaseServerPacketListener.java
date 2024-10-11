@@ -300,7 +300,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             ReplacerManager replacerManager = ProtocolStringReplacer.getInstance().getReplacerManager();
             ItemStackContainer container = new ItemStackContainer(itemStack);
 
-            if (!container.isFromCache() && cacheItemStack(container, nbt, lore, entries)) {
+            if (!container.isFromCache()) {
                 cacheItemStack(container, nbt, lore, entries);
             }
             if (container.getMetaCache().isBlocked()) {
