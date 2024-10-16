@@ -28,5 +28,14 @@ class WindowItemsPost11 : BaseServerItemPacketListener(PacketType.Play.Server.WI
                 saveMeta = true
             } ?: return
         }
+        val itemModifier = packetEvent.packet.itemModifier
+        if (itemModifier.size() != 0) {
+            // Since 1.17.1
+            val itemStack = itemModifier[0]
+            if (itemStack.type == Material.AIR) {
+                return
+            }
+            itemModifier[0] = replaceItemStack(packetEvent, user, listenType, itemStack, nbt, lore, entries, true) ?: return
+        }
     }
 }
