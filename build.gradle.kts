@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("java")
     id("io.github.goooler.shadow") version "8.1.8"
-    id("io.papermc.paperweight.userdev") version "1.7.1" apply false
+    id("io.papermc.paperweight.userdev") version "1.7.5" apply false
 }
 
 repositories {
