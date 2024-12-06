@@ -128,14 +128,14 @@ public class Updater implements Listener {
             errorCount = Math.max(errorCount - 1, 0);
             return jsonBuilder.toString();
         } catch (IOException e) {
-            if (errorCount < 3) {
-                errorCount++;
-                ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Checking-Version", e.toString()));
-            }
             if (tryTime == 0) {
                 return getJson("mirror.ghproxy.com/https://raw.githubusercontent.com", ++tryTime);
             } else if (tryTime == 1) {
                 return getJson("raw.githubusercontent.com", ++tryTime);
+            }
+            if (errorCount < 3) {
+                errorCount++;
+                ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Checking-Version", e.toString()));
             }
             return null;
         }
