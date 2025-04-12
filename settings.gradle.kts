@@ -16,3 +16,5 @@ include("bukkit:nms:v1_20_6")
 include("bukkit:nms:v1_21_1")
 include("bukkit:nms:v1_21_3")
 include("bukkit:nms:v1_21_4")
+include("bukkit:nms:v1_21_5")
+findProject(":bukkit:nms:v1_21_5")?.name = "v1_21_5"
