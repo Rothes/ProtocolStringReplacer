@@ -25,7 +25,9 @@ public final class UpdateTeamPost17 extends BaseUpdateTeamListener {
     private final Field suffix;
 
     public UpdateTeamPost17() {
-        Class<?> info = PacketType.Play.Server.SCOREBOARD_TEAM.getPacketClass().getDeclaredClasses()[0];
+        Class<?> info = Arrays.stream(PacketType.Play.Server.SCOREBOARD_TEAM.getPacketClass().getDeclaredClasses()).filter(
+                it -> !it.isInterface() && !it.isEnum()
+        ).findFirst().get();
         List<Field> collect = Arrays.stream(info.getDeclaredFields())
                 .filter(it -> it.getType() == MinecraftReflection.getIChatBaseComponentClass())
                 .collect(Collectors.toList());
