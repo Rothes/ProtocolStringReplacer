@@ -14,7 +14,7 @@ dependencies {
     paperweight.paperDevBundle("$serverVer-R0.1-SNAPSHOT")
     implementation("commons-collections:commons-collections:3.2.2")
     implementation("org.neosearch.stringsearcher:multiple-string-searcher:0.1.1")
-    implementation("de.tr7zw:item-nbt-api:2.14.1")
+    implementation("de.tr7zw:item-nbt-api:2.15.0")
     implementation("org.bstats:bstats-bukkit:3.0.2")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
