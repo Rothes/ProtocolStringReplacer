@@ -63,7 +63,7 @@ public class Updater implements Listener {
                     return;
                 }
                 checkJson(json);
-            } catch (IllegalStateException | NullPointerException e) {
+            } catch (Throwable e) {
                 ProtocolStringReplacer.error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Updater.Error-Parsing-Json"), e);
             }
         }, 0L, 72000L);
@@ -127,7 +127,7 @@ public class Updater implements Listener {
             }
             errorCount = Math.max(errorCount - 1, 0);
             return jsonBuilder.toString();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             if (tryTime == 0) {
                 return getJson("mirror.ghproxy.com/https://raw.githubusercontent.com", ++tryTime);
             } else if (tryTime == 1) {
