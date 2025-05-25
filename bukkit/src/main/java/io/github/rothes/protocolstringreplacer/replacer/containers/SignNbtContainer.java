@@ -1,5 +1,6 @@
 package io.github.rothes.protocolstringreplacer.replacer.containers;
 
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
@@ -34,8 +35,12 @@ public class SignNbtContainer extends AbstractContainer<NBTContainer> {
         children.clear();
         jsonReplaceables.clear();
         if (POST_20) {
-            addLines(content.getCompound("front_text").getStringList("messages"));
-            addLines(content.getCompound("back_text").getStringList("messages"));
+            NBTCompound compound = content.getCompound("front_text");
+            if (compound != null)
+                addLines(compound.getStringList("messages"));
+            compound = content.getCompound("back_text");
+            if (compound != null)
+                addLines(compound.getStringList("messages"));
         } else {
             String key;
             for (int i = 1; i <= 4; i++) {
