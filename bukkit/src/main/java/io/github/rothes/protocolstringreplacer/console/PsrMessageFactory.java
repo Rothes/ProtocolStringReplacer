@@ -17,7 +17,7 @@ public class PsrMessageFactory extends AbstractMessageFactory {
 
     @Override
     public Message newMessage(String message, Object... params) {
-        return new PsrMessage(message);
+        return new PsrMessage(message, params);
     }
 
 }

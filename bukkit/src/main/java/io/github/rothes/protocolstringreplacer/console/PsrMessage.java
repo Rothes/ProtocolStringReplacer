@@ -21,6 +21,7 @@ public class PsrMessage implements Message, CharSequence{
     private static ProtocolStringReplacer plugin;
 
     private String message;
+    private Object[] params;
     private transient CharSequence charSequence;
 
     /**
@@ -28,6 +29,10 @@ public class PsrMessage implements Message, CharSequence{
      * @param message The String message.
      */
     public PsrMessage(final String message) {
+        this(message, null);
+    }
+
+    public PsrMessage(final String message, final Object[] params) {
         if (plugin.hasStarted()) {
             SimpleTextContainer container = new SimpleTextContainer(message);
             container.createTexts(container);
@@ -46,6 +51,7 @@ public class PsrMessage implements Message, CharSequence{
             this.message = message;
             this.charSequence = message;
         }
+        this.params = params;
     }
 
     /**
@@ -81,7 +87,10 @@ public class PsrMessage implements Message, CharSequence{
      */
     @Override
     public String getFormattedMessage() {
-        return message = message == null ? String.valueOf(charSequence) : message ;
+        if (message == null) {
+            message = params == null ? String.valueOf(charSequence) : String.format(charSequence.toString(), params);
+        }
+        return message;
     }
 
     /**
@@ -99,7 +108,7 @@ public class PsrMessage implements Message, CharSequence{
      */
     @Override
     public Object[] getParameters() {
-        return null;
+        return params;
     }
 
     @Override
