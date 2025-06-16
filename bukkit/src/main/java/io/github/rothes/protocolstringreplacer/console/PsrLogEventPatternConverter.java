@@ -91,9 +91,11 @@ public class PsrLogEventPatternConverter extends LogEventPatternConverter {
             LOGGER.error("Incorrect number of options. Expected at least 1, max 2 received " + options.length);
             return null;
         }
+        String pattern = ConsoleReplaceManager.getPatterns().get(Short.parseShort(options[0]));
+        boolean removeAnsi = options.length == 2 && "removeAnsi".equals(options[1]);
         return new PsrLogEventPatternConverter(
-                PatternLayout.createPatternParser(config).parse(ConsoleReplaceManager.getPatterns().get(Short.parseShort(options[0]))),
-                options.length == 2 && "removeAnsi".equals(options[1])
+                PatternLayout.createPatternParser(config).parse(pattern, true, removeAnsi),
+                removeAnsi
         );
     }
 
