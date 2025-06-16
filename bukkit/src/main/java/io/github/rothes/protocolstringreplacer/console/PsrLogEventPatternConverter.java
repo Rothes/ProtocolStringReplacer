@@ -75,14 +75,26 @@ public class PsrLogEventPatternConverter extends LogEventPatternConverter {
         }
     }
 
+    @Override
+    public boolean handlesThrowable() {
+        for (final PatternFormatter formatter : formatters) {
+            if (formatter.handlesThrowable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings("unused")
     public static PsrLogEventPatternConverter newInstance(Configuration config, String[] options) {
         if (options.length < 1 || options.length > 2) {
-            LOGGER.error("Incorrect number of options on minecraftFormatting. Expected at least 1, max 2 received " + options.length);
+            LOGGER.error("Incorrect number of options. Expected at least 1, max 2 received " + options.length);
             return null;
         }
-        return new PsrLogEventPatternConverter(PatternLayout.createPatternParser(config).parse(ConsoleReplaceManager.getPatterns().get(Short.parseShort(options[0]))),
-                options.length >= 2 && "removeAnsi".equals(options[1]));
+        return new PsrLogEventPatternConverter(
+                PatternLayout.createPatternParser(config).parse(ConsoleReplaceManager.getPatterns().get(Short.parseShort(options[0]))),
+                options.length == 2 && "removeAnsi".equals(options[1])
+        );
     }
 
 }
