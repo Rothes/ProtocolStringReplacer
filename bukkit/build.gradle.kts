@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("java")
     id("io.github.goooler.shadow") version "8.1.8"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.11"
+    id("io.papermc.paperweight.userdev")
 }
 
 val serverVer = rootProject.property("targetMinecraftVersion").toString()
