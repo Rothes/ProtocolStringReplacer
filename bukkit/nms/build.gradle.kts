@@ -12,7 +12,7 @@ dependencies {
     subprojects.filter {
         it.parent == project
     }.forEach {
-        api(project(it.path, configuration = "reobf"))
+        api(project(it.path, configuration = if (it.hasProperty("no-reobf")) "shadow" else "reobf"))
     }
 }
 
