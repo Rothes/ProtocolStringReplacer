@@ -23,7 +23,9 @@ import net.md_5.bungee.chat.SelectorComponentSerializer;
 import net.md_5.bungee.chat.TextComponentSerializer;
 import net.md_5.bungee.chat.TranslatableComponentSerializer;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 public class SpigotUtils {
 
@@ -42,12 +44,12 @@ public class SpigotUtils {
                         GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping();
                         try {
                             gsonBuilder.registerTypeAdapter(BaseComponent.class, new ComponentSerializer())
-                                    .registerTypeAdapter(TextComponent.class, new TextComponentSerializer())
-                                    .registerTypeAdapter(TranslatableComponent.class, new TranslatableComponentSerializer())
-                                    .registerTypeAdapter(KeybindComponent.class, new KeybindComponentSerializer())
-                                    .registerTypeAdapter(ScoreComponent.class, new ScoreComponentSerializer())
-                                    .registerTypeAdapter(SelectorComponent.class, new SelectorComponentSerializer())
-                                    .registerTypeAdapter(Entity.class, new EntitySerializer())
+                                    .registerTypeAdapter(TextComponent.class, newInstance(TextComponentSerializer.class))
+                                    .registerTypeAdapter(TranslatableComponent.class, newInstance(TranslatableComponentSerializer.class))
+                                    .registerTypeAdapter(KeybindComponent.class, newInstance(KeybindComponentSerializer.class))
+                                    .registerTypeAdapter(ScoreComponent.class, newInstance(ScoreComponentSerializer.class))
+                                    .registerTypeAdapter(SelectorComponent.class, newInstance(SelectorComponentSerializer.class))
+                                    .registerTypeAdapter(Entity.class, newInstance(EntitySerializer.class))
                                     .registerTypeAdapter(Text.class, new TextSerializer())
                                     .registerTypeAdapter(Item.class, new ItemSerializer())
                                     .registerTypeAdapter(ItemTag.class, new ItemTag.Serializer());
@@ -100,6 +102,12 @@ public class SpigotUtils {
             }
         }
         return true;
+    }
+
+    private static Object newInstance(Class<?> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Constructor<?> constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return constructor.newInstance();
     }
 
 }
