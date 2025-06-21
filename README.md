@@ -2,12 +2,12 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/10b4b7cb53d34e8289d708fa3a5e3caf)](https://app.codacy.com/gh/Rothes/ProtocolStringReplacer?utm_source=github.com&utm_medium=referral&utm_content=Rothes/ProtocolStringReplacer&utm_campaign=Badge_Grade_Settings)
 
-A Spigot plugin for Minecraft 1.8 - 1.21.1 that gives you the ability to edit the strings/components in packet sends to players.
+A Spigot plugin for Minecraft 1.8 - 1.21.6 that gives you the ability to edit the strings/components in packet sends to players.
 
-Please visit [SpigotMC](#links) or [MCBBS](#links) for a detailed description. 
+Please visit [Modrinth](#links) or [MCBBS](#links) for a detailed description. 
 
 ## Download
-For stable releases, go SpigotMC or MCBBS. Also, we create a tag for each published version on GitHub. You can compile it yourself.
+For stable releases, go Modrinth or MCBBS. Also, we create a tag for each published version on GitHub. You can compile it yourself.
 For development builds, you can download on GitHub Actions.
 
 ## Support
@@ -23,6 +23,9 @@ so we can let you know if we are willing to merge it and give you some suggestio
 
 *   **Wiki**:
 [https://rothes.gitbook.io/protocolstringreplacer](https://rothes.gitbook.io/protocolstringreplacer)
+
+*   **Modrinth** :
+[https://modrinth.com/plugin/protocolstringreplacer](https://modrinth.com/plugin/protocolstringreplacer)
 
 *   **MCBBS** (Down) :
 [https://www.mcbbs.net/thread-1209429-1-1.html](https://www.mcbbs.net/thread-1209429-1-1.html)
