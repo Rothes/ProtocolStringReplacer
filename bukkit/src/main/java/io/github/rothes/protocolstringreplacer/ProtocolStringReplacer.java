@@ -272,7 +272,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
         boolean missingDepend = false;
         PluginManager pluginManager = Bukkit.getPluginManager();
         for (String depend : depends) {
-            if (pluginManager.getPlugin(depend) == null) {
+            if (!pluginManager.isPluginEnabled(depend)) {
                 error(PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Missing-Dependency", depend));
                 missingDepend = true;
             }
