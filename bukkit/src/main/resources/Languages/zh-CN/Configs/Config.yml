@@ -8,7 +8,7 @@ Options:
 
   # 设置检测更新服务器的域名. 默认为 'raw.githubusercontent.com'.
   # 若连接不上此加速线路, 应自行选择其它加速线路.
-  Git-Raw-Host: 'mirror.ghproxy.com/https://raw.githubusercontent.com'
+  Git-Raw-Host: 'ghfast.top/https://raw.githubusercontent.com'
 
   # 设置 PSR 加载配置的时期. 可选 INIT (最早), LOAD (中), ENABLE (最晚, 默认值).
   # 主要用于控制台消息的修改.

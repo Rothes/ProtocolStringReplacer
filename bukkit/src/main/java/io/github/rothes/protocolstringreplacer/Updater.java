@@ -129,7 +129,7 @@ public class Updater implements Listener {
             return jsonBuilder.toString();
         } catch (Throwable e) {
             if (tryTime == 0) {
-                return getJson("mirror.ghproxy.com/https://raw.githubusercontent.com", ++tryTime);
+                return getJson("ghfast.top/https://raw.githubusercontent.com", ++tryTime);
             } else if (tryTime == 1) {
                 return getJson("raw.githubusercontent.com", ++tryTime);
             }
