@@ -14,8 +14,8 @@ dependencies {
     paperweight.paperDevBundle("$serverVer-R0.1-SNAPSHOT")
     implementation("commons-collections:commons-collections:3.2.2")
     implementation("org.neosearch.stringsearcher:multiple-string-searcher:0.1.1")
-    implementation("de.tr7zw:item-nbt-api:2.15.0")
     implementation("org.bstats:bstats-bukkit:3.0.2")
+    compileOnly("de.tr7zw:item-nbt-api:2.15.0")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("org.apache.logging.log4j:log4j-api:2.23.1")
@@ -36,7 +36,6 @@ tasks {
         relocate("org.bstats", "io.github.rothes.protocolstringreplacer.lib.org.bstats")
         relocate("org.apache.commons.collections", "io.github.rothes.protocolstringreplacer.lib.org.apache.commons.collections")
         relocate("org.neosearch.stringsearcher", "io.github.rothes.protocolstringreplacer.lib.org.neosearch.stringsearcher")
-        relocate("de.tr7zw.changeme.nbtapi", "io.github.rothes.protocolstringreplacer.lib.de.tr7zw.changeme.nbtapi")
         relocate("kotlin", "io.github.rothes.protocolstringreplacer.lib.kotlin")
     }
 

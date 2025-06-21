@@ -1,7 +1,6 @@
 package io.github.rothes.protocolstringreplacer;
 
 import com.sk89q.protocolstringreplacer.PsrDisguisePlugin;
-import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import io.github.rothes.protocolstringreplacer.api.configuration.CommentYamlConfiguration;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUserManager;
@@ -191,7 +190,7 @@ public class ProtocolStringReplacer extends JavaPlugin {
                 warn("\033[0;31m" + PsrLocalization.getLocaledMessage("Console-Sender.Messages.Initialize.Recommend-Paper") + "\033[0m");
             }
         }
-        if (!checkDepends("ProtocolLib")) {
+        if (!checkDepends("ProtocolLib", "NBTAPI")) {
             initialize();
             new Updater(this).start();
         }
@@ -263,8 +262,6 @@ public class ProtocolStringReplacer extends JavaPlugin {
         packetListenerManager = new PacketListenerManager();
         packetListenerManager.initialize();
         commandHandler.initialize();
-        // init NBT-API
-        MinecraftVersion.getVersion();
         for (Player player : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(player);
             player.updateInventory();
