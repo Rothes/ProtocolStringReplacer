@@ -2,7 +2,7 @@ package io.github.rothes.protocolstringreplacer.packetlistener.server.sign
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.PacketEvent
-import de.tr7zw.changeme.nbtapi.NBTContainer
+import de.tr7zw.nbtapi.NBTContainer
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData
 import net.minecraft.world.level.block.entity.BlockEntityType

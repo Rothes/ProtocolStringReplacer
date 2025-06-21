@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.utility.MinecraftReflection;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.nbtapi.NBTContainer;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import org.jetbrains.annotations.NotNull;
 

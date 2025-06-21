@@ -3,7 +3,7 @@ package io.github.rothes.protocolstringreplacer.packetlistener.server.sign;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.nbtapi.NBTContainer;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 
 import java.util.Collection;

@@ -1,7 +1,7 @@
 package io.github.rothes.protocolstringreplacer.packetlistener.client.itemstack;
 
 import com.comphenix.protocol.PacketType;
-import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.nbtapi.NBT;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.packetlistener.client.BaseClientPacketListener;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;

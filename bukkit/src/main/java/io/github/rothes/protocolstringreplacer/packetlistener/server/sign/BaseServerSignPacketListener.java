@@ -2,8 +2,8 @@ package io.github.rothes.protocolstringreplacer.packetlistener.server.sign;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NbtApiException;
+import de.tr7zw.nbtapi.NBTContainer;
+import de.tr7zw.nbtapi.NbtApiException;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.PsrLocalization;
 import io.github.rothes.protocolstringreplacer.api.capture.CaptureInfoImpl;

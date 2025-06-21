@@ -1,6 +1,6 @@
 package io.github.rothes.protocolstringreplacer.replacer;
 
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import io.github.rothes.protocolstringreplacer.util.scheduler.PsrScheduler;
 import io.github.rothes.protocolstringreplacer.util.scheduler.PsrTask;
 import io.github.rothes.protocolstringreplacer.util.FileUtils;

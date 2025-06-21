@@ -1,11 +1,11 @@
 package io.github.rothes.protocolstringreplacer.replacer.containers
 
-import de.tr7zw.changeme.nbtapi.NBT
-import de.tr7zw.changeme.nbtapi.NBTContainer
-import de.tr7zw.changeme.nbtapi.NBTType
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTCompoundList
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList
+import de.tr7zw.nbtapi.NBT
+import de.tr7zw.nbtapi.NBTContainer
+import de.tr7zw.nbtapi.NBTType
+import de.tr7zw.nbtapi.iface.ReadWriteNBT
+import de.tr7zw.nbtapi.iface.ReadWriteNBTCompoundList
+import de.tr7zw.nbtapi.iface.ReadWriteNBTList
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer
 import io.github.rothes.protocolstringreplacer.plugin
 import io.github.rothes.protocolstringreplacer.replacer.ReplacerManager.HandledItemCache
