@@ -125,6 +125,8 @@ public class Updater implements Listener {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 jsonBuilder.append(line).append("\n");
             }
+            // noinspection deprecation // For legacy server supports
+            new JsonParser().parse(jsonBuilder.toString()); // Try parse
             errorCount = Math.max(errorCount - 1, 0);
             return jsonBuilder.toString();
         } catch (Throwable e) {
