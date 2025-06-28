@@ -176,7 +176,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
     protected static String getReplacedDirect(@Nonnull PacketEvent packetEvent, @Nonnull PsrUser user, @Nonnull ListenType listenType,
                                             @Nonnull String json, List<ReplacerConfig> replacers) {
         StringBuilder sb = new StringBuilder();
-        for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
+        for (BaseComponent baseComponent : SpigotUtils.parseComponents(json)) {
             sb.append(baseComponent.toLegacyText());
         }
 
@@ -198,7 +198,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             List<Replaceable> jsons = container.getJsons();
             for (Replaceable j : jsons) {
                 StringBuilder sb1 = new StringBuilder();
-                for (BaseComponent baseComponent : ComponentSerializer.parse(j.getText())) {
+                for (BaseComponent baseComponent : SpigotUtils.parseComponents(j.getText())) {
                     sb1.append(baseComponent.toLegacyText());
                 }
 
@@ -393,7 +393,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             List<String> directs = new ArrayList<>(originalJsons.size());
             for (String json : originalJsons) {
                 StringBuilder sb = new StringBuilder();
-                for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
+                for (BaseComponent baseComponent : SpigotUtils.parseComponents(json)) {
                     sb.append(baseComponent.toLegacyText());
                 }
 
@@ -404,7 +404,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             List<ReplacerConfig> filtered = matchItemType(entries, type);
             for (Replaceable json : jsons) {
                 StringBuilder sb = new StringBuilder();
-                for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
+                for (BaseComponent baseComponent : SpigotUtils.parseComponents(json.getText())) {
                     sb.append(baseComponent.toLegacyText());
                 }
 
@@ -481,7 +481,7 @@ public abstract class BaseServerPacketListener extends BasePacketListener {
             for (Replaceable json : container.getJsons()) {
                 StringBuilder sb = new StringBuilder();
                 try {
-                    for (BaseComponent baseComponent : ComponentSerializer.parse(json.getText())) {
+                    for (BaseComponent baseComponent : SpigotUtils.parseComponents(json.getText())) {
                         sb.append(baseComponent.toLegacyText());
                     }
                 } catch (Throwable t) {

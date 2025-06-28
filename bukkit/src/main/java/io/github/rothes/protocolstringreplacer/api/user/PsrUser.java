@@ -329,7 +329,7 @@ public class PsrUser {
     }
 
     public void sendFilteredMessage(String json) {
-        sendFilteredMessage(ComponentSerializer.parse(json));
+        sendFilteredMessage(SpigotUtils.parseComponents(json));
     }
 
     public void sendFilteredText(String text) {

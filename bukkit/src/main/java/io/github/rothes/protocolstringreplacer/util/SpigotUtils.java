@@ -2,6 +2,8 @@ package io.github.rothes.protocolstringreplacer.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ItemTag;
@@ -16,12 +18,14 @@ import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.ItemSerializer;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.api.chat.hover.content.TextSerializer;
+import net.md_5.bungee.chat.ChatVersion;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.chat.KeybindComponentSerializer;
 import net.md_5.bungee.chat.ScoreComponentSerializer;
 import net.md_5.bungee.chat.SelectorComponentSerializer;
 import net.md_5.bungee.chat.TextComponentSerializer;
 import net.md_5.bungee.chat.TranslatableComponentSerializer;
+import net.md_5.bungee.chat.VersionedComponentSerializer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -30,14 +34,25 @@ import java.lang.reflect.InvocationTargetException;
 public class SpigotUtils {
 
     private static final Gson psrSerializer;
+    private static final JsonParser jsonParser = new JsonParser();
 
     static {
         Gson temp = null;
+        ProtocolStringReplacer plugin = ProtocolStringReplacer.getInstance();
         try {
-            for (Field declaredField : ComponentSerializer.class.getDeclaredFields()) {
+            Class<?> clazz;
+            Object instance = null;
+            if (plugin.getServerMajorVersion() == 21 && plugin.getServerMinorVersion() >= 5
+                    || plugin.getServerMinorVersion() > 21) {
+                clazz = VersionedComponentSerializer.class;
+                instance = VersionedComponentSerializer.forVersion(ChatVersion.V1_21_5);
+            } else {
+                clazz = ComponentSerializer.class;
+            }
+            for (Field declaredField : clazz.getDeclaredFields()) {
                 if (declaredField.getType() == Gson.class) {
                     declaredField.setAccessible(true);
-                    temp = (Gson) declaredField.get(null);
+                    temp = (Gson) declaredField.get(instance);
                     try {
                         temp = temp.newBuilder().disableHtmlEscaping().create();
                     } catch (NoSuchMethodError e) {
@@ -65,6 +80,20 @@ public class SpigotUtils {
             ProtocolStringReplacer.error("Unable to disableHtmlEscaping for SpigotComponentSerializer:", e);
         }
         psrSerializer = temp;
+    }
+
+    public static BaseComponent[] parseComponents(String json) {
+        try {
+            JsonElement jsonElement = jsonParser.parse(json);
+            if (jsonElement.isJsonArray()) {
+                return psrSerializer.fromJson(jsonElement, BaseComponent[].class);
+            } else {
+                return new BaseComponent[] { psrSerializer.fromJson(jsonElement, BaseComponent.class) };
+            }
+
+        } catch (Throwable t) {
+            return ComponentSerializer.parse(json);
+        }
     }
 
     public static String serializeComponents(BaseComponent... components) {

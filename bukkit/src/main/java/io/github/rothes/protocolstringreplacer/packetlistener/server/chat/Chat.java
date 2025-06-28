@@ -12,6 +12,7 @@ import io.github.rothes.protocolstringreplacer.packetlistener.server.BaseServerC
 import io.github.rothes.protocolstringreplacer.replacer.ListenType;
 import io.github.rothes.protocolstringreplacer.api.user.PsrUser;
 import io.github.rothes.protocolstringreplacer.util.PaperUtils;
+import io.github.rothes.protocolstringreplacer.util.SpigotUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
@@ -123,14 +124,14 @@ public final class Chat extends BaseServerComponentsPacketListener {
 
         if (wrappedChatComponent != null) {
             // 1.19.1+
-            message = ComponentSerializer.parse(wrappedChatComponent.getJson())[0];
+            message = SpigotUtils.parseComponents(wrappedChatComponent.getJson())[0];
         } else {
             // 1.19
             BaseComponent[] spigotComponent = getSpigotComponent(modifier);
             if (spigotComponent != null) {
                 message = spigotComponent[0];
             } else {
-                message = ComponentSerializer.parse(PaperUtils.serializeComponent(getPaperComponent(modifier)))[0];
+                message = SpigotUtils.parseComponents(PaperUtils.serializeComponent(getPaperComponent(modifier)))[0];
             }
         }
 
@@ -152,7 +153,7 @@ public final class Chat extends BaseServerComponentsPacketListener {
                                 .withType(PlayerChatHelper.getPlayerChatMessageClass()).read(0)).getJson()));
                         break;
                     default:
-                        user.sendMessage(ComponentSerializer.parse(packet.getChatComponents().read(0).getJson()));
+                        user.sendMessage(SpigotUtils.parseComponents(packet.getChatComponents().read(0).getJson()));
                         break;
                 }
                 break;

@@ -8,6 +8,7 @@ import io.github.rothes.protocolstringreplacer.ProtocolStringReplacer;
 import io.github.rothes.protocolstringreplacer.api.exceptions.IncompatibleServerException;
 import io.github.rothes.protocolstringreplacer.nms.NmsManager;
 import io.github.rothes.protocolstringreplacer.nms.packetreader.ChatType;
+import io.github.rothes.protocolstringreplacer.util.SpigotUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
@@ -246,7 +247,7 @@ public class PlayerChatHelper {
     }
 
     public static BaseComponent getDisplayName(Object object) {
-        return ComponentSerializer.parse(getDisplayNameWrapped(object).getJson())[0];
+        return SpigotUtils.parseComponents(getDisplayNameWrapped(object).getJson())[0];
     }
 
     public static WrappedChatComponent getDisplayNameWrapped(Object object) {
@@ -270,7 +271,7 @@ public class PlayerChatHelper {
     }
 
     public static BaseComponent getTeamName(Object object) {
-        return ComponentSerializer.parse(getTeamNameWrapped(object).getJson())[0];
+        return SpigotUtils.parseComponents(getTeamNameWrapped(object).getJson())[0];
     }
 
     public static WrappedChatComponent getTeamNameWrapped(Object object) {

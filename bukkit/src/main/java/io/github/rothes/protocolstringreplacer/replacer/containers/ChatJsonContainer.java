@@ -2,7 +2,6 @@ package io.github.rothes.protocolstringreplacer.replacer.containers;
 
 import io.github.rothes.protocolstringreplacer.api.exceptions.JsonSyntaxException;
 import io.github.rothes.protocolstringreplacer.util.SpigotUtils;
-import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
 public class ChatJsonContainer extends AbstractContainer<String> {
@@ -32,7 +31,7 @@ public class ChatJsonContainer extends AbstractContainer<String> {
     public void createDefaultChildren() {
         if (createComponents) {
             try {
-                componentsContainer = new ComponentsContainer(ComponentSerializer.parse(content), root);
+                componentsContainer = new ComponentsContainer(SpigotUtils.parseComponents(content), root);
             } catch (Throwable t) {
                 throw new JsonSyntaxException("Serializer can't parse Json: " + content, t);
             }

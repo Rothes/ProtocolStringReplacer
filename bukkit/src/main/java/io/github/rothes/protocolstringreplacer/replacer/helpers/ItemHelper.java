@@ -43,13 +43,13 @@ public class ItemHelper {
             helper.display = helper.nbt.getCompound("display");
             if (helper.display != null) {
                 if (helper.display.hasTag("Name")) {
-                    helper.name = ComponentSerializer.parse(helper.display.getString("Name"));
+                    helper.name = SpigotUtils.parseComponents(helper.display.getString("Name"));
                 }
                 if (helper.display.hasTag("Lore")) {
                     helper.loreNbt = helper.display.getStringList("Lore");
                     helper.lore = new ArrayList<>(helper.loreNbt.size());
                     for (String line : helper.loreNbt) {
-                        helper.lore.add(ComponentSerializer.parse(line));
+                        helper.lore.add(SpigotUtils.parseComponents(line));
                     }
                 }
             }

@@ -80,7 +80,7 @@ public abstract class BaseServerSignPacketListener extends BaseServerPacketListe
         for (String json : originalJsons) {
             StringBuilder sb = new StringBuilder();
             try {
-                for (BaseComponent baseComponent : ComponentSerializer.parse(json)) {
+                for (BaseComponent baseComponent : SpigotUtils.parseComponents(json)) {
                     sb.append(baseComponent.toLegacyText());
                 }
             } catch (Throwable t) {
