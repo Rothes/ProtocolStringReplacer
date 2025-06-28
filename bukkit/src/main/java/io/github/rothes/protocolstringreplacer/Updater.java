@@ -58,7 +58,10 @@ public class Updater implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         PsrScheduler.runTaskTimerAsynchronously(() -> {
             try {
-                String json = getJson(plugin.getConfigManager().gitRawHost, 0);
+                String host = plugin.getConfigManager().gitRawHost;
+                if (host.isEmpty()) return;
+
+                String json = getJson(host, 0);
                 if (json == null) {
                     return;
                 }
