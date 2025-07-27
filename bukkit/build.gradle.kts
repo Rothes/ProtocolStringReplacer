@@ -1,4 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.codehaus.groovy.tools.shell.util.Preferences.keys
 
 plugins {
     kotlin("jvm") version "1.9.22"
@@ -40,13 +41,14 @@ tasks {
     }
 
     processResources {
-        filter<ReplaceTokens>(
-            "tokens" to mapOf(
-                "versionName" to project.property("versionName"),
-                "versionChannel" to project.property("versionChannel"),
-                "versionId" to project.property("versionId"),
-            ))
-        outputs.doNotCacheIf("MakeReplacementsWork") { true }
+        val tokens = "tokens" to mapOf(
+            "versionName" to project.property("versionName"),
+            "versionChannel" to project.property("versionChannel"),
+            "versionId" to project.property("versionId"),
+        )
+        filter<ReplaceTokens>(tokens)
+        val properties = rootProject.ext.properties.filter { tokens.second.contains(it.key) }
+        inputs.properties(properties)
     }
 }
 
