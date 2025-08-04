@@ -114,7 +114,10 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
             }
             if (display.hasTag(LORE_KEY)) {
                 if (LORE_JSON) {
-                    addJsonList(display.getStringList(LORE_KEY))
+                    if (COMPOUND_JSON)
+                        addJsonList(display.getCompoundList(LORE_KEY))
+                    else
+                        addJsonList(display.getStringList(LORE_KEY))
                 } else {
                     addTextList(display.getStringList(LORE_KEY))
                 }
@@ -150,13 +153,13 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
             if (compound.hasTag("pages")) {
                 if (type == Material.WRITTEN_BOOK) {
                     if (NEW_NBT && compound.getListType("pages") == NBTType.NBTTagCompound) {
-                        addJsonList(compound.getCompoundList("pages"))
+                        addJsonListBook(compound.getCompoundList("pages"))
                     } else {
                         addJsonList(compound.getStringList("pages"))
                     }
                 } else {
                     if (NEW_NBT && compound.getListType("pages") == NBTType.NBTTagCompound) {
-                        addTextList(compound.getCompoundList("pages"))
+                        addTextListBook(compound.getCompoundList("pages"))
                     } else {
                         addTextList(compound.getStringList("pages"))
                     }
@@ -181,7 +184,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         }
     }
 
-    private fun addJsonList(list: ReadWriteNBTCompoundList) {
+    private fun addJsonListBook(list: ReadWriteNBTCompoundList) {
         val size = list.size()
         for (line in 0 until size) {
             val compound = list[line]
@@ -190,7 +193,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         }
     }
 
-    private fun addTextList(list: ReadWriteNBTCompoundList) {
+    private fun addTextListBook(list: ReadWriteNBTCompoundList) {
         val size = list.size()
         for (line in 0 until size) {
             val compound = list[line]
@@ -206,6 +209,24 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
                 override fun getResult(): String {
                     val result = super.getResult()
                     list[line] = result
+                    return result
+                }
+            })
+        }
+    }
+
+    private fun addJsonList(list: ReadWriteNBTCompoundList) {
+        val size = list.size()
+        for (line in 0 until size) {
+            val compound = list[line]
+            val string = compound.toString()
+            children.add(object : ChatJsonContainer(string, root, true) {
+                override fun getResult(): String {
+                    val result = super.getResult()
+                    if (string != result) {
+                        compound.clearNBT()
+                        compound.mergeCompound(NBT.parseNBT(result))
+                    }
                     return result
                 }
             })
@@ -268,13 +289,20 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         private val key: String,
         root: Container<*>,
         createComponents: Boolean,
-        private val original: String = compound.getString(key)
+        private val jsonCompound: ReadWriteNBT? = if (COMPOUND_JSON) compound.getCompound(key) else null,
+        private val original: String = if (COMPOUND_JSON) jsonCompound!!.toString() else compound.getString(key)
     ): ChatJsonContainer(original, root, createComponents) {
 
         override fun getResult(): String {
             val result = super.getResult()
             if (result != original) {
-                compound.setString(key, result)
+                if (COMPOUND_JSON) {
+                    jsonCompound!!
+                    jsonCompound.clearNBT()
+                    jsonCompound.mergeCompound(NBT.parseNBT(result))
+                } else {
+                    compound.setString(key, result)
+                }
             }
             return result
         }
@@ -301,6 +329,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         private val NAME_JSON = plugin.serverMajorVersion >= 13
         private val LORE_JSON = plugin.serverMajorVersion >= 14
         private val NEW_NBT = plugin.serverMajorVersion == 20.toByte() && plugin.serverMinorVersion >= 5 || plugin.serverMajorVersion > 20
+        private val COMPOUND_JSON = plugin.serverMajorVersion == 21.toByte() && plugin.serverMinorVersion >= 6 || plugin.serverMajorVersion > 21
         private val TAG_PATH = if (NEW_NBT) arrayOf("components") else arrayOf("tag")
         private val DISPLAY_PATH = if (NEW_NBT) arrayOf() else arrayOf("display")
         private val NAME_KEY = if (NEW_NBT) "minecraft:custom_name" else "Name"
