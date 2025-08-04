@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -44,6 +45,11 @@ public class PsrDisguisePlugin implements Plugin {
     @Override
     public File getDataFolder() {
         return null;
+    }
+
+    @Override
+    public @NotNull Path getDataPath() {
+        return Plugin.super.getDataPath();
     }
 
     @NotNull
@@ -179,6 +185,11 @@ public class PsrDisguisePlugin implements Plugin {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         return null;
+    }
+
+    @Override
+    public @NotNull String namespace() {
+        return "";
     }
 
 }
