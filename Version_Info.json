@@ -1,11 +1,11 @@
 {
   "Version_Channels": {
     "Stable": {
-      "Latest_Version_Number": 130,
+      "Latest_Version_Number": 131,
       "Log_Level": "Info",
       "Actions": [],
       "Message": {
-        "en-US": "§bA new version of PSR (\"3.2.3\") is available!\n§bDownload here: https://modrinth.com/plugin/protocolstringreplacer/"
+        "en-US": "§bA new version of PSR (\"3.2.4\") is available!\n§bDownload here: https://modrinth.com/plugin/protocolstringreplacer/"
       }
     }
   },
