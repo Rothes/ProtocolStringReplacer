@@ -107,14 +107,14 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         if (display != null) {
             if (display.hasTag(NAME_KEY)) {
                 if (NAME_JSON) {
-                    children.add(CompoundJsonContainer(display, NAME_KEY, root, true))
+                    children.add(CompoundJsonContainer(display, NAME_KEY, root))
                 } else {
                     children.add(CompoundTextContainer(display, NAME_KEY, root))
                 }
             }
             if (display.hasTag(LORE_KEY)) {
                 if (LORE_JSON) {
-                    if (COMPOUND_JSON)
+                    if (display.getListType(LORE_KEY) == NBTType.NBTTagCompound)
                         addJsonList(display.getCompoundList(LORE_KEY))
                     else
                         addJsonList(display.getStringList(LORE_KEY))
@@ -180,7 +180,7 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
 
     private fun addJsonTag(compound: ReadWriteNBT, tag: String) {
         if (compound.hasTag(tag)) {
-            children.add(CompoundJsonContainer(compound, tag, root, true))
+            children.add(CompoundJsonContainer(compound, tag, root))
         }
     }
 
@@ -288,15 +288,41 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         private val compound: ReadWriteNBT,
         private val key: String,
         root: Container<*>,
-        createComponents: Boolean,
-        private val jsonCompound: ReadWriteNBT? = if (COMPOUND_JSON) compound.getCompound(key) else null,
-        private val original: String = if (COMPOUND_JSON) jsonCompound!!.toString() else compound.getString(key)
-    ): ChatJsonContainer(original, root, createComponents) {
+    ): AbstractContainer<Unit>(Unit, root) {
 
-        override fun getResult(): String {
-            val result = super.getResult()
+        private val isCompound: Boolean
+        private val jsonCompound: ReadWriteNBT?
+        private val original: String
+        private val container: Container<String>
+
+        init {
+            if (COMPOUND_JSON) {
+                isCompound = compound.getType(key) == NBTType.NBTTagCompound
+                if (isCompound) {
+                    jsonCompound = compound.getCompound(key)
+                    original = jsonCompound.toString()
+                    container = ChatJsonContainer(original, root)
+                    children.add(container)
+                } else {
+                    jsonCompound = null
+                    original = compound.getString(key)
+                    container = SimpleTextContainer(original, root)
+                    children.add(container)
+                }
+                // TODO string list?
+            } else {
+                isCompound = false
+                jsonCompound = null
+                original = compound.getString(key)
+                container = ChatJsonContainer(original, root)
+                children.add(container)
+            }
+        }
+
+        override fun getResult() {
+            val result = container.getResult()
             if (result != original) {
-                if (COMPOUND_JSON) {
+                if (isCompound) {
                     jsonCompound!!
                     jsonCompound.clearNBT()
                     jsonCompound.mergeCompound(NBT.parseNBT(result))
@@ -304,7 +330,6 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
                     compound.setString(key, result)
                 }
             }
-            return result
         }
     }
 
