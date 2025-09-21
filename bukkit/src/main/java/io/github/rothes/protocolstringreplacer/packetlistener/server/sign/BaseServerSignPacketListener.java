@@ -81,6 +81,7 @@ public abstract class BaseServerSignPacketListener extends BaseServerPacketListe
             StringBuilder sb = new StringBuilder();
             try {
                 for (BaseComponent baseComponent : SpigotUtils.parseComponents(json)) {
+                    if (baseComponent == null) continue; // If text is empty
                     sb.append(baseComponent.toLegacyText());
                 }
             } catch (Throwable t) {
