@@ -284,55 +284,6 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         return nbt
     }
 
-    class CompoundJsonContainer(
-        private val compound: ReadWriteNBT,
-        private val key: String,
-        root: Container<*>,
-    ): AbstractContainer<Unit>(Unit, root) {
-
-        private val isCompound: Boolean
-        private val jsonCompound: ReadWriteNBT?
-        private val original: String
-        private val container: Container<String>
-
-        init {
-            if (COMPOUND_JSON) {
-                isCompound = compound.getType(key) == NBTType.NBTTagCompound
-                if (isCompound) {
-                    jsonCompound = compound.getCompound(key)
-                    original = jsonCompound.toString()
-                    container = ChatJsonContainer(original, root)
-                    children.add(container)
-                } else {
-                    jsonCompound = null
-                    original = compound.getString(key)
-                    container = SimpleTextContainer(original, root)
-                    children.add(container)
-                }
-                // TODO string list?
-            } else {
-                isCompound = false
-                jsonCompound = null
-                original = compound.getString(key)
-                container = ChatJsonContainer(original, root)
-                children.add(container)
-            }
-        }
-
-        override fun getResult() {
-            val result = container.getResult()
-            if (result != original) {
-                if (isCompound) {
-                    jsonCompound!!
-                    jsonCompound.clearNBT()
-                    jsonCompound.mergeCompound(NBT.parseNBT(result))
-                } else {
-                    compound.setString(key, result)
-                }
-            }
-        }
-    }
-
     class CompoundTextContainer(
         private val compound: ReadWriteNBT,
         private val key: String,
@@ -354,7 +305,6 @@ class ItemStackContainer @JvmOverloads constructor(itemStack: ItemStack, useCach
         private val NAME_JSON = plugin.serverMajorVersion >= 13
         private val LORE_JSON = plugin.serverMajorVersion >= 14
         private val NEW_NBT = plugin.serverMajorVersion == 20.toByte() && plugin.serverMinorVersion >= 5 || plugin.serverMajorVersion > 20
-        private val COMPOUND_JSON = plugin.serverMajorVersion == 21.toByte() && plugin.serverMinorVersion >= 6 || plugin.serverMajorVersion > 21
         private val TAG_PATH = if (NEW_NBT) arrayOf("components") else arrayOf("tag")
         private val DISPLAY_PATH = if (NEW_NBT) arrayOf() else arrayOf("display")
         private val NAME_KEY = if (NEW_NBT) "minecraft:custom_name" else "Name"
