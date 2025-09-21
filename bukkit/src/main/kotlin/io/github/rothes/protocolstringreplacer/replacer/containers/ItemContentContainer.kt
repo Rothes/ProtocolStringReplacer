@@ -12,7 +12,7 @@ open class ItemContentContainer(item: Item, root: Container<*>?) : AbstractConta
     private val container: ItemStackContainer?
 
     init {
-        if (content.tag != null) {
+        if (content.tag != null && content.id != "minecraft:air") {
             val nbt = NBT.createNBTObject()
             nbt.setString("id", content.id)
             if (NEW_NBT) {
@@ -32,7 +32,15 @@ open class ItemContentContainer(item: Item, root: Container<*>?) : AbstractConta
     override fun createDefaultChildren() {
         if (container != null) {
             children.add(container)
+        }
+        super.createDefaultChildren()
+    }
+
+    override fun createTexts(root: Container<*>) {
+        if (container != null) {
             container.entriesPeriod()
+            container.createDefaultChildrenDeep()
+            container.createTexts(root)
         }
     }
 
